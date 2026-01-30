@@ -107,12 +107,24 @@ const Section1 = () => {
   return (
     <section className="w-full bg-black py-4 sm:py-6 px-3 sm:px-4 md:px-8">
       {/* MARKETS Header */}
-      <div className="flex justify-center mb-4 sm:mb-6">
-        <div className="bg-gray-800 border-2 border-yellow-500 rounded-full px-6 sm:px-8 py-2 sm:py-3">
-          <h2 className="text-white text-lg sm:text-xl md:text-2xl font-bold uppercase">MARKETS</h2>
-        </div>
-      </div>
+      {/* MARKETS Header */}
+      <div className="flex items-end justify-center mb-8 w-full max-w-7xl mx-auto">
+        {/* Left Line */}
+        <div className="flex-1 h-[2px] bg-[#d4af37]"></div>
 
+        {/* Center Trapezoid */}
+        <div className="relative shrink-0">
+          <svg width="240" height="40" viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 39 L30 2 L210 2 L240 39" stroke="#d4af37" strokeWidth="2" fill="black" />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center pt-3">
+            <h2 className="text-white text-2xl font-bold tracking-wider">MARKETS</h2>
+          </div>
+        </div>
+
+        {/* Right Line */}
+        <div className="flex-1 h-[2px] bg-[#d4af37]"></div>
+      </div>
       {/* Market Cards Grid */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {markets.map((market, index) => (
@@ -158,8 +170,8 @@ const Section1 = () => {
               {/* Play Now Button */}
               <button
                 className={`w-full py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-colors ${market.isOpen
-                    ? 'bg-yellow-500 text-black hover:bg-yellow-600'
-                    : 'bg-gray-600 text-white hover:bg-gray-700'
+                  ? 'bg-yellow-500 text-black hover:bg-yellow-600'
+                  : 'bg-gray-600 text-white hover:bg-gray-700'
                   }`}
               >
                 PLAY NOW
