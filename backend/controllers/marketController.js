@@ -199,6 +199,38 @@ export const setClosingNumber = async (req, res) => {
 };
 
 /**
+ * Set win number. Body: { winNumber: "123" or "123-65-456" }
+ */
+export const setWinNumber = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { winNumber } = req.body;
+        if (!winNumber || winNumber.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'winNumber is required',
+            });
+        }
+        const market = await Market.findByIdAndUpdate(
+            id,
+            { winNumber: winNumber.trim() },
+            { new: true, runValidators: true }
+        );
+        if (!market) {
+            return res.status(404).json({ success: false, message: 'Market not found' });
+        }
+        const response = market.toObject();
+        response.displayResult = market.getDisplayResult();
+        res.status(200).json({ success: true, data: response });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(400).json({ success: false, message: 'Invalid market ID' });
+        }
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
  * Delete a market.
  */
 export const deleteMarket = async (req, res) => {

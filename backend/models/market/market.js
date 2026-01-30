@@ -69,6 +69,11 @@ const marketSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    /** Win number declared by admin (can be any format, e.g. "123", "123-65-456", etc.) */
+    winNumber: {
+        type: String,
+        default: null,
+    },
 });
 
 /** Compute middle two digits: first from opening sum, second from closing sum (last digit only). */

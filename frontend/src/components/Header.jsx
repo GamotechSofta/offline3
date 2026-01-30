@@ -8,7 +8,7 @@ const Header = () => {
     <div className="bg-black w-full py-2 sm:py-2.5 overflow-hidden relative">
       <div className="flex items-center">
         <div className="whitespace-nowrap animate-scroll flex">
-          <span className="text-indigo-400 text-xs sm:text-sm md:text-base font-normal">
+          <span className="text-white text-xs sm:text-sm md:text-base font-normal">
             {repeatedText} | {repeatedText}
           </span>
         </div>

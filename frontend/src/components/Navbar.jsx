@@ -9,20 +9,20 @@ const Navbar = () => {
       {/* Left side - Hamburger menu and Logo */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Hamburger Menu Icon */}
-        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-gray-600 flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-yellow-500/50 flex items-center justify-center cursor-pointer hover:bg-yellow-500/10 transition-colors">
           <div className="flex flex-col gap-1 sm:gap-1.5">
-            <div className="w-2.5 sm:w-3 h-0.5 bg-purple-400"></div>
-            <div className="w-3 sm:w-4 h-0.5 bg-pink-400"></div>
-            <div className="w-2.5 sm:w-3 h-0.5 bg-purple-400"></div>
+            <div className="w-2.5 sm:w-3 h-0.5 bg-yellow-400"></div>
+            <div className="w-3 sm:w-4 h-0.5 bg-yellow-500"></div>
+            <div className="w-2.5 sm:w-3 h-0.5 bg-yellow-400"></div>
           </div>
         </div>
         
         {/* Logo Text - Clickable to home */}
         <Link to="/" className="flex items-center cursor-pointer">
-          <span className="text-base sm:text-xl md:text-2xl font-bold text-blue-400 underline decoration-pink-500 decoration-2 underline-offset-2">
+          <span className="text-base sm:text-xl md:text-2xl font-bold text-yellow-400 underline decoration-yellow-500 decoration-2 underline-offset-2">
             RATAN
           </span>
-          <span className="text-base sm:text-xl md:text-2xl font-bold text-pink-500 underline decoration-pink-500 decoration-2 underline-offset-2 ml-0.5 sm:ml-1">
+          <span className="text-base sm:text-xl md:text-2xl font-bold text-yellow-500 underline decoration-yellow-500 decoration-2 underline-offset-2 ml-0.5 sm:ml-1">
             365
           </span>
         </Link>

@@ -1,16 +1,43 @@
-# React + Vite
+# Super Admin Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the super admin panel for managing markets, including:
+- Market creation, editing, and deletion
+- Setting opening and closing numbers
+- Declaring win numbers
+- Managing market opening and closing times
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Make sure the backend server is running on `http://localhost:3010`
 
-## React Compiler
+2. Create an admin user (run from backend directory):
+   ```bash
+   npm run create-admin [username] [password]
+   ```
+   Example:
+   ```bash
+   npm run create-admin admin mypassword123
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. Start the admin panel:
+   ```bash
+   npm run dev
+   ```
 
-## Expanding the ESLint configuration
+4. Login with your admin credentials at `http://localhost:5173` (or the port shown)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+- **Login**: Secure admin authentication
+- **Dashboard**: View all markets with their current status
+- **Create Market**: Add new markets with custom opening/closing times
+- **Edit Market**: Update market name and times
+- **Delete Market**: Remove markets
+- **Set Numbers**: 
+  - Set opening number (3 digits)
+  - Set closing number (3 digits)
+  - Declare win number (any format)
+
+## API Base URL
+
+The admin panel connects to `http://localhost:3010/api/v1` by default. Update `API_BASE_URL` in the component files if your backend runs on a different port.

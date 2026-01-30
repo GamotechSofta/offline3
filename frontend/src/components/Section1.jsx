@@ -1,108 +1,147 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
 
 const Section1 = () => {
   const navigate = useNavigate();
-  const markets = [
-    {
-      gameName: "Rudraksh Morning",
-      timeRange: "10:00 AM - 11:00 AM",
-      result: "387-87-133",
-      isOpen: false,
-      timer: null
-    },
-    {
-      gameName: "Milan Morning",
-      timeRange: "10:00 AM - 11:00 AM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "2 Hrs: 50 Mins: 27 Sec"
-    },
-    {
-      gameName: "Rudraksh Night",
-      timeRange: "10:00 AM - 11:00 AM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "1 Hr: 23 Mins: 12 Sec"
-    },
-    {
-      gameName: "Madhur Night",
-      timeRange: "10:00 AM - 11:00 AM",
-      result: "387-87-133",
-      isOpen: false,
-      timer: null
-    },
-    {
-      gameName: "Kalyan Morning",
-      timeRange: "11:00 AM - 12:00 PM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "3 Hrs: 15 Mins: 45 Sec"
-    },
-    {
-      gameName: "Time Bazar",
-      timeRange: "12:00 PM - 01:00 PM",
-      result: "456-78-234",
-      isOpen: false,
-      timer: null
-    },
-    {
-      gameName: "Milan Day",
-      timeRange: "02:00 PM - 04:00 PM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "1 Hr: 45 Mins: 30 Sec"
-    },
-    {
-      gameName: "Rajdhani Day",
-      timeRange: "02:00 PM - 04:00 PM",
-      result: "234-56-789",
-      isOpen: false,
-      timer: null
-    },
-    {
-      gameName: "Kalyan Evening",
-      timeRange: "05:00 PM - 07:00 PM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "2 Hrs: 30 Mins: 15 Sec"
-    },
-    {
-      gameName: "Mumbai Day",
-      timeRange: "05:00 PM - 07:00 PM",
-      result: "567-89-123",
-      isOpen: false,
-      timer: null
-    },
-    {
-      gameName: "Rajdhani Night",
-      timeRange: "08:00 PM - 10:00 PM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "4 Hrs: 20 Mins: 10 Sec"
-    },
-    {
-      gameName: "Kalyan Night",
-      timeRange: "08:00 PM - 10:00 PM",
-      result: "345-67-890",
-      isOpen: false,
-      timer: null
-    },
-    {
-      gameName: "Mumbai Night",
-      timeRange: "10:00 PM - 12:00 AM",
-      result: "***_**_***",
-      isOpen: true,
-      timer: "5 Hrs: 10 Mins: 5 Sec"
-    },
-    {
-      gameName: "Main Bazar",
-      timeRange: "10:00 PM - 12:00 AM",
-      result: "678-90-345",
-      isOpen: false,
-      timer: null
+  const [markets, setMarkets] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Convert 24-hour time to 12-hour format
+  const formatTime = (time24) => {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  // Parse time string to minutes since midnight
+  const parseTimeToMinutes = (timeStr) => {
+    if (!timeStr) return null;
+    const [hour, min] = timeStr.split(':').map(Number);
+    if (hour >= 0 && hour < 24 && min >= 0 && min < 60) {
+      return hour * 60 + min;
     }
-  ];
+    return null;
+  };
+
+  // Calculate market status and countdown
+  const getMarketStatus = (market) => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMin = now.getMinutes();
+    const currentSec = now.getSeconds();
+    const currentTime = currentHour * 60 + currentMin;
+
+    const startTime = parseTimeToMinutes(market.startingTime);
+    const endTime = parseTimeToMinutes(market.closingTime);
+
+    if (startTime === null || endTime === null) {
+      return { isOpen: false, timer: null };
+    }
+
+    if (currentTime < startTime) {
+      // Market hasn't started yet - calculate time until opening
+      const totalSeconds = (startTime - currentTime) * 60 - currentSec;
+      const hours = Math.floor(totalSeconds / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      
+      let timerStr = '';
+      if (hours > 0) timerStr += `${hours} Hr${hours > 1 ? 's' : ''}: `;
+      if (mins > 0 || hours > 0) timerStr += `${mins} Min${mins !== 1 ? 's' : ''}: `;
+      timerStr += `${secs} Sec${secs !== 1 ? '' : ''}`;
+      
+      return {
+        isOpen: false,
+        timer: timerStr.trim()
+      };
+    } else if (currentTime >= startTime && currentTime <= endTime) {
+      // Market is open - calculate time until closing
+      const totalSeconds = (endTime - currentTime) * 60 - currentSec;
+      const hours = Math.floor(totalSeconds / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      
+      let timerStr = '';
+      if (hours > 0) timerStr += `${hours} Hr${hours > 1 ? 's' : ''}: `;
+      if (mins > 0 || hours > 0) timerStr += `${mins} Min${mins !== 1 ? 's' : ''}: `;
+      timerStr += `${secs} Sec${secs !== 1 ? '' : ''}`;
+      
+      return {
+        isOpen: true,
+        timer: timerStr.trim()
+      };
+    } else {
+      // Market is closed
+      return { isOpen: false, timer: null };
+    }
+  };
+
+  // Fetch markets from API
+  useEffect(() => {
+    const fetchMarkets = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_BASE_URL}/markets/get-markets`);
+        const data = await response.json();
+        
+        if (data.success) {
+          // Transform API data to match UI format
+          const transformedMarkets = data.data.map((market) => {
+            const status = getMarketStatus(market);
+            return {
+              id: market._id,
+              gameName: market.marketName,
+              timeRange: `${formatTime(market.startingTime)} - ${formatTime(market.closingTime)}`,
+              result: market.displayResult || '***-**-***',
+              isOpen: status.isOpen,
+              timer: status.timer,
+              winNumber: market.winNumber,
+              startingTime: market.startingTime,
+              closingTime: market.closingTime
+            };
+          });
+          setMarkets(transformedMarkets);
+        }
+      } catch (error) {
+        console.error('Error fetching markets:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMarkets();
+    
+    // Refresh market data every 30 seconds
+    const dataInterval = setInterval(fetchMarkets, 30000);
+    
+    return () => clearInterval(dataInterval);
+  }, []);
+
+  // Update timers every second for real-time countdown
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setMarkets((prevMarkets) => 
+        prevMarkets.map((market) => {
+          if (!market.startingTime || !market.closingTime) return market;
+          const status = getMarketStatus({
+            startingTime: market.startingTime,
+            closingTime: market.closingTime
+          });
+          return {
+            ...market,
+            isOpen: status.isOpen,
+            timer: status.timer
+          };
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, []);
 
   return (
     <section className="w-full bg-black py-4 sm:py-6 px-3 sm:px-4 md:px-8">
@@ -126,19 +165,28 @@ const Section1 = () => {
         <div className="flex-1 h-[2px] bg-[#d4af37]"></div>
       </div>
       {/* Market Cards Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {markets.map((market, index) => (
-          <div
-            key={index}
-            onClick={() => navigate('/bidoptions')}
-            className="bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform hover:scale-[1.02] transition-transform duration-200"
-          >
-            {/* Status Banner */}
-            <div className={`${market.isOpen ? 'bg-green-600' : 'bg-red-600'} py-2 px-3 text-center`}>
-              <p className="text-white text-xs sm:text-sm font-semibold">
-                {market.isOpen ? market.timer : 'MARKET CLOSED'}
-              </p>
-            </div>
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-400">Loading markets...</p>
+        </div>
+      ) : markets.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-400">No markets available</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {markets.map((market) => (
+            <div
+              key={market.id}
+              onClick={() => navigate('/bidoptions')}
+              className="bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform hover:scale-[1.02] transition-transform duration-200"
+            >
+              {/* Status Banner */}
+              <div className={`${market.isOpen ? 'bg-green-600' : 'bg-red-600'} py-2 px-3 text-center`}>
+                <p className="text-white text-xs sm:text-sm font-semibold">
+                  {market.isOpen ? market.timer : 'MARKET CLOSED'}
+                </p>
+              </div>
 
             {/* Card Content */}
             <div className="p-3 sm:p-4">
@@ -161,25 +209,16 @@ const Section1 = () => {
               </h3>
 
               {/* Result */}
-              <div className="mb-4">
+              <div>
                 <p className="text-yellow-400 text-xl sm:text-2xl md:text-3xl font-bold">
                   {market.result}
                 </p>
               </div>
-
-              {/* Play Now Button */}
-              <button
-                className={`w-full py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-colors ${market.isOpen
-                  ? 'bg-yellow-500 text-black hover:bg-yellow-600'
-                  : 'bg-gray-600 text-white hover:bg-gray-700'
-                  }`}
-              >
-                PLAY NOW
-              </button>
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

@@ -6,17 +6,23 @@ import {
     updateMarket,
     setOpeningNumber,
     setClosingNumber,
+    setWinNumber,
     deleteMarket,
 } from '../../controllers/marketController.js';
+import { verifyAdmin } from '../../middleware/adminAuth.js';
 
 const router = express.Router();
 
-router.post('/create-market', createMarket);
+// Public routes
 router.get('/get-markets', getMarkets);
 router.get('/get-market/:id', getMarketById);
-router.patch('/update-market/:id', updateMarket);
-router.patch('/set-opening-number/:id', setOpeningNumber);
-router.patch('/set-closing-number/:id', setClosingNumber);
-router.delete('/delete-market/:id', deleteMarket);
+
+// Protected admin routes
+router.post('/create-market', verifyAdmin, createMarket);
+router.patch('/update-market/:id', verifyAdmin, updateMarket);
+router.patch('/set-opening-number/:id', verifyAdmin, setOpeningNumber);
+router.patch('/set-closing-number/:id', verifyAdmin, setClosingNumber);
+router.patch('/set-win-number/:id', verifyAdmin, setWinNumber);
+router.delete('/delete-market/:id', verifyAdmin, deleteMarket);
 
 export default router;

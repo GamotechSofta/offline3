@@ -1,0 +1,57 @@
+import Admin from '../models/admin/admin.js';
+
+/**
+ * Middleware to verify admin authentication
+ * Supports Basic Auth from headers or username/password from body
+ * In production, use JWT tokens
+ */
+export const verifyAdmin = async (req, res, next) => {
+    try {
+        let username, password;
+
+        // Try to get from Authorization header first
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith('Basic ')) {
+            try {
+                const credentials = Buffer.from(authHeader.replace('Basic ', ''), 'base64').toString('ascii');
+                [username, password] = credentials.split(':');
+            } catch (err) {
+                // Invalid base64
+            }
+        }
+
+        // Fallback to body if not in headers
+        if (!username || !password) {
+            username = req.body.username;
+            password = req.body.password;
+        }
+
+        if (!username || !password) {
+            return res.status(401).json({
+                success: false,
+                message: 'Admin authentication required',
+            });
+        }
+
+        const admin = await Admin.findOne({ username });
+        if (!admin) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid admin credentials',
+            });
+        }
+
+        const isPasswordValid = await admin.comparePassword(password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid admin credentials',
+            });
+        }
+
+        req.admin = admin;
+        next();
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
