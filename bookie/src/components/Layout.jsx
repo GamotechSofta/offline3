@@ -16,7 +16,7 @@ const Layout = ({ children, title }) => {
     return (
         <div className="min-h-screen bg-gray-900 text-white flex">
             <Sidebar onLogout={handleLogout} />
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 ml-64 flex flex-col overflow-y-auto">
                 <Header title={title} user={bookie} />
                 <main className="flex-1 p-6 overflow-auto">
                     {children}

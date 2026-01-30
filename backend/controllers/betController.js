@@ -1,11 +1,21 @@
 import Bet from '../models/bet/bet.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const getBetHistory = async (req, res) => {
     try {
         const { userId, marketId, status, startDate, endDate } = req.query;
         const query = {};
 
-        if (userId) query.userId = userId;
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        if (bookieUserIds !== null) {
+            query.userId = { $in: bookieUserIds };
+            if (userId) {
+                const ids = bookieUserIds.map((id) => id.toString());
+                if (ids.includes(userId)) query.userId = userId;
+            }
+        } else if (userId) {
+            query.userId = userId;
+        }
         if (marketId) query.marketId = marketId;
         if (status) query.status = status;
         if (startDate || endDate) {
@@ -30,6 +40,7 @@ export const getTopWinners = async (req, res) => {
     try {
         const { timeRange } = req.query;
         const dateFilter = {};
+        const bookieUserIds = await getBookieUserIds(req.admin);
 
         if (timeRange === 'today') {
             const today = new Date();
@@ -45,8 +56,13 @@ export const getTopWinners = async (req, res) => {
             dateFilter.createdAt = { $gte: monthAgo };
         }
 
+        const matchStage = { status: 'won', ...dateFilter };
+        if (bookieUserIds !== null) {
+            matchStage.userId = { $in: bookieUserIds };
+        }
+
         const winners = await Bet.aggregate([
-            { $match: { status: 'won', ...dateFilter } },
+            { $match: matchStage },
             {
                 $group: {
                     _id: '$userId',

@@ -1,6 +1,7 @@
 import User from '../models/user/user.js';
 import bcrypt from 'bcryptjs';
 import { Wallet } from '../models/wallet/wallet.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const userLogin = async (req, res) => {
     try {
@@ -92,6 +93,7 @@ export const userSignup = async (req, res) => {
             role: 'user',
             balance: 0,
             isActive: true,
+            referredBy: req.body.referredBy || null,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
@@ -130,7 +132,7 @@ export const userSignup = async (req, res) => {
 
 export const createUser = async (req, res) => {
     try {
-        const { username, email, password, phone, role, balance } = req.body;
+        const { username, email, password, phone, role, balance, referredBy } = req.body;
         
         if (!username || !email || !password) {
             return res.status(400).json({
@@ -146,6 +148,12 @@ export const createUser = async (req, res) => {
             });
         }
 
+        // When bookie creates user, set referredBy to bookie's id
+        let finalReferredBy = referredBy;
+        if (req.admin && req.admin.role === 'bookie') {
+            finalReferredBy = req.admin._id;
+        }
+
         // Hash password manually to avoid pre-save hook issues
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -159,6 +167,7 @@ export const createUser = async (req, res) => {
             role: role || 'user',
             balance: balance || 0,
             isActive: true,
+            referredBy: finalReferredBy || null,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
@@ -191,6 +200,26 @@ export const createUser = async (req, res) => {
                 message: 'User with this username or email already exists',
             });
         }
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const getUsers = async (req, res) => {
+    try {
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        const query = {};
+        if (bookieUserIds !== null) {
+            query._id = { $in: bookieUserIds };
+        }
+
+        const users = await User.find(query)
+            .select('username email phone role isActive referredBy createdAt')
+            .populate('referredBy', 'username')
+            .sort({ createdAt: -1 })
+            .limit(500);
+
+        res.status(200).json({ success: true, data: users });
+    } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };

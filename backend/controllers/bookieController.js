@@ -44,3 +44,28 @@ export const bookieLogin = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+/**
+ * Get bookie's referral link - requires bookie auth via verifyAdmin
+ * Returns bookieId for frontend to construct URL
+ */
+export const getReferralLink = async (req, res) => {
+    try {
+        const bookie = await Admin.findOne({ _id: req.admin._id, role: 'bookie' });
+        if (!bookie) {
+            return res.status(403).json({
+                success: false,
+                message: 'Bookie access required',
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: {
+                bookieId: bookie._id,
+                username: bookie.username,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

@@ -9,7 +9,7 @@ import {
     setWinNumber,
     deleteMarket,
 } from '../../controllers/marketController.js';
-import { verifyAdmin } from '../../middleware/adminAuth.js';
+import { verifyAdmin, verifySuperAdmin } from '../../middleware/adminAuth.js';
 
 const router = express.Router();
 
@@ -17,12 +17,12 @@ const router = express.Router();
 router.get('/get-markets', getMarkets);
 router.get('/get-market/:id', getMarketById);
 
-// Protected admin routes
-router.post('/create-market', verifyAdmin, createMarket);
-router.patch('/update-market/:id', verifyAdmin, updateMarket);
-router.patch('/set-opening-number/:id', verifyAdmin, setOpeningNumber);
-router.patch('/set-closing-number/:id', verifyAdmin, setClosingNumber);
-router.patch('/set-win-number/:id', verifyAdmin, setWinNumber);
-router.delete('/delete-market/:id', verifyAdmin, deleteMarket);
+// Super admin only - market management
+router.post('/create-market', ...verifySuperAdmin, createMarket);
+router.patch('/update-market/:id', ...verifySuperAdmin, updateMarket);
+router.patch('/set-opening-number/:id', ...verifySuperAdmin, setOpeningNumber);
+router.patch('/set-closing-number/:id', ...verifySuperAdmin, setClosingNumber);
+router.patch('/set-win-number/:id', ...verifySuperAdmin, setWinNumber);
+router.delete('/delete-market/:id', ...verifySuperAdmin, deleteMarket);
 
 export default router;

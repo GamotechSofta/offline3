@@ -1,9 +1,15 @@
 import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import User from '../models/user/user.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const getAllWallets = async (req, res) => {
     try {
-        const wallets = await Wallet.find()
+        const query = {};
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        if (bookieUserIds !== null) {
+            query.userId = { $in: bookieUserIds };
+        }
+        const wallets = await Wallet.find(query)
             .populate('userId', 'username email')
             .sort({ balance: -1 });
 
@@ -15,7 +21,12 @@ export const getAllWallets = async (req, res) => {
 
 export const getTransactions = async (req, res) => {
     try {
-        const transactions = await WalletTransaction.find()
+        const query = {};
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        if (bookieUserIds !== null) {
+            query.userId = { $in: bookieUserIds };
+        }
+        const transactions = await WalletTransaction.find(query)
             .populate('userId', 'username email')
             .sort({ createdAt: -1 })
             .limit(1000);

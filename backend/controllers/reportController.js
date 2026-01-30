@@ -1,16 +1,21 @@
 import Bet from '../models/bet/bet.js';
 import Payment from '../models/payment/payment.js';
 import User from '../models/user/user.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const getReport = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
         const dateFilter = {};
+        const bookieUserIds = await getBookieUserIds(req.admin);
 
         if (startDate || endDate) {
             dateFilter.createdAt = {};
             if (startDate) dateFilter.createdAt.$gte = new Date(startDate);
             if (endDate) dateFilter.createdAt.$lte = new Date(endDate);
+        }
+        if (bookieUserIds !== null) {
+            dateFilter.userId = { $in: bookieUserIds };
         }
 
         // Total revenue (from all bets)
@@ -19,9 +24,10 @@ export const getReport = async (req, res) => {
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
 
+        const wonFilter = { status: 'won', ...dateFilter };
         // Total payouts (from winning bets)
         const totalPayouts = await Bet.aggregate([
-            { $match: { status: 'won', ...dateFilter } },
+            { $match: wonFilter },
             { $group: { _id: null, total: { $sum: '$payout' } } },
         ]);
 
@@ -32,8 +38,9 @@ export const getReport = async (req, res) => {
         const winningBets = await Bet.countDocuments({ status: 'won', ...dateFilter });
         const losingBets = await Bet.countDocuments({ status: 'lost', ...dateFilter });
 
-        // Active users
-        const activeUsers = await User.countDocuments({ isActive: true });
+        // Active users (filter by bookie if applicable)
+        const userFilter = bookieUserIds !== null ? { _id: { $in: bookieUserIds }, isActive: true } : { isActive: true };
+        const activeUsers = await User.countDocuments(userFilter);
 
         // Calculate net profit
         const revenue = totalRevenue[0]?.total || 0;

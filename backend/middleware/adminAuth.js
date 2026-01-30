@@ -55,3 +55,28 @@ export const verifyAdmin = async (req, res, next) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+/** Only super_admin can access - use after verifyAdmin */
+export const requireSuperAdmin = (req, res, next) => {
+    if (req.admin?.role !== 'super_admin') {
+        return res.status(403).json({
+            success: false,
+            message: 'Super admin access required',
+        });
+    }
+    next();
+};
+
+/** Chain: verifyAdmin + requireSuperAdmin */
+export const verifySuperAdmin = [verifyAdmin, requireSuperAdmin];
+
+/** Only bookie can access - use after verifyAdmin */
+export const requireBookie = (req, res, next) => {
+    if (req.admin?.role !== 'bookie') {
+        return res.status(403).json({
+            success: false,
+            message: 'Bookie access required',
+        });
+    }
+    next();
+};

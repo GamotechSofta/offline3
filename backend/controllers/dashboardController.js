@@ -4,9 +4,17 @@ import User from '../models/user/user.js';
 import Market from '../models/market/market.js';
 import { Wallet } from '../models/wallet/wallet.js';
 import HelpDesk from '../models/helpDesk/helpDesk.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const getDashboardStats = async (req, res) => {
     try {
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        const userFilter = bookieUserIds !== null ? { _id: { $in: bookieUserIds } } : {};
+        const betFilter = bookieUserIds !== null ? { userId: { $in: bookieUserIds } } : {};
+        const paymentFilter = bookieUserIds !== null ? { userId: { $in: bookieUserIds } } : {};
+        const walletMatch = bookieUserIds !== null ? { userId: { $in: bookieUserIds } } : {};
+        const helpDeskFilter = bookieUserIds !== null ? { userId: { $in: bookieUserIds } } : {};
+
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const thisWeek = new Date(today);
@@ -15,11 +23,11 @@ export const getDashboardStats = async (req, res) => {
         thisMonth.setMonth(thisMonth.getMonth() - 1);
 
         // Total Users
-        const totalUsers = await User.countDocuments();
-        const activeUsers = await User.countDocuments({ isActive: true });
-        const newUsersToday = await User.countDocuments({ createdAt: { $gte: today } });
-        const newUsersThisWeek = await User.countDocuments({ createdAt: { $gte: thisWeek } });
-        const newUsersThisMonth = await User.countDocuments({ createdAt: { $gte: thisMonth } });
+        const totalUsers = await User.countDocuments(userFilter);
+        const activeUsers = await User.countDocuments({ ...userFilter, isActive: true });
+        const newUsersToday = await User.countDocuments({ ...userFilter, createdAt: { $gte: today } });
+        const newUsersThisWeek = await User.countDocuments({ ...userFilter, createdAt: { $gte: thisWeek } });
+        const newUsersThisMonth = await User.countDocuments({ ...userFilter, createdAt: { $gte: thisMonth } });
 
         // Total Markets
         const totalMarkets = await Market.countDocuments();
@@ -35,55 +43,57 @@ export const getDashboardStats = async (req, res) => {
 
         // Revenue Stats
         const totalRevenue = await Bet.aggregate([
+            { $match: betFilter },
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
         const totalPayouts = await Bet.aggregate([
-            { $match: { status: 'won' } },
+            { $match: { status: 'won', ...betFilter } },
             { $group: { _id: null, total: { $sum: '$payout' } } },
         ]);
         const revenueToday = await Bet.aggregate([
-            { $match: { createdAt: { $gte: today } } },
+            { $match: { createdAt: { $gte: today }, ...betFilter } },
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
         const revenueThisWeek = await Bet.aggregate([
-            { $match: { createdAt: { $gte: thisWeek } } },
+            { $match: { createdAt: { $gte: thisWeek }, ...betFilter } },
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
         const revenueThisMonth = await Bet.aggregate([
-            { $match: { createdAt: { $gte: thisMonth } } },
+            { $match: { createdAt: { $gte: thisMonth }, ...betFilter } },
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
 
         // Bet Stats
-        const totalBets = await Bet.countDocuments();
-        const betsToday = await Bet.countDocuments({ createdAt: { $gte: today } });
-        const betsThisWeek = await Bet.countDocuments({ createdAt: { $gte: thisWeek } });
-        const betsThisMonth = await Bet.countDocuments({ createdAt: { $gte: thisMonth } });
-        const winningBets = await Bet.countDocuments({ status: 'won' });
-        const losingBets = await Bet.countDocuments({ status: 'lost' });
-        const pendingBets = await Bet.countDocuments({ status: 'pending' });
+        const totalBets = await Bet.countDocuments(betFilter);
+        const betsToday = await Bet.countDocuments({ createdAt: { $gte: today }, ...betFilter });
+        const betsThisWeek = await Bet.countDocuments({ createdAt: { $gte: thisWeek }, ...betFilter });
+        const betsThisMonth = await Bet.countDocuments({ createdAt: { $gte: thisMonth }, ...betFilter });
+        const winningBets = await Bet.countDocuments({ status: 'won', ...betFilter });
+        const losingBets = await Bet.countDocuments({ status: 'lost', ...betFilter });
+        const pendingBets = await Bet.countDocuments({ status: 'pending', ...betFilter });
 
         // Payment Stats
-        const totalPayments = await Payment.countDocuments();
-        const pendingPayments = await Payment.countDocuments({ status: 'pending' });
+        const totalPayments = await Payment.countDocuments(paymentFilter);
+        const pendingPayments = await Payment.countDocuments({ status: 'pending', ...paymentFilter });
         const totalDeposits = await Payment.aggregate([
-            { $match: { type: 'deposit', status: { $in: ['approved', 'completed'] } } },
+            { $match: { type: 'deposit', status: { $in: ['approved', 'completed'] }, ...paymentFilter } },
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
         const totalWithdrawals = await Payment.aggregate([
-            { $match: { type: 'withdrawal', status: { $in: ['approved', 'completed'] } } },
+            { $match: { type: 'withdrawal', status: { $in: ['approved', 'completed'] }, ...paymentFilter } },
             { $group: { _id: null, total: { $sum: '$amount' } } },
         ]);
 
         // Wallet Stats
         const totalWalletBalance = await Wallet.aggregate([
+            ...(Object.keys(walletMatch).length ? [{ $match: walletMatch }] : []),
             { $group: { _id: null, total: { $sum: '$balance' } } },
         ]);
 
         // Help Desk Stats
-        const totalTickets = await HelpDesk.countDocuments();
-        const openTickets = await HelpDesk.countDocuments({ status: 'open' });
-        const inProgressTickets = await HelpDesk.countDocuments({ status: 'in-progress' });
+        const totalTickets = await HelpDesk.countDocuments(helpDeskFilter);
+        const openTickets = await HelpDesk.countDocuments({ status: 'open', ...helpDeskFilter });
+        const inProgressTickets = await HelpDesk.countDocuments({ status: 'in-progress', ...helpDeskFilter });
 
         // Calculate net profit
         const revenue = totalRevenue[0]?.total || 0;

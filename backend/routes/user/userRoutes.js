@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, userLogin, userSignup } from '../../controllers/userController.js';
+import { createUser, userLogin, userSignup, getUsers } from '../../controllers/userController.js';
 import { verifyAdmin } from '../../middleware/adminAuth.js';
 
 const router = express.Router();
@@ -8,7 +8,8 @@ const router = express.Router();
 router.post('/login', userLogin);
 router.post('/signup', userSignup);
 
-// Admin only routes
+// Admin/Bookie routes
+router.get('/', verifyAdmin, getUsers);
 router.post('/create', verifyAdmin, createUser);
 
 export default router;

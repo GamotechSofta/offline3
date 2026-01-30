@@ -1,11 +1,16 @@
 import Payment from '../models/payment/payment.js';
 import { Wallet } from '../models/wallet/wallet.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const getPayments = async (req, res) => {
     try {
         const { status, type } = req.query;
         const query = {};
 
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        if (bookieUserIds !== null) {
+            query.userId = { $in: bookieUserIds };
+        }
         if (status) query.status = status;
         if (type) query.type = type;
 

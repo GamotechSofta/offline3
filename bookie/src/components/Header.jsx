@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header = ({ title, user }) => {
     return (
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4 shrink-0">
             <div className="flex items-center justify-between">
                 <h1 className="text-xl font-semibold text-white">{title || 'Dashboard'}</h1>
                 <div className="flex items-center gap-4">

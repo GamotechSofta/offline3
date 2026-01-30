@@ -1,4 +1,5 @@
 import HelpDesk from '../models/helpDesk/helpDesk.js';
+import { getBookieUserIds } from '../utils/bookieFilter.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -62,6 +63,10 @@ export const getTickets = async (req, res) => {
     try {
         const { status } = req.query;
         const query = {};
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        if (bookieUserIds !== null) {
+            query.userId = { $in: bookieUserIds };
+        }
         if (status) query.status = status;
 
         const tickets = await HelpDesk.find(query)

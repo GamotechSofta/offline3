@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const refParam = searchParams.get('ref');
+  const [isLogin, setIsLogin] = useState(!refParam);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -54,12 +56,13 @@ const Login = () => {
 
     try {
       const endpoint = isLogin ? '/users/login' : '/users/signup';
+      const body = isLogin ? formData : { ...formData, referredBy: refParam || undefined };
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();

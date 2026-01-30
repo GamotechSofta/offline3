@@ -3,6 +3,15 @@ import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Markets from './pages/Markets';
+import AddUser from './pages/AddUser';
+import ReferralLink from './pages/ReferralLink';
+import BetHistory from './pages/BetHistory';
+import TopWinners from './pages/TopWinners';
+import Reports from './pages/Reports';
+import Payments from './pages/Payments';
+import Wallet from './pages/Wallet';
+import HelpDesk from './pages/HelpDesk';
 
 const PrivateRoute = ({ children }) => {
     const { bookie, loading } = useAuth();
@@ -21,14 +30,16 @@ const PrivateRoute = ({ children }) => {
 const AppRoutes = () => (
     <Routes>
         <Route path="/" element={<Login />} />
-        <Route
-            path="/dashboard"
-            element={
-                <PrivateRoute>
-                    <Dashboard />
-                </PrivateRoute>
-            }
-        />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/markets" element={<PrivateRoute><Markets /></PrivateRoute>} />
+        <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>} />
+        <Route path="/referral-link" element={<PrivateRoute><ReferralLink /></PrivateRoute>} />
+        <Route path="/bet-history" element={<PrivateRoute><BetHistory /></PrivateRoute>} />
+        <Route path="/top-winners" element={<PrivateRoute><TopWinners /></PrivateRoute>} />
+        <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
+        <Route path="/payments" element={<PrivateRoute><Payments /></PrivateRoute>} />
+        <Route path="/wallet" element={<PrivateRoute><Wallet /></PrivateRoute>} />
+        <Route path="/help-desk" element={<PrivateRoute><HelpDesk /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
 );
