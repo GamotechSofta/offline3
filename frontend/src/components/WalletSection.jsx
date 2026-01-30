@@ -130,7 +130,7 @@ const WalletSection = () => {
 
       <div className="mt-5 sm:hidden">
         <img
-          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769709356/Black_and_White_Minimalist_Casino_Night_Facebook_Cover_1920_x_600_mm_iocl92.png"
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769775839/Black_and_White_Minimalist_Casino_Night_Facebook_Cover_olvhqm.png"
           alt="Casino banner"
           className="w-full rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.35)]"
         />
