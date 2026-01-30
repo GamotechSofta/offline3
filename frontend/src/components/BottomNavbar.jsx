@@ -9,7 +9,7 @@ const BottomNavbar = () => {
     {
       id: 'my-bids',
       label: 'My Bids',
-      path: '/bidoptions',
+      path: '/bids',
       icon: (
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777192/auction_ofhpps.png"

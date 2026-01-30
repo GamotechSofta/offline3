@@ -12,6 +12,7 @@ import Download from '../pages/Download';
 import Login from '../pages/Login';
 import Passbook from '../pages/Passbook';
 import Support from '../pages/Support';
+import Bids from '../pages/Bids';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -37,7 +38,6 @@ const Layout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 pb-16 md:pb-0">
       <AppHeader />
-      <Header />
       {children}
       <BottomNavbar />
     </div>
@@ -58,6 +58,7 @@ const AppRoutes = () => {
           <Route path="/passbook" element={<Passbook />} />
           <Route path="/support" element={<Support />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/bids" element={<Bids />} />
         </Routes>
       </Layout>
     </Router>
