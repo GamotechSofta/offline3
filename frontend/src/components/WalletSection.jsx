@@ -114,8 +114,14 @@ const WalletSection = () => {
         </div>
       </div>
 
+      <div className="flex justify-center mt-2 sm:mt-3">
+        <button className="rounded-full bg-[#f3b61b] px-8 sm:px-12 py-3 sm:py-3.5 text-base sm:text-lg font-semibold text-black shadow-[0_6px_18px_rgba(243,182,27,0.35)] hover:bg-[#e5a914] transition-colors">
+          Download App
+        </button>
+      </div>
+
       {/* Market Category Buttons */}
-      <div className="mt-2 sm:mt-3 grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="mt-5 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
         <button className="relative rounded-2xl bg-[#2a2721] p-4 sm:p-5 text-left shadow-[0_8px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/5 hover:bg-[#302c25] transition-colors">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -138,12 +144,6 @@ const WalletSection = () => {
             </div>
             <span className="text-white/40 text-lg">›</span>
           </div>
-        </button>
-      </div>
-
-      <div className="flex justify-center mt-5 sm:mt-6">
-        <button className="rounded-full bg-[#f3b61b] px-8 sm:px-12 py-3 sm:py-3.5 text-base sm:text-lg font-semibold text-black shadow-[0_6px_18px_rgba(243,182,27,0.35)] hover:bg-[#e5a914] transition-colors">
-          Download App
         </button>
       </div>
 
