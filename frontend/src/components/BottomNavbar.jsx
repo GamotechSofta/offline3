@@ -14,7 +14,7 @@ const BottomNavbar = () => {
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777192/auction_ofhpps.png"
           alt="My Bids"
-          className="w-5 h-5 object-contain"
+          className="w-6 h-6 object-contain [image-rendering:-webkit-optimize-contrast]"
         />
       )
     },
@@ -26,7 +26,7 @@ const BottomNavbar = () => {
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777283/bank_il6uwi.png"
           alt="Bank"
-          className="w-5 h-5 object-contain"
+          className="w-6 h-6 object-contain [image-rendering:-webkit-optimize-contrast]"
         />
       )
     },
@@ -38,7 +38,7 @@ const BottomNavbar = () => {
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777716/home_pvawyw.png"
           alt="Home"
-          className="w-5 h-5 object-contain"
+          className="w-6 h-6 object-contain [image-rendering:-webkit-optimize-contrast]"
         />
       ),
       isCenter: true
@@ -46,12 +46,12 @@ const BottomNavbar = () => {
     {
       id: 'funds',
       label: 'Funds',
-      path: '/bank',
+      path: '/funds',
       icon: (
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777500/funding_zjmbzp.png"
           alt="Funds"
-          className="w-5 h-5 object-contain"
+          className="w-6 h-6 object-contain [image-rendering:-webkit-optimize-contrast]"
         />
       )
     },
@@ -63,7 +63,7 @@ const BottomNavbar = () => {
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777618/customer-support_du0zcj.png"
           alt="Support"
-          className="w-5 h-5 object-contain"
+          className="w-6 h-6 object-contain [image-rendering:-webkit-optimize-contrast]"
         />
       )
     }
@@ -88,16 +88,31 @@ const BottomNavbar = () => {
               <button
                 key={item.id}
                 onClick={() => navigate(item.path)}
-                className="flex flex-col items-center justify-center -mt-6 relative z-10"
+                className="flex flex-col items-center justify-center -mt-6 relative z-10 active:scale-90 transition-transform duration-150 touch-manipulation"
               >
                 <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(243,182,27,0.35)] ${
-                    active ? 'bg-[#f3b61b] text-black' : 'bg-gray-800 border border-gray-700 text-gray-400'
+                  className={`w-14 h-14 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(243,182,27,0.35)] transition-all duration-200 ${
+                    active
+                      ? 'bg-[#f3b61b] ring-2 ring-[#f3b61b]/60 ring-offset-2 ring-offset-black scale-105'
+                      : 'bg-gray-800 border border-gray-700'
                   }`}
                 >
-                  {item.icon}
+                  {/* Icon: white when inactive, dark when active (on yellow bg) */}
+                  <div
+                    className={`transition-[filter] duration-200 ${
+                      active ? '[filter:brightness(0)]' : '[filter:brightness(0)_invert(1)]'
+                    }`}
+                  >
+                    {item.icon}
+                  </div>
                 </div>
-                <span className="text-[10px] sm:text-xs font-bold text-white mt-1">{item.label}</span>
+                <span
+                  className={`text-[10px] sm:text-xs font-bold mt-1 transition-colors duration-200 ${
+                    active ? 'text-[#f3b61b]' : 'text-white'
+                  }`}
+                >
+                  {item.label}
+                </span>
               </button>
             );
           }
@@ -106,12 +121,29 @@ const BottomNavbar = () => {
             <button
               key={item.id}
               onClick={() => navigate(item.path)}
-              className="flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl transition-colors min-w-[56px]"
+              className="relative flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl min-w-[56px] active:scale-95 transition-all duration-150 touch-manipulation"
             >
-              <div className={active ? 'text-[#f3b61b]' : 'text-gray-400'}>
+              {/* Icon: white when inactive, golden when active - same as text */}
+              <div
+                className={`transition-all duration-200 ${
+                  active ? 'scale-110 [filter:brightness(0)_invert(0.88)_sepia(0.25)_saturate(8)_hue-rotate(5deg)]' : 'scale-100 [filter:brightness(0)_invert(1)]'
+                }`}
+              >
                 {item.icon}
               </div>
-              <span className="text-[10px] sm:text-xs font-bold text-white">{item.label}</span>
+              {/* Active indicator dot below icon */}
+              <div className="h-1.5 flex items-center justify-center">
+                {active && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f3b61b] shadow-[0_0_8px_rgba(243,182,27,0.6)]" />
+                )}
+              </div>
+              <span
+                className={`text-[10px] sm:text-xs font-bold transition-colors duration-200 ${
+                  active ? 'text-[#f3b61b]' : 'text-white'
+                }`}
+              >
+                {item.label}
+              </span>
             </button>
           );
         })}
