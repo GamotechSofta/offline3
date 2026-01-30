@@ -177,7 +177,7 @@ const BidOptions = () => {
       </div>
 
       {/* Grid Content */}
-      <div className="w-full max-w-md p-4 grid grid-cols-2 gap-4">
+      <div className="w-full max-w-md p-3 grid grid-cols-2 gap-3">
         {options.map((option) => (
           <div
             key={option.id}
@@ -187,15 +187,15 @@ const BidOptions = () => {
                 gameMode: option.title.toLowerCase().includes('bulk') ? 'bulk' : 'easy'
               }
             })}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-gray-800 active:scale-95 transition-all cursor-pointer shadow-lg group"
+            className="relative rounded-2xl bg-gradient-to-br from-[#1b1d22] via-[#15171b] to-[#0f1013] border border-white/10 p-3 flex flex-col items-center justify-center gap-2 hover:from-[#23262d] hover:via-[#1a1d22] hover:to-[#121418] active:scale-[0.98] transition-all cursor-pointer shadow-[0_10px_25px_rgba(0,0,0,0.35)] group"
           >
             {/* Icon Container with subtle glow effect */}
-            <div className="transform group-hover:scale-110 transition-transform duration-300">
+            <div className="flex items-center justify-center w-16 h-16 transform scale-90 group-hover:scale-100 transition-transform duration-300">
               {option.icon}
             </div>
 
             {/* Title */}
-            <span className="text-white text-xs font-bold tracking-wide uppercase text-center">
+            <span className="text-white text-[10px] sm:text-xs font-semibold tracking-[0.18em] uppercase text-center">
               {option.title}
             </span>
           </div>
