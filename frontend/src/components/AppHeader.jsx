@@ -63,6 +63,23 @@ const AppHeader = () => {
     navigate('/login');
   };
 
+  const displayName = user?.username || 'Guest';
+  const displayPhone =
+    user?.phone ||
+    user?.mobile ||
+    user?.mobileNumber ||
+    user?.phoneNumber ||
+    user?.phone_number ||
+    user?.mobilenumber ||
+    user?.email ||
+    '-';
+  const sinceDateRaw = user?.createdAt || user?.created_at || user?.createdOn;
+  const sinceDate = sinceDateRaw ? new Date(sinceDateRaw) : null;
+  const sinceText = sinceDate && !Number.isNaN(sinceDate.getTime())
+    ? `Since ${sinceDate.toLocaleDateString('en-GB')}`
+    : 'Since -';
+  const avatarInitial = displayName ? displayName.charAt(0).toUpperCase() : 'U';
+
   return (
     <>
       <div className="w-full bg-black px-3 sm:px-5 md:px-6 lg:px-8 py-2.5 sm:py-3 md:py-4">
@@ -179,26 +196,23 @@ const AppHeader = () => {
             onClick={() => setIsMenuOpen(false)}
             aria-label="Close menu overlay"
           />
-          <aside className="relative h-full w-[82%] max-w-[360px] bg-black shadow-[6px_0_18px_rgba(0,0,0,0.5)]">
-            <div className="px-4 pt-6 pb-4 border-b border-gray-800">
+          <aside className="relative h-full w-[86%] max-w-[360px] sm:w-[70%] sm:max-w-[380px] md:w-[420px] md:max-w-none bg-black shadow-[6px_0_18px_rgba(0,0,0,0.5)]">
+            <div className="px-4 sm:px-6 pt-6 pb-4 border-b border-gray-800">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-[#0f2c5a] flex items-center justify-center text-white">
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 14a4 4 0 10-8 0v3h8v-3z" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#0f2c5a] flex items-center justify-center text-white text-xl sm:text-2xl font-semibold">
+                    {avatarInitial}
                   </div>
                   <div>
-                    <div className="text-lg font-semibold text-white">Prajwal</div>
-                    <div className="text-sm text-gray-300">8788626281</div>
-                    <div className="text-sm text-gray-400">Since 28/01/2026</div>
+                    <div className="text-base sm:text-lg font-semibold text-white">{displayName}</div>
+                    <div className="text-xs sm:text-sm text-gray-300">{displayPhone}</div>
+                    <div className="text-xs sm:text-sm text-gray-400">{sinceText}</div>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-red-500 text-2xl leading-none"
+                  className="text-red-500 text-2xl sm:text-3xl leading-none"
                   aria-label="Close menu"
                 >
                   ×
@@ -206,21 +220,25 @@ const AppHeader = () => {
               </div>
             </div>
 
-            <div className="px-4 py-4 space-y-3 overflow-y-auto h-[calc(100%-128px)] scrollbar-hidden">
+            <div className="px-4 sm:px-6 py-4 space-y-3 overflow-y-auto h-[calc(100%-128px)] scrollbar-hidden">
               {menuItems.map((item) => (
                 <button
                   key={item.label}
                   type="button"
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate(item.path);
+                    if (item.label === 'Logout') {
+                      handleLogout();
+                    } else {
+                      navigate(item.path);
+                    }
                   }}
-                  className="w-full bg-gray-900 rounded-2xl px-3 py-3 flex items-center gap-4 border border-gray-800 shadow-[0_8px_18px_rgba(0,0,0,0.35)]"
+                  className="w-full bg-gray-900 rounded-2xl px-3 py-3 sm:px-4 sm:py-3.5 flex items-center gap-4 border border-gray-800 shadow-[0_8px_18px_rgba(0,0,0,0.35)]"
                 >
-                  <div className="w-12 h-12 rounded-full bg-[#0f2c5a] text-white flex items-center justify-center">
-                    <div className="w-6 h-6 rounded-full border-2 border-white"></div>
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#0f2c5a] text-white flex items-center justify-center">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-white"></div>
                   </div>
-                  <span className="text-base font-semibold text-white">{item.label}</span>
+                  <span className="text-sm sm:text-base font-semibold text-white">{item.label}</span>
                 </button>
               ))}
               <div className="text-center text-xs text-gray-500 pt-2">Version: 1.0.0</div>

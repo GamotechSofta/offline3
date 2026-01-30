@@ -65,8 +65,28 @@ const Login = () => {
       const data = await response.json();
 
       if (data.success) {
-        // Store user data
-        localStorage.setItem('user', JSON.stringify(data.data));
+        // Store user data (preserve signup date when available)
+        const previousUser = localStorage.getItem('user');
+        let previousCreatedAt = null;
+        if (previousUser) {
+          try {
+            const parsed = JSON.parse(previousUser);
+            previousCreatedAt = parsed?.createdAt || parsed?.created_at || parsed?.createdOn || null;
+          } catch (e) {
+            previousCreatedAt = null;
+          }
+        }
+
+        const userPayload = {
+          ...data.data,
+          createdAt:
+            data.data?.createdAt ||
+            data.data?.created_at ||
+            data.data?.createdOn ||
+            (!isLogin ? new Date().toISOString() : previousCreatedAt)
+        };
+
+        localStorage.setItem('user', JSON.stringify(userPayload));
         // Dispatch custom event to update navbar
         window.dispatchEvent(new Event('userLogin'));
         // Redirect to home
