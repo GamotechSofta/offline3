@@ -9,113 +9,99 @@ const BidOptions = () => {
       id: 1,
       title: 'Single Digit',
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12 text-blue-200" stroke="currentColor" strokeWidth="1.5">
-          <rect x="4" y="4" width="16" height="16" rx="2" fill="#E0E7FF" stroke="none" />
-          <circle cx="12" cy="12" r="2" fill="#DC2626" />
-        </svg>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769756244/Untitled_90_x_160_px_1080_x_1080_px_1_yinraf.svg"
+          alt="Single Digit"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 2,
       title: 'Single Digit Bulk',
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12 text-blue-200" stroke="currentColor" strokeWidth="1.5">
-          <rect x="4" y="4" width="16" height="16" rx="2" fill="#E0E7FF" stroke="none" />
-          <circle cx="12" cy="12" r="2" fill="#DC2626" />
-        </svg>
+        <img
+        src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769756244/Untitled_90_x_160_px_1080_x_1080_px_1_yinraf.svg"
+        alt="Single Digit"
+        className="w-25 h-25 object-contain"
+      />
       ),
     },
     {
       id: 3,
       title: 'Jodi',
       icon: (
-        <div className="flex gap-1 justify-center">
-          <svg viewBox="0 0 24 24" fill="none" className="w-10 h-10 text-blue-200" stroke="currentColor">
-            <rect x="4" y="4" width="16" height="16" rx="2" fill="#E0E7FF" stroke="none" />
-            <circle cx="8" cy="8" r="1.5" fill="#DC2626" />
-            <circle cx="16" cy="16" r="1.5" fill="#DC2626" />
-          </svg>
-          <svg viewBox="0 0 24 24" fill="none" className="w-10 h-10 text-blue-200" stroke="currentColor">
-            <rect x="4" y="4" width="16" height="16" rx="2" fill="#E0E7FF" stroke="none" />
-            <circle cx="12" cy="12" r="1.5" fill="#DC2626" />
-          </svg>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714108/Untitled_1080_x_1080_px_1080_x_1080_px_7_rpzykt.svg"
+          alt="Jodi"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 4,
       title: 'Jodi Bulk',
       icon: (
-        <div className="flex gap-1 justify-center">
-          <svg viewBox="0 0 24 24" fill="none" className="w-10 h-10 text-blue-200" stroke="currentColor">
-            <rect x="4" y="4" width="16" height="16" rx="2" fill="#E0E7FF" stroke="none" />
-            <circle cx="8" cy="8" r="1.5" fill="#DC2626" />
-            <circle cx="16" cy="16" r="1.5" fill="#DC2626" />
-          </svg>
-          <svg viewBox="0 0 24 24" fill="none" className="w-10 h-10 text-blue-200" stroke="currentColor">
-            <rect x="4" y="4" width="16" height="16" rx="2" fill="#E0E7FF" stroke="none" />
-            <circle cx="12" cy="12" r="1.5" fill="#DC2626" />
-          </svg>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714108/Untitled_1080_x_1080_px_1080_x_1080_px_7_rpzykt.svg"
+          alt="Jodi Bulk"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 5,
       title: 'Single Pana',
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12" stroke="currentColor" strokeWidth="1">
-          <rect x="5" y="2" width="14" height="20" rx="2" fill="white" stroke="gray" />
-          <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fontSize="10" fill="black">A♣</text>
-          <path d="M12 14 L12 14" stroke="black" />
-        </svg>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714254/Untitled_1080_x_1080_px_1080_x_1080_px_8_jdbxyd.svg"
+          alt="Single Pana"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 6,
       title: 'Single Pana Bulk',
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12" stroke="currentColor" strokeWidth="1">
-          <rect x="5" y="2" width="14" height="20" rx="2" fill="white" stroke="gray" />
-          <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fontSize="10" fill="black">A♣</text>
-          <path d="M12 14 L12 14" stroke="black" />
-        </svg>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714254/Untitled_1080_x_1080_px_1080_x_1080_px_8_jdbxyd.svg"
+          alt="Single Pana Bulk"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 7,
       title: 'Double Pana',
       icon: (
-        <div className="relative w-12 h-12 flex justify-center items-center">
-          <div className="absolute top-0 right-2 w-8 h-10 bg-white border border-gray-300 rounded shadow-md transform rotate-6 z-0"></div>
-          <div className="absolute top-1 left-2 w-8 h-10 bg-white border border-gray-300 rounded shadow-md transform -rotate-6 z-10 flex items-center justify-center">
-            <span className="text-black text-xs font-bold">A♣</span>
-          </div>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769713943/Untitled_1080_x_1080_px_1080_x_1080_px_6_uccv7o.svg"
+          alt="Double Pana"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 8,
       title: 'Double Pana Bulk',
       icon: (
-        <div className="relative w-12 h-12 flex justify-center items-center">
-          <div className="absolute top-0 right-2 w-8 h-10 bg-white border border-gray-300 rounded shadow-md transform rotate-6 z-0"></div>
-          <div className="absolute top-1 left-2 w-8 h-10 bg-white border border-gray-300 rounded shadow-md transform -rotate-6 z-10 flex items-center justify-center">
-            <span className="text-black text-xs font-bold">A♣</span>
-          </div>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769713943/Untitled_1080_x_1080_px_1080_x_1080_px_6_uccv7o.svg"
+          alt="Double Pana Bulk"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
       id: 9,
       title: 'Triple Pana',
       icon: (
-        <div className="relative w-14 h-12 flex justify-center items-center">
-          <div className="absolute top-0 right-0 w-7 h-9 bg-white border border-gray-300 rounded shadow-md transform rotate-12 z-0"></div>
-          <div className="absolute top-0 left-0 w-7 h-9 bg-white border border-gray-300 rounded shadow-md transform -rotate-12 z-0"></div>
-          <div className="absolute top-1 left-3 w-7 h-9 bg-white border border-gray-300 rounded shadow-md z-10 flex items-center justify-center">
-            <span className="text-black text-[10px] font-bold">A♣</span>
-          </div>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714392/Untitled_1080_x_1080_px_1080_x_1080_px_9_ugcdef.svg"
+          alt="Triple Pana"
+          className="w-25 h-25 object-contain"
+        />
       ),
     },
     {
