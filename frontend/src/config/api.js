@@ -1,3 +1,2 @@
-// API Configuration
-// Update this URL if your backend runs on a different port or domain
-export const API_BASE_URL = 'http://localhost:3010/api/v1';
+// API Configuration – set VITE_API_BASE_URL in Render (or .env) for production
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
