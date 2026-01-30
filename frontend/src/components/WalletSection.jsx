@@ -41,20 +41,20 @@ const WalletSection = () => {
       {/* Available Points Balance Card */}
       {/* Available Points Balance Card */}
       {/* Available Points Balance Card */}
-      <div className="relative w-full max-w-lg mx-auto mb-16">
+      <div className="relative w-full max-w-lg mx-auto mb-8">
         {/* Main Card */}
-        <div className="relative bg-[#202124] rounded-3xl px-6 pt-3 pb-10 sm:px-8 sm:pt-5 sm:pb-14 shadow-2xl border border-white/5 z-10">
+        <div className="relative bg-[#202124] rounded-3xl px-5 pt-3 pb-6 sm:px-6 sm:pt-4 sm:pb-8 shadow-2xl border border-white/5 z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {/* Wallet Icon - Cleaner CSS Illustration */}
               <img
                 src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769766330/Untitled_90_x_160_px_1080_x_1080_px_1_1_vrybhs.png"
                 alt="Wallet Icon"
-                className="w-20 h-20 object-contain shrink-0"
+                className="w-16 h-16 object-contain shrink-0"
               />
 
               <div className="flex flex-col gap-0.5">
-                <h2 className="text-[2.5rem] leading-none font-bold text-white tracking-tight font-sans">2,853</h2>
+                <h2 className="text-2xl sm:text-3xl leading-none font-bold text-white tracking-tight font-sans">2,853</h2>
                 <p className="text-gray-400 text-sm font-light tracking-wide">Available Points Balance</p>
               </div>
             </div>
@@ -114,14 +114,8 @@ const WalletSection = () => {
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <button className="rounded-full bg-[#f3b61b] px-8 sm:px-12 py-3 sm:py-3.5 text-base sm:text-lg font-semibold text-black shadow-[0_6px_18px_rgba(243,182,27,0.35)] hover:bg-[#e5a914] transition-colors">
-          Download App
-        </button>
-      </div>
-
       {/* Market Category Buttons */}
-      <div className="mt-5 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="mt-2 sm:mt-3 grid grid-cols-2 gap-3 sm:gap-4">
         <button className="relative rounded-2xl bg-[#2a2721] p-4 sm:p-5 text-left shadow-[0_8px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/5 hover:bg-[#302c25] transition-colors">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -144,6 +138,12 @@ const WalletSection = () => {
             </div>
             <span className="text-white/40 text-lg">›</span>
           </div>
+        </button>
+      </div>
+
+      <div className="flex justify-center mt-5 sm:mt-6">
+        <button className="rounded-full bg-[#f3b61b] px-8 sm:px-12 py-3 sm:py-3.5 text-base sm:text-lg font-semibold text-black shadow-[0_6px_18px_rgba(243,182,27,0.35)] hover:bg-[#e5a914] transition-colors">
+          Download App
         </button>
       </div>
 
