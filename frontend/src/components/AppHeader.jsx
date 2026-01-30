@@ -8,10 +8,11 @@ const AppHeader = () => {
 
   const menuItems = [
     { label: 'Home', path: '/' },
-    { label: 'Whatsapp Channel', path: '/support' },
+    { label: 'Top Winners', path: '/support' },
+    { label: 'Starline Winners', path: '/support' },
     { label: 'Telegram Channel', path: '/support' },
     { label: 'My Bids', path: '/bids' },
-    { label: 'Passbook', path: '/passbook' },
+    { label: 'Bank', path: '/bank' },
     { label: 'Funds', path: '/funds' },
     { label: 'Notification', path: '/support' },
     { label: 'Game Chart', path: '/support' },
