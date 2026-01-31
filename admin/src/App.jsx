@@ -11,6 +11,7 @@ import Reports from './pages/Reports';
 import PaymentManagement from './pages/PaymentManagement';
 import Wallet from './pages/Wallet';
 import HelpDesk from './pages/HelpDesk';
+import BookieManagement from './pages/BookieManagement';
 
 const PrivateRoute = ({ children }) => {
     const admin = localStorage.getItem('admin');
@@ -99,6 +100,14 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <HelpDesk />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/bookie-management"
+                    element={
+                        <PrivateRoute>
+                            <BookieManagement />
                         </PrivateRoute>
                     }
                 />

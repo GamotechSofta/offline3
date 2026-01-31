@@ -1,7 +1,7 @@
 import Admin from '../models/admin/admin.js';
 
 /**
- * Bookie login - only allows users with role 'bookie'
+ * Bookie login - only allows users with role 'bookie' and status 'active'
  * Body: { username, password }
  */
 export const bookieLogin = async (req, res) => {
@@ -23,6 +23,14 @@ export const bookieLogin = async (req, res) => {
             });
         }
 
+        // Check if bookie account is active
+        if (bookie.status === 'inactive') {
+            return res.status(403).json({
+                success: false,
+                message: 'Your account has been deactivated. Please contact admin.',
+            });
+        }
+
         const isPasswordValid = await bookie.comparePassword(password);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -38,6 +46,8 @@ export const bookieLogin = async (req, res) => {
                 id: bookie._id,
                 username: bookie.username,
                 role: bookie.role,
+                email: bookie.email,
+                phone: bookie.phone,
             },
         });
     } catch (error) {
