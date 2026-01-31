@@ -4,6 +4,7 @@ import {
     createAdmin, 
     createBookie,
     getAllBookies,
+    getAllSuperAdmins,
     getBookieById,
     updateBookie,
     deleteBookie,
@@ -15,6 +16,9 @@ const router = express.Router();
 
 router.post('/login', adminLogin);
 router.post('/create', createAdmin); // For initial admin setup
+
+// Super Admin management routes (Super Admin only)
+router.get('/super-admins', verifyAdmin, getAllSuperAdmins); // Get all super admins
 
 // Bookie management routes (Super Admin only)
 router.post('/bookies', verifyAdmin, createBookie); // Create new bookie

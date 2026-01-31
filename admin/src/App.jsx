@@ -12,6 +12,7 @@ import PaymentManagement from './pages/PaymentManagement';
 import Wallet from './pages/Wallet';
 import HelpDesk from './pages/HelpDesk';
 import BookieManagement from './pages/BookieManagement';
+import AllUsers from './pages/AllUsers';
 import AddResult from './pages/AddResult';
 
 const PrivateRoute = ({ children }) => {
@@ -109,6 +110,14 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <HelpDesk />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/all-users"
+                    element={
+                        <PrivateRoute>
+                            <AllUsers />
                         </PrivateRoute>
                     }
                 />

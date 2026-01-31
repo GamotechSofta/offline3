@@ -169,6 +169,43 @@ button, a, input, select, textarea {
   background: rgba(107, 114, 128, 0.9);
 }
 
+/* Hide number input spinners across admin panel */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Bet Closure Time - unified focus border (input + Seconds) */
+.bet-closure-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(75 85 99); /* gray-600 */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.bet-closure-group:focus-within {
+  border-color: #F59E0B; /* yellow-500 */
+  box-shadow: 0 0 0 2px #F59E0B;
+}
+.bet-closure-group input {
+  border: none;
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+.bet-closure-group input:focus,
+.bet-closure-group input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.bet-closure-group .bet-closure-unit {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
 /* Focus Styles for Accessibility */
 *:focus-visible {
   outline: 2px solid #F59E0B;

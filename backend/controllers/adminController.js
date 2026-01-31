@@ -163,6 +163,33 @@ export const createBookie = async (req, res) => {
 };
 
 /**
+ * Get all super admins
+ * Only super_admin can access
+ */
+export const getAllSuperAdmins = async (req, res) => {
+    try {
+        if (req.admin?.role !== 'super_admin') {
+            return res.status(403).json({
+                success: false,
+                message: 'Only Super Admin can view super admins',
+            });
+        }
+
+        const admins = await Admin.find({ role: 'super_admin' })
+            .select('-password')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: admins.length,
+            data: admins,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
  * Get all bookies
  * Only super_admin can access
  */

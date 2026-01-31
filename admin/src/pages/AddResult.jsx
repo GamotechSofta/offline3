@@ -68,6 +68,15 @@ const AddResult = () => {
         setClosingNumber('');
     };
 
+    /** Digits must be non-descending (e.g. 123 OK, 112 OK, 321 NO, 132 NO) */
+    const isDigitsValid = (str) => {
+        if (!str || str.length !== 3) return false;
+        const a = parseInt(str[0], 10);
+        const b = parseInt(str[1], 10);
+        const c = parseInt(str[2], 10);
+        return a <= b && b <= c;
+    };
+
     const handleSave = async () => {
         if (!editingMarketId) return;
 
@@ -78,6 +87,16 @@ const AddResult = () => {
 
         if (hasValidClosing && !hasValidOpening) {
             alert('Opening number is required before closing number. Please add opening number first.');
+            return;
+        }
+
+        if (hasValidOpening && !isDigitsValid(openingVal)) {
+            alert('Opening number digits must be non-descending (e.g. 123 OK, 112 OK, 321 NO, 132 NO). Each digit must be less than or equal to the next.');
+            return;
+        }
+
+        if (hasValidClosing && !isDigitsValid(closingVal)) {
+            alert('Closing number digits must be non-descending (e.g. 123 OK, 112 OK, 321 NO, 132 NO). Each digit must be less than or equal to the next.');
             return;
         }
 
@@ -130,8 +149,9 @@ const AddResult = () => {
                     <p className="text-gray-400 mb-2">
                         All markets – add or edit opening and closing numbers here.
                     </p>
-                    <div className="mb-6 p-3 sm:p-4 bg-amber-900/30 border border-amber-700 rounded-lg text-amber-200 text-sm">
-                        <strong>Note:</strong> Opening number must be added before closing number. You cannot add closing number without opening number.
+                    <div className="mb-6 p-3 sm:p-4 bg-amber-900/30 border border-amber-700 rounded-lg text-amber-200 text-sm space-y-2">
+                        <p><strong>Note:</strong> Opening number must be added before closing number. You cannot add closing number without opening number.</p>
+                        <p><strong>Validation:</strong> Opening and closing digits must be non-descending (e.g. 123 OK, 112 OK, 321 NO, 132 NO). Each digit must be less than or equal to the next.</p>
                     </div>
 
                     {loading ? (

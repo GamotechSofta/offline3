@@ -38,9 +38,20 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    /** Super admin's user: direct frontend signup or created by super admin. Bookie's user: created by bookie or came via bookie link. */
+    source: {
+        type: String,
+        enum: ['super_admin', 'bookie'],
+        default: 'super_admin',
+    },
     referredBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',
+        default: null,
+    },
+    /** Last active timestamp – used to compute online/offline status (online if within 5 min) */
+    lastActiveAt: {
+        type: Date,
         default: null,
     },
 }, {

@@ -134,7 +134,7 @@ const MarketForm = ({ market, onClose, onSuccess, apiBaseUrl, getAuthHeaders }) 
                             <label className="block text-gray-300 text-sm font-medium mb-2">
                                 Bet Closure Time
                             </label>
-                            <div className="flex items-stretch w-full">
+                            <div className="bet-closure-group">
                                 <input
                                     type="number"
                                     name="betClosureTime"
@@ -144,9 +144,9 @@ const MarketForm = ({ market, onClose, onSuccess, apiBaseUrl, getAuthHeaders }) 
                                     step="1"
                                     placeholder="e.g. 300"
                                     inputMode="numeric"
-                                    className="flex-1 min-w-0 px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-700 border border-gray-600 rounded-l-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base"
+                                    className="flex-1 min-w-0 px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-700 text-white placeholder-gray-500 text-base"
                                 />
-                                <span className="inline-flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-600 border border-l-0 border-gray-600 rounded-r-lg text-gray-300 text-sm font-medium whitespace-nowrap">
+                                <span className="bet-closure-unit inline-flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-600 text-gray-300 text-sm font-medium whitespace-nowrap">
                                     Seconds
                                 </span>
                             </div>

@@ -13,6 +13,7 @@ import {
     FaLifeRing,
     FaSignOutAlt,
     FaUsers,
+    FaUserFriends,
     FaEdit,
     FaTimes
 } from 'react-icons/fa';
@@ -23,6 +24,7 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
 
     const menuItems = [
         { path: '/dashboard', label: 'Dashboard', icon: FaTachometerAlt },
+        { path: '/all-users', label: 'All Users', icon: FaUserFriends },
         { path: '/bookie-management', label: 'Bookie Accounts', icon: FaUsers },
         { path: '/markets', label: 'Markets', icon: FaChartBar },
         { path: '/add-result', label: 'Add Result', icon: FaEdit },
