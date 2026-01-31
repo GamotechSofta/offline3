@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
@@ -70,14 +70,11 @@ const PaymentManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold mb-6">Payment Management</h1>
+        <AdminLayout onLogout={handleLogout} title="Payments">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Payment Management</h1>
 
                     {/* Filters */}
-                    <div className="bg-gray-800 rounded-lg p-4 mb-6 flex gap-4">
+                    <div className="bg-gray-800 rounded-lg p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row gap-4">
                         <select
                             value={filters.status}
                             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
@@ -106,8 +103,9 @@ const PaymentManagement = () => {
                             <p className="text-gray-400">Loading payments...</p>
                         </div>
                     ) : (
-                        <div className="bg-gray-800 rounded-lg overflow-hidden">
-                            <table className="w-full">
+                        <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <div className="bg-gray-800 rounded-lg overflow-hidden min-w-[720px]">
+                            <table className="w-full text-sm sm:text-base">
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
@@ -176,11 +174,10 @@ const PaymentManagement = () => {
                                     )}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

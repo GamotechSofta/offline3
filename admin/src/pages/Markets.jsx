@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import MarketList from '../components/MarketList';
 import MarketForm from '../components/MarketForm';
 
@@ -72,22 +72,19 @@ const Markets = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
+        <AdminLayout onLogout={handleLogout} title="Markets">
                 {error && (
                     <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
                         {error}
                     </div>
                 )}
 
-                <h1 className="text-3xl font-bold mb-6">Markets Management</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Markets Management</h1>
                 
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                     <button
                         onClick={handleCreate}
-                        className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors"
+                        className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors text-sm sm:text-base"
                     >
                         + Add New Market
                     </button>
@@ -116,9 +113,7 @@ const Markets = () => {
                         getAuthHeaders={getAuthHeaders}
                     />
                 )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

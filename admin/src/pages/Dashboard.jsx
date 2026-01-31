@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import MarketList from '../components/MarketList';
 import MarketForm from '../components/MarketForm';
 
@@ -74,17 +74,14 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white flex">
-            <Sidebar onLogout={handleLogout} />
-            <div className="flex-1">
-                <div className="p-8">
+        <AdminLayout onLogout={handleLogout} title="Markets">
                 {error && (
                     <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
                         {error}
                     </div>
                 )}
 
-                <h1 className="text-3xl font-bold mb-6">Markets Management</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Markets Management</h1>
                 
                 <div className="mb-6">
                     <button
@@ -118,9 +115,7 @@ const Dashboard = () => {
                         getAuthHeaders={getAuthHeaders}
                     />
                 )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

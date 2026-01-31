@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
@@ -42,12 +42,9 @@ const TopWinners = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-3xl font-bold">Top Winners</h1>
+        <AdminLayout onLogout={handleLogout} title="Top Winners">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
+                        <h1 className="text-2xl sm:text-3xl font-bold">Top Winners</h1>
                         <select
                             value={timeRange}
                             onChange={(e) => setTimeRange(e.target.value)}
@@ -65,7 +62,7 @@ const TopWinners = () => {
                             <p className="text-gray-400">Loading winners...</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {winners.length === 0 ? (
                                 <div className="col-span-full text-center py-12">
                                     <p className="text-gray-400">No winners found</p>
@@ -74,7 +71,7 @@ const TopWinners = () => {
                                 winners.map((winner, index) => (
                                     <div
                                         key={winner._id}
-                                        className="bg-gray-800 rounded-lg p-6 border border-gray-700"
+                                        className="bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-700"
                                     >
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="flex items-center gap-3">
@@ -111,9 +108,7 @@ const TopWinners = () => {
                             )}
                         </div>
                     )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

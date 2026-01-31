@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
@@ -55,14 +55,11 @@ const BetHistory = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold mb-6">Bet History</h1>
+        <AdminLayout onLogout={handleLogout} title="Bet History">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Bet History</h1>
 
                     {/* Filters */}
-                    <div className="bg-gray-800 rounded-lg p-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-gray-800 rounded-lg p-4 mb-4 sm:mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                         <input
                             type="text"
                             placeholder="User ID"
@@ -108,17 +105,18 @@ const BetHistory = () => {
                             <p className="text-gray-400">Loading bets...</p>
                         </div>
                     ) : (
-                        <div className="bg-gray-800 rounded-lg overflow-hidden">
-                            <table className="w-full">
+                        <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <div className="bg-gray-800 rounded-lg overflow-hidden min-w-[640px]">
+                            <table className="w-full text-sm sm:text-base">
                                 <thead className="bg-gray-700">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Market</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Bet Type</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Amount</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Date</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Market</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Bet Type</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Amount</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
+                                        <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-700">
@@ -131,12 +129,12 @@ const BetHistory = () => {
                                     ) : (
                                         bets.map((bet) => (
                                             <tr key={bet._id} className="hover:bg-gray-700">
-                                                <td className="px-6 py-4 text-sm">{bet._id.slice(-8)}</td>
-                                                <td className="px-6 py-4 text-sm">{bet.userId?.username || bet.userId}</td>
-                                                <td className="px-6 py-4 text-sm">{bet.marketId?.marketName || bet.marketId}</td>
-                                                <td className="px-6 py-4 text-sm">{bet.betType}</td>
-                                                <td className="px-6 py-4 text-sm">₹{bet.amount}</td>
-                                                <td className="px-6 py-4 text-sm">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">{bet._id.slice(-8)}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">{bet.userId?.username || bet.userId}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">{bet.marketId?.marketName || bet.marketId}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">{bet.betType}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">₹{bet.amount}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">
                                                     <span className={`px-2 py-1 rounded text-xs ${
                                                         bet.status === 'won' ? 'bg-green-600' :
                                                         bet.status === 'lost' ? 'bg-red-600' :
@@ -146,7 +144,7 @@ const BetHistory = () => {
                                                         {bet.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-sm">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm">
                                                     {new Date(bet.createdAt).toLocaleString()}
                                                 </td>
                                             </tr>
@@ -154,11 +152,10 @@ const BetHistory = () => {
                                     )}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

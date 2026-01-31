@@ -58,11 +58,11 @@ const MarketForm = ({ market, onClose, onSuccess, apiBaseUrl, getAuthHeaders }) 
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-gray-800 rounded-lg shadow-2xl w-full max-w-md border border-gray-700">
-                <div className="p-6">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold text-white">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 sm:p-6 z-50 overflow-y-auto">
+            <div className="bg-gray-800 rounded-lg shadow-2xl w-full max-w-md border border-gray-700 my-auto">
+                <div className="p-4 sm:p-6">
+                    <div className="flex justify-between items-center mb-4 sm:mb-6">
+                        <h2 className="text-xl sm:text-2xl font-bold text-white">
                             {market ? 'Edit Market' : 'Create New Market'}
                         </h2>
                         <button

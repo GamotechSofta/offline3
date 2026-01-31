@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash, FaToggleOn, FaToggleOff, FaPlus, FaTimes, FaEye, FaEyeSlash, FaCopy } from 'react-icons/fa';
 
@@ -219,19 +219,16 @@ const BookieManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
+        <AdminLayout onLogout={handleLogout} title="Bookies">
                     {/* Header */}
-                    <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-3xl font-bold">Bookie Accounts Management</h1>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
+                        <h1 className="text-2xl sm:text-3xl font-bold">Bookie Accounts Management</h1>
                         <button
                             onClick={() => {
                                 setFormData({ username: '', password: '', email: '', phone: '' });
                                 setShowCreateModal(true);
                             }}
-                            className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg transition-colors"
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
                         >
                             <FaPlus /> Add New Bookie
                         </button>
@@ -266,7 +263,8 @@ const BookieManagement = () => {
                                 <p className="mt-2">Click "Add New Bookie" to create one.</p>
                             </div>
                         ) : (
-                            <table className="w-full">
+                            <div className="overflow-x-auto">
+                            <table className="w-full min-w-[640px] text-sm sm:text-base">
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -365,20 +363,19 @@ const BookieManagement = () => {
                                     ))}
                                 </tbody>
                             </table>
+                            </div>
                         )}
                     </div>
 
                     {/* Info Card */}
-                    <div className="mt-6 bg-gray-800 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-yellow-500 mb-3">Bookie Login Information</h3>
-                        <div className="text-gray-300 space-y-2">
+                    <div className="mt-4 sm:mt-6 bg-gray-800 rounded-lg p-4 sm:p-6">
+                        <h3 className="text-base sm:text-lg font-semibold text-yellow-500 mb-3">Bookie Login Information</h3>
+                        <div className="text-gray-300 space-y-2 text-sm sm:text-base">
                             <p><strong>Bookie Panel URL:</strong> <code className="bg-gray-700 px-2 py-1 rounded">/bookie</code></p>
                             <p><strong>Login:</strong> Bookies use their Username as Login ID and the password you set.</p>
                             <p><strong>Status:</strong> Inactive bookies cannot login to the bookie panel.</p>
                         </div>
                     </div>
-                </div>
-            </div>
 
             {/* Create Modal */}
             {showCreateModal && (
@@ -606,7 +603,7 @@ const BookieManagement = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </AdminLayout>
     );
 };
 

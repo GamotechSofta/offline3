@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
@@ -72,14 +72,11 @@ const HelpDesk = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold mb-6">Help Desk</h1>
+        <AdminLayout onLogout={handleLogout} title="Help Desk">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Help Desk</h1>
 
                     {/* Filters */}
-                    <div className="bg-gray-800 rounded-lg p-4 mb-6">
+                    <div className="bg-gray-800 rounded-lg p-4 mb-4 sm:mb-6">
                         <select
                             value={filters.status}
                             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
@@ -93,7 +90,7 @@ const HelpDesk = () => {
                         </select>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
                         {/* Tickets List */}
                         <div className="bg-gray-800 rounded-lg overflow-hidden">
                             <div className="p-4 border-b border-gray-700">
@@ -225,9 +222,7 @@ const HelpDesk = () => {
                             )}
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

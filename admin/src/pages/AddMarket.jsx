@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import MarketForm from '../components/MarketForm';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,11 +29,8 @@ const AddMarket = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold mb-6">Add New Market</h1>
+        <AdminLayout onLogout={handleLogout} title="Add Market">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Add New Market</h1>
                     {showForm && (
                         <MarketForm
                             market={null}
@@ -43,9 +40,7 @@ const AddMarket = () => {
                             getAuthHeaders={getAuthHeaders}
                         />
                     )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
@@ -76,6 +76,11 @@ const AddResult = () => {
         const hasValidOpening = openingVal && /^\d{3}$/.test(openingVal);
         const hasValidClosing = closingVal && /^\d{3}$/.test(closingVal);
 
+        if (hasValidClosing && !hasValidOpening) {
+            alert('Opening number is required before closing number. Please add opening number first.');
+            return;
+        }
+
         const headers = getAuthHeaders();
         setSubmitLoading(true);
 
@@ -114,20 +119,20 @@ const AddResult = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
+        <AdminLayout onLogout={handleLogout} title="Add Result">
                     {error && (
                         <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
                             {error}
                         </div>
                     )}
 
-                    <h1 className="text-3xl font-bold mb-6">Add / Edit Result</h1>
-                    <p className="text-gray-400 mb-6">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Add / Edit Result</h1>
+                    <p className="text-gray-400 mb-2">
                         All markets – add or edit opening and closing numbers here.
                     </p>
+                    <div className="mb-6 p-3 sm:p-4 bg-amber-900/30 border border-amber-700 rounded-lg text-amber-200 text-sm">
+                        <strong>Note:</strong> Opening number must be added before closing number. You cannot add closing number without opening number.
+                    </div>
 
                     {loading ? (
                         <div className="text-center py-12">
@@ -138,16 +143,16 @@ const AddResult = () => {
                             No markets found. Add markets first.
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full border border-gray-700 rounded-lg overflow-hidden">
+                        <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <table className="w-full min-w-[640px] border border-gray-700 rounded-lg overflow-hidden text-sm sm:text-base">
                                 <thead>
                                     <tr className="bg-gray-800">
-                                        <th className="text-left py-3 px-4 font-semibold">Market</th>
-                                        <th className="text-left py-3 px-4 font-semibold">Timeline</th>
-                                        <th className="text-left py-3 px-4 font-semibold">Result</th>
-                                        <th className="text-left py-3 px-4 font-semibold">Opening</th>
-                                        <th className="text-left py-3 px-4 font-semibold">Closing</th>
-                                        <th className="text-left py-3 px-4 font-semibold w-40">Actions</th>
+                                        <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold">Market</th>
+                                        <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold">Timeline</th>
+                                        <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold">Result</th>
+                                        <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold">Opening</th>
+                                        <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold">Closing</th>
+                                        <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold w-32 sm:w-40">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -156,11 +161,11 @@ const AddResult = () => {
                                             key={market._id}
                                             className="border-b border-gray-700 hover:bg-gray-800/50"
                                         >
-                                            <td className="py-3 px-4 font-medium">{market.marketName}</td>
-                                            <td className="py-3 px-4 text-gray-300">
+                                            <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium">{market.marketName}</td>
+                                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-gray-300">
                                                 {market.startingTime} – {market.closingTime}
                                             </td>
-                                            <td className="py-3 px-4">
+                                            <td className="py-2 sm:py-3 px-2 sm:px-4">
                                                 <span className="font-mono text-yellow-400">
                                                     {market.displayResult || '***-**-***'}
                                                 </span>
@@ -168,7 +173,7 @@ const AddResult = () => {
                                                     <span className="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-red-600">Closed</span>
                                                 )}
                                             </td>
-                                            <td className="py-3 px-4">
+                                            <td className="py-2 sm:py-3 px-2 sm:px-4">
                                                 {editingMarketId === market._id ? (
                                                     <input
                                                         type="text"
@@ -184,7 +189,7 @@ const AddResult = () => {
                                                     <span className="font-mono">{market.openingNumber || '—'}</span>
                                                 )}
                                             </td>
-                                            <td className="py-3 px-4">
+                                            <td className="py-2 sm:py-3 px-2 sm:px-4">
                                                 {editingMarketId === market._id ? (
                                                     <input
                                                         type="text"
@@ -200,7 +205,7 @@ const AddResult = () => {
                                                     <span className="font-mono">{market.closingNumber || '—'}</span>
                                                 )}
                                             </td>
-                                            <td className="py-3 px-4">
+                                            <td className="py-2 sm:py-3 px-2 sm:px-4">
                                                 {editingMarketId === market._id ? (
                                                     <div className="flex gap-2">
                                                         <button
@@ -232,9 +237,7 @@ const AddResult = () => {
                             </table>
                         </div>
                     )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

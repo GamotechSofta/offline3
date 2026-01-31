@@ -34,14 +34,14 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {markets.map((market) => {
                 const status = getMarketStatus(market);
 
                 return (
                     <div
                         key={market._id}
-                        className="bg-gray-800 rounded-lg border border-gray-700 p-6 hover:border-yellow-500 transition-colors"
+                        className="bg-gray-800 rounded-lg border border-gray-700 p-4 sm:p-6 hover:border-yellow-500 transition-colors"
                     >
                         {/* Status Badge */}
                         <div className={`${status.color} text-white text-xs font-semibold px-3 py-1 rounded-full inline-block mb-4`}>
@@ -51,7 +51,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                         </div>
 
                         {/* Market Info */}
-                        <h3 className="text-xl font-bold text-white mb-2">{market.marketName}</h3>
+                        <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{market.marketName}</h3>
                         <div className="space-y-2 mb-4 text-sm text-gray-300">
                             <p><span className="font-semibold">Opening:</span> {market.startingTime}</p>
                             <p><span className="font-semibold">Closing:</span> {market.closingTime}</p>

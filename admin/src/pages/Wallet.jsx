@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
@@ -89,14 +89,11 @@ const Wallet = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold mb-6">Wallet Management</h1>
+        <AdminLayout onLogout={handleLogout} title="Wallet">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Wallet Management</h1>
 
                     {/* Tabs */}
-                    <div className="flex gap-4 mb-6 border-b border-gray-700">
+                    <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6 border-b border-gray-700 overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('wallets')}
                             className={`pb-4 px-4 font-semibold ${
@@ -120,8 +117,9 @@ const Wallet = () => {
                             <p className="text-gray-400">Loading...</p>
                         </div>
                     ) : activeTab === 'wallets' ? (
-                        <div className="bg-gray-800 rounded-lg overflow-hidden">
-                            <table className="w-full">
+                        <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <div className="bg-gray-800 rounded-lg overflow-hidden min-w-[400px]">
+                                <table className="w-full text-sm sm:text-base">
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
@@ -168,10 +166,12 @@ const Wallet = () => {
                                     )}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     ) : (
-                        <div className="bg-gray-800 rounded-lg overflow-hidden">
-                            <table className="w-full">
+                        <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <div className="bg-gray-800 rounded-lg overflow-hidden min-w-[400px]">
+                                <table className="w-full text-sm sm:text-base">
                                 <thead className="bg-gray-700">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
@@ -207,11 +207,10 @@ const Wallet = () => {
                                     )}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     )}
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 

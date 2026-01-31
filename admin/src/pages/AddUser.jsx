@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
@@ -71,11 +71,8 @@ const AddUser = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Sidebar onLogout={handleLogout} />
-            <div className="ml-64">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold mb-6">Add New User</h1>
+        <AdminLayout onLogout={handleLogout} title="Add User">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Add New User</h1>
 
                     {error && (
                         <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
@@ -89,7 +86,7 @@ const AddUser = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 max-w-2xl">
+                    <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-4 sm:p-6 max-w-2xl w-full">
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-gray-300 text-sm font-medium mb-2">
@@ -187,9 +184,7 @@ const AddUser = () => {
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
+        </AdminLayout>
     );
 };
 
