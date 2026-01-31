@@ -63,23 +63,23 @@ const BidLayout = ({ market, title, children, bidsCount, totalPoints, showDateSe
                 {children}
             </div>
 
-            {/* Footer - Home theme dark */}
-            <div className={`fixed bottom-[88px] left-0 right-0 md:bottom-0 bg-[#202124] border-t border-white/10 py-4 z-10 ${footerRightOnDesktop ? 'px-0 md:px-4' : 'px-3 sm:px-4'}`}>
-                <div className={`${footerRightOnDesktop ? 'md:grid md:grid-cols-2 md:gap-4 md:max-w-7xl md:mx-auto' : ''} ${footerRightOnDesktop ? 'md:pl-0' : ''}`}>
-                    {footerRightOnDesktop && <div className="hidden md:block" />}
-                    <div className={footerRightOnDesktop ? 'px-3 sm:px-4 md:px-0' : ''}>
-                        <div className="flex justify-between items-center px-2 mb-3 text-sm font-bold text-white">
+            {/* Footer - Card centered in right 50% on desktop */}
+            <div className="fixed bottom-[88px] left-0 right-0 md:bottom-0 z-10 px-3 sm:px-4 py-3 md:grid md:grid-cols-2 md:gap-0">
+                <div className="hidden md:block" />
+                <div className="flex justify-center md:justify-center">
+                    <div className="w-full max-w-sm md:max-w-md bg-[#202124]/95 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-black/30 px-4 py-4 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                        <div className="flex items-center gap-6 sm:gap-8 shrink-0">
                             <div className="text-center">
-                                <div className="text-xs text-gray-400 uppercase">Bids</div>
-                                <div className="text-lg text-[#f2c14e]">{bidsCount}</div>
+                                <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Bids</div>
+                                <div className="text-base sm:text-lg font-bold text-[#f2c14e]">{bidsCount}</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-xs text-gray-400 uppercase">Points</div>
-                                <div className="text-lg text-[#f2c14e]">{totalPoints}</div>
+                                <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Points</div>
+                                <div className="text-base sm:text-lg font-bold text-[#f2c14e]">{totalPoints}</div>
                             </div>
                         </div>
-                        <button className="w-full bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] font-bold py-3.5 min-h-[48px] rounded-lg shadow-lg hover:from-[#e5c04a] hover:to-[#d4af37] transition-all active:scale-[0.98]">
-                            Submit
+                        <button className="flex-1 w-full sm:w-auto sm:min-w-[140px] bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] font-bold py-3 px-6 rounded-xl shadow-lg hover:from-[#e5c04a] hover:to-[#d4af37] transition-all active:scale-[0.98] text-sm sm:text-base">
+                            Submit Bids
                         </button>
                     </div>
                 </div>
