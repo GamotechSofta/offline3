@@ -40,7 +40,7 @@ const ReferralLink = () => {
     return (
         <Layout title="My Referral Link">
             <h1 className="text-3xl font-bold mb-6">My Referral Link</h1>
-            <p className="text-gray-400 mb-6">Share this link with users. When they sign up using this link, they will be added to your account.</p>
+            <p className="text-gray-400 mb-6">Share this link with players. When they sign up using this link, they will be added to your account.</p>
             {error && <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">{error}</div>}
             {loading ? (
                 <p className="text-gray-400">Loading...</p>
@@ -60,7 +60,7 @@ const ReferralLink = () => {
                             {copied ? 'Copied!' : 'Copy'}
                         </button>
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">Users who register via this link will appear in your Bet History, Reports, Wallet, and other sections.</p>
+                    <p className="mt-4 text-sm text-gray-500">Players who register via this link will appear in your Bet History, Reports, Wallet, and other sections.</p>
                 </div>
             ) : null}
         </Layout>

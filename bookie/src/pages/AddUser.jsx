@@ -36,7 +36,7 @@ const AddUser = () => {
             });
             const data = await response.json();
             if (data.success) {
-                setSuccess('User created successfully! User is now linked to your account.');
+                setSuccess('Player created successfully! Player is now linked to your account.');
                 setFormData({
                     username: '',
                     email: '',
@@ -56,9 +56,9 @@ const AddUser = () => {
     };
 
     return (
-        <Layout title="Add User">
+        <Layout title="Add Player">
             <div className="p-8">
-                <h1 className="text-3xl font-bold mb-6">Add New User</h1>
+                <h1 className="text-3xl font-bold mb-6">Add New Player</h1>
 
                 {error && (
                     <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
@@ -141,7 +141,7 @@ const AddUser = () => {
                                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                 required
                             >
-                                <option value="user">User</option>
+                                <option value="user">Player</option>
                             </select>
                         </div>
 
@@ -165,7 +165,7 @@ const AddUser = () => {
                             disabled={loading}
                             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
                         >
-                            {loading ? 'Creating...' : 'Create User'}
+                            {loading ? 'Creating...' : 'Create Player'}
                         </button>
                     </div>
                 </form>

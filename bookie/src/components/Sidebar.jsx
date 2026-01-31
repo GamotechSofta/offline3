@@ -21,9 +21,9 @@ const Sidebar = ({ onLogout }) => {
 
     const menuItems = [
         { path: '/dashboard', label: 'Dashboard', icon: FaTachometerAlt },
-        { path: '/my-users', label: 'My Users', icon: FaUsers },
+        { path: '/my-users', label: 'My Players', icon: FaUsers },
         { path: '/markets', label: 'Markets', icon: FaChartBar },
-        { path: '/add-user', label: 'Add User', icon: FaUserPlus },
+        { path: '/add-user', label: 'Add Player', icon: FaUserPlus },
         { path: '/referral-link', label: 'My Referral Link', icon: FaLink },
         { path: '/bet-history', label: 'Bet History', icon: FaHistory },
         { path: '/top-winners', label: 'Top Winners', icon: FaTrophy },

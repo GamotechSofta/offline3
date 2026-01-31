@@ -83,7 +83,7 @@ const HelpDesk = () => {
                                 <h2 className="text-2xl font-bold">{selectedTicket.subject}</h2>
                                 <span className={`px-3 py-1 rounded text-sm ${selectedTicket.status === 'resolved' ? 'bg-green-600' : selectedTicket.status === 'in-progress' ? 'bg-yellow-600' : selectedTicket.status === 'closed' ? 'bg-gray-600' : 'bg-blue-600'}`}>{selectedTicket.status}</span>
                             </div>
-                            <div className="mb-4"><p className="text-gray-400 text-sm mb-1">User</p><p className="font-semibold">{selectedTicket.userId?.username || selectedTicket.userId}</p></div>
+                            <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Player</p><p className="font-semibold">{selectedTicket.userId?.username || selectedTicket.userId}</p></div>
                             <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Description</p><p className="whitespace-pre-wrap">{selectedTicket.description}</p></div>
                             {selectedTicket.screenshots?.length > 0 && (
                                 <div className="mb-4">

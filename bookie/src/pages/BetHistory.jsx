@@ -34,7 +34,7 @@ const BetHistory = () => {
         <Layout title="Bet History">
             <h1 className="text-3xl font-bold mb-6">Bet History</h1>
             <div className="bg-gray-800 rounded-lg p-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" placeholder="User ID" value={filters.userId} onChange={(e) => setFilters({ ...filters, userId: e.target.value })} className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white" />
+                <input type="text" placeholder="Player ID" value={filters.userId} onChange={(e) => setFilters({ ...filters, userId: e.target.value })} className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white" />
                 <input type="text" placeholder="Market ID" value={filters.marketId} onChange={(e) => setFilters({ ...filters, marketId: e.target.value })} className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white" />
                 <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
                     <option value="">All Status</option>
@@ -54,7 +54,7 @@ const BetHistory = () => {
                         <thead className="bg-gray-700">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Market</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Bet Type</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Amount</th>

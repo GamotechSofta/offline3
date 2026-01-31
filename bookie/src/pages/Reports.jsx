@@ -39,7 +39,7 @@ const Reports = () => {
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Total Payouts</h3><p className="text-2xl font-bold text-red-400">₹{report.totalPayouts}</p></div>
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Net Profit</h3><p className="text-2xl font-bold text-yellow-400">₹{report.netProfit}</p></div>
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Total Bets</h3><p className="text-2xl font-bold">{report.totalBets}</p></div>
-                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Active Users</h3><p className="text-2xl font-bold">{report.activeUsers}</p></div>
+                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Active Players</h3><p className="text-2xl font-bold">{report.activeUsers}</p></div>
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Winning Bets</h3><p className="text-2xl font-bold text-green-400">{report.winningBets}</p></div>
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Losing Bets</h3><p className="text-2xl font-bold text-red-400">{report.losingBets}</p></div>
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700"><h3 className="text-gray-400 text-sm mb-2">Win Rate</h3><p className="text-2xl font-bold">{report.winRate}%</p></div>

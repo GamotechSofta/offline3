@@ -69,7 +69,7 @@ const Dashboard = () => {
                         <p className="mt-4 text-xs text-blue-100">Payouts: {formatCurrency(stats?.revenue?.payouts)}</p>
                     </div>
                     <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-6 shadow-lg">
-                        <h3 className="text-gray-200 text-sm font-medium mb-2">My Users</h3>
+                        <h3 className="text-gray-200 text-sm font-medium mb-2">My Players</h3>
                         <p className="text-3xl font-bold text-white">{stats?.users?.total || 0}</p>
                         <div className="mt-4 flex gap-4 text-xs text-purple-100">
                             <span>Active: {stats?.users?.active || 0}</span>

@@ -43,7 +43,7 @@ const Wallet = () => {
         <Layout title="Wallet">
             <h1 className="text-3xl font-bold mb-6">Wallet (View Only)</h1>
             <div className="flex gap-4 mb-6 border-b border-gray-700">
-                <button onClick={() => setActiveTab('wallets')} className={`pb-4 px-4 font-semibold ${activeTab === 'wallets' ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-400'}`}>User Wallets</button>
+                <button onClick={() => setActiveTab('wallets')} className={`pb-4 px-4 font-semibold ${activeTab === 'wallets' ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-400'}`}>Player Wallets</button>
                 <button onClick={() => setActiveTab('transactions')} className={`pb-4 px-4 font-semibold ${activeTab === 'transactions' ? 'text-emerald-500 border-b-2 border-emerald-500' : 'text-gray-400'}`}>Transactions</button>
             </div>
             {loading ? (
@@ -53,7 +53,7 @@ const Wallet = () => {
                     <table className="w-full">
                         <thead className="bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Balance</th>
                             </tr>
                         </thead>
@@ -72,7 +72,7 @@ const Wallet = () => {
                     <table className="w-full">
                         <thead className="bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">User</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Amount</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Date</th>

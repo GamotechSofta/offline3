@@ -59,12 +59,12 @@ const MyUsers = () => {
     };
 
     return (
-        <Layout title="My Users">
+        <Layout title="My Players">
             <div className="p-8">
                 {/* Header */}
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold mb-2">My Users</h1>
-                    <p className="text-gray-400">Users who registered through your referral link or were created by you</p>
+                    <h1 className="text-3xl font-bold mb-2">My Players</h1>
+                    <p className="text-gray-400">Players who registered through your referral link or were created by you</p>
                 </div>
 
                 {/* Search Bar */}
@@ -86,7 +86,7 @@ const MyUsers = () => {
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-400 text-sm">Total Users</p>
+                                <p className="text-gray-400 text-sm">Total Players</p>
                                 <p className="text-3xl font-bold text-white mt-1">{users.length}</p>
                             </div>
                             <div className="bg-emerald-500/20 p-3 rounded-lg">
@@ -98,7 +98,7 @@ const MyUsers = () => {
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-400 text-sm">Active Users</p>
+                                <p className="text-gray-400 text-sm">Active Players</p>
                                 <p className="text-3xl font-bold text-white mt-1">
                                     {users.filter(u => u.isActive).length}
                                 </p>
@@ -112,7 +112,7 @@ const MyUsers = () => {
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-400 text-sm">Inactive Users</p>
+                                <p className="text-gray-400 text-sm">Inactive Players</p>
                                 <p className="text-3xl font-bold text-white mt-1">
                                     {users.filter(u => !u.isActive).length}
                                 </p>
@@ -131,18 +131,18 @@ const MyUsers = () => {
                     </div>
                 )}
 
-                {/* Users Table */}
+                {/* Players Table */}
                 <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700">
                     {loading ? (
                         <div className="p-8 text-center">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto"></div>
-                            <p className="mt-4 text-gray-400">Loading users...</p>
+                            <p className="mt-4 text-gray-400">Loading players...</p>
                         </div>
                     ) : filteredUsers.length === 0 ? (
                         <div className="p-8 text-center text-gray-400">
                             {searchTerm ? (
                                 <>
-                                    <p>No users found matching "{searchTerm}"</p>
+                                    <p>No players found matching "{searchTerm}"</p>
                                     <button
                                         onClick={() => setSearchTerm('')}
                                         className="mt-4 text-emerald-500 hover:text-emerald-400"
@@ -152,8 +152,8 @@ const MyUsers = () => {
                                 </>
                             ) : (
                                 <>
-                                    <p>No users found.</p>
-                                    <p className="mt-2">Users who register through your referral link will appear here.</p>
+                                    <p>No players found.</p>
+                                    <p className="mt-2">Players who register through your referral link will appear here.</p>
                                 </>
                             )}
                         </div>
@@ -248,7 +248,7 @@ const MyUsers = () => {
                             {/* Results count */}
                             <div className="px-6 py-4 bg-gray-750 border-t border-gray-700">
                                 <p className="text-sm text-gray-400">
-                                    Showing {filteredUsers.length} of {users.length} users
+                                    Showing {filteredUsers.length} of {users.length} players
                                 </p>
                             </div>
                         </>
@@ -257,12 +257,12 @@ const MyUsers = () => {
 
                 {/* Info Card */}
                 <div className="mt-6 bg-gray-800 rounded-lg p-6 border border-gray-700">
-                    <h3 className="text-lg font-semibold text-emerald-500 mb-3">About My Users</h3>
+                    <h3 className="text-lg font-semibold text-emerald-500 mb-3">About My Players</h3>
                     <div className="text-gray-300 space-y-2">
-                        <p>• This list shows only the users who are linked to your bookie account.</p>
-                        <p>• Users created by you or registered through your referral link will appear here.</p>
+                        <p>• This list shows only the players who are linked to your bookie account.</p>
+                        <p>• Players created by you or registered through your referral link will appear here.</p>
                         <p>• You can see their activity in Bet History, Reports, and Wallet sections.</p>
-                        <p>• Other bookies cannot see these users in their panel.</p>
+                        <p>• Other bookies cannot see these players in their panel.</p>
                     </div>
                 </div>
             </div>
