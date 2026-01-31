@@ -6,6 +6,7 @@ import { FaUser, FaEnvelope, FaPhone, FaCheckCircle, FaTimesCircle, FaSearch } f
 const MyUsers = () => {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
+    const [walletByUserId, setWalletByUserId] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
@@ -15,17 +16,30 @@ const MyUsers = () => {
     }, []);
 
     useEffect(() => {
-        // Filter users based on search term
-        if (searchTerm.trim() === '') {
+        // Filter players by Sr No or player name (username)
+        const term = searchTerm.trim();
+        if (term === '') {
             setFilteredUsers(users);
-        } else {
-            const filtered = users.filter(user =>
-                user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (user.phone && user.phone.includes(searchTerm))
-            );
-            setFilteredUsers(filtered);
+            return;
         }
+
+        const lower = term.toLowerCase();
+        const numeric = Number(term);
+        const isNumeric = Number.isFinite(numeric) && term !== '';
+
+        const idToSrNo = new Map(users.map((u, idx) => [u?._id, idx + 1]));
+
+        const filtered = users.filter((u) => {
+            const name = (u?.username || '').toLowerCase();
+            const nameMatch = name.includes(lower);
+            if (nameMatch) return true;
+
+            if (!isNumeric) return false;
+            const srNo = idToSrNo.get(u?._id) || 0;
+            return String(srNo) === term;
+        });
+
+        setFilteredUsers(filtered);
     }, [searchTerm, users]);
 
     const fetchUsers = async () => {
@@ -46,6 +60,8 @@ const MyUsers = () => {
                 setUsers(data.data);
                 setFilteredUsers(data.data);
                 console.log('Users loaded:', data.data.length);
+                // Fetch wallet balances (optional enrichment for table)
+                fetchWalletBalances();
             } else {
                 setError(data.message || 'Failed to fetch users');
                 console.error('API Error:', data.message);
@@ -58,36 +74,56 @@ const MyUsers = () => {
         }
     };
 
+    const fetchWalletBalances = async () => {
+        try {
+            const headers = getBookieAuthHeaders();
+            const res = await fetch(`${API_BASE_URL}/wallet/all`, { headers });
+            const data = await res.json();
+            if (!data?.success || !Array.isArray(data?.data)) return;
+
+            const map = {};
+            for (const w of data.data) {
+                const id = w?.userId?._id || w?.userId;
+                if (!id) continue;
+                map[id] = w?.balance;
+            }
+            setWalletByUserId(map);
+        } catch (e) {
+            // Non-blocking; table will show '-' if unavailable
+            setWalletByUserId({});
+        }
+    };
+
     return (
         <Layout title="My Players">
-            <div className="p-8">
+            <div className="p-4">
                 {/* Header */}
-                <div className="mb-6">
-                    <h1 className="text-3xl font-bold mb-2">My Players</h1>
+                <div className="mb-4">
+                    <h1 className="text-2xl font-bold mb-1">My Players</h1>
                     <p className="text-gray-400">Players who registered through your referral link or were created by you</p>
                 </div>
 
                 {/* Search Bar */}
-                <div className="mb-6">
+                <div className="mb-4">
                     <div className="relative max-w-md">
                         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Search by username, email, or phone..."
+                            placeholder="Search by Sr No or player name..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                            className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         />
                     </div>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-400 text-sm">Total Players</p>
-                                <p className="text-3xl font-bold text-white mt-1">{users.length}</p>
+                                <p className="text-2xl font-bold text-white mt-1">{users.length}</p>
                             </div>
                             <div className="bg-emerald-500/20 p-3 rounded-lg">
                                 <FaUser className="text-emerald-500 text-2xl" />
@@ -95,11 +131,11 @@ const MyUsers = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-400 text-sm">Active Players</p>
-                                <p className="text-3xl font-bold text-white mt-1">
+                                <p className="text-2xl font-bold text-white mt-1">
                                     {users.filter(u => u.isActive).length}
                                 </p>
                             </div>
@@ -109,11 +145,11 @@ const MyUsers = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-400 text-sm">Inactive Players</p>
-                                <p className="text-3xl font-bold text-white mt-1">
+                                <p className="text-2xl font-bold text-white mt-1">
                                     {users.filter(u => !u.isActive).length}
                                 </p>
                             </div>
@@ -160,66 +196,69 @@ const MyUsers = () => {
                     ) : (
                         <>
                             <div className="overflow-x-auto">
-                                <table className="w-full">
+                                <table className="w-full table-fixed">
                                     <thead className="bg-gray-700">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                                #
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-12">
+                                                Sr No
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                                Username
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-36">
+                                                Players
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-52">
                                                 Email
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-36">
                                                 Phone
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-24">
                                                 Role
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-28">
                                                 Status
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                                Joined Date
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-32">
+                                                Joined
+                                            </th>
+                                            <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-300 uppercase tracking-wider w-28">
+                                                Wallet Balance
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-700">
-                                        {filteredUsers.map((user, index) => (
+                                        {filteredUsers.map((user) => (
                                             <tr key={user._id} className="hover:bg-gray-750">
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
-                                                    {index + 1}
+                                                <td className="px-3 py-2 text-gray-300 text-sm">
+                                                    {users.findIndex((u) => u?._id === user?._id) + 1}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="px-3 py-2">
                                                     <div className="flex items-center gap-2">
                                                         <FaUser className="text-gray-500" />
-                                                        <span className="font-medium text-white">{user.username}</span>
+                                                        <span className="font-medium text-white truncate">{user.username}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="px-3 py-2">
                                                     <div className="flex items-center gap-2 text-gray-300">
                                                         <FaEnvelope className="text-gray-500" size={14} />
-                                                        <span>{user.email}</span>
+                                                        <span className="truncate">{user.email}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
+                                                <td className="px-3 py-2 text-gray-300">
                                                     {user.phone ? (
                                                         <div className="flex items-center gap-2">
                                                             <FaPhone className="text-gray-500" size={14} />
-                                                            <span>{user.phone}</span>
+                                                            <span className="truncate">{user.phone}</span>
                                                         </div>
                                                     ) : (
                                                         <span className="text-gray-500">-</span>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="px-3 py-2">
                                                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-900/50 text-blue-400 border border-blue-700">
                                                         {user.role}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                <td className="px-3 py-2">
                                                     {user.isActive ? (
                                                         <span className="flex items-center gap-2 text-green-400">
                                                             <FaCheckCircle />
@@ -232,12 +271,25 @@ const MyUsers = () => {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
-                                                    {new Date(user.createdAt).toLocaleDateString('en-IN', {
-                                                        day: '2-digit',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                    })}
+                                                <td className="px-3 py-2 text-gray-300">
+                                                    <div className="text-sm">
+                                                        {new Date(user.createdAt).toLocaleDateString('en-IN', {
+                                                            day: '2-digit',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                        })}
+                                                    </div>
+                                                    <div className="text-[11px] text-gray-400">
+                                                        {new Date(user.createdAt).toLocaleTimeString('en-IN', {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit',
+                                                        })}
+                                                    </div>
+                                                </td>
+                                                <td className="px-3 py-2 text-yellow-400 font-semibold">
+                                                    {walletByUserId?.[user._id] !== undefined && walletByUserId?.[user._id] !== null
+                                                        ? `₹${walletByUserId[user._id]}`
+                                                        : '-'}
                                                 </td>
                                             </tr>
                                         ))}
@@ -246,8 +298,8 @@ const MyUsers = () => {
                             </div>
                             
                             {/* Results count */}
-                            <div className="px-6 py-4 bg-gray-750 border-t border-gray-700">
-                                <p className="text-sm text-gray-400">
+                            <div className="px-3 py-2 bg-gray-750 border-t border-gray-700">
+                                <p className="text-xs text-gray-400">
                                     Showing {filteredUsers.length} of {users.length} players
                                 </p>
                             </div>
