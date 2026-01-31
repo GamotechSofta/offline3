@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getBidTypeConfig } from '../config/bidTypes';
 
 const GameBid = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { title = "RADHA NIGHT", gameMode = "easy" } = location.state || {}; // Default logic
+    const { market, betType, gameMode = "easy" } = location.state || {};
 
-    const [activeTab, setActiveTab] = useState('special');
+    // Redirect to home if no market (direct URL or refresh)
+    useEffect(() => {
+        if (!market && !location.state?.title) {
+            navigate('/', { replace: true });
+        }
+    }, [market, location.state?.title, navigate]);
+    // betType = Single Digit, Jodi, etc. Used for form labels and header
+    const title = betType || location.state?.title || "Select Bet Type";
+    const bidConfig = getBidTypeConfig(title);
+    const isBulkDefault = bidConfig?.defaultMode === 'bulk';
+    // Dynamic date (dd-mm-yyyy)
+    const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+
+    const [activeTab, setActiveTab] = useState(bidConfig?.hasSpecialMode && isBulkDefault ? 'special' : 'easy');
     const [session, setSession] = useState('OPEN');
     const [bids, setBids] = useState([]);
 
@@ -14,16 +28,30 @@ const GameBid = () => {
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
 
-    // Special Mode State (for 0-9)
+    // Bulk Mode State (for 0-9): stores total points per digit
     const [specialBids, setSpecialBids] = useState(
-        Object.fromEntries(Array.from({ length: 10 }, (_, i) => [i, '']))
+        Object.fromEntries(Array.from({ length: 10 }, (_, i) => [i, 0]))
     );
 
+    // Validate based on bid type
+    const validateBidNumber = (num) => {
+        if (!num || !num.toString().trim()) return { valid: false };
+        const n = num.toString().trim();
+        if (bidConfig?.regex && !bidConfig.regex.test(n)) return { valid: false };
+        if (bidConfig?.digitCount === 1) {
+            const d = parseInt(n, 10);
+            if (isNaN(d) || d < 0 || d > 9) return { valid: false };
+        }
+        return { valid: true, value: n };
+    };
+
     const handleAddBid = () => {
-        if (!inputNumber || !inputPoints) return;
+        if (!inputPoints || Number(inputPoints) <= 0) return;
+        const { valid, value } = validateBidNumber(inputNumber);
+        if (!valid) return;
         setBids([...bids, {
             id: Date.now(),
-            number: inputNumber,
+            number: value,
             points: inputPoints,
             type: session
         }]);
@@ -31,15 +59,33 @@ const GameBid = () => {
         setInputPoints('');
     };
 
+    // Bulk mode: click digit = add current Enter Points to that digit (cumulative)
+    const handleDigitClick = (num) => {
+        const pts = Number(inputPoints);
+        if (!pts || pts <= 0) return;
+        setSpecialBids(prev => ({ ...prev, [num]: (prev[num] || 0) + pts }));
+    };
+
     const handleDeleteBid = (id) => {
         setBids(bids.filter(bid => bid.id !== id));
     };
 
-    const handleSpecialChange = (num, value) => {
-        setSpecialBids(prev => ({ ...prev, [num]: value }));
+    // Restrict Single Digit input to only 0-9, max 1 character
+    const handleNumberInputChange = (e) => {
+        const val = e.target.value;
+        if (bidConfig?.digitCount === 1) {
+            const digit = val.replace(/\D/g, '').slice(-1); // only last digit, digits only
+            setInputNumber(digit);
+        } else {
+            setInputNumber(val);
+        }
     };
 
-    const totalPoints = bids.reduce((sum, bid) => sum + Number(bid.points), 0);
+    // Bulk mode: bids count = digits with points, total = sum of all
+    const bulkBidsCount = Object.values(specialBids).filter((v) => Number(v) > 0).length;
+    const bulkTotalPoints = Object.values(specialBids).reduce((sum, v) => sum + Number(v || 0), 0);
+    const totalPoints = activeTab === 'special' ? bulkTotalPoints : bids.reduce((sum, bid) => sum + Number(bid.points), 0);
+    const bidsCount = activeTab === 'special' ? bulkBidsCount : bids.length;
 
     // Determine input label/validation based on title
     const getInputConfig = () => {
@@ -52,23 +98,24 @@ const GameBid = () => {
 
     const { label, maxLength } = getInputConfig();
 
-    // Special Mode is mainly relevant for Single Digit in the screenshot's specific 0-9 format. 
-    // For others, we might want to disable it or adapt it, but adhering to the user's request for "related", 
-    // we will render the 0-9 grid ONLY if "Single Digit" is involved, or maybe standard rows for others.
-    // However, strict adherence to the screenshot 1 (0-9 grid) suggests simpler logic.
-    // We'll show the grid for Single Digit and a placeholder for others to avoid confusion.
-    const isSingleDigit = title.toLowerCase().includes('single digit');
+    const isSingleDigit = bidConfig?.hasSpecialMode ?? title.toLowerCase().includes('single digit');
+    const showTabs = bidConfig?.hasSpecialMode;
 
     return (
         <div className="min-h-screen bg-gray-100 font-sans">
             {/* Header */}
             <div className="bg-gray-200 px-4 py-3 flex items-center justify-between shadow-sm sticky top-0 z-10">
-                <button onClick={() => navigate(-1)} className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50">
+                <button 
+                  onClick={() => market ? navigate('/bidoptions', { state: { market } }) : navigate(-1)} 
+                  className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </button>
-                <h1 className="text-lg font-bold uppercase tracking-wide">{title}</h1>
+                <h1 className="text-lg font-bold uppercase tracking-wide">
+                  {market?.gameName ? `${market.gameName} - ${title}` : title}
+                </h1>
                 <div className="bg-black text-white px-3 py-1.5 rounded-full flex items-center gap-2 text-sm font-bold shadow-md">
                     <div className="w-5 h-5 bg-white rounded flex items-center justify-center">
                         <div className="w-3 h-2 border-2 border-black border-t-0 border-l-0 transform rotate-45 mb-1"></div>
@@ -77,7 +124,8 @@ const GameBid = () => {
                 </div>
             </div>
 
-            {/* Tabs */}
+            {/* Tabs - hide when bulk mode (included in left panel) */}
+            {showTabs && !(activeTab === 'special' && isSingleDigit) && (
             <div className="p-4 grid grid-cols-2 gap-3">
                 <button
                     onClick={() => setActiveTab('special')}
@@ -86,7 +134,7 @@ const GameBid = () => {
                             : 'bg-white text-gray-700 border-gray-300'
                         }`}
                 >
-                    SPECIAL MODE
+                    BULK MODE
                 </button>
                 <button
                     onClick={() => setActiveTab('easy')}
@@ -98,8 +146,10 @@ const GameBid = () => {
                     EASY MODE
                 </button>
             </div>
+            )}
 
-            {/* Controls: Date & Session */}
+            {/* Controls: Date & Session - hide when bulk mode (included in left panel) */}
+            {!(activeTab === 'special' && isSingleDigit) && (
             <div className="px-4 pb-4 grid grid-cols-2 gap-3">
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -109,7 +159,7 @@ const GameBid = () => {
                     </div>
                     <input
                         type="text"
-                        value="30-01-2026"
+                        value={todayDate}
                         readOnly
                         className="w-full pl-10 py-2.5 bg-white border border-gray-300 rounded-full text-sm font-bold text-center shadow-sm text-gray-800 focus:outline-none"
                     />
@@ -128,40 +178,43 @@ const GameBid = () => {
                     </div>
                 </div>
             </div>
+            )}
 
             {/* Content Area */}
             <div className="flex-1 overflow-y-auto pb-32">
                 {activeTab === 'easy' ? (
                     /* EASY MODE CONTENT */
                     <div className="px-4">
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Select Game Type:</label>
-                            <div className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm font-bold text-gray-800 shadow-sm">
-                                {session}
+                        {/* 3 fields: horizontal on desktop, stacked on mobile */}
+                        <div className="flex flex-col md:flex-row md:items-end gap-4 mb-4">
+                            <div className="flex-1">
+                                <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Select Game Type:</label>
+                                <div className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm font-bold text-gray-800 shadow-sm">
+                                    {session}
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">{label}:</label>
-                            <input
-                                type="number"
-                                value={inputNumber}
-                                onChange={(e) => setInputNumber(e.target.value)}
-                                placeholder={label.split(' ')[1]}
-                                className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm shadow-sm focus:ring-2 focus:ring-blue-900 focus:outline-none"
-                                maxLength={maxLength}
-                            />
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Enter Points:</label>
-                            <input
-                                type="number"
-                                value={inputPoints}
-                                onChange={(e) => setInputPoints(e.target.value)}
-                                placeholder="Point"
-                                className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm shadow-sm focus:ring-2 focus:ring-blue-900 focus:outline-none"
-                            />
+                            <div className="flex-1">
+                                <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">{label}:</label>
+                                <input
+                                    type={bidConfig?.digitCount === 1 ? 'text' : 'number'}
+                                    inputMode={bidConfig?.digitCount === 1 ? 'numeric' : 'numeric'}
+                                    value={inputNumber}
+                                    onChange={handleNumberInputChange}
+                                    placeholder={label.split(' ').pop()}
+                                    className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm shadow-sm focus:ring-2 focus:ring-blue-900 focus:outline-none"
+                                    maxLength={maxLength}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Enter Points:</label>
+                                <input
+                                    type="number"
+                                    value={inputPoints}
+                                    onChange={(e) => setInputPoints(e.target.value)}
+                                    placeholder="Point"
+                                    className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm shadow-sm focus:ring-2 focus:ring-blue-900 focus:outline-none"
+                                />
+                            </div>
                         </div>
 
                         <button
@@ -207,46 +260,106 @@ const GameBid = () => {
 
                     </div>
                 ) : (
-                    /* SPECIAL MODE CONTENT */
+                    /* BULK MODE CONTENT */
                     <div className="px-4">
                         {isSingleDigit ? (
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Left Column (Evens basically, per screenshot 0,2,4,6,8) */}
-                                <div className="space-y-3">
-                                    {[0, 2, 4, 6, 8].map(num => (
-                                        <div key={num} className="flex items-center">
-                                            <div className="w-10 h-10 bg-[#0F172A] text-white flex items-center justify-center rounded-l-md font-bold text-sm">
-                                                {num}
+                            <div className="flex flex-col md:grid md:grid-cols-2 md:gap-6 md:items-center md:min-h-0">
+                                {/* Left half: Options */}
+                                <div className="w-full md:flex md:justify-center md:items-center">
+                                    <div className="grid grid-cols-2 gap-4 mb-4 md:mb-0 max-w-sm">
+                                        <div className="col-span-2 grid grid-cols-2 gap-2">
+                                            <button
+                                                onClick={() => setActiveTab('special')}
+                                                className={`py-2.5 rounded-md font-bold text-sm shadow-sm transition-colors border ${activeTab === 'special'
+                                                    ? 'bg-[#0F172A] text-white border-[#0F172A]'
+                                                    : 'bg-white text-gray-700 border-gray-300'
+                                                }`}
+                                            >
+                                                BULK MODE
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTab('easy')}
+                                                className={`py-2.5 rounded-md font-bold text-sm shadow-sm transition-colors border ${activeTab === 'easy'
+                                                    ? 'bg-[#0F172A] text-white border-[#0F172A]'
+                                                    : 'bg-white text-gray-700 border-gray-300'
+                                                }`}
+                                            >
+                                                EASY MODE
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Date</label>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                                <input type="text" value={todayDate} readOnly className="w-full pl-9 py-2 bg-white border border-gray-300 rounded-full text-sm font-bold text-center text-gray-800" />
                                             </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Select Game Type:</label>
+                                            <select
+                                                value={session}
+                                                onChange={(e) => setSession(e.target.value)}
+                                                className="w-full appearance-none bg-white border border-gray-300 text-gray-800 font-bold text-sm py-2 px-4 rounded-full text-center shadow-sm focus:outline-none"
+                                            >
+                                                <option value="OPEN">OPEN</option>
+                                                <option value="CLOSE">CLOSE</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="block text-gray-700 text-sm font-medium mb-1 pl-1">Enter Points:</label>
                                             <input
                                                 type="number"
-                                                value={specialBids[num]}
-                                                onChange={(e) => handleSpecialChange(num, e.target.value)}
-                                                className="w-full h-10 bg-gray-200 rounded-r-md border-y border-r border-gray-300 focus:outline-none focus:bg-white focus:border-blue-500 px-3 text-sm font-semibold"
+                                                min="1"
+                                                value={inputPoints}
+                                                onChange={(e) => setInputPoints(e.target.value)}
+                                                placeholder="Point"
+                                                className="w-full bg-white border border-gray-300 rounded-full py-2.5 px-4 text-center text-sm shadow-sm focus:ring-2 focus:ring-blue-900 focus:outline-none"
                                             />
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
-                                {/* Right Column (Odds basically, per screenshot 1,3,5,7,9) */}
-                                <div className="space-y-3">
-                                    {[1, 3, 5, 7, 9].map(num => (
-                                        <div key={num} className="flex items-center">
-                                            <div className="w-10 h-10 bg-[#0F172A] text-white flex items-center justify-center rounded-l-md font-bold text-sm">
-                                                {num}
-                                            </div>
-                                            <input
-                                                type="number"
-                                                value={specialBids[num]}
-                                                onChange={(e) => handleSpecialChange(num, e.target.value)}
-                                                className="w-full h-10 bg-gray-200 rounded-r-md border-y border-r border-gray-300 focus:outline-none focus:bg-white focus:border-blue-500 px-3 text-sm font-semibold"
-                                            />
-                                        </div>
+                                {/* Right half: Digit grid */}
+                                <div className="w-full md:flex md:justify-center md:items-center pt-4 md:pt-6">
+                                <div className="grid grid-cols-3 gap-2 max-w-[160px] w-full md:max-w-[200px] mx-auto">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                                        <button
+                                            key={num}
+                                            type="button"
+                                            onClick={() => handleDigitClick(num)}
+                                            className="relative aspect-square min-h-[38px] bg-[#0F172A] hover:bg-[#1e293b] text-white rounded-lg font-bold text-base flex items-center justify-center transition-all active:scale-95 shadow-md"
+                                        >
+                                            {num}
+                                            {specialBids[num] > 0 && (
+                                                <span className="absolute top-0.5 right-1 text-[10px] font-bold text-yellow-300">
+                                                    {specialBids[num]}
+                                                </span>
+                                            )}
+                                        </button>
                                     ))}
+                                    <div className="col-span-3 flex justify-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDigitClick(0)}
+                                            className="relative aspect-square min-w-[38px] min-h-[38px] w-14 bg-[#0F172A] hover:bg-[#1e293b] text-white rounded-lg font-bold text-base flex items-center justify-center transition-all active:scale-95 shadow-md"
+                                        >
+                                            0
+                                            {specialBids[0] > 0 && (
+                                                <span className="absolute top-0.5 right-1 text-[10px] font-bold text-yellow-300">
+                                                    {specialBids[0]}
+                                                </span>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="bg-white p-6 rounded-lg shadow text-center">
-                                <p className="text-gray-500 mb-2">Bulk entry mode is optimized for Single Digit.</p>
+                                <p className="text-gray-500 mb-2">Bulk mode is available for Single Digit only.</p>
                                 <p className="text-sm text-gray-400">Please use Easy Mode for {title}.</p>
                             </div>
                         )}
@@ -257,9 +370,9 @@ const GameBid = () => {
             {/* Footer */}
             <div className="fixed bottom-[65px] left-0 right-0 bg-gray-200 p-4 border-t border-gray-300 md:bottom-0">
                 <div className="flex justify-between items-center px-2 mb-3 text-sm font-bold text-gray-700">
-                    <div className="text-center">
+                        <div className="text-center">
                         <div className="text-xs text-gray-500 uppercase">Bids</div>
-                        <div className="text-lg text-gray-900">{bids.length}</div>
+                        <div className="text-lg text-gray-900">{bidsCount}</div>
                     </div>
                     <div className="text-center">
                         <div className="text-xs text-gray-500 uppercase">Points</div>

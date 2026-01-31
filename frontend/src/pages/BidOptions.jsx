@@ -1,8 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const BidOptions = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const market = location.state?.market;
+
+  // Redirect to home if no market (direct URL access or refresh)
+  useEffect(() => {
+    if (!market) {
+      navigate('/', { replace: true });
+    }
+  }, [market, navigate]);
 
   const options = [
     {
@@ -156,6 +165,19 @@ const BidOptions = () => {
     }
   ];
 
+  if (!market) {
+    return null; // Will redirect via useEffect
+  }
+
+  // When market is "CLOSED IS RUNNING", hide Jodi, Jodi Bulk, and Half Sangam (A)
+  const isRunning = market.status === 'running';
+  const visibleOptions = isRunning
+    ? options.filter((opt) => {
+        const t = opt.title.toLowerCase();
+        return !t.includes('jodi') && !(t.includes('half sangam') && t.includes('(a)'));
+      })
+    : options;
+
   return (
     <div className="min-h-screen bg-black flex flex-col items-center">
       {/* Header */}
@@ -169,21 +191,22 @@ const BidOptions = () => {
           </svg>
         </button>
         <div className="w-full text-center">
-          {/* Using a similar golden outlined visual for header as likely intended */}
+          {/* Dynamic market name from selected market */}
           <h1 className="text-white font-bold text-lg tracking-wider uppercase inline-block border-b-2 border-yellow-500 pb-1">
-            RUDRAKSH MORNING
+            {market?.gameName || 'SELECT MARKET'}
           </h1>
         </div>
       </div>
 
       {/* Grid Content */}
       <div className="w-full max-w-md p-3 grid grid-cols-2 gap-3">
-        {options.map((option) => (
+        {visibleOptions.map((option) => (
           <div
             key={option.id}
             onClick={() => navigate('/game-bid', {
               state: {
-                title: option.title,
+                market,
+                betType: option.title,
                 gameMode: option.title.toLowerCase().includes('bulk') ? 'bulk' : 'easy'
               }
             })}

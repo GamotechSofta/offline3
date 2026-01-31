@@ -110,11 +110,18 @@ const Section1 = () => {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          {markets.map((market) => (
+          {markets.map((market) => {
+            // open + running = clickable; closed = not clickable
+            const isClickable = market.status === 'open' || market.status === 'running';
+            return (
             <div
               key={market.id}
-              onClick={() => navigate('/bidoptions')}
-              className="bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform hover:scale-[1.02] transition-transform duration-200"
+              onClick={() => isClickable && navigate('/bidoptions', { state: { market } })}
+              className={`bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-200 ${
+                isClickable 
+                  ? 'cursor-pointer hover:scale-[1.02]' 
+                  : 'cursor-not-allowed opacity-80'
+              }`}
             >
               {/* Status: ***-**-***=Open(green), 156-2*-***=Running(green), 987-45-456=Closed(red) */}
               <div className={`${
@@ -155,7 +162,8 @@ const Section1 = () => {
               </div>
             </div>
           </div>
-        ))}
+            );
+          })}
         </div>
       )}
     </section>
