@@ -184,6 +184,24 @@ const AllUsers = () => {
                 </button>
             </div>
 
+            {/* Fixed top notification - no layout shift */}
+            {(success || error) && (
+                <div className="fixed top-14 lg:top-4 left-0 right-0 lg:left-72 lg:right-0 flex justify-center px-4 z-50 pointer-events-none">
+                    <div className={`px-3 py-2 rounded-lg flex items-center gap-2 shadow-lg backdrop-blur-sm border text-sm max-w-md ${
+                        success
+                            ? 'bg-green-900/95 border-green-700 text-green-200'
+                            : 'bg-red-900/95 border-red-700 text-red-200'
+                    }`}>
+                        <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+                            success ? 'bg-green-600/50 text-green-300' : 'bg-red-600/50 text-red-300'
+                        }`}>
+                            {success ? '✓' : '✕'}
+                        </span>
+                        <span className="flex-1">{success || error}</span>
+                    </div>
+                </div>
+            )}
+
             {/* Tabs */}
             <div className="flex flex-wrap gap-2 mb-4">
                 {TABS.map((tab) => (
@@ -223,17 +241,6 @@ const AllUsers = () => {
                     )}
                 </div>
             </div>
-
-            {error && (
-                <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
-                    {error}
-                </div>
-            )}
-            {success && (
-                <div className="mb-4 p-4 bg-green-900/50 border border-green-700 rounded-lg text-green-200">
-                    {success}
-                </div>
-            )}
 
             {/* Table */}
             <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 min-w-0 max-w-full">
