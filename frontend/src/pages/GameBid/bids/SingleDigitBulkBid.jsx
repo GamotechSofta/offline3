@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 
 const SingleDigitBulkBid = ({ market, title }) => {
-    const [session, setSession] = useState('OPEN');
+    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
     const [inputPoints, setInputPoints] = useState('');
     const [bids, setBids] = useState([]);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
@@ -13,6 +13,11 @@ const SingleDigitBulkBid = ({ market, title }) => {
         window.clearTimeout(showWarning._t);
         showWarning._t = window.setTimeout(() => setWarning(''), 2200);
     };
+
+    const isRunning = market?.status === 'running'; // "CLOSED IS RUNNING"
+    useEffect(() => {
+        if (isRunning) setSession('CLOSE');
+    }, [isRunning]);
 
     const handleDigitClick = (num) => {
         const pts = Number(inputPoints);
@@ -110,9 +115,20 @@ const SingleDigitBulkBid = ({ market, title }) => {
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-xs font-medium shrink-0 w-16">Type:</label>
-                                <select value={session} onChange={(e) => setSession(e.target.value)} className="flex-1 min-w-0 appearance-none bg-[#202124] border border-white/10 text-white font-bold text-xs py-2 min-h-[36px] px-4 rounded-full text-center focus:outline-none focus:border-[#d4af37]">
-                                    <option value="OPEN">OPEN</option>
-                                    <option value="CLOSE">CLOSE</option>
+                                <select
+                                    value={session}
+                                    onChange={(e) => setSession(e.target.value)}
+                                    disabled={isRunning}
+                                    className={`flex-1 min-w-0 appearance-none bg-[#202124] border border-white/10 text-white font-bold text-xs py-2 min-h-[36px] px-4 rounded-full text-center focus:outline-none focus:border-[#d4af37] ${isRunning ? 'opacity-80 cursor-not-allowed' : ''}`}
+                                >
+                                    {isRunning ? (
+                                        <option value="CLOSE">CLOSE</option>
+                                    ) : (
+                                        <>
+                                            <option value="OPEN">OPEN</option>
+                                            <option value="CLOSE">CLOSE</option>
+                                        </>
+                                    )}
                                 </select>
                             </div>
                             <div className="flex flex-row items-center gap-2">

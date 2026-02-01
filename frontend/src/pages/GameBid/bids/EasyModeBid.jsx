@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 
@@ -17,7 +17,7 @@ const EasyModeBid = ({
     desktopSplit = false,
 }) => {
     const [activeTab, setActiveTab] = useState('easy'); // easy | special
-    const [session, setSession] = useState('OPEN');
+    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
     const [bids, setBids] = useState([]);
     const [reviewRows, setReviewRows] = useState([]);
     const [inputNumber, setInputNumber] = useState('');
@@ -29,6 +29,11 @@ const EasyModeBid = ({
         window.clearTimeout(showWarning._t);
         showWarning._t = window.setTimeout(() => setWarning(''), 2200);
     };
+
+    const isRunning = market?.status === 'running'; // "CLOSED IS RUNNING"
+    useEffect(() => {
+        if (isRunning) setSession('CLOSE');
+    }, [isRunning]);
 
     const jodiNumbers = useMemo(
         () => Array.from({ length: 100 }, (_, i) => String(i).padStart(2, '0')),
@@ -210,10 +215,17 @@ const EasyModeBid = ({
                     <select
                         value={session}
                         onChange={(e) => setSession(e.target.value)}
-                        className="w-full appearance-none bg-[#202124] border border-white/10 text-white font-bold text-sm py-3 sm:py-2.5 min-h-[44px] px-4 rounded-full text-center focus:outline-none focus:border-[#d4af37]"
+                        disabled={isRunning}
+                        className={`w-full appearance-none bg-[#202124] border border-white/10 text-white font-bold text-sm py-3 sm:py-2.5 min-h-[44px] px-4 rounded-full text-center focus:outline-none focus:border-[#d4af37] ${isRunning ? 'opacity-80 cursor-not-allowed' : ''}`}
                     >
-                        <option value="OPEN">OPEN</option>
-                        <option value="CLOSE">CLOSE</option>
+                        {isRunning ? (
+                            <option value="CLOSE">CLOSE</option>
+                        ) : (
+                            <>
+                                <option value="OPEN">OPEN</option>
+                                <option value="CLOSE">CLOSE</option>
+                            </>
+                        )}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
