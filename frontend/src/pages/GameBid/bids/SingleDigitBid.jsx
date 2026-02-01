@@ -9,6 +9,12 @@ const SingleDigitBid = ({ market, title }) => {
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
+    const [warning, setWarning] = useState('');
+    const showWarning = (msg) => {
+        setWarning(msg);
+        window.clearTimeout(showWarning._t);
+        showWarning._t = window.setTimeout(() => setWarning(''), 2200);
+    };
     const [specialModeInputs, setSpecialModeInputs] = useState(
         Object.fromEntries(Array.from({ length: 10 }, (_, i) => [i, '']))
     );
@@ -24,9 +30,20 @@ const SingleDigitBid = ({ market, title }) => {
     };
 
     const handleAddBid = () => {
-        if (!inputPoints || Number(inputPoints) <= 0) return;
+        const pts = Number(inputPoints);
+        if (!pts || pts <= 0) {
+            showWarning('Please enter points.');
+            return;
+        }
         const n = inputNumber.toString().trim();
-        if (!n || !/^[0-9]$/.test(n)) return;
+        if (!n) {
+            showWarning('Please enter digit (0-9).');
+            return;
+        }
+        if (!/^[0-9]$/.test(n)) {
+            showWarning('Invalid digit. Use 0-9.');
+            return;
+        }
         const next = [...bids, { id: Date.now(), number: n, points: inputPoints, type: session }];
         setBids(next);
         setInputNumber('');
@@ -43,7 +60,10 @@ const SingleDigitBid = ({ market, title }) => {
         const toAdd = Object.entries(specialModeInputs)
             .filter(([, pts]) => Number(pts) > 0)
             .map(([num, pts]) => ({ id: Date.now() + parseInt(num, 10), number: num, points: String(pts), type: session }));
-        if (toAdd.length === 0) return;
+        if (toAdd.length === 0) {
+            showWarning('Please enter points for at least one digit (0-9).');
+            return;
+        }
         const next = [...bids, ...toAdd];
         setBids(next);
         setSpecialModeInputs(Object.fromEntries(Array.from({ length: 10 }, (_, i) => [i, ''])));
@@ -114,6 +134,11 @@ const SingleDigitBid = ({ market, title }) => {
 
     const leftColumn = (
         <div className="space-y-4">
+            {warning && (
+                <div className="bg-red-500/10 border border-red-500/30 text-red-200 rounded-xl px-4 py-3 text-sm">
+                    {warning}
+                </div>
+            )}
             {modeTabs}
             {dateSessionRow}
             {activeTab === 'easy' ? (
