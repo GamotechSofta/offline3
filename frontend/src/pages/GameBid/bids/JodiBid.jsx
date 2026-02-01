@@ -4,7 +4,18 @@ import EasyModeBid from './EasyModeBid';
 const validateJodi = (n) => n && /^[0-9]{2}$/.test(n.toString().trim());
 
 const JodiBid = (props) => (
-    <EasyModeBid {...props} label="Enter Jodi" maxLength={2} validateInput={validateJodi} />
+    <EasyModeBid
+        {...props}
+        label="Enter Jodi"
+        maxLength={2}
+        validateInput={validateJodi}
+        showBidsList
+        openReviewOnAdd={false}
+        showInlineSubmit
+        showModeTabs
+        specialModeType="jodi"
+        desktopSplit
+    />
 );
 
 export default JodiBid;

@@ -11,7 +11,12 @@ const SingleDigitBulkBid = ({ market, title }) => {
     const handleDigitClick = (num) => {
         const pts = Number(inputPoints);
         if (!pts || pts <= 0) return;
-        setSpecialBids((prev) => ({ ...prev, [num]: (prev[num] || 0) + pts }));
+        setSpecialBids((prev) => {
+            const next = { ...prev, [num]: (prev[num] || 0) + pts };
+            // Open payment popup after adding (no extra button needed)
+            setIsReviewOpen(true);
+            return next;
+        });
     };
 
     const bulkBidsCount = Object.values(specialBids).filter((v) => Number(v) > 0).length;
@@ -95,7 +100,14 @@ const SingleDigitBulkBid = ({ market, title }) => {
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-24">Enter Points:</label>
-                                <input type="number" min="1" value={inputPoints} onChange={(e) => setInputPoints(e.target.value)} placeholder="Point" className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none" />
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    value={inputPoints}
+                                    onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                    placeholder="Point"
+                                    className="no-spinner flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
+                                />
                             </div>
                         </div>
                     </div>
@@ -115,15 +127,6 @@ const SingleDigitBulkBid = ({ market, title }) => {
                             </div>
                         </div>
 
-                        {bulkBidsCount > 0 && (
-                            <button
-                                type="button"
-                                onClick={() => setIsReviewOpen(true)}
-                                className="mt-5 w-full max-w-[280px] md:max-w-[200px] mx-auto bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] font-bold py-3 min-h-[48px] rounded-lg shadow-md hover:from-[#e5c04a] hover:to-[#d4af37] transition-all active:scale-[0.98]"
-                            >
-                                Proceed to Payment
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>

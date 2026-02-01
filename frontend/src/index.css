@@ -24,6 +24,17 @@
   height: 0;
 }
 
+/* Hide number input spinners (Enter Points) */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spinner[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
   * {

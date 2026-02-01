@@ -19,7 +19,7 @@ const getWalletFromStorage = () => {
     }
 };
 
-const BidLayout = ({ market, title, children, bidsCount, totalPoints, showDateSession = true, extraHeader, session = 'OPEN', setSession = () => {}, footerRightOnDesktop = false, hideFooter = false, walletBalance }) => {
+const BidLayout = ({ market, title, children, bidsCount, totalPoints, showDateSession = true, extraHeader, session = 'OPEN', setSession = () => {}, footerRightOnDesktop = false, hideFooter = false, walletBalance, onSubmit = () => {} }) => {
     const navigate = useNavigate();
     const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
     const wallet = Number.isFinite(Number(walletBalance)) ? Number(walletBalance) : getWalletFromStorage();
@@ -98,7 +98,16 @@ const BidLayout = ({ market, title, children, bidsCount, totalPoints, showDateSe
                                 <div className="text-base sm:text-lg font-bold text-[#f2c14e]">{totalPoints}</div>
                             </div>
                         </div>
-                        <button className="flex-1 w-full sm:w-auto sm:min-w-[140px] bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] font-bold py-3 px-6 rounded-xl shadow-lg hover:from-[#e5c04a] hover:to-[#d4af37] transition-all active:scale-[0.98] text-sm sm:text-base">
+                        <button
+                            type="button"
+                            onClick={onSubmit}
+                            disabled={!bidsCount}
+                            className={`flex-1 w-full sm:w-auto sm:min-w-[140px] font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-sm sm:text-base ${
+                                bidsCount
+                                    ? 'bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] hover:from-[#e5c04a] hover:to-[#d4af37] active:scale-[0.98]'
+                                    : 'bg-white/10 text-gray-400 border border-white/10 cursor-not-allowed'
+                            }`}
+                        >
                             Submit Bids
                         </button>
                     </div>
