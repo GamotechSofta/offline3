@@ -170,27 +170,33 @@ const EasyModeBid = ({
         setMatchingPanas(matches);
         setSelectedSum(num);
         
-        // If points are entered, add all matching numbers to bids (avoid duplicates)
+        // If points are entered, add all matching numbers to bids (increase points if already exists)
         if (pts && pts > 0) {
             if (matches.length > 0) {
                 setBids((prev) => {
-                    const existingNumbers = new Set(prev.map(b => b.number));
-                    const newBids = matches
-                        .filter(pana => !existingNumbers.has(pana))
-                        .map((pana) => ({
-                            id: Date.now() + Math.random() + Math.random() * matches.indexOf(pana),
-                            number: pana,
-                            points: String(pts),
-                            type: session
-                        }));
-                    const addedCount = newBids.length;
-                    if (addedCount > 0) {
-                        showWarning(`Added ${addedCount} double pana numbers with sum ${num}${addedCount < matches.length ? ` (${matches.length - addedCount} already in list)` : ''}`);
-                    } else {
-                        showWarning(`All ${matches.length} double pana numbers with sum ${num} are already in the list`);
-                    }
-                    return [...prev, ...newBids];
+                    const bidsMap = new Map(prev.map(b => [b.number, { ...b, points: Number(b.points) || 0 }]));
+                    
+                    // For each matching pana, either add new bid or increase points
+                    matches.forEach((pana) => {
+                        if (bidsMap.has(pana)) {
+                            // Increase points for existing bid
+                            const existingBid = bidsMap.get(pana);
+                            existingBid.points = existingBid.points + pts;
+                            existingBid.points = String(existingBid.points);
+                        } else {
+                            // Add new bid
+                            bidsMap.set(pana, {
+                                id: Date.now() + Math.random() + Math.random() * matches.indexOf(pana),
+                                number: pana,
+                                points: String(pts),
+                                type: session
+                            });
+                        }
+                    });
+                    
+                    return Array.from(bidsMap.values());
                 });
+                showWarning(`Added ${matches.length} double pana numbers with sum ${num}`);
             } else {
                 showWarning(`No valid double pana numbers found with sum ${num}`);
             }
@@ -245,6 +251,33 @@ const EasyModeBid = ({
     const dateText = new Date().toLocaleDateString('en-GB'); // dd/mm/yyyy
     const marketTitle = market?.gameName || market?.marketName || title;
     const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+
+    // Calculate total points betted for each sum (0-9) for double pana
+    const pointsBySum = useMemo(() => {
+        if (specialModeType !== 'doublePana' || !validDoublePanas || validDoublePanas.length === 0) {
+            return {};
+        }
+        const sumMap = {};
+        for (let i = 0; i <= 9; i++) {
+            sumMap[i] = 0;
+        }
+        bids.forEach((bid) => {
+            const pana = bid.number;
+            if (validDoublePanas.includes(pana)) {
+                const digits = pana.split('').map(Number);
+                const sum = digits[0] + digits[1] + digits[2];
+                const unitPlace = sum % 10;
+                const points = Number(bid.points) || 0;
+                // Add points to the sum that would match (either actual sum if <= 9, or unit place)
+                if (sum <= 9) {
+                    sumMap[sum] = (sumMap[sum] || 0) + points;
+                } else {
+                    sumMap[unitPlace] = (sumMap[unitPlace] || 0) + points;
+                }
+            }
+        });
+        return sumMap;
+    }, [bids, specialModeType, validDoublePanas]);
 
     const submitBtnClass = (enabled) =>
         enabled
@@ -494,38 +527,50 @@ const EasyModeBid = ({
 
                                         {/* Select Sum Keypad with Submit Button */}
                                         <div className="flex gap-4 mb-4">
-                                            <div className="flex-1 bg-[#202124] border border-white/10 rounded-xl p-3">
-                                                <h3 className="text-base font-bold text-[#f2c14e] mb-4 text-center">Select Sum</h3>
-                                                <div className="grid grid-cols-5 gap-4">
-                                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                                                        <button
-                                                            key={num}
-                                                            type="button"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                handleKeypadClick(num);
-                                                            }}
-                                                            onTouchStart={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                handleKeypadClick(num);
-                                                            }}
-                                                            className={`aspect-square min-h-[50px] text-white rounded-xl font-bold text-lg flex items-center justify-center transition-all active:scale-90 shadow-lg cursor-pointer select-none ${
-                                                                selectedSum === num 
-                                                                    ? 'bg-gradient-to-br from-[#d4af37] to-[#cca84d] text-[#4b3608] ring-2 ring-[#f2c14e] shadow-[#d4af37]/50 scale-105 z-10' 
-                                                                    : 'bg-[#2a2d32] border-2 border-white/10 hover:border-[#d4af37]/60 hover:bg-[#2a2d32]/80 active:bg-[#2a2d32]'
-                                                            }`}
-                                                            style={{ 
-                                                                touchAction: 'manipulation',
-                                                                WebkitTapHighlightColor: 'transparent',
-                                                                userSelect: 'none',
-                                                                WebkitUserSelect: 'none'
-                                                            }}
-                                                        >
-                                                            {num}
-                                                        </button>
-                                                    ))}
+                                            <div className="flex-1 bg-[#202124] border border-white/10 rounded-xl p-2">
+                                                <h3 className="text-sm font-bold text-[#f2c14e] mb-3 text-center">Select Sum</h3>
+                                                <div className="grid grid-cols-5 sm:grid-cols-5 gap-1.5 sm:gap-2 md:gap-3">
+                                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
+                                                        const totalPointsForSum = pointsBySum[num] || 0;
+                                                        const hasPoints = Number(inputPoints) > 0;
+                                                        return (
+                                                            <button
+                                                                key={num}
+                                                                type="button"
+                                                                disabled={!hasPoints}
+                                                                onClick={(e) => {
+                                                                    if (!hasPoints) return;
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    handleKeypadClick(num);
+                                                                }}
+                                                                onTouchStart={(e) => {
+                                                                    if (!hasPoints) return;
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    handleKeypadClick(num);
+                                                                }}
+                                                                className={`relative aspect-square min-h-[40px] sm:min-h-[44px] md:min-h-[48px] text-white rounded-lg sm:rounded-xl font-bold text-sm sm:text-base flex items-center justify-center transition-all active:scale-90 shadow-lg select-none bg-[#2a2d32] border-2 border-white/10 ${
+                                                                    hasPoints 
+                                                                        ? 'cursor-pointer hover:border-[#d4af37]/60 hover:bg-[#2a2d32]/80 active:bg-[#2a2d32]' 
+                                                                        : 'cursor-not-allowed opacity-50'
+                                                                }`}
+                                                                style={{ 
+                                                                    touchAction: 'manipulation',
+                                                                    WebkitTapHighlightColor: 'transparent',
+                                                                    userSelect: 'none',
+                                                                    WebkitUserSelect: 'none'
+                                                                }}
+                                                            >
+                                                                {num}
+                                                                {totalPointsForSum > 0 && (
+                                                                    <span className="absolute top-0.5 right-0.5 sm:top-0.5 sm:right-0.5 bg-[#d4af37] text-[#4b3608] text-[8px] sm:text-[9px] font-bold rounded-full min-w-[14px] sm:min-w-[16px] h-3.5 sm:h-4 px-0.5 sm:px-1 flex items-center justify-center shadow-md">
+                                                                        {totalPointsForSum > 999 ? '999+' : totalPointsForSum}
+                                                                    </span>
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                             <div className="flex items-center">
@@ -551,47 +596,6 @@ const EasyModeBid = ({
                                                 </button>
                                             </div>
                                         </div>
-
-                                        {/* Display Matching Panas */}
-                                        {matchingPanas.length > 0 && (
-                                            <div className="bg-[#202124] border border-white/10 rounded-xl p-4 shadow-lg mb-4">
-                                                <div className="flex justify-between items-center mb-3 pb-3 border-b border-white/10">
-                                                    <div className="flex items-center gap-2">
-                                                        <h3 className="text-sm font-bold text-[#f2c14e]">Sum {selectedSum}</h3>
-                                                        <span className="text-xs text-gray-400 bg-[#2a2d32] px-2.5 py-1 rounded-full border border-white/10">
-                                                            {matchingPanas.length} numbers
-                                                        </span>
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setMatchingPanas([]);
-                                                            setSelectedSum(null);
-                                                        }}
-                                                        className="text-xs text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10"
-                                                    >
-                                                        Hide
-                                                    </button>
-                                                </div>
-                                                <div className="grid grid-cols-3 gap-2.5 max-h-60 overflow-y-auto custom-scrollbar">
-                                                    {matchingPanas.map((pana) => {
-                                                        const isInBids = bids.some(b => b.number === pana);
-                                                        return (
-                                                            <div
-                                                                key={pana}
-                                                                className={`text-center py-2.5 px-2 text-sm font-bold rounded-lg transition-all ${
-                                                                    isInBids
-                                                                        ? 'bg-[#d4af37]/25 border-2 border-[#d4af37] text-[#f2c14e]'
-                                                                        : 'bg-[#2a2d32] border border-white/15 text-white hover:border-[#d4af37]/60 hover:bg-[#2a2d32]/90'
-                                                                }`}
-                                                            >
-                                                                {pana}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        )}
 
                                         {/* Mobile: keep list below on small screens */}
                                         {desktopSplit && <div className="md:hidden mt-4">{bidsList}</div>}
