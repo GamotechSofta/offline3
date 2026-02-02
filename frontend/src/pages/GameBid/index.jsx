@@ -24,8 +24,11 @@ const BID_COMPONENTS = {
     'double pana bulk': DoublePanaBulkBid,
     'triple pana': TriplePanaBid,
     'full sangam': FullSangamBid,
+    // Half Sangam naming: support both legacy (A/B) and current (O/C).
     'half sangam (a)': HalfSangamABid,
     'half sangam (b)': HalfSangamBBid,
+    'half sangam (o)': HalfSangamABid,
+    'half sangam (c)': HalfSangamBBid,
 };
 
 const GameBid = () => {

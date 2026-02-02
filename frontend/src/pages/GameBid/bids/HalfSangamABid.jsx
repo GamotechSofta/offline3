@@ -4,7 +4,7 @@ import EasyModeBid from './EasyModeBid';
 const validateSangam = (n) => n && n.toString().trim().length >= 4;
 
 const HalfSangamABid = (props) => (
-    <EasyModeBid {...props} label="Enter Half Sangam (A)" maxLength={6} validateInput={validateSangam} />
+    <EasyModeBid {...props} label="Enter Half Sangam (O)" maxLength={6} validateInput={validateSangam} />
 );
 
 export default HalfSangamABid;

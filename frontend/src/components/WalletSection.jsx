@@ -109,7 +109,7 @@ const WalletSection = () => {
               <div className="h-12 w-12 rounded-xl bg-[#e8e1ff] text-[#4a3c9a] flex items-center justify-center text-2xl shadow-[0_6px_12px_rgba(232,225,255,0.35)]">
                 🎲
               </div>
-              <p className="text-white text-sm sm:text-base font-semibold tracking-wide">GALI-DISAWAR</p>
+              <p className="text-white text-sm sm:text-base font-semibold tracking-wide">KING BAZAAR</p>
             </div>
             <span className="text-white/40 text-lg">›</span>
           </div>

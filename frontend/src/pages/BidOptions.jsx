@@ -152,19 +152,27 @@ const BidOptions = () => {
     return null; // Will redirect via useEffect
   }
 
-  // When market is "CLOSED IS RUNNING", hide Jodi, Jodi Bulk, and Half Sangam (A)
+  // When market is "CLOSED IS RUNNING", hide options that require OPEN session.
   const isRunning = market.status === 'running';
   const visibleOptions = isRunning
     ? options.filter((opt) => {
-        const t = opt.title.toLowerCase();
-        return !t.includes('jodi') && !(t.includes('half sangam') && t.includes('(a)'));
+        const t = (opt.title || '').toLowerCase().trim();
+        // Support both legacy (A/B) and current (O/C) naming.
+        const hideWhenRunning = new Set([
+          'jodi',
+          'jodi bulk',
+          'full sangam',
+          'half sangam (o)',
+          'half sangam (a)',
+        ]);
+        return !hideWhenRunning.has(t);
       })
     : options;
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center">
       {/* Header */}
-      <div className="w-full flex items-center p-4 bg-black border-b border-gray-800 relative">
+      <div className="w-full flex items-center px-4 pt-5 pb-4 bg-black border-b border-gray-800 relative">
         <button
           onClick={() => navigate('/')}
           className="absolute left-4 text-gray-400 hover:text-white"
@@ -175,14 +183,14 @@ const BidOptions = () => {
         </button>
         <div className="w-full text-center">
           {/* Dynamic market name from selected market */}
-          <h1 className="text-white font-bold text-lg tracking-wider uppercase inline-block border-b-2 border-yellow-500 pb-1">
+          <h1 className="text-white font-bold text-lg tracking-wider uppercase inline-block border-b-2 border-yellow-500 pb-1 px-2 py-1">
             {market?.gameName || 'SELECT MARKET'}
           </h1>
         </div>
       </div>
 
       {/* Grid Content */}
-      <div className="w-full max-w-md lg:max-w-none p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="w-full max-w-md lg:max-w-none px-3 pt-3 pb-20 md:pb-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {visibleOptions.map((option) => (
           <div
             key={option.id}

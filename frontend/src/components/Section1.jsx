@@ -79,7 +79,7 @@ const Section1 = () => {
 
 
   return (
-    <section className="w-full bg-black py-4 sm:py-6 px-3 sm:px-4 md:px-8">
+    <section className="w-full bg-black pt-4 pb-20 sm:pt-6 sm:pb-10 px-3 sm:px-4 md:px-8 md:pb-8">
       {/* MARKETS Header */}
       {/* MARKETS Header */}
       <div className="flex items-end justify-center mb-8 w-full max-w-7xl mx-auto">

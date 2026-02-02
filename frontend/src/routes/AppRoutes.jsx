@@ -14,6 +14,7 @@ import Login from '../pages/Login';
 import Passbook from '../pages/Passbook';
 import Support from '../pages/Support';
 import Bids from '../pages/Bids';
+import Profile from '../pages/Profile';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -77,7 +78,7 @@ const Layout = ({ children }) => {
   return (
     <div className={`min-h-screen pb-16 md:pb-0 w-full max-w-full overflow-x-hidden ${isBidPage ? 'bg-black' : 'bg-gray-50'}`}>
       <AppHeader />
-      <div className="pt-[60px] sm:pt-[68px] md:pt-[80px]">
+      <div className={isBidPage ? 'pt-[68px] sm:pt-[76px] md:pt-[88px]' : 'pt-[60px] sm:pt-[68px] md:pt-[80px]'}>
         {children}
       </div>
       <BottomNavbar />
@@ -102,6 +103,7 @@ const AppRoutes = () => {
           <Route path="/support" element={<Support />} />
           <Route path="/login" element={<Login />} />
           <Route path="/bids" element={<Bids />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Layout>
     </Router>
