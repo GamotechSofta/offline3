@@ -59,7 +59,8 @@ export const userLogin = async (req, res) => {
         }
 
         const clientIp = getClientIp(req);
-        const trimmedDeviceId = deviceId && typeof deviceId === 'string' ? deviceId.trim() : '';
+        const rawDeviceId = req.body != null && 'deviceId' in req.body ? req.body.deviceId : deviceId;
+        const trimmedDeviceId = (rawDeviceId != null && String(rawDeviceId).trim()) ? String(rawDeviceId).trim() : '';
         const update = {
             lastActiveAt: new Date(),
             lastLoginIp: clientIp || undefined,

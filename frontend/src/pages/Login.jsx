@@ -56,19 +56,24 @@ const Login = () => {
 
     try {
       const endpoint = isLogin ? '/users/login' : '/users/signup';
-      let deviceId = null;
-      if (isLogin && typeof localStorage !== 'undefined') {
-        deviceId = localStorage.getItem('deviceId');
-        if (!deviceId && typeof crypto !== 'undefined' && crypto.randomUUID) {
-          deviceId = crypto.randomUUID();
-          localStorage.setItem('deviceId', deviceId);
-        } else if (!deviceId) {
+      let deviceId = '';
+      if (isLogin) {
+        try {
+          deviceId = typeof localStorage !== 'undefined' ? (localStorage.getItem('deviceId') || '') : '';
+          if (!deviceId) {
+            deviceId = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+              ? crypto.randomUUID()
+              : `web-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+            if (typeof localStorage !== 'undefined') {
+              localStorage.setItem('deviceId', deviceId);
+            }
+          }
+        } catch (e) {
           deviceId = `web-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-          localStorage.setItem('deviceId', deviceId);
         }
       }
       const body = isLogin
-        ? { ...formData, ...(deviceId ? { deviceId } : {}) }
+        ? { ...formData, deviceId: deviceId || undefined }
         : { ...formData, referredBy: refParam || undefined };
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
