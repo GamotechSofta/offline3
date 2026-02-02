@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const getWalletFromStorage = () => {
     try {
@@ -45,6 +45,8 @@ const BidLayout = ({
     contentPaddingClass,
 }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const contentRef = useRef(null);
     const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
     const wallet = Number.isFinite(Number(walletBalance)) ? Number(walletBalance) : getWalletFromStorage();
 
@@ -64,6 +66,22 @@ const BidLayout = ({
         }
         if (isRunning && session !== 'CLOSE') setSession('CLOSE');
     }, [isRunning, session, setSession, sessionOptionsOverride]);
+
+    // Scroll to top when route changes
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            // Scroll window
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            if (document.documentElement) document.documentElement.scrollTop = 0;
+            if (document.body) document.body.scrollTop = 0;
+            
+            // Scroll content container
+            if (contentRef.current) {
+                contentRef.current.scrollTop = 0;
+            }
+        }, 0);
+        return () => clearTimeout(timer);
+    }, [location.pathname]);
 
     return (
         <div className="min-h-screen bg-black font-sans w-full max-w-full overflow-x-hidden">
@@ -130,6 +148,7 @@ const BidLayout = ({
             )}
 
             <div
+                ref={contentRef}
                 className={`flex-1 overflow-y-auto overflow-x-hidden w-full max-w-full ${
                     contentPaddingClass ?? (hideFooter ? 'pb-6' : 'pb-44 md:pb-32')
                 }`}

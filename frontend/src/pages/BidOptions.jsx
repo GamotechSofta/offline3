@@ -117,50 +117,33 @@ const BidOptions = () => {
       id: 10,
       title: 'Full Sangam',
       icon: (
-        <div className="flex items-center gap-0.5">
-          <div className="w-7 h-9 bg-white border border-gray-300 rounded shadow-sm flex items-center justify-center -mr-2 z-10">
-            <span className="text-black text-[8px] font-bold">A</span>
-          </div>
-          <div className="w-7 h-9 bg-white border border-gray-300 rounded shadow-sm flex items-center justify-center mr-1 z-0">
-            <span className="text-black text-[8px]">A</span>
-          </div>
-
-          <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center shadow-sm">
-            <div className="w-1 h-1 bg-red-600 rounded-full"></div>
-          </div>
-          <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center shadow-sm -ml-1">
-            <div className="w-1 h-1 bg-red-600 mr-2 rounded-full"></div>
-            <div className="w-1 h-1 bg-red-600 rounded-full"></div>
-          </div>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770033671/Untitled_design_2_kr1imj.svg"
+          alt="Triple Pana"
+          className="w-30 h-30 object-contain"
+        />
       ),
     },
     {
       id: 11,
-      title: 'Half Sangam (A)',
+      title: 'Half Sangam (O)',
       icon: (
-        <div className="flex items-center gap-1">
-          <div className="w-8 h-10 bg-white border border-gray-300 rounded shadow-sm flex items-center justify-center">
-            <span className="text-black text-[10px] font-bold">A</span>
-          </div>
-          <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center shadow-sm">
-            <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
-          </div>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770033165/Untitled_design_c5hag8.svg"
+          alt="Triple Pana"
+          className="w-30 h-30 object-contain"
+        />
       ),
     },
     {
       id: 12,
-      title: 'Half Sangam (B)',
+      title: 'Half Sangam (C)',
       icon: (
-        <div className="flex items-center gap-1">
-          <div className="w-8 h-10 bg-white border border-gray-300 rounded shadow-sm flex items-center justify-center">
-            <span className="text-black text-[10px] font-bold">A</span>
-          </div>
-          <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center shadow-sm">
-            <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
-          </div>
-        </div>
+        <img
+          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770033270/Untitled_design_1_z8p4ic.svg"
+          alt="Triple Pana"
+          className="w-30 h-30 object-contain"
+        />
       ),
     }
   ];

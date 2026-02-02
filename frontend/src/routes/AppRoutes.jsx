@@ -15,6 +15,44 @@ import Passbook from '../pages/Passbook';
 import Support from '../pages/Support';
 import Bids from '../pages/Bids';
 
+<<<<<<< Updated upstream
+=======
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Use requestAnimationFrame to ensure DOM has updated, then scroll
+    const scrollToTop = () => {
+      // Scroll window and document elements
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+      
+      // Scroll any scrollable containers (with a small delay to catch dynamically rendered ones)
+      setTimeout(() => {
+        const scrollableElements = document.querySelectorAll('[class*="overflow-y-auto"], [class*="overflow-y-scroll"], [class*="overflow-auto"]');
+        scrollableElements.forEach((el) => {
+          if (el.scrollTop > 0) {
+            el.scrollTop = 0;
+          }
+        });
+      }, 10);
+    };
+
+    // Immediate scroll
+    scrollToTop();
+    
+    // Also scroll after a short delay to catch any late-rendering containers
+    const timer = setTimeout(scrollToTop, 50);
+
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
+  return null;
+};
+
+>>>>>>> Stashed changes
 const Layout = ({ children }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
