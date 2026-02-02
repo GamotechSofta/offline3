@@ -438,6 +438,7 @@ const EasyModeBid = ({
                     <>
                         {specialModeType === 'jodi' ? (
                             <>
+                                {showModeTabs && desktopSplit && <div className="mb-4">{modeHeader}</div>}
                                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 xl:grid-rows-10 xl:grid-flow-col xl:gap-2">
                                     {jodiNumbers.map((num) => (
                                         <div key={num} className="flex items-center gap-1.5">
