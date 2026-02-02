@@ -15,9 +15,9 @@ const validatePana = (n) => {
     const hasConsecutiveSame = (first === second) || (second === third);
     if (!hasConsecutiveSame) return false;
     
-    // Special case: Two zeros at the start are not allowed (001-009)
-    if (first === 0 && second === 0) {
-        return false; // All numbers starting with 00 are disallowed
+    // Numbers starting with zero are not allowed (001-099)
+    if (first === 0) {
+        return false;
     }
     
     // Special case: Two zeros at the end are allowed (300, 900, 100)
