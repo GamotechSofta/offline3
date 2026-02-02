@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 import { SkeletonCard, LoadingOverlay } from '../components/Skeleton';
 import StatCard from '../components/StatCard';
-import { FaChartLine, FaUsers, FaMoneyBillWave, FaChartBar, FaCalendarAlt } from 'react-icons/fa';
+import { FaChartLine, FaUsers, FaMoneyBillWave, FaChartBar, FaSyncAlt } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
 const PRESETS = [
-    { id: 'today', label: '1 Day (Today)', getRange: () => {
+    { id: 'today', label: 'Today', getRange: () => {
         const d = new Date();
         const y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
         const from = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         return { from, to: from };
     }},
-    { id: 'tomorrow', label: 'Tomorrow', getRange: () => {
+    { id: 'yesterday', label: 'Yesterday', getRange: () => {
         const d = new Date();
-        d.setDate(d.getDate() + 1);
+        d.setDate(d.getDate() - 1);
         const y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
         const from = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         return { from, to: from };
@@ -60,7 +60,7 @@ const PRESETS = [
 ];
 
 const formatRangeLabel = (from, to) => {
-    if (!from || !to) return '1 Day (Today)';
+    if (!from || !to) return 'Today';
     if (from === to) {
         const d = new Date(from + 'T12:00:00');
         return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -70,6 +70,55 @@ const formatRangeLabel = (from, to) => {
     return `${a.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} – ${b.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 };
 
+/** Calendar filter row - same theme as rest of admin (yellow accent) */
+const CalendarFilterRow = ({ datePreset, customMode, onPresetSelect, onCustomToggle, customOpen, customFrom, customTo, onCustomFromChange, onCustomToChange, onCustomApply }) => (
+    <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+            {PRESETS.map((p) => {
+                const isActive = !customMode && datePreset === p.id;
+                return (
+                    <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => onPresetSelect(p.id)}
+                        className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                            isActive
+                                ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/30'
+                                : 'bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:border-yellow-500/50'
+                        }`}
+                    >
+                        {p.label}
+                    </button>
+                );
+            })}
+            <button
+                type="button"
+                onClick={onCustomToggle}
+                className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                    customMode ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/30' : 'bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:border-yellow-500/50'
+                }`}
+            >
+                Custom
+            </button>
+        </div>
+        {customOpen && (
+            <div className="flex flex-wrap items-end gap-3 p-3 rounded-xl bg-gray-800/60 border border-gray-600">
+                <div>
+                    <label className="block text-xs text-gray-400 mb-1">From</label>
+                    <input type="date" value={customFrom} onChange={(e) => onCustomFromChange(e.target.value)} className="px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50" />
+                </div>
+                <div>
+                    <label className="block text-xs text-gray-400 mb-1">To</label>
+                    <input type="date" value={customTo} onChange={(e) => onCustomToChange(e.target.value)} className="px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50" />
+                </div>
+                <button type="button" onClick={onCustomApply} className="px-4 py-2 rounded-lg bg-yellow-500 text-black font-semibold text-sm hover:bg-yellow-400">
+                    Apply
+                </button>
+            </div>
+        )}
+    </div>
+);
+
 const AdminDashboard = () => {
     const navigate = useNavigate();
     const [stats, setStats] = useState(null);
@@ -78,9 +127,9 @@ const AdminDashboard = () => {
     const [datePreset, setDatePreset] = useState('today');
     const [customFrom, setCustomFrom] = useState('');
     const [customTo, setCustomTo] = useState('');
-    const [calendarOpen, setCalendarOpen] = useState(false);
     const [customMode, setCustomMode] = useState(false);
-    const dropdownRef = useRef(null);
+    const [customOpen, setCustomOpen] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const getFromTo = () => {
         if (customMode && customFrom && customTo) return { from: customFrom, to: customTo };
@@ -91,7 +140,7 @@ const AdminDashboard = () => {
     const getDisplayLabel = () => {
         if (customMode && customFrom && customTo) return formatRangeLabel(customFrom, customTo);
         const preset = PRESETS.find((p) => p.id === datePreset);
-        return preset ? preset.label : '1 Day (Today)';
+        return preset ? preset.label : 'Today';
     };
 
     useEffect(() => {
@@ -103,26 +152,28 @@ const AdminDashboard = () => {
         fetchDashboardStats();
     }, [navigate]);
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setCalendarOpen(false);
-        };
-        document.addEventListener('click', handleClickOutside);
-        return () => document.removeEventListener('click', handleClickOutside);
-    }, []);
-
-    const fetchDashboardStats = async (rangeOverride) => {
+    const fetchDashboardStats = async (rangeOverride, options = {}) => {
+        const isRefresh = options.refresh === true;
         try {
-            setLoading(true);
+            if (isRefresh) setRefreshing(true);
+            else setLoading(true);
             setError('');
             const { from, to } = rangeOverride || getFromTo();
             const admin = JSON.parse(localStorage.getItem('admin'));
             const password = sessionStorage.getItem('adminPassword') || '';
-            const url = `${API_BASE_URL}/dashboard/stats${from && to ? `?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}` : ''}`;
+            const params = new URLSearchParams();
+            if (from && to) {
+                params.set('from', from);
+                params.set('to', to);
+            }
+            if (isRefresh) params.set('_', String(Date.now()));
+            const query = params.toString();
+            const url = `${API_BASE_URL}/dashboard/stats${query ? `?${query}` : ''}`;
             const response = await fetch(url, {
                 headers: {
                     'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
                 },
+                cache: isRefresh ? 'no-store' : 'default',
             });
             const data = await response.json();
             if (data.success) {
@@ -134,23 +185,33 @@ const AdminDashboard = () => {
             setError('Network error. Please check if the server is running.');
         } finally {
             setLoading(false);
+            setRefreshing(false);
         }
+    };
+
+    const handleRefresh = () => {
+        fetchDashboardStats(undefined, { refresh: true });
     };
 
     const handlePresetSelect = (presetId) => {
         setDatePreset(presetId);
         setCustomMode(false);
-        setCalendarOpen(false);
+        setCustomOpen(false);
         const preset = PRESETS.find((p) => p.id === presetId);
         const range = preset ? preset.getRange() : PRESETS[0].getRange();
         fetchDashboardStats(range);
+    };
+
+    const handleCustomToggle = () => {
+        setCustomMode(true);
+        setCustomOpen((o) => !o);
     };
 
     const handleCustomApply = () => {
         if (!customFrom || !customTo) return;
         if (new Date(customFrom) > new Date(customTo)) return;
         setCustomMode(true);
-        setCalendarOpen(false);
+        setCustomOpen(false);
         fetchDashboardStats({ from: customFrom, to: customTo });
     };
 
@@ -171,37 +232,20 @@ const AdminDashboard = () => {
     if (loading) {
         return (
             <AdminLayout onLogout={handleLogout} title="Dashboard">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+                <div className="flex flex-col gap-4 mb-6 sm:mb-8">
                     <h1 className="text-2xl sm:text-3xl font-bold animate-fadeIn">Dashboard Overview</h1>
-                    <div className="relative shrink-0" ref={dropdownRef}>
-                        <button
-                            type="button"
-                            onClick={() => setCalendarOpen((o) => !o)}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-200 font-medium text-sm transition-colors"
-                        >
-                            <FaCalendarAlt className="w-4 h-4 text-yellow-500" />
-                            {getDisplayLabel()}
-                        </button>
-                        {calendarOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-gray-800 border border-gray-600 shadow-xl z-50 py-2">
-                                {PRESETS.map((p) => (
-                                    <button key={p.id} type="button" onClick={() => handlePresetSelect(p.id)} className="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-gray-700 flex items-center gap-2">
-                                        {datePreset === p.id && !customMode ? <span className="text-yellow-500">●</span> : <span className="w-2" />}
-                                        {p.label}
-                                    </button>
-                                ))}
-                                <div className="border-t border-gray-600 my-2" />
-                                <div className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">Custom Date Range</div>
-                                <div className="px-4 py-2 flex flex-col gap-2">
-                                    <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white" />
-                                    <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white" />
-                                    <button type="button" onClick={handleCustomApply} disabled={!customFrom || !customTo} className="w-full py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold text-sm">
-                                        Apply
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CalendarFilterRow
+                        datePreset={datePreset}
+                        customMode={customMode}
+                        onPresetSelect={handlePresetSelect}
+                        onCustomToggle={handleCustomToggle}
+                        customOpen={customOpen}
+                        customFrom={customFrom}
+                        customTo={customTo}
+                        onCustomFromChange={setCustomFrom}
+                        onCustomToChange={setCustomTo}
+                        onCustomApply={handleCustomApply}
+                    />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     {[...Array(4)].map((_, i) => (
@@ -220,37 +264,20 @@ const AdminDashboard = () => {
     if (error) {
         return (
             <AdminLayout onLogout={handleLogout} title="Dashboard">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+                <div className="flex flex-col gap-4 mb-6 sm:mb-8">
                     <h1 className="text-2xl sm:text-3xl font-bold animate-fadeIn">Dashboard Overview</h1>
-                    <div className="relative shrink-0" ref={dropdownRef}>
-                        <button
-                            type="button"
-                            onClick={() => setCalendarOpen((o) => !o)}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-200 font-medium text-sm transition-colors"
-                        >
-                            <FaCalendarAlt className="w-4 h-4 text-yellow-500" />
-                            {getDisplayLabel()}
-                        </button>
-                        {calendarOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-gray-800 border border-gray-600 shadow-xl z-50 py-2">
-                                {PRESETS.map((p) => (
-                                    <button key={p.id} type="button" onClick={() => handlePresetSelect(p.id)} className="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-gray-700 flex items-center gap-2">
-                                        {datePreset === p.id && !customMode ? <span className="text-yellow-500">●</span> : <span className="w-2" />}
-                                        {p.label}
-                                    </button>
-                                ))}
-                                <div className="border-t border-gray-600 my-2" />
-                                <div className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">Custom Date Range</div>
-                                <div className="px-4 py-2 flex flex-col gap-2">
-                                    <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white" />
-                                    <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white" />
-                                    <button type="button" onClick={handleCustomApply} disabled={!customFrom || !customTo} className="w-full py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold text-sm">
-                                        Apply
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <CalendarFilterRow
+                        datePreset={datePreset}
+                        customMode={customMode}
+                        onPresetSelect={handlePresetSelect}
+                        onCustomToggle={handleCustomToggle}
+                        customOpen={customOpen}
+                        customFrom={customFrom}
+                        customTo={customTo}
+                        onCustomFromChange={setCustomFrom}
+                        onCustomToChange={setCustomTo}
+                        onCustomApply={handleCustomApply}
+                    />
                 </div>
                 <div className="flex flex-col items-center justify-center min-h-[50vh] animate-fadeIn">
                     <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
@@ -272,37 +299,33 @@ const AdminDashboard = () => {
 
     return (
         <AdminLayout onLogout={handleLogout} title="Dashboard">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold animate-fadeIn">Dashboard Overview</h1>
-                <div className="relative shrink-0" ref={dropdownRef}>
+            <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <h1 className="text-2xl sm:text-3xl font-bold animate-fadeIn">Dashboard Overview</h1>
                     <button
                         type="button"
-                        onClick={() => setCalendarOpen((o) => !o)}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-200 font-medium text-sm transition-colors"
+                        onClick={handleRefresh}
+                        disabled={refreshing}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-700 hover:bg-yellow-500/20 border border-gray-600 hover:border-yellow-500/60 text-gray-200 hover:text-yellow-400 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-gray-700 disabled:hover:border-gray-600 disabled:hover:text-gray-200 text-sm font-medium"
+                        title="Refresh dashboard data"
+                        aria-label="Refresh dashboard"
                     >
-                        <FaCalendarAlt className="w-4 h-4 text-yellow-500" />
-                        {getDisplayLabel()}
+                        <FaSyncAlt className={`w-4 h-4 shrink-0 ${refreshing ? 'animate-spin' : ''}`} />
+                        <span>Refresh</span>
                     </button>
-                    {calendarOpen && (
-                        <div className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-gray-800 border border-gray-600 shadow-xl z-50 py-2">
-                            {PRESETS.map((p) => (
-                                <button key={p.id} type="button" onClick={() => handlePresetSelect(p.id)} className="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-gray-700 flex items-center gap-2">
-                                    {datePreset === p.id && !customMode ? <span className="text-yellow-500">●</span> : <span className="w-2" />}
-                                    {p.label}
-                                </button>
-                            ))}
-                            <div className="border-t border-gray-600 my-2" />
-                            <div className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">Custom Date Range</div>
-                            <div className="px-4 py-2 flex flex-col gap-2">
-                                <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white" />
-                                <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-sm text-white" />
-                                <button type="button" onClick={handleCustomApply} disabled={!customFrom || !customTo} className="w-full py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold text-sm">
-                                    Apply
-                                </button>
-                            </div>
-                        </div>
-                    )}
                 </div>
+                <CalendarFilterRow
+                    datePreset={datePreset}
+                    customMode={customMode}
+                    onPresetSelect={handlePresetSelect}
+                    onCustomToggle={handleCustomToggle}
+                    customOpen={customOpen}
+                    customFrom={customFrom}
+                    customTo={customTo}
+                    onCustomFromChange={setCustomFrom}
+                    onCustomToChange={setCustomTo}
+                    onCustomApply={handleCustomApply}
+                />
             </div>
 
             {/* Revenue Cards */}
