@@ -415,10 +415,9 @@ const PlayerDetail = () => {
                 </div>
             </div>
 
-            {/* Date range for statement */}
-            {activeTab === 'statement' && (
-                <div className="mb-4 flex flex-wrap items-center gap-2">
-                    <span className="text-gray-400 text-sm">Date range:</span>
+            {/* Date range - visible for all tabs (Statement, Wallet, Bet History, Profile, Exposure) */}
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+                <span className="text-gray-400 text-sm">Date range:</span>
                     <div className="relative" ref={dropdownRef}>
                         <button
                             type="button"
@@ -463,7 +462,6 @@ const PlayerDetail = () => {
                         )}
                     </div>
                 </div>
-            )}
 
             {/* Tabs */}
             <div className="flex flex-wrap gap-2 mb-4 border-b border-gray-700 pb-2">
