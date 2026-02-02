@@ -13,9 +13,10 @@ const EasyModeBid = ({
     showFooterSubmit = false,
     showInlineSubmit = false,
     showModeTabs = false,
-    specialModeType = null, // 'jodi' | 'doublePana'
+    specialModeType = null, // 'jodi' | 'doublePana' | 'singlePana'
     desktopSplit = false,
     validDoublePanas = [],
+    validSinglePanas = [],
 }) => {
     const [activeTab, setActiveTab] = useState('easy'); // easy | special
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
@@ -42,11 +43,15 @@ const EasyModeBid = ({
         () => Array.from({ length: 100 }, (_, i) => String(i).padStart(2, '0')),
         []
     );
+
+    const isPanaSumMode = specialModeType === 'doublePana' || specialModeType === 'singlePana';
+    const validPanasForSumMode =
+        specialModeType === 'doublePana' ? validDoublePanas : (specialModeType === 'singlePana' ? validSinglePanas : []);
     const [specialInputs, setSpecialInputs] = useState(() => {
         if (specialModeType === 'jodi') {
             return Object.fromEntries(Array.from({ length: 100 }, (_, i) => [String(i).padStart(2, '0'), '']));
-        } else if (specialModeType === 'doublePana' && validDoublePanas && validDoublePanas.length > 0) {
-            return Object.fromEntries(validDoublePanas.map(pana => [pana, '']));
+        } else if (isPanaSumMode && validPanasForSumMode && validPanasForSumMode.length > 0) {
+            return Object.fromEntries(validPanasForSumMode.map((pana) => [pana, '']));
         }
         return {};
     });
@@ -95,7 +100,7 @@ const EasyModeBid = ({
     const handleDeleteBid = (id) => setBids((prev) => prev.filter((b) => b.id !== id));
 
     const handleAddSpecialToList = () => {
-        if (specialModeType !== 'jodi' && specialModeType !== 'doublePana') return;
+        if (specialModeType !== 'jodi' && specialModeType !== 'doublePana' && specialModeType !== 'singlePana') return;
         const toAdd = Object.entries(specialInputs)
             .filter(([, pts]) => Number(pts) > 0)
             .map(([num, pts]) => ({
@@ -105,20 +110,22 @@ const EasyModeBid = ({
                 type: session,
             }));
         if (!toAdd.length) {
-            const label = specialModeType === 'jodi' ? 'Jodi (00-99)' : 'Double Pana';
+            const label =
+                specialModeType === 'jodi' ? 'Jodi (00-99)'
+                : (specialModeType === 'doublePana' ? 'Double Pana' : 'Single Pana');
             showWarning(`Please enter points for at least one ${label}.`);
             return;
         }
         setBids((prev) => [...prev, ...toAdd]);
         if (specialModeType === 'jodi') {
             setSpecialInputs(Object.fromEntries(jodiNumbers.map((n) => [n, ''])));
-        } else if (specialModeType === 'doublePana' && validDoublePanas.length > 0) {
-            setSpecialInputs(Object.fromEntries(validDoublePanas.map((n) => [n, ''])));
+        } else if (isPanaSumMode && validPanasForSumMode.length > 0) {
+            setSpecialInputs(Object.fromEntries(validPanasForSumMode.map((n) => [n, ''])));
         }
     };
 
     const handleSubmitFromSpecial = () => {
-        if (specialModeType !== 'jodi' && specialModeType !== 'doublePana') return;
+        if (specialModeType !== 'jodi' && specialModeType !== 'doublePana' && specialModeType !== 'singlePana') return;
         const toAdd = Object.entries(specialInputs)
             .filter(([, pts]) => Number(pts) > 0)
             .map(([num, pts]) => ({
@@ -129,7 +136,9 @@ const EasyModeBid = ({
             }));
 
         if (!toAdd.length && bids.length === 0) {
-            const label = specialModeType === 'jodi' ? 'Jodi (00-99)' : 'Double Pana';
+            const label =
+                specialModeType === 'jodi' ? 'Jodi (00-99)'
+                : (specialModeType === 'doublePana' ? 'Double Pana' : 'Single Pana');
             showWarning(`Please enter points for at least one ${label}.`);
             return;
         }
@@ -140,16 +149,16 @@ const EasyModeBid = ({
         setIsReviewOpen(true);
         if (specialModeType === 'jodi') {
             setSpecialInputs(Object.fromEntries(jodiNumbers.map((n) => [n, ''])));
-        } else if (specialModeType === 'doublePana' && validDoublePanas.length > 0) {
-            setSpecialInputs(Object.fromEntries(validDoublePanas.map((n) => [n, ''])));
+        } else if (isPanaSumMode && validPanasForSumMode.length > 0) {
+            setSpecialInputs(Object.fromEntries(validPanasForSumMode.map((n) => [n, ''])));
         }
     };
 
     // Find all double pana numbers whose digit sum matches the target (or unit place matches)
-    const findDoublePanaBySum = (targetNum) => {
-        if (specialModeType !== 'doublePana' || !validDoublePanas || validDoublePanas.length === 0) return [];
+    const findPanaBySum = (targetNum) => {
+        if (!isPanaSumMode || !validPanasForSumMode || validPanasForSumMode.length === 0) return [];
         const matches = [];
-        for (const pana of validDoublePanas) {
+        for (const pana of validPanasForSumMode) {
             const digits = pana.split('').map(Number);
             const sum = digits[0] + digits[1] + digits[2];
             // Check if sum equals target, or if unit place of sum equals target
@@ -162,11 +171,11 @@ const EasyModeBid = ({
     };
 
     const handleKeypadClick = (num) => {
-        if (specialModeType !== 'doublePana') return;
+        if (!isPanaSumMode) return;
         const pts = Number(inputPoints);
         
-        // Find all matching double pana numbers
-        const matches = findDoublePanaBySum(num);
+        // Find all matching pana numbers
+        const matches = findPanaBySum(num);
         setMatchingPanas(matches);
         setSelectedSum(num);
         
@@ -196,16 +205,16 @@ const EasyModeBid = ({
                     
                     return Array.from(bidsMap.values());
                 });
-                showWarning(`Added ${matches.length} double pana numbers with sum ${num}`);
+                showWarning(`Added ${matches.length} ${specialModeType === 'doublePana' ? 'double' : 'single'} pana numbers with sum ${num}`);
             } else {
-                showWarning(`No valid double pana numbers found with sum ${num}`);
+                showWarning(`No valid ${specialModeType === 'doublePana' ? 'double' : 'single'} pana numbers found with sum ${num}`);
             }
         } else {
             // If no points, just show the matching numbers
             if (matches.length > 0) {
-                showWarning(`Found ${matches.length} double pana numbers with sum ${num}. Enter points to add them.`);
+                showWarning(`Found ${matches.length} ${specialModeType === 'doublePana' ? 'double' : 'single'} pana numbers with sum ${num}. Enter points to add them.`);
             } else {
-                showWarning(`No valid double pana numbers found with sum ${num}`);
+                showWarning(`No valid ${specialModeType === 'doublePana' ? 'double' : 'single'} pana numbers found with sum ${num}`);
             }
         }
     };
@@ -254,7 +263,7 @@ const EasyModeBid = ({
 
     // Calculate total points betted for each sum (0-9) for double pana
     const pointsBySum = useMemo(() => {
-        if (specialModeType !== 'doublePana' || !validDoublePanas || validDoublePanas.length === 0) {
+        if (!isPanaSumMode || !validPanasForSumMode || validPanasForSumMode.length === 0) {
             return {};
         }
         const sumMap = {};
@@ -263,7 +272,7 @@ const EasyModeBid = ({
         }
         bids.forEach((bid) => {
             const pana = bid.number;
-            if (validDoublePanas.includes(pana)) {
+            if (validPanasForSumMode.includes(pana)) {
                 const digits = pana.split('').map(Number);
                 const sum = digits[0] + digits[1] + digits[2];
                 const unitPlace = sum % 10;
@@ -277,7 +286,7 @@ const EasyModeBid = ({
             }
         });
         return sumMap;
-    }, [bids, specialModeType, validDoublePanas]);
+    }, [bids, isPanaSumMode, validPanasForSumMode]);
 
     const submitBtnClass = (enabled) =>
         enabled
@@ -499,7 +508,7 @@ const EasyModeBid = ({
                                     <div className="md:hidden h-24" />
                                 )}
                             </>
-                        ) : specialModeType === 'doublePana' && validDoublePanas.length > 0 ? (
+                        ) : (specialModeType === 'doublePana' || specialModeType === 'singlePana') && validPanasForSumMode.length > 0 ? (
                             <>
                                 <div className={desktopSplit ? 'md:grid md:grid-cols-2 md:gap-6 md:items-start' : ''}>
                                     <div>
@@ -619,7 +628,7 @@ const EasyModeBid = ({
                                 <div className="md:hidden fixed left-0 right-0 bottom-[88px] z-20 px-3">
                                     {(() => {
                                         const enabled =
-                                            (specialModeType === 'jodi' || specialModeType === 'doublePana')
+                                            (specialModeType === 'jodi' || specialModeType === 'doublePana' || specialModeType === 'singlePana')
                                                 ? bids.length > 0 || Object.values(specialInputs).some((v) => Number(v) > 0)
                                                 : bids.length > 0;
                                         return (
@@ -630,7 +639,7 @@ const EasyModeBid = ({
                                                 ? bids.length === 0 && !Object.values(specialInputs).some((v) => Number(v) > 0)
                                                 : !bids.length
                                         }
-                                        onClick={(specialModeType === 'jodi' || specialModeType === 'doublePana') ? handleSubmitFromSpecial : () => { setReviewRows(bids); setIsReviewOpen(true); }}
+                                        onClick={(specialModeType === 'jodi' || specialModeType === 'doublePana' || specialModeType === 'singlePana') ? handleSubmitFromSpecial : () => { setReviewRows(bids); setIsReviewOpen(true); }}
                                         className={submitBtnClass(enabled)}
                                     >
                                         Submit Bet
@@ -643,7 +652,7 @@ const EasyModeBid = ({
                                 <div className="hidden md:block mt-4">
                                     {(() => {
                                         const enabled =
-                                            (specialModeType === 'jodi' || specialModeType === 'doublePana')
+                                            (specialModeType === 'jodi' || specialModeType === 'doublePana' || specialModeType === 'singlePana')
                                                 ? bids.length > 0 || Object.values(specialInputs).some((v) => Number(v) > 0)
                                                 : bids.length > 0;
                                         return (
@@ -654,7 +663,7 @@ const EasyModeBid = ({
                                                 ? bids.length === 0 && !Object.values(specialInputs).some((v) => Number(v) > 0)
                                                 : !bids.length
                                         }
-                                        onClick={(specialModeType === 'jodi' || specialModeType === 'doublePana') ? handleSubmitFromSpecial : () => { setReviewRows(bids); setIsReviewOpen(true); }}
+                                        onClick={(specialModeType === 'jodi' || specialModeType === 'doublePana' || specialModeType === 'singlePana') ? handleSubmitFromSpecial : () => { setReviewRows(bids); setIsReviewOpen(true); }}
                                         className={submitBtnClass(enabled)}
                                     >
                                         Submit Bet

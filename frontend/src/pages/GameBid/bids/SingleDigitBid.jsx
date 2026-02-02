@@ -3,7 +3,8 @@ import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 
 const SingleDigitBid = ({ market, title }) => {
-    const [activeTab, setActiveTab] = useState('easy');
+    // Single Digit: show Special Mode first (per requirement)
+    const [activeTab, setActiveTab] = useState('special');
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
     const [bids, setBids] = useState([]);
     const [inputNumber, setInputNumber] = useState('');
@@ -101,16 +102,16 @@ const SingleDigitBid = ({ market, title }) => {
     const modeTabs = (
         <div className="grid grid-cols-2 gap-3">
             <button
-                onClick={() => setActiveTab('easy')}
-                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-[#d4af37] text-[#4b3608] border-[#d4af37]' : 'bg-[#202124] text-gray-400 border-white/10 hover:border-[#d4af37]/50'}`}
-            >
-                EASY MODE
-            </button>
-            <button
                 onClick={() => setActiveTab('special')}
                 className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'special' ? 'bg-[#d4af37] text-[#4b3608] border-[#d4af37]' : 'bg-[#202124] text-gray-400 border-white/10 hover:border-[#d4af37]/50'}`}
             >
                 SPECIAL MODE
+            </button>
+            <button
+                onClick={() => setActiveTab('easy')}
+                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-[#d4af37] text-[#4b3608] border-[#d4af37]' : 'bg-[#202124] text-gray-400 border-white/10 hover:border-[#d4af37]/50'}`}
+            >
+                EASY MODE
             </button>
         </div>
     );

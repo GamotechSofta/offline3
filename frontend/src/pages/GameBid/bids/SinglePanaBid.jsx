@@ -37,6 +37,8 @@ const SinglePanaBid = (props) => (
         label="Enter Pana"
         maxLength={3}
         validateInput={validateSinglePana}
+        specialModeType="singlePana"
+        validSinglePanas={Array.from(VALID_SINGLE_PANAS)}
         showBidsList
         openReviewOnAdd={false}
         showInlineSubmit
