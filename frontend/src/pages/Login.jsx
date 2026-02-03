@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
+import { applyBookieTheme } from '../utils/theme';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -108,9 +109,8 @@ const Login = () => {
         };
 
         localStorage.setItem('user', JSON.stringify(userPayload));
-        // Dispatch custom event to update navbar
+        applyBookieTheme();
         window.dispatchEvent(new Event('userLogin'));
-        // Redirect to home
         navigate('/');
       } else {
         setError(data.message || 'Something went wrong');
@@ -136,7 +136,7 @@ const Login = () => {
 
         {/* LOG IN & SIGN UP Banner with gold outline */}
         <div className="w-full mb-3">
-          <div className="bg-gray-800 border-2 border-yellow-500 rounded-full px-6 py-3 text-center">
+          <div className="bg-gray-800 border-2 border-[var(--theme-primary)] rounded-full px-6 py-3 text-center">
             <h3 className="text-white text-xl sm:text-2xl font-bold uppercase">
               LOG IN & SIGN UP
             </h3>
@@ -159,7 +159,7 @@ const Login = () => {
               }}
               className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${
                 isLogin
-                  ? 'bg-yellow-500 text-black'
+                  ? 'bg-[var(--theme-primary)] text-black'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -172,7 +172,7 @@ const Login = () => {
               }}
               className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${
                 !isLogin
-                  ? 'bg-yellow-500 text-black'
+                  ? 'bg-[var(--theme-primary)] text-black'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -199,7 +199,7 @@ const Login = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:border-transparent"
                 placeholder="Enter your username"
                 required
               />
@@ -216,7 +216,7 @@ const Login = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:border-transparent"
                   placeholder="Enter your email"
                   required
                 />
@@ -234,7 +234,7 @@ const Login = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:border-transparent"
                   placeholder="Enter your phone number"
                 />
               </div>
@@ -250,7 +250,7 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:border-transparent"
                 placeholder="Enter your password"
                 required
               />
@@ -284,7 +284,8 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 text-white font-bold py-3 sm:py-4 rounded-lg hover:from-yellow-700 hover:to-yellow-600 transition-colors text-sm sm:text-base uppercase disabled:opacity-50"
+              style={{ background: 'linear-gradient(to right, var(--theme-accent), var(--theme-primary))' }}
+              className="w-full text-white font-bold py-3 sm:py-4 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base uppercase disabled:opacity-50"
             >
               {loading ? 'Please wait...' : isLogin ? 'LOGIN' : 'SIGN UP'}
             </button>

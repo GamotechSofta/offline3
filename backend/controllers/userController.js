@@ -1,4 +1,5 @@
 import User from '../models/user/user.js';
+import Admin from '../models/admin/admin.js';
 import bcrypt from 'bcryptjs';
 import { Wallet } from '../models/wallet/wallet.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
@@ -95,16 +96,23 @@ export const userLogin = async (req, res) => {
         const wallet = await Wallet.findOne({ userId: user._id });
         const balance = wallet ? wallet.balance : 0;
 
+        const data = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            balance: balance,
+        };
+        if (user.referredBy) {
+            data.referredBy = user.referredBy;
+            const bookie = await Admin.findById(user.referredBy).select('uiTheme').lean();
+            data.bookieTheme = bookie?.uiTheme || { themeId: 'default' };
+        }
+
         res.status(200).json({
             success: true,
             message: 'Login successful',
-            data: {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                balance: balance,
-            },
+            data,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -206,15 +214,21 @@ export const userSignup = async (req, res) => {
             updatedAt: new Date(),
         });
 
+        const signupData = {
+            id: userId,
+            username: userDoc.username,
+            email: userDoc.email,
+            role: userDoc.role,
+        };
+        if (referredBy) {
+            signupData.referredBy = referredBy;
+            const bookie = await Admin.findById(referredBy).select('uiTheme').lean();
+            signupData.bookieTheme = bookie?.uiTheme || { themeId: 'default' };
+        }
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            data: {
-                id: userId,
-                username: userDoc.username,
-                email: userDoc.email,
-                role: userDoc.role,
-            },
+            data: signupData,
         });
     } catch (error) {
         if (error.code === 11000) {

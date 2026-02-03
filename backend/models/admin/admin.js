@@ -32,6 +32,12 @@ const adminSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    /** Bookie-only: UI theme for their users' panel (user app). Ignored for super_admin. */
+    uiTheme: {
+        themeId: { type: String, enum: ['default', 'gold', 'blue', 'green', 'red', 'purple'], default: 'default' },
+        primaryColor: { type: String, trim: true },
+        accentColor: { type: String, trim: true },
+    },
 }, {
     timestamps: true,
 });
