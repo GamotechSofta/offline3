@@ -582,7 +582,7 @@ const EasyModeBid = ({
                                                     })}
                                                 </div>
                                             </div>
-                                            <div className={`flex items-center ${specialModeType === 'doublePana' ? 'hidden md:flex' : ''}`}>
+                                            <div className="flex items-center">
                                                 <button
                                                     type="button"
                                                     disabled={
