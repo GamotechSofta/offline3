@@ -93,7 +93,7 @@ const BottomNavbar = () => {
                 <div
                   className={`w-14 h-14 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.35)] transition-all duration-200 ${
                     active
-                      ? 'bg-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/60 ring-offset-2 ring-offset-black scale-105'
+                      ? 'bg-[#f3b61b] ring-2 ring-[#f3b61b]/60 ring-offset-2 ring-offset-black scale-105'
                       : 'bg-gray-800 border border-gray-700'
                   }`}
                 >
@@ -108,7 +108,7 @@ const BottomNavbar = () => {
                 </div>
                 <span
                   className={`text-[10px] sm:text-xs font-bold mt-1 transition-colors duration-200 ${
-                    active ? 'text-[var(--theme-primary)]' : 'text-white'
+                    active ? 'text-[#f3b61b]' : 'text-white'
                   }`}
                 >
                   {item.label}
@@ -134,12 +134,12 @@ const BottomNavbar = () => {
               {/* Active indicator dot below icon */}
               <div className="h-1.5 flex items-center justify-center">
                 {active && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--theme-primary)] shadow-[0_0_8px_rgba(0,0,0,0.4)]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f3b61b] shadow-[0_0_8px_rgba(0,0,0,0.4)]" />
                 )}
               </div>
               <span
                 className={`text-[10px] sm:text-xs font-bold transition-colors duration-200 ${
-                  active ? 'text-[var(--theme-primary)]' : 'text-white'
+                  active ? 'text-[#f3b61b]' : 'text-white'
                 }`}
               >
                 {item.label}

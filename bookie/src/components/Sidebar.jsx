@@ -13,7 +13,6 @@ import {
     FaLink,
     FaSignOutAlt,
     FaUsers,
-    FaPalette,
 } from 'react-icons/fa';
 
 const Sidebar = ({ onLogout }) => {
@@ -26,7 +25,6 @@ const Sidebar = ({ onLogout }) => {
         { path: '/markets', label: 'Markets', icon: FaChartBar },
         { path: '/add-user', label: 'Add Player', icon: FaUserPlus },
         { path: '/referral-link', label: 'My Referral Link', icon: FaLink },
-        { path: '/theme-settings', label: 'User Panel Theme', icon: FaPalette },
         { path: '/bet-history', label: 'Bet History', icon: FaHistory },
         { path: '/top-winners', label: 'Top Winners', icon: FaTrophy },
         { path: '/reports', label: 'Report', icon: FaChartLine },
