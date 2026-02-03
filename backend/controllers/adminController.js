@@ -119,10 +119,12 @@ export const createAdmin = async (req, res) => {
     }
 };
 
+const PHONE_REGEX = /^[6-9]\d{9}$/;
+
 /**
  * Create bookie (Admin collection with role 'bookie')
- * Only super_admin can create. Bookie can then login via /bookie/login
- * Body: { username, password, email, phone }
+ * Only super_admin can create. Bookie logs in to Bookie Panel with phone + password.
+ * Body: { username | (firstName + lastName), password, email, phone }
  */
 export const createBookie = async (req, res) => {
     try {
@@ -133,12 +135,38 @@ export const createBookie = async (req, res) => {
             });
         }
 
-        const { username, password, email, phone } = req.body;
+        const { username, firstName, lastName, email, password, phone } = req.body;
 
-        if (!username || !password) {
+        const derivedUsername = (firstName != null && lastName != null)
+            ? `${String(firstName).trim()} ${String(lastName).trim()}`.trim()
+            : (username != null ? String(username).trim() : '');
+
+        if (!derivedUsername) {
             return res.status(400).json({
                 success: false,
-                message: 'Username and password are required',
+                message: 'Username or both First name and Last name are required',
+            });
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password is required',
+            });
+        }
+
+        if (!phone || typeof phone !== 'string') {
+            return res.status(400).json({
+                success: false,
+                message: 'Phone number is required (bookies log in with phone + password)',
+            });
+        }
+
+        const trimmedPhone = phone.replace(/\D/g, '').slice(0, 10);
+        if (!PHONE_REGEX.test(trimmedPhone)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter a valid 10-digit phone number (starting with 6–9)',
             });
         }
 
@@ -149,21 +177,30 @@ export const createBookie = async (req, res) => {
             });
         }
 
-        const existingBookie = await Admin.findOne({ username });
+        const existingBookie = await Admin.findOne({
+            $or: [
+                { username: derivedUsername },
+                { phone: trimmedPhone },
+                ...(email ? [{ email: email.toLowerCase() }] : []),
+            ].filter(Boolean),
+        });
         if (existingBookie) {
-            return res.status(409).json({
-                success: false,
-                message: 'Username already exists',
-            });
+            if (existingBookie.phone === trimmedPhone) {
+                return res.status(409).json({ success: false, message: 'A bookie with this phone number already exists' });
+            }
+            if (email && existingBookie.email === email.toLowerCase()) {
+                return res.status(409).json({ success: false, message: 'A bookie with this email already exists' });
+            }
+            return res.status(409).json({ success: false, message: 'A bookie with this name already exists' });
         }
 
-        const bookie = new Admin({ 
-            username, 
-            password, 
+        const bookie = new Admin({
+            username: derivedUsername,
+            password,
             role: 'bookie',
-            email: email || '',
-            phone: phone || '',
-            status: 'active'
+            email: (email && String(email).trim()) ? email.trim().toLowerCase() : '',
+            phone: trimmedPhone,
+            status: 'active',
         });
         await bookie.save();
 
@@ -179,7 +216,7 @@ export const createBookie = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: 'Bookie created successfully. They can now login to the Bookie Panel.',
+            message: 'Bookie created successfully. They can log in to the Bookie Panel with phone + password.',
             data: {
                 id: bookie._id,
                 username: bookie.username,
@@ -289,7 +326,7 @@ export const getBookieById = async (req, res) => {
 /**
  * Update bookie
  * Only super_admin can update
- * Body: { username, email, phone, status, password (optional) }
+ * Body: { username | (firstName + lastName), email, phone, status, password (optional), uiTheme }
  */
 export const updateBookie = async (req, res) => {
     try {
@@ -301,7 +338,7 @@ export const updateBookie = async (req, res) => {
         }
 
         const { id } = req.params;
-        const { username, email, phone, status, password, uiTheme } = req.body;
+        const { username, firstName, lastName, email, phone, status, password, uiTheme } = req.body;
 
         const bookie = await Admin.findOne({ _id: id, role: 'bookie' });
         if (!bookie) {
@@ -311,20 +348,44 @@ export const updateBookie = async (req, res) => {
             });
         }
 
-        // Check if new username already exists (excluding current bookie)
-        if (username && username !== bookie.username) {
-            const existingBookie = await Admin.findOne({ username });
-            if (existingBookie) {
-                return res.status(409).json({
-                    success: false,
-                    message: 'Username already exists',
-                });
+        const derivedUsername = (firstName != null && lastName != null)
+            ? `${String(firstName).trim()} ${String(lastName).trim()}`.trim()
+            : (username != null ? String(username).trim() : null);
+
+        if (derivedUsername) {
+            if (derivedUsername !== bookie.username) {
+                const existingBookie = await Admin.findOne({ username: derivedUsername });
+                if (existingBookie) {
+                    return res.status(409).json({
+                        success: false,
+                        message: 'A bookie with this name already exists',
+                    });
+                }
+                bookie.username = derivedUsername;
             }
-            bookie.username = username;
         }
 
-        if (email !== undefined) bookie.email = email;
-        if (phone !== undefined) bookie.phone = phone;
+        if (email !== undefined) bookie.email = email ? String(email).trim().toLowerCase() : '';
+        if (phone !== undefined) {
+            const trimmedPhone = String(phone).replace(/\D/g, '').slice(0, 10);
+            if (trimmedPhone && !PHONE_REGEX.test(trimmedPhone)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Please enter a valid 10-digit phone number (starting with 6–9)',
+                });
+            }
+            const newPhone = trimmedPhone || '';
+            if (newPhone && newPhone !== bookie.phone) {
+                const existingByPhone = await Admin.findOne({ phone: newPhone });
+                if (existingByPhone) {
+                    return res.status(409).json({
+                        success: false,
+                        message: 'A bookie with this phone number already exists',
+                    });
+                }
+            }
+            bookie.phone = newPhone;
+        }
         if (status && ['active', 'inactive'].includes(status)) bookie.status = status;
         if (uiTheme && typeof uiTheme === 'object') {
             if (!bookie.uiTheme) bookie.uiTheme = { themeId: 'default' };

@@ -40,7 +40,12 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         { path: '/logs', label: 'Logs', icon: FaClipboardList },
     ];
 
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path) => {
+        if (path === '/all-users') {
+            return location.pathname === path || location.pathname.startsWith(path + '/');
+        }
+        return location.pathname === path;
+    };
 
     const handleNav = (path) => {
         navigate(path);

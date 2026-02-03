@@ -10,6 +10,12 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // If already logged in, go to dashboard
+    React.useEffect(() => {
+        const admin = localStorage.getItem('admin');
+        if (admin) navigate('/dashboard', { replace: true });
+    }, [navigate]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');

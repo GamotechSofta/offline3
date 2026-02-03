@@ -116,7 +116,7 @@ const PlayerDevices = () => {
                         <FaArrowLeft className="w-4 h-4" /> All Players
                     </Link>
                     <Link to={`/all-users/${userId}`} className="text-gray-400 hover:text-yellow-500 text-sm inline-flex items-center gap-1 mb-2 block">
-                        Players » {player.username}
+                        Player » {player.username}
                     </Link>
                     <h1 className="text-2xl sm:text-3xl font-bold">Devices used <span className="text-gray-400 font-normal">» {player.username}</span></h1>
                 </div>

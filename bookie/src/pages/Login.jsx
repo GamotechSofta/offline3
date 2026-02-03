@@ -4,8 +4,10 @@ import { useAuth } from '../context/AuthContext';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
+const PHONE_REGEX = /^[6-9]\d{9}$/;
+
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -16,9 +18,22 @@ const Login = () => {
         if (bookie) navigate('/dashboard');
     }, [bookie, navigate]);
 
+    const handlePhoneChange = (e) => {
+        setPhone(e.target.value.replace(/\D/g, '').slice(0, 10));
+        setError('');
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        if (!phone || !password) {
+            setError('Phone number and password are required');
+            return;
+        }
+        if (!PHONE_REGEX.test(phone)) {
+            setError('Please enter a valid 10-digit phone number (starting with 6–9)');
+            return;
+        }
         setLoading(true);
 
         try {
@@ -27,7 +42,7 @@ const Login = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ phone, password }),
             });
 
             const data = await response.json();
@@ -63,14 +78,15 @@ const Login = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label className="block text-gray-300 text-sm font-medium mb-2">
-                            Username
+                            Phone Number
                         </label>
                         <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            type="tel"
+                            value={phone}
+                            onChange={handlePhoneChange}
+                            maxLength={10}
                             className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                            placeholder="Enter username"
+                            placeholder="10-digit phone number"
                             required
                         />
                     </div>

@@ -27,10 +27,10 @@ const addOnlineStatus = (users) => {
 export const userLogin = async (req, res) => {
     try {
         const { username, phone, password, deviceId } = req.body;
-        
-        // Support both username and phone for login
+
+        // Support both username and phone for login (admin-created players use phone + password)
         const loginIdentifier = phone || username;
-        
+
         if (!loginIdentifier || !password) {
             return res.status(400).json({
                 success: false,
@@ -38,10 +38,13 @@ export const userLogin = async (req, res) => {
             });
         }
 
+        // Normalize phone to digits only so lookup matches stored value (e.g. admin-created users store 10 digits)
+        const normalizedPhone = phone ? String(phone).replace(/\D/g, '').slice(0, 10) : '';
+
         // Try to find user by phone first, then by username
-        let user = phone ? await User.findOne({ phone }) : null;
+        let user = normalizedPhone.length >= 10 ? await User.findOne({ phone: normalizedPhone }) : null;
         if (!user && username) {
-            user = await User.findOne({ username });
+            user = await User.findOne({ username: String(username).trim() });
         }
         
         if (!user) {
@@ -151,11 +154,26 @@ export const userHeartbeat = async (req, res) => {
 export const userSignup = async (req, res) => {
     try {
         const { username, email, password, phone } = req.body;
-        
+
         if (!username || !email || !password) {
             return res.status(400).json({
                 success: false,
                 message: 'Username, email and password are required',
+            });
+        }
+
+        if (!phone || typeof phone !== 'string') {
+            return res.status(400).json({
+                success: false,
+                message: 'Phone number is required',
+            });
+        }
+
+        const trimmedPhone = phone.replace(/\D/g, '').slice(0, 10);
+        if (!/^[6-9]\d{9}$/.test(trimmedPhone)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter a valid 10-digit phone number (starting with 6–9)',
             });
         }
 
@@ -166,16 +184,23 @@ export const userSignup = async (req, res) => {
             });
         }
 
-        // Check if user already exists
+        // Check if user already exists (username, email or phone)
         const existingUser = await User.findOne({
-            $or: [{ username }, { email: email.toLowerCase() }]
+            $or: [
+                { username: username.trim() },
+                { email: email.toLowerCase() },
+                { phone: trimmedPhone },
+            ],
         });
 
         if (existingUser) {
-            return res.status(409).json({
-                success: false,
-                message: 'Username or email already exists',
-            });
+            if (existingUser.phone === trimmedPhone) {
+                return res.status(409).json({ success: false, message: 'A player with this phone number already exists' });
+            }
+            if (existingUser.email === email.toLowerCase()) {
+                return res.status(409).json({ success: false, message: 'A player with this email already exists' });
+            }
+            return res.status(409).json({ success: false, message: 'Username already exists' });
         }
 
         // Hash password
@@ -187,10 +212,10 @@ export const userSignup = async (req, res) => {
         const source = referredBy ? 'bookie' : 'super_admin';
         const now = new Date();
         const userDoc = {
-            username,
+            username: username.trim(),
             email: email.toLowerCase(),
             password: hashedPassword,
-            phone: phone || '',
+            phone: trimmedPhone,
             role: 'user',
             balance: 0,
             isActive: true,
@@ -252,14 +277,43 @@ export const userSignup = async (req, res) => {
     }
 };
 
+const PHONE_REGEX = /^[6-9]\d{9}$/;
+
 export const createUser = async (req, res) => {
     try {
-        const { username, email, password, phone, role, balance, referredBy } = req.body;
-        
-        if (!username || !email || !password) {
+        const { username, firstName, lastName, email, password, phone, role, balance, referredBy } = req.body;
+
+        // Derive username from firstName + lastName if provided (matches frontend signup flow); otherwise require username
+        const derivedUsername = (firstName != null && lastName != null)
+            ? `${String(firstName).trim()} ${String(lastName).trim()}`.trim()
+            : (username != null ? String(username).trim() : '');
+
+        if (!derivedUsername) {
             return res.status(400).json({
                 success: false,
-                message: 'Username, email and password are required',
+                message: 'Username or both First name and Last name are required',
+            });
+        }
+
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email and password are required',
+            });
+        }
+
+        if (!phone || typeof phone !== 'string') {
+            return res.status(400).json({
+                success: false,
+                message: 'Phone number is required (players log in with phone + password)',
+            });
+        }
+
+        const trimmedPhone = phone.replace(/\D/g, '').slice(0, 10);
+        if (!PHONE_REGEX.test(trimmedPhone)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter a valid 10-digit phone number (starting with 6–9)',
             });
         }
 
@@ -278,16 +332,34 @@ export const createUser = async (req, res) => {
             source = 'bookie';
         }
 
+        // Check existing user by username, email or phone (phone must be unique for login)
+        const existingUser = await User.findOne({
+            $or: [
+                { username: derivedUsername },
+                { email: email.toLowerCase() },
+                { phone: trimmedPhone },
+            ],
+        });
+        if (existingUser) {
+            if (existingUser.phone === trimmedPhone) {
+                return res.status(409).json({ success: false, message: 'A player with this phone number already exists' });
+            }
+            if (existingUser.email === email.toLowerCase()) {
+                return res.status(409).json({ success: false, message: 'A player with this email already exists' });
+            }
+            return res.status(409).json({ success: false, message: 'A player with this username already exists' });
+        }
+
         // Hash password manually to avoid pre-save hook issues
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create user directly in collection to bypass pre-save hook
         const userDoc = {
-            username,
+            username: derivedUsername,
             email: email.toLowerCase(),
             password: hashedPassword,
-            phone: phone || '',
+            phone: trimmedPhone,
             role: role || 'user',
             balance: balance || 0,
             isActive: true,
@@ -315,7 +387,7 @@ export const createUser = async (req, res) => {
                 performedByType: req.admin.role || 'admin',
                 targetType: 'user',
                 targetId: userId.toString(),
-                details: `Player "${username}" created`,
+                details: `Player "${derivedUsername}" created`,
                 ip: getClientIp(req),
             });
         }
@@ -327,6 +399,7 @@ export const createUser = async (req, res) => {
                 id: userId,
                 username: userDoc.username,
                 email: userDoc.email,
+                phone: userDoc.phone || '',
                 role: userDoc.role,
             },
         });

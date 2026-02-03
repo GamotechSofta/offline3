@@ -225,7 +225,7 @@ const AllUsers = () => {
                     <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                     <input
                         type="text"
-                        placeholder="Search by username, email or phone..."
+                        placeholder="Search by name, email or phone..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className={`w-full pl-10 py-2.5 bg-gray-700/80 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
@@ -344,7 +344,7 @@ const AllUsers = () => {
                                                                             <thead className="bg-gray-700/80">
                                                                                 <tr>
                                                                                     <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-400 uppercase w-10">#</th>
-                                                                                    <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-400 uppercase">Username</th>
+                                                                                    <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-400 uppercase">Name</th>
                                                                                     <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-400 uppercase">Email</th>
                                                                                     <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-400 uppercase hidden lg:table-cell">Phone</th>
                                                                                     <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-400 uppercase">Status</th>
@@ -518,7 +518,7 @@ const AllUsers = () => {
                             <thead className="bg-gray-700">
                                 <tr>
                                     <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase w-8">#</th>
-                                    <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Username</th>
+                                    <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Name</th>
                                     <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Email</th>
                                     <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Phone</th>
                                     <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Role</th>

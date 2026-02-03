@@ -3,20 +3,28 @@ import { logActivity, getClientIp } from '../utils/activityLogger.js';
 
 /**
  * Bookie login - only allows users with role 'bookie' and status 'active'
- * Body: { username, password }
+ * Body: { phone, password } or { username, password } (phone preferred; bookies log in with phone + password)
  */
 export const bookieLogin = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, phone, password } = req.body;
 
-        if (!username || !password) {
+        const loginIdentifier = phone || username;
+        if (!loginIdentifier || !password) {
             return res.status(400).json({
                 success: false,
-                message: 'Username and password are required',
+                message: 'Phone number (or username) and password are required',
             });
         }
 
-        const bookie = await Admin.findOne({ username, role: 'bookie' });
+        const normalizedPhone = phone ? String(phone).replace(/\D/g, '').slice(0, 10) : '';
+
+        let bookie = normalizedPhone.length >= 10
+            ? await Admin.findOne({ phone: normalizedPhone, role: 'bookie' })
+            : null;
+        if (!bookie && username) {
+            bookie = await Admin.findOne({ username: String(username).trim(), role: 'bookie' });
+        }
         if (!bookie) {
             return res.status(401).json({
                 success: false,

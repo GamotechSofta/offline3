@@ -19,15 +19,19 @@ const BookieManagement = () => {
     const [selectedBookie, setSelectedBookie] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     
-    // Form data
+    // Form data - create: firstName, lastName, email, phone, password, confirmPassword; edit: same + optional password
     const [formData, setFormData] = useState({
-        username: '',
-        password: '',
+        firstName: '',
+        lastName: '',
         email: '',
         phone: '',
+        password: '',
+        confirmPassword: '',
     });
-    
+
     const [formLoading, setFormLoading] = useState(false);
+
+    const PHONE_REGEX = /^[6-9]\d{9}$/;
 
     // Get auth headers
     const getAuthHeaders = () => {
@@ -65,30 +69,59 @@ const BookieManagement = () => {
 
     // Handle form input change
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+        const processed = name === 'phone' ? value.replace(/\D/g, '').slice(0, 10) : value;
+        setFormData({ ...formData, [name]: processed });
+        setError('');
     };
 
     // Create new bookie
     const handleCreate = async (e) => {
         e.preventDefault();
         setError('');
+        const trimmedFirst = (formData.firstName || '').trim();
+        const trimmedLast = (formData.lastName || '').trim();
+        const username = `${trimmedFirst} ${trimmedLast}`.trim();
+        if (!trimmedFirst || !trimmedLast) {
+            setError('First name and last name are required');
+            return;
+        }
+        if (!formData.phone || !formData.phone.trim()) {
+            setError('Phone number is required (bookies log in with phone + password)');
+            return;
+        }
+        if (!PHONE_REGEX.test(formData.phone.replace(/\D/g, ''))) {
+            setError('Please enter a valid 10-digit phone number (starting with 6–9)');
+            return;
+        }
+        if (!formData.password || formData.password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
         setFormLoading(true);
-
         try {
+            const payload = {
+                firstName: trimmedFirst,
+                lastName: trimmedLast,
+                username,
+                email: formData.email.trim(),
+                phone: formData.phone.replace(/\D/g, '').slice(0, 10),
+                password: formData.password,
+            };
             const response = await fetch(`${API_BASE_URL}/admin/bookies`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
             });
             const data = await response.json();
-            
             if (data.success) {
                 setSuccess('Bookie account created successfully!');
                 setShowCreateModal(false);
-                setFormData({ username: '', password: '', email: '', phone: '' });
+                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '' });
                 fetchBookies();
                 setTimeout(() => setSuccess(''), 3000);
             } else {
@@ -105,14 +138,29 @@ const BookieManagement = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         setError('');
+        const trimmedFirst = (formData.firstName || '').trim();
+        const trimmedLast = (formData.lastName || '').trim();
+        if (!trimmedFirst || !trimmedLast) {
+            setError('First name and last name are required');
+            return;
+        }
+        if (formData.phone && !PHONE_REGEX.test(formData.phone.replace(/\D/g, ''))) {
+            setError('Please enter a valid 10-digit phone number (starting with 6–9)');
+            return;
+        }
+        if (formData.password && formData.password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
         setFormLoading(true);
-
         try {
-            const updateData = { ...formData };
-            // Only include password if it's provided
-            if (!updateData.password) {
-                delete updateData.password;
-            }
+            const updateData = {
+                firstName: trimmedFirst,
+                lastName: trimmedLast,
+                email: formData.email.trim(),
+                phone: formData.phone.replace(/\D/g, '').slice(0, 10) || formData.phone,
+            };
+            if (formData.password) updateData.password = formData.password;
 
             const response = await fetch(`${API_BASE_URL}/admin/bookies/${selectedBookie._id}`, {
                 method: 'PUT',
@@ -120,12 +168,11 @@ const BookieManagement = () => {
                 body: JSON.stringify(updateData),
             });
             const data = await response.json();
-            
             if (data.success) {
                 setSuccess('Bookie updated successfully!');
                 setShowEditModal(false);
                 setSelectedBookie(null);
-                setFormData({ username: '', password: '', email: '', phone: '' });
+                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '' });
                 fetchBookies();
                 setTimeout(() => setSuccess(''), 3000);
             } else {
@@ -187,14 +234,19 @@ const BookieManagement = () => {
         }
     };
 
-    // Open edit modal
+    // Open edit modal - split username "First Last" into firstName, lastName
     const openEditModal = (bookie) => {
         setSelectedBookie(bookie);
+        const parts = (bookie.username || '').trim().split(/\s+/);
+        const firstName = parts[0] || '';
+        const lastName = parts.slice(1).join(' ') || '';
         setFormData({
-            username: bookie.username,
-            password: '',
+            firstName,
+            lastName,
             email: bookie.email || '',
             phone: bookie.phone || '',
+            password: '',
+            confirmPassword: '',
         });
         setShowEditModal(true);
     };
@@ -219,13 +271,13 @@ const BookieManagement = () => {
     };
 
     return (
-        <AdminLayout onLogout={handleLogout} title="Bookies">
+        <AdminLayout onLogout={handleLogout} title="Bookie Accounts">
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
                         <h1 className="text-2xl sm:text-3xl font-bold">Bookie Accounts Management</h1>
                         <button
                             onClick={() => {
-                                setFormData({ username: '', password: '', email: '', phone: '' });
+                                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '' });
                                 setShowCreateModal(true);
                             }}
                             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
@@ -271,7 +323,7 @@ const BookieManagement = () => {
                                             #
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                            Username (Login ID)
+                                            Name
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Email
@@ -302,7 +354,7 @@ const BookieManagement = () => {
                                                     <button
                                                         onClick={() => copyToClipboard(bookie.username)}
                                                         className="text-gray-400 hover:text-yellow-500"
-                                                        title="Copy username"
+                                                        title="Copy name"
                                                     >
                                                         <FaCopy size={14} />
                                                     </button>
@@ -372,7 +424,7 @@ const BookieManagement = () => {
                         <h3 className="text-base sm:text-lg font-semibold text-yellow-500 mb-3">Bookie Login Information</h3>
                         <div className="text-gray-300 space-y-2 text-sm sm:text-base">
                             <p><strong>Bookie Panel URL:</strong> <code className="bg-gray-700 px-2 py-1 rounded">/bookie</code></p>
-                            <p><strong>Login:</strong> Bookies use their Username as Login ID and the password you set.</p>
+                            <p><strong>Login:</strong> Bookies use their Phone number and the password you set.</p>
                             <p><strong>Status:</strong> Suspended bookies cannot login to the bookie panel.</p>
                         </div>
                     </div>
@@ -389,24 +441,59 @@ const BookieManagement = () => {
                         </div>
                         <form onSubmit={handleCreate}>
                             <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-gray-300 text-sm font-medium mb-2">First Name *</label>
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            value={formData.firstName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            required
+                                            placeholder="First name"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-300 text-sm font-medium mb-2">Last Name *</label>
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            value={formData.lastName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            required
+                                            placeholder="Last name"
+                                        />
+                                    </div>
+                                </div>
                                 <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Username (Login ID) *
-                                    </label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
                                     <input
-                                        type="text"
-                                        name="username"
-                                        value={formData.username}
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
                                         onChange={handleChange}
                                         className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                                        required
-                                        placeholder="Enter login username"
+                                        placeholder="Optional"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Password *
-                                    </label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">Phone Number *</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        maxLength={10}
+                                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                        placeholder="10-digit (6–9 start)"
+                                        required
+                                    />
+                                    <p className="mt-1 text-xs text-gray-500">Bookies log in with phone + password.</p>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">Password *</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? 'text' : 'password'}
@@ -415,7 +502,7 @@ const BookieManagement = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 pr-10"
                                             required
-                                            minLength="6"
+                                            minLength={6}
                                             placeholder="Minimum 6 characters"
                                         />
                                         <button
@@ -428,29 +515,15 @@ const BookieManagement = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Email
-                                    </label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">Confirm Password *</label>
                                     <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
+                                        type="password"
+                                        name="confirmPassword"
+                                        value={formData.confirmPassword}
                                         onChange={handleChange}
                                         className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                                        placeholder="Optional"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Phone
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                                        placeholder="Optional"
+                                        required
+                                        placeholder="Re-enter password"
                                     />
                                 </div>
                                 <div className="flex gap-3 pt-2">
@@ -487,16 +560,50 @@ const BookieManagement = () => {
                         </div>
                         <form onSubmit={handleUpdate}>
                             <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-gray-300 text-sm font-medium mb-2">First Name *</label>
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            value={formData.firstName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-300 text-sm font-medium mb-2">Last Name *</label>
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            value={formData.lastName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            required
+                                        />
+                                    </div>
+                                </div>
                                 <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Username (Login ID) *
-                                    </label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
                                     <input
-                                        type="text"
-                                        name="username"
-                                        value={formData.username}
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
                                         onChange={handleChange}
                                         className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-300 text-sm font-medium mb-2">Phone Number *</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        maxLength={10}
+                                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                        placeholder="10-digit (6–9 start)"
                                         required
                                     />
                                 </div>
@@ -511,7 +618,7 @@ const BookieManagement = () => {
                                             value={formData.password}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 pr-10"
-                                            minLength="6"
+                                            minLength={6}
                                             placeholder="Enter new password"
                                         />
                                         <button
@@ -522,30 +629,6 @@ const BookieManagement = () => {
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                                         </button>
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-gray-300 text-sm font-medium mb-2">
-                                        Phone
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                                    />
                                 </div>
                                 <div className="flex gap-3 pt-2">
                                     <button

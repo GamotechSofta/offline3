@@ -336,7 +336,7 @@ const PlayerDetail = () => {
 
     if (loading) {
         return (
-            <AdminLayout onLogout={handleLogout} title="Players">
+            <AdminLayout onLogout={handleLogout} title="Player">
                 <div className="animate-pulse space-y-4">
                     <div className="h-8 w-48 bg-gray-700 rounded" />
                     <div className="h-24 bg-gray-700 rounded-xl" />
@@ -348,7 +348,7 @@ const PlayerDetail = () => {
 
     if (error || !player) {
         return (
-            <AdminLayout onLogout={handleLogout} title="Players">
+            <AdminLayout onLogout={handleLogout} title="Player">
                 <div className="flex flex-col items-center justify-center min-h-[40vh]">
                     <p className="text-red-400 mb-4">{error || 'Player not found'}</p>
                     <Link to="/all-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 text-black font-semibold">
@@ -360,14 +360,14 @@ const PlayerDetail = () => {
     }
 
     return (
-        <AdminLayout onLogout={handleLogout} title="Players">
+        <AdminLayout onLogout={handleLogout} title="Player">
             <div className="min-w-0 max-w-full">
             {/* Breadcrumb */}
             <div className="mb-4">
                 <Link to="/all-users" className="text-gray-400 hover:text-yellow-500 text-sm inline-flex items-center gap-1 mb-2">
                     <FaArrowLeft className="w-4 h-4" /> All Players
                 </Link>
-                <h1 className="text-2xl sm:text-3xl font-bold">Players <span className="text-gray-400 font-normal">» {player.username}</span></h1>
+                <h1 className="text-2xl sm:text-3xl font-bold">Player <span className="text-gray-400 font-normal">» {player.username}</span></h1>
             </div>
 
             {/* Player info card - responsive, no overflow */}
@@ -446,7 +446,7 @@ const PlayerDetail = () => {
                             <p className="text-white truncate" title={player.email}>{player.email || '—'}</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Username</p>
+                            <p className="text-gray-500 uppercase tracking-wider text-xs">Name</p>
                             <p className="text-white truncate">{player.username}</p>
                         </div>
                         <div className="min-w-0 col-span-2 sm:col-span-1">
@@ -647,7 +647,7 @@ const PlayerDetail = () => {
                 {activeTab === 'profile' && (
                     <div className="p-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-                            <div><p className="text-gray-500 text-sm">Username</p><p className="text-white">{player.username}</p></div>
+                            <div><p className="text-gray-500 text-sm">Name</p><p className="text-white">{player.username}</p></div>
                             <div><p className="text-gray-500 text-sm">Email</p><p className="text-white">{player.email}</p></div>
                             <div><p className="text-gray-500 text-sm">Phone</p><p className="text-white">{player.phone || '—'}</p></div>
                             <div><p className="text-gray-500 text-sm">Role</p><p className="text-white capitalize">{player.role || 'Player'}</p></div>
