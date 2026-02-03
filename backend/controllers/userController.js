@@ -1,6 +1,6 @@
 import User from '../models/user/user.js';
 import bcrypt from 'bcryptjs';
-import { Wallet } from '../models/wallet/wallet.js';
+import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 
@@ -458,14 +458,25 @@ export const togglePlayerStatus = async (req, res) => {
 };
 
 /**
+<<<<<<< Updated upstream
  * Delete a player (Super Admin only). Removes user and their wallet.
  */
 export const deletePlayer = async (req, res) => {
+=======
+ * Delete a player (user). Super admin only.
+ * Removes user, their wallet, and wallet transactions.
+ */
+export const deleteUser = async (req, res) => {
+>>>>>>> Stashed changes
     try {
         if (req.admin?.role !== 'super_admin') {
             return res.status(403).json({
                 success: false,
+<<<<<<< Updated upstream
                 message: 'Only Super Admin can delete players',
+=======
+                message: 'Only Super Admin can delete player accounts',
+>>>>>>> Stashed changes
             });
         }
 
@@ -479,18 +490,34 @@ export const deletePlayer = async (req, res) => {
             });
         }
 
+<<<<<<< Updated upstream
         const username = user.username;
 
         await Wallet.deleteOne({ userId: user._id });
         await User.findByIdAndDelete(user._id);
+=======
+        const userId = user._id;
+        const username = user.username;
+
+        await WalletTransaction.deleteMany({ userId });
+        await Wallet.findOneAndDelete({ userId });
+        await User.findByIdAndDelete(id);
+>>>>>>> Stashed changes
 
         await logActivity({
             action: 'delete_player',
             performedBy: req.admin?.username || 'Admin',
+<<<<<<< Updated upstream
             performedByType: 'admin',
             targetType: 'user',
             targetId: id,
             details: `Player "${username}" deleted`,
+=======
+            performedByType: req.admin?.role || 'admin',
+            targetType: 'user',
+            targetId: id,
+            details: `Player "${username}" (${id}) deleted`,
+>>>>>>> Stashed changes
             ip: getClientIp(req),
         });
 
@@ -503,6 +530,7 @@ export const deletePlayer = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+<<<<<<< Updated upstream
 
 /**
  * Clear login devices list for a player (Admin only).
@@ -540,3 +568,5 @@ export const clearLoginDevices = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+=======
+>>>>>>> Stashed changes
