@@ -32,6 +32,14 @@ export const adminLogin = async (req, res) => {
             });
         }
 
+        if (admin.role === 'bookie') {
+            return res.status(403).json({
+                success: false,
+                message: 'Use the Bookie Panel to login with this account.',
+                code: 'USE_BOOKIE_PANEL',
+            });
+        }
+
         await logActivity({
             action: 'admin_login',
             performedBy: admin.username,
