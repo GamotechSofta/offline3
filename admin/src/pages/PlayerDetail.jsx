@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { FaArrowLeft, FaCalendarAlt, FaUserSlash, FaUserCheck } from 'react-icons/fa';
+import { FaArrowLeft, FaCalendarAlt, FaUserSlash, FaUserCheck, FaTrash } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
@@ -96,6 +96,7 @@ const PlayerDetail = () => {
     const [loadingTab, setLoadingTab] = useState(false);
     const [togglingStatus, setTogglingStatus] = useState(false);
     const [toggleMessage, setToggleMessage] = useState('');
+    const [deletingPlayer, setDeletingPlayer] = useState(false);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
@@ -299,6 +300,36 @@ const PlayerDetail = () => {
         }
     };
 
+    const handleDeletePlayer = async () => {
+<<<<<<< Updated upstream
+        if (!userId || !player?.username) return;
+        if (!window.confirm(`Delete player "${player.username}"? This will remove their account and wallet. This cannot be undone.`)) {
+            return;
+        }
+=======
+        if (!userId || !player) return;
+        if (!window.confirm(`Delete player "${player.username}"? This cannot be undone.`)) return;
+>>>>>>> Stashed changes
+        setDeletingPlayer(true);
+        setError('');
+        try {
+            const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders(),
+            });
+            const data = await res.json();
+            if (data.success) {
+                navigate('/all-users');
+            } else {
+                setError(data.message || 'Failed to delete player');
+            }
+        } catch (err) {
+            setError('Network error. Please try again.');
+        } finally {
+            setDeletingPlayer(false);
+        }
+    };
+
     const formatCurrency = (n) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n || 0);
 
     const formatIpDisplay = (ip) => {
@@ -352,7 +383,7 @@ const PlayerDetail = () => {
                         <button
                             type="button"
                             onClick={handleTogglePlayerStatus}
-                            disabled={togglingStatus}
+                            disabled={togglingStatus || deletingPlayer}
                             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                                 player.isActive !== false
                                     ? 'bg-red-600 hover:bg-red-500 text-white'
@@ -367,6 +398,40 @@ const PlayerDetail = () => {
                                 <><FaUserCheck className="w-4 h-4" /> Unsuspend</>
                             )}
                         </button>
+                        <button
+                            type="button"
+                            onClick={handleDeletePlayer}
+<<<<<<< Updated upstream
+                            disabled={deletingPlayer}
+=======
+                            disabled={togglingStatus || deletingPlayer}
+>>>>>>> Stashed changes
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-600 hover:bg-red-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Delete player"
+                        >
+                            {deletingPlayer ? <span className="animate-spin">⏳</span> : <><FaTrash className="w-4 h-4" /> Delete</>}
+                        </button>
+<<<<<<< Updated upstream
+                        <Link
+                            to={`/all-users/${userId}/devices`}
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                                Array.isArray(player.loginDevices) && player.loginDevices.length > 1
+                                    ? 'bg-red-900/50 border border-red-600 text-red-200 hover:bg-red-800 hover:border-red-500 hover:text-red-100'
+                                    : 'bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:border-yellow-500/50 hover:text-yellow-400'
+                            }`}
+                            title="Devices used"
+                        >
+                            Devices used
+                            {Array.isArray(player.loginDevices) && player.loginDevices.length > 0 && (
+                                <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${
+                                    player.loginDevices.length > 1 ? 'bg-red-800 text-red-200' : 'bg-gray-600 text-gray-300'
+                                }`}>
+                                    {player.loginDevices.length}
+                                </span>
+                            )}
+                        </Link>
+=======
+>>>>>>> Stashed changes
                         {toggleMessage && (
                             <span className={`text-sm ${toggleMessage.includes('success') ? 'text-green-400' : 'text-red-400'}`}>
                                 {toggleMessage}
@@ -400,6 +465,10 @@ const PlayerDetail = () => {
                             <p className="text-gray-500 uppercase tracking-wider text-xs">Id</p>
                             <p className="text-gray-300 font-mono text-xs truncate break-all" title={player._id}>{player._id}</p>
                         </div>
+                        <div className="min-w-0 col-span-2 sm:col-span-1">
+                            <p className="text-gray-500 uppercase tracking-wider text-xs">Device ID</p>
+                            <p className="text-gray-300 font-mono text-xs truncate break-all" title={player.lastLoginDeviceId || ''}>{player.lastLoginDeviceId || '—'}</p>
+                        </div>
                         <div className="min-w-0">
                             <p className="text-gray-500 uppercase tracking-wider text-xs">IP Address</p>
                             <p className="text-gray-300 font-mono text-xs truncate" title={player.lastLoginIp || ''}>{formatIpDisplay(player.lastLoginIp)}</p>
@@ -426,6 +495,14 @@ const PlayerDetail = () => {
                 </div>
             </div>
 
+            {/* Multiple devices warning (admin-only) – red when multiple devices */}
+            {Array.isArray(player.loginDevices) && player.loginDevices.length > 1 && (
+                <div className="mb-4 min-w-0">
+                    <div className="rounded-xl border border-red-500/60 bg-red-500/10 px-4 py-3 text-red-200 text-sm font-medium">
+                        ⚠️ User has logged in from multiple devices
+                    </div>
+                </div>
+            )}
             {/* Date range - visible for all tabs (Statement, Wallet, Bet History, Profile, Exposure) */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
                 <span className="text-gray-400 text-sm">Date range:</span>

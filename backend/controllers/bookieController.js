@@ -60,6 +60,7 @@ export const bookieLogin = async (req, res) => {
                 role: bookie.role,
                 email: bookie.email,
                 phone: bookie.phone,
+                uiTheme: bookie.uiTheme || { themeId: 'default' },
             },
         });
     } catch (error) {
@@ -109,6 +110,60 @@ export const getReferralLink = async (req, res) => {
                 bookieId: bookie._id,
                 username: bookie.username,
             },
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Get bookie profile (including uiTheme) - requires bookie auth
+ */
+export const getProfile = async (req, res) => {
+    try {
+        const bookie = await Admin.findOne({ _id: req.admin._id, role: 'bookie' })
+            .select('-password')
+            .lean();
+        if (!bookie) {
+            return res.status(403).json({ success: false, message: 'Bookie access required' });
+        }
+        res.status(200).json({
+            success: true,
+            data: {
+                id: bookie._id,
+                username: bookie.username,
+                email: bookie.email,
+                phone: bookie.phone,
+                role: bookie.role,
+                uiTheme: bookie.uiTheme || { themeId: 'default' },
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Update bookie's UI theme (for their users' panel) - requires bookie auth
+ * Body: { themeId?, primaryColor?, accentColor? }
+ */
+export const updateTheme = async (req, res) => {
+    try {
+        const bookie = await Admin.findOne({ _id: req.admin._id, role: 'bookie' });
+        if (!bookie) {
+            return res.status(403).json({ success: false, message: 'Bookie access required' });
+        }
+        const { themeId, primaryColor, accentColor } = req.body;
+        const validThemeIds = ['default', 'gold', 'blue', 'green', 'red', 'purple'];
+        if (!bookie.uiTheme) bookie.uiTheme = { themeId: 'default' };
+        if (themeId && validThemeIds.includes(themeId)) bookie.uiTheme.themeId = themeId;
+        if (primaryColor !== undefined) bookie.uiTheme.primaryColor = primaryColor ? String(primaryColor).trim() : undefined;
+        if (accentColor !== undefined) bookie.uiTheme.accentColor = accentColor ? String(accentColor).trim() : undefined;
+        await bookie.save();
+        res.status(200).json({
+            success: true,
+            message: 'Theme updated',
+            data: { uiTheme: bookie.uiTheme },
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

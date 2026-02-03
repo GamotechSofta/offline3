@@ -32,6 +32,14 @@ export const adminLogin = async (req, res) => {
             });
         }
 
+        if (admin.role === 'bookie') {
+            return res.status(403).json({
+                success: false,
+                message: 'Use the Bookie Panel to login with this account.',
+                code: 'USE_BOOKIE_PANEL',
+            });
+        }
+
         await logActivity({
             action: 'admin_login',
             performedBy: admin.username,
@@ -293,7 +301,7 @@ export const updateBookie = async (req, res) => {
         }
 
         const { id } = req.params;
-        const { username, email, phone, status, password } = req.body;
+        const { username, email, phone, status, password, uiTheme } = req.body;
 
         const bookie = await Admin.findOne({ _id: id, role: 'bookie' });
         if (!bookie) {
@@ -318,7 +326,13 @@ export const updateBookie = async (req, res) => {
         if (email !== undefined) bookie.email = email;
         if (phone !== undefined) bookie.phone = phone;
         if (status && ['active', 'inactive'].includes(status)) bookie.status = status;
-        
+        if (uiTheme && typeof uiTheme === 'object') {
+            if (!bookie.uiTheme) bookie.uiTheme = { themeId: 'default' };
+            const validThemeIds = ['default', 'gold', 'blue', 'green', 'red', 'purple'];
+            if (uiTheme.themeId && validThemeIds.includes(uiTheme.themeId)) bookie.uiTheme.themeId = uiTheme.themeId;
+            if (uiTheme.primaryColor !== undefined) bookie.uiTheme.primaryColor = uiTheme.primaryColor ? String(uiTheme.primaryColor).trim() : undefined;
+            if (uiTheme.accentColor !== undefined) bookie.uiTheme.accentColor = uiTheme.accentColor ? String(uiTheme.accentColor).trim() : undefined;
+        }
         // Update password if provided
         if (password) {
             if (password.length < 6) {
@@ -352,6 +366,7 @@ export const updateBookie = async (req, res) => {
                 phone: bookie.phone,
                 status: bookie.status,
                 role: bookie.role,
+                uiTheme: bookie.uiTheme,
             },
         });
     } catch (error) {

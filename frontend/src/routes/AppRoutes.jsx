@@ -20,16 +20,35 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'instant'
-    });
+    // Use requestAnimationFrame to ensure DOM has updated, then scroll
+    const scrollToTop = () => {
+      // Scroll window and document elements
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+      
+      // Scroll any scrollable containers (with a small delay to catch dynamically rendered ones)
+      setTimeout(() => {
+        const scrollableElements = document.querySelectorAll('[class*="overflow-y-auto"], [class*="overflow-y-scroll"], [class*="overflow-auto"]');
+        scrollableElements.forEach((el) => {
+          if (el.scrollTop > 0) {
+            el.scrollTop = 0;
+          }
+        });
+      }, 10);
+    };
+
+    // Immediate scroll
+    scrollToTop();
+    
+    // Also scroll after a short delay to catch any late-rendering containers
+    const timer = setTimeout(scrollToTop, 50);
+
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   return null;
 };
-
 const Layout = ({ children }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
@@ -45,7 +64,9 @@ const Layout = ({ children }) => {
       <div className="min-h-screen pb-16 md:pb-0 bg-black">
         <AppHeader />
         <Header />
-        {children}
+        <div className="pt-[100px] sm:pt-[110px] md:pt-[125px]">
+          {children}
+        </div>
         <BottomNavbar />
       </div>
     );
@@ -56,7 +77,9 @@ const Layout = ({ children }) => {
   return (
     <div className={`min-h-screen pb-16 md:pb-0 w-full max-w-full overflow-x-hidden ${isBidPage ? 'bg-black' : 'bg-gray-50'}`}>
       <AppHeader />
-      {children}
+      <div className="pt-[60px] sm:pt-[68px] md:pt-[80px]">
+        {children}
+      </div>
       <BottomNavbar />
     </div>
   );
@@ -86,3 +109,4 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+

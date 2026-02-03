@@ -1,6 +1,7 @@
 import User from '../models/user/user.js';
+import Admin from '../models/admin/admin.js';
 import bcrypt from 'bcryptjs';
-import { Wallet } from '../models/wallet/wallet.js';
+import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 
@@ -25,7 +26,7 @@ const addOnlineStatus = (users) => {
 
 export const userLogin = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, deviceId } = req.body;
         
         if (!username || !password) {
             return res.status(400).json({
@@ -59,10 +60,27 @@ export const userLogin = async (req, res) => {
         }
 
         const clientIp = getClientIp(req);
-        await User.updateOne(
-            { _id: user._id },
-            { $set: { lastActiveAt: new Date(), lastLoginIp: clientIp || undefined } }
-        );
+        const rawDeviceId = req.body != null && 'deviceId' in req.body ? req.body.deviceId : deviceId;
+        const trimmedDeviceId = (rawDeviceId != null && String(rawDeviceId).trim()) ? String(rawDeviceId).trim() : '';
+        const update = {
+            lastActiveAt: new Date(),
+            lastLoginIp: clientIp || undefined,
+            ...(trimmedDeviceId ? { lastLoginDeviceId: trimmedDeviceId } : {}),
+        };
+        await User.updateOne({ _id: user._id }, { $set: update });
+
+        if (trimmedDeviceId) {
+            const doc = await User.findById(user._id).select('loginDevices').lean();
+            const loginDevices = Array.isArray(doc?.loginDevices) ? [...doc.loginDevices] : [];
+            const now = new Date();
+            const idx = loginDevices.findIndex((d) => String(d.deviceId) === trimmedDeviceId);
+            if (idx >= 0) {
+                loginDevices[idx].lastLoginAt = now;
+            } else {
+                loginDevices.push({ deviceId: trimmedDeviceId, firstLoginAt: now, lastLoginAt: now });
+            }
+            await User.updateOne({ _id: user._id }, { $set: { loginDevices } });
+        }
 
         await logActivity({
             action: 'player_login',
@@ -78,16 +96,23 @@ export const userLogin = async (req, res) => {
         const wallet = await Wallet.findOne({ userId: user._id });
         const balance = wallet ? wallet.balance : 0;
 
+        const data = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            balance: balance,
+        };
+        if (user.referredBy) {
+            data.referredBy = user.referredBy;
+            const bookie = await Admin.findById(user.referredBy).select('uiTheme').lean();
+            data.bookieTheme = bookie?.uiTheme || { themeId: 'default' };
+        }
+
         res.status(200).json({
             success: true,
             message: 'Login successful',
-            data: {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                balance: balance,
-            },
+            data,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -189,15 +214,21 @@ export const userSignup = async (req, res) => {
             updatedAt: new Date(),
         });
 
+        const signupData = {
+            id: userId,
+            username: userDoc.username,
+            email: userDoc.email,
+            role: userDoc.role,
+        };
+        if (referredBy) {
+            signupData.referredBy = referredBy;
+            const bookie = await Admin.findById(referredBy).select('uiTheme').lean();
+            signupData.bookieTheme = bookie?.uiTheme || { themeId: 'default' };
+        }
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            data: {
-                id: userId,
-                username: userDoc.username,
-                email: userDoc.email,
-                role: userDoc.role,
-            },
+            data: signupData,
         });
     } catch (error) {
         if (error.code === 11000) {
@@ -322,7 +353,7 @@ export const getUsers = async (req, res) => {
         }
 
         let users = await User.find(query)
-            .select('username email phone role isActive source referredBy lastActiveAt lastLoginIp createdAt')
+            .select('username email phone role isActive source referredBy lastActiveAt lastLoginIp lastLoginDeviceId loginDevices createdAt')
             .populate('referredBy', 'username')
             .sort(filter === 'bookie' ? { referredBy: 1, createdAt: -1 } : { createdAt: -1 })
             .limit(500)
@@ -356,7 +387,7 @@ export const getSingleUser = async (req, res) => {
         const bookieUserIds = await getBookieUserIds(req.admin);
 
         const user = await User.findById(id)
-            .select('username email phone role isActive source referredBy lastActiveAt lastLoginIp createdAt')
+            .select('username email phone role isActive source referredBy lastActiveAt lastLoginIp lastLoginDeviceId loginDevices createdAt')
             .populate('referredBy', 'username')
             .lean();
 
@@ -439,3 +470,117 @@ export const togglePlayerStatus = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+/**
+<<<<<<< Updated upstream
+ * Delete a player (Super Admin only). Removes user and their wallet.
+ */
+export const deletePlayer = async (req, res) => {
+=======
+ * Delete a player (user). Super admin only.
+ * Removes user, their wallet, and wallet transactions.
+ */
+export const deleteUser = async (req, res) => {
+>>>>>>> Stashed changes
+    try {
+        if (req.admin?.role !== 'super_admin') {
+            return res.status(403).json({
+                success: false,
+<<<<<<< Updated upstream
+                message: 'Only Super Admin can delete players',
+=======
+                message: 'Only Super Admin can delete player accounts',
+>>>>>>> Stashed changes
+            });
+        }
+
+        const { id } = req.params;
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Player not found',
+            });
+        }
+
+<<<<<<< Updated upstream
+        const username = user.username;
+
+        await Wallet.deleteOne({ userId: user._id });
+        await User.findByIdAndDelete(user._id);
+=======
+        const userId = user._id;
+        const username = user.username;
+
+        await WalletTransaction.deleteMany({ userId });
+        await Wallet.findOneAndDelete({ userId });
+        await User.findByIdAndDelete(id);
+>>>>>>> Stashed changes
+
+        await logActivity({
+            action: 'delete_player',
+            performedBy: req.admin?.username || 'Admin',
+<<<<<<< Updated upstream
+            performedByType: 'admin',
+            targetType: 'user',
+            targetId: id,
+            details: `Player "${username}" deleted`,
+=======
+            performedByType: req.admin?.role || 'admin',
+            targetType: 'user',
+            targetId: id,
+            details: `Player "${username}" (${id}) deleted`,
+>>>>>>> Stashed changes
+            ip: getClientIp(req),
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Player deleted successfully',
+            data: { id },
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+<<<<<<< Updated upstream
+
+/**
+ * Clear login devices list for a player (Admin only).
+ */
+export const clearLoginDevices = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Player not found',
+            });
+        }
+
+        await User.updateOne({ _id: id }, { $set: { loginDevices: [] } });
+
+        await logActivity({
+            action: 'clear_login_devices',
+            performedBy: req.admin?.username || 'Admin',
+            performedByType: req.admin?.role || 'admin',
+            targetType: 'user',
+            targetId: id,
+            details: `Login devices cleared for player "${user.username}"`,
+            ip: getClientIp(req),
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Devices list cleared successfully',
+            data: { id },
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+=======
+>>>>>>> Stashed changes

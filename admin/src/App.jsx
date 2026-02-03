@@ -15,6 +15,7 @@ import Logs from './pages/Logs';
 import BookieManagement from './pages/BookieManagement';
 import AllUsers from './pages/AllUsers';
 import PlayerDetail from './pages/PlayerDetail';
+import PlayerDevices from './pages/PlayerDevices';
 import AddResult from './pages/AddResult';
 
 // Scroll to top on route change
@@ -152,6 +153,14 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <PlayerDetail />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/all-users/:userId/devices"
+                    element={
+                        <PrivateRoute>
+                            <PlayerDevices />
                         </PrivateRoute>
                     }
                 />

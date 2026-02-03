@@ -204,6 +204,7 @@ const JodiBulkBid = ({ market, title }) => {
                                     key={`col-${c}`}
                                     type="text"
                                     inputMode="numeric"
+                                    placeholder="Pts"
                                     value={colBulk[c]}
                                     onChange={(e) => setColBulk((p) => ({ ...p, [c]: sanitizePoints(e.target.value) }))}
                                     onBlur={() => {
@@ -212,7 +213,7 @@ const JodiBulkBid = ({ market, title }) => {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && colBulk[c]) applyCol(c, colBulk[c]);
                                     }}
-                                    className="no-spinner w-full min-w-0 h-6 md:h-7 bg-black/40 border border-white/10 text-white rounded text-[9px] md:text-xs text-center focus:outline-none focus:border-[#d4af37]"
+                                    className="no-spinner w-full min-w-0 h-6 md:h-7 bg-black/40 border border-white/10 text-white rounded text-[9px] md:text-xs text-center placeholder:text-white/15 focus:outline-none focus:border-[#d4af37]"
                                 />
                             ))}
 
@@ -227,6 +228,7 @@ const JodiBulkBid = ({ market, title }) => {
                                         <input
                                             type="text"
                                             inputMode="numeric"
+                                            placeholder="Pts"
                                             value={rowBulk[r]}
                                             onChange={(e) => setRowBulk((p) => ({ ...p, [r]: sanitizePoints(e.target.value) }))}
                                             onBlur={() => {
@@ -235,7 +237,7 @@ const JodiBulkBid = ({ market, title }) => {
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && rowBulk[r]) applyRow(r, rowBulk[r]);
                                             }}
-                                            className="no-spinner h-6 md:h-7 flex-1 min-w-0 bg-black/40 border border-white/10 text-white rounded text-[9px] md:text-xs text-center focus:outline-none focus:border-[#d4af37]"
+                                            className="no-spinner h-6 md:h-7 flex-1 min-w-0 bg-black/40 border border-white/10 text-white rounded text-[9px] md:text-xs text-center placeholder:text-white/15 focus:outline-none focus:border-[#d4af37]"
                                         />
                                     </div>
                                     <div className="h-6 md:h-7" />
@@ -243,20 +245,23 @@ const JodiBulkBid = ({ market, title }) => {
                                     {DIGITS.map((c) => {
                                         const key = `${r}${c}`;
                                         return (
-                                            <input
-                                                key={key}
-                                                type="text"
-                                                inputMode="numeric"
-                                                placeholder={key}
-                                                value={cells[key]}
-                                                onChange={(e) =>
-                                                    setCells((p) => ({
-                                                        ...p,
-                                                        [key]: sanitizePoints(e.target.value),
-                                                    }))
-                                                }
-                                                className="no-spinner h-6 md:h-7 bg-black/40 border border-white/10 text-white rounded text-[9px] md:text-xs text-center placeholder:text-white/15 focus:outline-none focus:border-[#d4af37]"
-                                            />
+                                            <div key={key} className="flex flex-col items-center justify-center">
+                                                <div className="text-[8px] md:text-[10px] leading-none text-white/30 mb-0.5 select-none">
+                                                    {key}
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    value={cells[key]}
+                                                    onChange={(e) =>
+                                                        setCells((p) => ({
+                                                            ...p,
+                                                            [key]: sanitizePoints(e.target.value),
+                                                        }))
+                                                    }
+                                                    className="no-spinner h-6 md:h-7 w-full bg-black/40 border border-white/10 text-white rounded text-[9px] md:text-xs text-center focus:outline-none focus:border-[#d4af37]"
+                                                />
+                                            </div>
                                         );
                                     })}
                                 </React.Fragment>
