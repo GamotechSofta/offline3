@@ -25,6 +25,7 @@ const AddResult = () => {
     const [checkLoading, setCheckLoading] = useState(false);
     const [checkCloseLoading, setCheckCloseLoading] = useState(false);
     const [declareLoading, setDeclareLoading] = useState(false);
+    const [clearLoading, setClearLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -202,6 +203,44 @@ const AddResult = () => {
             alert('Network error');
         } finally {
             setDeclareLoading(false);
+        }
+    };
+
+    const handleClearResult = async () => {
+        if (!selectedMarket) return;
+        const hasOpen = selectedMarket.openingNumber && /^\d{3}$/.test(selectedMarket.openingNumber);
+        const hasClose = selectedMarket.closingNumber && /^\d{3}$/.test(selectedMarket.closingNumber);
+        if (!hasOpen && !hasClose) {
+            alert('This market has no result to clear.');
+            return;
+        }
+        const msg = hasOpen && hasClose
+            ? 'Clear Opening & Closing result for this market?'
+            : hasOpen
+                ? 'Clear Opening result for this market?'
+                : 'Clear Closing result for this market?';
+        if (!window.confirm(msg)) return;
+        setClearLoading(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/markets/clear-result/${selectedMarket._id}`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setSelectedMarket((prev) => (prev ? { ...prev, openingNumber: null, closingNumber: null } : null));
+                setOpenPatti('');
+                setClosePatti('');
+                setPreview(null);
+                setPreviewClose(null);
+                fetchMarkets();
+            } else {
+                alert(data.message || 'Failed to clear result');
+            }
+        } catch (err) {
+            alert('Network error');
+        } finally {
+            setClearLoading(false);
         }
     };
 
@@ -404,6 +443,17 @@ const AddResult = () => {
                                 </div>
                             )}
 
+                            {(selectedMarket.openingNumber && /^\d{3}$/.test(selectedMarket.openingNumber)) ||
+                             (selectedMarket.closingNumber && /^\d{3}$/.test(selectedMarket.closingNumber)) ? (
+                                <button
+                                    type="button"
+                                    onClick={handleClearResult}
+                                    disabled={clearLoading}
+                                    className="mt-3 sm:mt-4 w-full px-4 py-2.5 sm:py-3 bg-red-900/80 hover:bg-red-800 text-red-100 font-semibold rounded-lg border border-red-700 disabled:opacity-50 transition-colors text-sm sm:text-base min-h-[44px] sm:min-h-[48px] touch-manipulation"
+                                >
+                                    {clearLoading ? 'Clearing...' : 'Clear Result'}
+                                </button>
+                            ) : null}
                             <button
                                 type="button"
                                 onClick={closePanel}

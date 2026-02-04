@@ -13,6 +13,7 @@ import {
     declareOpenResult,
     previewDeclareCloseResult,
     declareCloseResult,
+    clearResult,
 } from '../../controllers/marketController.js';
 import { verifyAdmin, verifySuperAdmin } from '../../middleware/adminAuth.js';
 
@@ -30,6 +31,7 @@ router.get('/preview-declare-open/:id', verifySuperAdmin, previewDeclareOpenResu
 router.get('/preview-declare-close/:id', verifySuperAdmin, previewDeclareCloseResult);
 router.post('/declare-open/:id', verifySuperAdmin, declareOpenResult);
 router.post('/declare-close/:id', verifySuperAdmin, declareCloseResult);
+router.post('/clear-result/:id', verifySuperAdmin, clearResult);
 
 // Super admin only - market management
 router.post('/create-market', verifySuperAdmin, createMarket);

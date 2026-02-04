@@ -408,6 +408,38 @@ export const declareCloseResult = async (req, res) => {
 };
 
 /**
+ * Clear result: set openingNumber and closingNumber to null for a market.
+ * Does not reverse bet settlement or wallet – use only to reset result display (e.g. declared by mistake before closing).
+ */
+export const clearResult = async (req, res) => {
+    try {
+        const { id: marketId } = req.params;
+        const market = await Market.findById(marketId);
+        if (!market) {
+            return res.status(404).json({ success: false, message: 'Market not found' });
+        }
+        await Market.findByIdAndUpdate(marketId, { openingNumber: null, closingNumber: null });
+        if (req.admin) {
+            await logActivity({
+                action: 'clear_result',
+                performedBy: req.admin.username,
+                performedByType: req.admin.role || 'super_admin',
+                targetType: 'market',
+                targetId: marketId,
+                details: `Market "${market.marketName}" – result cleared`,
+                ip: getClientIp(req),
+            });
+        }
+        const updated = await Market.findById(marketId);
+        const response = updated.toObject();
+        response.displayResult = updated.getDisplayResult();
+        res.status(200).json({ success: true, message: 'Result cleared', data: response });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
  * Get market statistics (amount and no. of bets per option) for admin market detail view.
  * Returns: singleDigit, jodi, singlePatti, doublePatti, triplePatti with per-option amount/count and totals.
  */
