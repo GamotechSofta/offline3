@@ -2,7 +2,7 @@ import Market from '../models/market/market.js';
 import Bet from '../models/bet/bet.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
-import { previewDeclareOpen, settleOpening, settleClosing } from '../utils/settleBets.js';
+import { previewDeclareOpen, previewDeclareClose, settleOpening, settleClosing } from '../utils/settleBets.js';
 
 /**
  * Create a new market.
@@ -342,6 +342,24 @@ export const declareOpenResult = async (req, res) => {
         const response = updated.toObject();
         response.displayResult = updated.getDisplayResult();
         res.status(200).json({ success: true, message: 'Open result declared', data: response });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Preview declare close: ?closingNumber=456 returns totalBetAmount, totalWinAmount, noOfPlayers, profit (for jodi/half-sangam/full-sangam pending bets).
+ */
+export const previewDeclareCloseResult = async (req, res) => {
+    try {
+        const { id: marketId } = req.params;
+        const closingNumber = (req.query.closingNumber || req.body?.closingNumber || '').toString().trim();
+        const market = await Market.findById(marketId);
+        if (!market) {
+            return res.status(404).json({ success: false, message: 'Market not found' });
+        }
+        const stats = await previewDeclareClose(marketId, closingNumber || null);
+        res.status(200).json({ success: true, data: stats });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

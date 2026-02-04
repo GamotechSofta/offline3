@@ -21,7 +21,9 @@ const AddResult = () => {
     const [openPatti, setOpenPatti] = useState('');
     const [closePatti, setClosePatti] = useState('');
     const [preview, setPreview] = useState(null);
+    const [previewClose, setPreviewClose] = useState(null);
     const [checkLoading, setCheckLoading] = useState(false);
+    const [checkCloseLoading, setCheckCloseLoading] = useState(false);
     const [declareLoading, setDeclareLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -72,6 +74,7 @@ const AddResult = () => {
         setOpenPatti(market.openingNumber || '');
         setClosePatti(market.closingNumber || '');
         setPreview(null);
+        setPreviewClose(null);
     };
 
     const closePanel = () => {
@@ -79,6 +82,7 @@ const AddResult = () => {
         setOpenPatti('');
         setClosePatti('');
         setPreview(null);
+        setPreviewClose(null);
     };
 
     const handleCheckOpen = async () => {
@@ -94,8 +98,26 @@ const AddResult = () => {
             else setPreview({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
         } catch (err) {
             setPreview(null);
+} finally {
+        setCheckLoading(false);
+        }
+    };
+
+    const handleCheckClose = async () => {
+        if (!selectedMarket) return;
+        const val = closePatti.replace(/\D/g, '').slice(0, 3);
+        setCheckCloseLoading(true);
+        setPreviewClose(null);
+        try {
+            const url = `${API_BASE_URL}/markets/preview-declare-close/${selectedMarket._id}?closingNumber=${encodeURIComponent(val)}`;
+            const res = await fetch(url, { headers: getAuthHeaders() });
+            const data = await res.json();
+            if (data.success) setPreviewClose(data.data);
+            else setPreviewClose({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
+        } catch (err) {
+            setPreviewClose(null);
         } finally {
-            setCheckLoading(false);
+            setCheckCloseLoading(false);
         }
     };
 
@@ -315,6 +337,36 @@ const AddResult = () => {
                                             maxLength={3}
                                         />
                                     </div>
+                                    <div className="flex gap-2 mb-2 sm:mb-3">
+                                        <button
+                                            type="button"
+                                            onClick={handleCheckClose}
+                                            disabled={checkCloseLoading}
+                                            className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg border border-gray-600 disabled:opacity-50 transition-colors text-sm sm:text-base min-h-[44px] sm:min-h-[48px] touch-manipulation"
+                                        >
+                                            {checkCloseLoading ? 'Checking...' : 'Check'}
+                                        </button>
+                                    </div>
+                                    {(previewClose != null) && (
+                                        <div className="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3 rounded-lg bg-gray-700/50 border border-gray-600 p-2.5 sm:p-3">
+                                            <div className="flex justify-between items-center gap-2">
+                                                <span className="text-gray-400 text-xs sm:text-sm shrink-0">Total Bet Amount</span>
+                                                <span className="font-mono text-white bg-gray-700 px-2 py-1 rounded text-xs sm:text-sm truncate">{formatNum(previewClose.totalBetAmount)}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center gap-2">
+                                                <span className="text-gray-400 text-xs sm:text-sm shrink-0">Total Win Amount</span>
+                                                <span className="font-mono text-white bg-gray-700 px-2 py-1 rounded text-xs sm:text-sm truncate">{formatNum(previewClose.totalWinAmount)}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center gap-2">
+                                                <span className="text-gray-400 text-xs sm:text-sm shrink-0">No Of Players</span>
+                                                <span className="font-mono text-white bg-gray-700 px-2 py-1 rounded text-xs sm:text-sm">{formatNum(previewClose.noOfPlayers)}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center gap-2">
+                                                <span className="text-gray-400 text-xs sm:text-sm shrink-0">Profit</span>
+                                                <span className="font-mono text-yellow-400 bg-gray-700 px-2 py-1 rounded text-xs sm:text-sm truncate">{formatNum(previewClose.profit)}</span>
+                                            </div>
+                                        </div>
+                                    )}
                                     <button
                                         type="button"
                                         onClick={handleDeclareClose}
