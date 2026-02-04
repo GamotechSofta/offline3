@@ -85,16 +85,16 @@ const Layout = ({ children }) => {
   }
 
   const isBidPage = location.pathname.includes('game-bid') || location.pathname === '/bidoptions';
-<<<<<<< Updated upstream
-  const isSupportPage = location.pathname === '/support' || location.pathname === '/support/new' || location.pathname === '/support/status';
-  const isDarkPage = isBidPage || location.pathname === '/bids' || location.pathname === '/bet-history' || isSupportPage;
-=======
+  const isSupportPage =
+    location.pathname === '/support' ||
+    location.pathname === '/support/new' ||
+    location.pathname === '/support/status';
   const isDarkPage =
     isBidPage ||
     location.pathname === '/bids' ||
     location.pathname === '/bet-history' ||
-    location.pathname === '/market-result-history';
->>>>>>> Stashed changes
+    location.pathname === '/market-result-history' ||
+    isSupportPage;
   const isBetsPage = location.pathname === '/bids';
 
   return (
