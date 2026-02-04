@@ -58,6 +58,16 @@ const WalletSection = () => {
 
   const displayBalance = balance != null ? Number(balance) : 0;
   const formattedBalance = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0, minimumFractionDigits: 0 }).format(displayBalance);
+  
+  // Calculate responsive font size based on balance length
+  const balanceLength = formattedBalance.length;
+  const getBalanceFontSize = () => {
+    if (balanceLength <= 4) return 'text-4xl sm:text-5xl md:text-6xl';
+    if (balanceLength <= 6) return 'text-3xl sm:text-4xl md:text-5xl';
+    if (balanceLength <= 8) return 'text-2xl sm:text-3xl md:text-4xl';
+    if (balanceLength <= 10) return 'text-xl sm:text-2xl md:text-3xl';
+    return 'text-lg sm:text-xl md:text-2xl';
+  };
 
   return (
     <section className="w-full bg-black py-3 sm:py-4 px-4 sm:px-6">
@@ -74,9 +84,9 @@ const WalletSection = () => {
             <div className="flex items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5">
               {/* Left Side - Wallet Icon and Balance */}
               <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                {/* Wallet Icon - Premium Design */}
+                {/* Wallet Icon - Larger Design */}
                 <div className="relative shrink-0">
-                  <div className="w-[72px] h-[72px] sm:w-20 sm:h-20 md:w-[88px] md:h-[88px] bg-[#2a2a2a] rounded-2xl sm:rounded-3xl p-3 sm:p-3.5 border border-white/10 shadow-lg flex items-center justify-center">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-[#2a2a2a] rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-white/10 shadow-lg flex items-center justify-center">
                     <img
                       src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769780438/Untitled_90_x_160_px_1080_x_1080_px_ychsx6.png"
                       alt="Wallet Icon"
@@ -85,9 +95,9 @@ const WalletSection = () => {
                   </div>
                 </div>
 
-                {/* Balance Text */}
+                {/* Balance Text - Responsive */}
                 <div className="flex flex-col gap-1.5 sm:gap-2 min-w-0 flex-1">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl leading-none font-black text-white tracking-tight">
+                  <h2 className={`${getBalanceFontSize()} leading-none font-black text-white tracking-tight break-words`}>
                     ₹ {formattedBalance}
                   </h2>
                   <p className="text-gray-400 text-xs sm:text-sm font-semibold">
