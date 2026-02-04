@@ -1,29 +1,28 @@
 /**
- * Market betting window: users can bet only between opening time and (closing time - betClosureTime).
+ * Market betting window: market opens at midnight (00:00) and closes at closing time each day.
+ * Users can bet only between midnight and (closing time - betClosureTime).
  * Times are in "HH:MM" or "HH:MM:SS"; betClosureTime is seconds before closing when betting stops.
  * Uses server local time (assume market times are in same timezone as server).
  *
- * @param {Object} market - { startingTime, closingTime, betClosureTime }
+ * @param {Object} market - { closingTime, betClosureTime } (startingTime is not used for the betting window)
  * @param {Date} [now] - current time (default: new Date())
  * @returns {{ allowed: boolean, message?: string }}
  */
 export function isBettingAllowed(market, now = new Date()) {
-    const startStr = (market?.startingTime || '').toString().trim();
     const closeStr = (market?.closingTime || '').toString().trim();
     const betClosureSec = Number(market?.betClosureTime);
     const closureSec = Number.isFinite(betClosureSec) && betClosureSec >= 0 ? betClosureSec : 0;
 
-    if (!startStr || !closeStr) {
+    if (!closeStr) {
         return { allowed: false, message: 'Market timing not configured.' };
     }
 
-    const openAt = parseTimeToDate(startStr, now);
+    const openAt = startOfDay(now);
     let closeAt = parseTimeToDate(closeStr, now);
-    if (!openAt || !closeAt) {
+    if (!closeAt) {
         return { allowed: false, message: 'Invalid market time format.' };
     }
 
-    // If closing is before or equal to opening, closing is next day (e.g. 22:00 - 02:00)
     if (closeAt.getTime() <= openAt.getTime()) {
         closeAt = new Date(closeAt);
         closeAt.setDate(closeAt.getDate() + 1);
@@ -34,16 +33,20 @@ export function isBettingAllowed(market, now = new Date()) {
     if (now.getTime() < openAt.getTime()) {
         return {
             allowed: false,
-            message: `Betting opens at ${formatTimeForMessage(startStr)}. Please try after opening time.`,
+            message: 'Betting opens at 12:00 AM (midnight). You can place bets after midnight.',
         };
     }
     if (now.getTime() > lastBetAt.getTime()) {
         return {
             allowed: false,
-            message: `Betting has closed for this market. Bets are not accepted after ${closureSec > 0 ? closureSec + ' seconds before closing time.' : 'closing time.'}`,
+            message: `Betting has closed for this market. Bets are not accepted after ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
         };
     }
     return { allowed: true };
+}
+
+function startOfDay(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
 }
 
 /**
@@ -60,12 +63,3 @@ function parseTimeToDate(timeStr, refDate) {
     return d;
 }
 
-function formatTimeForMessage(timeStr) {
-    if (!timeStr) return '';
-    const [h, m] = timeStr.split(':').map(Number);
-    if (!Number.isFinite(h)) return timeStr;
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    const h12 = h % 12 || 12;
-    const min = Number.isFinite(m) ? String(m).padStart(2, '0') : '00';
-    return `${h12}:${min} ${ampm}`;
-}

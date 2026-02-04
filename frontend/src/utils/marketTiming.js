@@ -1,25 +1,24 @@
 /**
  * Check if betting is allowed for a market at the given time.
- * Uses same rules as backend: between opening and (closing - betClosureTime).
+ * Market opens at midnight (00:00) and closes at closing time each day.
  * Uses client local time (assume market times are in same timezone as user).
  *
- * @param {{ startingTime: string, closingTime: string, betClosureTime?: number }} market
+ * @param {{ closingTime: string, betClosureTime?: number }} market
  * @param {Date} [now]
  * @returns {{ allowed: boolean, message?: string }}
  */
 export function isBettingAllowed(market, now = new Date()) {
-  const startStr = (market?.startingTime || '').toString().trim();
   const closeStr = (market?.closingTime || '').toString().trim();
   const betClosureSec = Number(market?.betClosureTime);
   const closureSec = Number.isFinite(betClosureSec) && betClosureSec >= 0 ? betClosureSec : 0;
 
-  if (!startStr || !closeStr) {
+  if (!closeStr) {
     return { allowed: false, message: 'Market timing not configured.' };
   }
 
-  const openAt = parseTimeToDate(startStr, now);
+  const openAt = startOfDay(now);
   let closeAt = parseTimeToDate(closeStr, now);
-  if (!openAt || !closeAt) {
+  if (!closeAt) {
     return { allowed: false, message: 'Invalid market time.' };
   }
 
@@ -33,16 +32,20 @@ export function isBettingAllowed(market, now = new Date()) {
   if (now.getTime() < openAt.getTime()) {
     return {
       allowed: false,
-      message: `Betting opens at ${formatTime12(startStr)}. You can place bets after opening time.`,
+      message: 'Betting opens at 12:00 AM (midnight). You can place bets after midnight.',
     };
   }
   if (now.getTime() > lastBetAt.getTime()) {
     return {
       allowed: false,
-      message: 'Betting has closed for this market. Bets are not accepted after the set closure time.',
+      message: `Betting has closed for this market. Bets are not accepted after ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
     };
   }
   return { allowed: true };
+}
+
+function startOfDay(d) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
 }
 
 function parseTimeToDate(timeStr, refDate) {
@@ -67,15 +70,15 @@ function formatTime12(timeStr) {
 
 /**
  * True if current time has reached or passed the market's closing time (market is automatically closed).
+ * Market opens at midnight and closes at closing time; after midnight a new day, so the same market opens again at midnight and closes again at closing time.
  */
 export function isPastClosingTime(market, now = new Date()) {
-  const startStr = (market?.startingTime || '').toString().trim();
   const closeStr = (market?.closingTime || '').toString().trim();
   if (!closeStr) return false;
-  const openAt = parseTimeToDate(startStr, now);
+  const openAt = startOfDay(now);
   let closeAt = parseTimeToDate(closeStr, now);
   if (!closeAt) return false;
-  if (openAt && closeAt.getTime() <= openAt.getTime()) {
+  if (closeAt.getTime() <= openAt.getTime()) {
     closeAt = new Date(closeAt);
     closeAt.setDate(closeAt.getDate() + 1);
   }
