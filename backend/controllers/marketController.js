@@ -297,12 +297,13 @@ export const setWinNumber = async (req, res) => {
  */
 export const previewDeclareOpenResult = async (req, res) => {
     try {
-        const { id: marketId } = req.params;
+        const { id: marketIdParam } = req.params;
         const openingNumber = (req.query.openingNumber || req.body?.openingNumber || '').toString().trim();
-        const market = await Market.findById(marketId);
+        const market = await Market.findById(marketIdParam);
         if (!market) {
             return res.status(404).json({ success: false, message: 'Market not found' });
         }
+        const marketId = market._id.toString();
         const stats = await previewDeclareOpen(marketId, openingNumber || null);
         res.status(200).json({ success: true, data: stats });
     } catch (error) {
@@ -326,7 +327,7 @@ export const declareOpenResult = async (req, res) => {
         if (!market) {
             return res.status(404).json({ success: false, message: 'Market not found' });
         }
-        await settleOpening(marketId, openVal);
+        await settleOpening(market._id.toString(), openVal);
         if (req.admin) {
             await logActivity({
                 action: 'declare_open_result',
@@ -352,12 +353,13 @@ export const declareOpenResult = async (req, res) => {
  */
 export const previewDeclareCloseResult = async (req, res) => {
     try {
-        const { id: marketId } = req.params;
+        const { id: marketIdParam } = req.params;
         const closingNumber = (req.query.closingNumber || req.body?.closingNumber || '').toString().trim();
-        const market = await Market.findById(marketId);
+        const market = await Market.findById(marketIdParam);
         if (!market) {
             return res.status(404).json({ success: false, message: 'Market not found' });
         }
+        const marketId = market._id.toString();
         const stats = await previewDeclareClose(marketId, closingNumber || null);
         res.status(200).json({ success: true, data: stats });
     } catch (error) {
@@ -384,7 +386,7 @@ export const declareCloseResult = async (req, res) => {
         if (!market.openingNumber || !/^\d{3}$/.test(market.openingNumber)) {
             return res.status(400).json({ success: false, message: 'Opening number must be declared before closing' });
         }
-        await settleClosing(marketId, closeVal);
+        await settleClosing(market._id.toString(), closeVal);
         if (req.admin) {
             await logActivity({
                 action: 'declare_close_result',

@@ -90,7 +90,9 @@ const UpdateRate = () => {
             const data = await res.json();
             if (data.success) {
                 cancelEdit();
-                fetchRates();
+                // Use returned list so UI shows exact rates used for player settlement
+                if (Array.isArray(data.data)) setRates(data.data);
+                else fetchRates();
             } else {
                 alert(data.message || 'Failed to update rate');
             }

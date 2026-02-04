@@ -1,7 +1,21 @@
+import mongoose from 'mongoose';
 import Bet from '../models/bet/bet.js';
 import Market from '../models/market/market.js';
 import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import { getRatesMap, DEFAULT_RATES } from '../models/rate/rate.js';
+
+function toObjectId(id) {
+    if (!id) return null;
+    if (id instanceof mongoose.Types.ObjectId) return id;
+    try {
+        const str = String(id).trim();
+        return mongoose.Types.ObjectId.isValid(str) && String(new mongoose.Types.ObjectId(str)) === str
+            ? new mongoose.Types.ObjectId(str)
+            : null;
+    } catch {
+        return null;
+    }
+}
 
 /**
  * Classify 3-digit panna as single/double/triple patti and return rate key.
@@ -33,13 +47,19 @@ export async function settleOpening(marketId, openingNumber) {
     }
     const market = await Market.findById(marketId);
     if (!market) throw new Error('Market not found');
+    const canonicalId = market._id.toString();
     await Market.findByIdAndUpdate(marketId, { openingNumber });
 
     const rates = await getRatesMap();
     const lastDigitOpen = openingNumber.slice(-1);
     const open3 = openingNumber;
 
-    const pendingBets = await Bet.find({ marketId, status: 'pending' }).lean();
+    const oid = toObjectId(canonicalId);
+    const marketIdStr = String(canonicalId).trim();
+    const pendingBets = await Bet.find({
+        status: 'pending',
+        $or: oid ? [{ marketId: oid }, { marketId: marketIdStr }] : [{ marketId: marketIdStr }],
+    }).lean();
     for (const bet of pendingBets) {
         const type = (bet.betType || '').toLowerCase();
         const num = (bet.betNumber || '').toString().trim();
@@ -112,7 +132,13 @@ export async function settleClosing(marketId, closingNumber) {
     const lastDigitClose = closingNumber.slice(-1);
     const close3 = closingNumber;
 
-    const pendingBets = await Bet.find({ marketId, status: 'pending' }).lean();
+    const canonicalId = market._id.toString();
+    const oid = toObjectId(canonicalId);
+    const marketIdStr = String(canonicalId).trim();
+    const pendingBets = await Bet.find({
+        status: 'pending',
+        $or: oid ? [{ marketId: oid }, { marketId: marketIdStr }] : [{ marketId: marketIdStr }],
+    }).lean();
     for (const bet of pendingBets) {
         const type = (bet.betType || '').toLowerCase();
         const num = (bet.betNumber || '').toString().trim();
@@ -203,7 +229,15 @@ export async function settleClosing(marketId, closingNumber) {
  * Preview: for a proposed opening number, return totalBetAmount (all pending), totalWinAmount (single + panna payout), noOfPlayers, profit.
  */
 export async function previewDeclareOpen(marketId, openingNumber) {
-    const pendingBets = await Bet.find({ marketId, status: 'pending' }).lean();
+    const oid = toObjectId(marketId);
+    if (!oid) {
+        return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 };
+    }
+    const marketIdStr = String(marketId).trim();
+    const pendingBets = await Bet.find({
+        status: 'pending',
+        $or: [{ marketId: oid }, { marketId: marketIdStr }],
+    }).lean();
     let totalBetAmount = 0;
     let totalWinAmount = 0;
     const userIds = new Set();
@@ -247,12 +281,18 @@ export async function previewDeclareOpen(marketId, openingNumber) {
  * Returns totalBetAmount (sum of those pending), totalWinAmount, noOfPlayers, profit.
  */
 export async function previewDeclareClose(marketId, closingNumber) {
-    const market = await Market.findById(marketId).lean();
+    const oid = toObjectId(marketId);
+    if (!oid) return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 };
+    const market = await Market.findById(oid).lean();
     if (!market) return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 };
     const open3 = (market.openingNumber || '').toString();
     if (!/^\d{3}$/.test(open3)) return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 };
 
-    const pendingBets = await Bet.find({ marketId, status: 'pending' }).lean();
+    const marketIdStr = String(marketId).trim();
+    const pendingBets = await Bet.find({
+        status: 'pending',
+        $or: [{ marketId: oid }, { marketId: marketIdStr }],
+    }).lean();
     let totalBetAmount = 0;
     let totalWinAmount = 0;
     const userIds = new Set();

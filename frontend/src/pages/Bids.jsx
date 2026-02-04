@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
+import { getRatesCurrent } from '../api/bets';
 
 const safeParse = (raw, fallback) => {
   try {
@@ -55,26 +56,31 @@ const inferBetKind = (betNumberRaw) => {
   return 'unknown';
 };
 
-const getPayoutMultiplier = (kind, betNumberRaw) => {
-  if (kind === 'digit') return 9;
-  if (kind === 'jodi') return 90;
-  if (kind === 'half-sangam-open' || kind === 'half-sangam-close') return 1000;
-  if (kind === 'full-sangam') return 10000;
+// Backend defaults (must match backend/models/rate/rate.js) – used when API rates not loaded
+const DEFAULT_RATES = { single: 10, jodi: 100, singlePatti: 150, doublePatti: 300, triplePatti: 1000, halfSangam: 5000, fullSangam: 10000 };
+
+const rateNum = (val, def) => (Number.isFinite(Number(val)) && Number(val) >= 0 ? Number(val) : def);
+const getPayoutMultiplier = (kind, betNumberRaw, ratesMap) => {
+  const r = ratesMap && typeof ratesMap === 'object' ? ratesMap : DEFAULT_RATES;
+  if (kind === 'digit') return rateNum(r.single, DEFAULT_RATES.single);
+  if (kind === 'jodi') return rateNum(r.jodi, DEFAULT_RATES.jodi);
+  if (kind === 'half-sangam-open' || kind === 'half-sangam-close') return rateNum(r.halfSangam, DEFAULT_RATES.halfSangam);
+  if (kind === 'full-sangam') return rateNum(r.fullSangam, DEFAULT_RATES.fullSangam);
   if (kind === 'panna') {
     const s = (betNumberRaw ?? '').toString().trim();
     if (/^\d{3}$/.test(s)) {
       const a = s[0], b = s[1], c = s[2];
       const allSame = a === b && b === c;
       const twoSame = a === b || b === c || a === c;
-      if (allSame) return 600; // triple patti
-      if (twoSame) return 300; // double patti
-      return 150; // single patti
+      if (allSame) return rateNum(r.triplePatti, DEFAULT_RATES.triplePatti);
+      if (twoSame) return rateNum(r.doublePatti, DEFAULT_RATES.doublePatti);
+      return rateNum(r.singlePatti, DEFAULT_RATES.singlePatti);
     }
   }
   return 0;
 };
 
-const evaluateBet = ({ market, betNumberRaw, amount, session }) => {
+const evaluateBet = ({ market, betNumberRaw, amount, session, ratesMap }) => {
   const opening = market?.openingNumber && /^\d{3}$/.test(String(market.openingNumber)) ? String(market.openingNumber) : null;
   const closing = market?.closingNumber && /^\d{3}$/.test(String(market.closingNumber)) ? String(market.closingNumber) : null;
   const openDigit = opening ? String(lastDigit(opening)) : null;
@@ -119,7 +125,7 @@ const evaluateBet = ({ market, betNumberRaw, amount, session }) => {
 
   if (!won) return { state: 'lost', kind, payout: 0 };
 
-  const mul = getPayoutMultiplier(kind, betNumber);
+  const mul = getPayoutMultiplier(kind, betNumber, ratesMap);
   const payout = mul > 0 ? (Number(amount) || 0) * mul : 0;
   return { state: 'won', kind, payout };
 };
@@ -189,6 +195,7 @@ const Bids = () => {
   }, []);
 
   const [markets, setMarkets] = useState([]);
+  const [ratesMap, setRatesMap] = useState(null);
   useEffect(() => {
     let alive = true;
     const fetchMarkets = async () => {
@@ -209,6 +216,14 @@ const Bids = () => {
       alive = false;
       clearInterval(id);
     };
+  }, []);
+  useEffect(() => {
+    let alive = true;
+    getRatesCurrent().then((result) => {
+      if (!alive) return;
+      if (result?.success && result?.data) setRatesMap(result.data);
+    });
+    return () => { alive = false; };
   }, []);
 
   const marketByName = useMemo(() => {
@@ -398,6 +413,7 @@ const Bids = () => {
                           betNumberRaw: r?.number,
                           amount: points,
                           session,
+                          ratesMap,
                         });
 
                         return (

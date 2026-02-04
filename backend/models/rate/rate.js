@@ -28,7 +28,8 @@ const Rate = mongoose.model('Rate', rateSchema);
 
 /**
  * Get all rates as a map { single: 10, jodi: 100, ... }. Seeds defaults if empty.
- * Every key from DEFAULT_RATES is guaranteed to be a finite number (default used if missing/invalid).
+ * Every key from DEFAULT_RATES is guaranteed to be a finite number (from DB or default).
+ * Used by settlement to pay winning players – must always reflect Update Rate screen values.
  */
 export async function getRatesMap() {
     let docs = await Rate.find().lean();
@@ -40,10 +41,13 @@ export async function getRatesMap() {
     }
     const map = { ...DEFAULT_RATES };
     for (const d of docs) {
-        const key = d.gameType;
-        const val = d.rate;
-        if (key && key in DEFAULT_RATES && val != null && Number.isFinite(Number(val)) && Number(val) >= 0) {
-            map[key] = Number(val);
+        const key = (d.gameType && String(d.gameType).trim()) || '';
+        const normalizedKey = key in DEFAULT_RATES ? key : null;
+        if (!normalizedKey) continue;
+        const raw = d.rate;
+        const num = raw != null ? Number(raw) : NaN;
+        if (Number.isFinite(num) && num >= 0) {
+            map[normalizedKey] = num;
         }
     }
     return map;

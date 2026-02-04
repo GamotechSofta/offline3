@@ -47,6 +47,20 @@ export async function placeBet(marketId, bets) {
 }
 
 /**
+ * Fetch current payout rates (single, jodi, singlePatti, etc.) for display.
+ * Same rates used when settling wins (admin Update Rate screen).
+ * @returns {Promise<{ success: boolean, data?: { single, jodi, singlePatti, ... }, message?: string }>}
+ */
+export async function getRatesCurrent() {
+  const response = await fetch(`${API_BASE_URL}/rates/current`);
+  const data = await response.json();
+  if (!response.ok) {
+    return { success: false, message: data.message || 'Failed to fetch rates' };
+  }
+  return data;
+}
+
+/**
  * Fetch current wallet balance for the logged-in user.
  * @returns {Promise<{ success: boolean, data?: { balance: number }, message?: string }>}
  */

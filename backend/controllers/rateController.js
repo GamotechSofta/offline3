@@ -1,7 +1,20 @@
 import Rate, { getRatesMap } from '../models/rate/rate.js';
 
 /**
- * GET /rates – list all game rates (admin). Public GET for settlement use.
+ * GET /rates/current – public. Returns current payout rates for user-side display (e.g. "You Won ₹X").
+ * Same rates used when settling bets (admin Update Rate screen).
+ */
+export const getRatesCurrent = async (req, res) => {
+    try {
+        const map = await getRatesMap();
+        res.status(200).json({ success: true, data: { ...map } });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * GET /rates – list all game rates (admin).
  */
 export const getRates = async (req, res) => {
     try {
@@ -21,27 +34,40 @@ export const getRates = async (req, res) => {
     }
 };
 
+const RATE_GAME_TYPES = ['single', 'jodi', 'singlePatti', 'doublePatti', 'triplePatti', 'halfSangam', 'fullSangam'];
+
 /**
  * PATCH /rates/:gameType – update one rate. Body: { rate: number }
+ * These rates are used when settling winning players (declare result).
  */
 export const updateRate = async (req, res) => {
     try {
-        const { gameType } = req.params;
-        const { rate } = req.body;
-        const validTypes = ['single', 'jodi', 'singlePatti', 'doublePatti', 'triplePatti', 'halfSangam', 'fullSangam'];
-        if (!validTypes.includes(gameType)) {
+        const gameType = (req.params.gameType || '').trim();
+        const rate = req.body?.rate;
+        if (!RATE_GAME_TYPES.includes(gameType)) {
             return res.status(400).json({ success: false, message: 'Invalid game type' });
         }
-        const rateNum = Number(rate);
+        const rateNum = rate != null ? Number(rate) : NaN;
         if (!Number.isFinite(rateNum) || rateNum < 0) {
             return res.status(400).json({ success: false, message: 'Rate must be a non-negative number' });
         }
-        const doc = await Rate.findOneAndUpdate(
+        await Rate.findOneAndUpdate(
             { gameType },
             { rate: rateNum },
-            { new: true, upsert: true }
+            { new: true, upsert: true, runValidators: true }
         );
-        res.status(200).json({ success: true, data: doc });
+        // Return full list (same as GET) so admin UI and settlement both use these rates
+        const map = await getRatesMap();
+        const list = [
+            { gameType: 'single', label: 'Single Digit', rate: map.single },
+            { gameType: 'jodi', label: 'Jodi', rate: map.jodi },
+            { gameType: 'singlePatti', label: 'Single Patti', rate: map.singlePatti },
+            { gameType: 'doublePatti', label: 'Double Patti', rate: map.doublePatti },
+            { gameType: 'triplePatti', label: 'Triple Patti', rate: map.triplePatti },
+            { gameType: 'halfSangam', label: 'Half Sangam', rate: map.halfSangam },
+            { gameType: 'fullSangam', label: 'Full Sangam', rate: map.fullSangam },
+        ];
+        res.status(200).json({ success: true, data: list });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

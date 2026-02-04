@@ -85,35 +85,61 @@ const AddResult = () => {
         setPreviewClose(null);
     };
 
+    const getMarketId = () => {
+        if (!selectedMarket) return null;
+        const id = selectedMarket._id ?? selectedMarket.id;
+        return id != null ? String(id) : null;
+    };
+
     const handleCheckOpen = async () => {
         if (!selectedMarket) return;
+        const marketId = getMarketId();
+        if (!marketId) return;
         const val = openPatti.replace(/\D/g, '').slice(0, 3);
         setCheckLoading(true);
         setPreview(null);
         try {
-            const url = `${API_BASE_URL}/markets/preview-declare-open/${selectedMarket._id}?openingNumber=${encodeURIComponent(val)}`;
+            const url = `${API_BASE_URL}/markets/preview-declare-open/${encodeURIComponent(marketId)}?openingNumber=${encodeURIComponent(val)}`;
             const res = await fetch(url, { headers: getAuthHeaders() });
             const data = await res.json();
-            if (data.success) setPreview(data.data);
-            else setPreview({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
+            if (data.success && data.data != null) {
+                setPreview({
+                    totalBetAmount: Number(data.data.totalBetAmount) ?? 0,
+                    totalWinAmount: Number(data.data.totalWinAmount) ?? 0,
+                    noOfPlayers: Number(data.data.noOfPlayers) ?? 0,
+                    profit: Number(data.data.profit) ?? 0,
+                });
+            } else {
+                setPreview({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
+            }
         } catch (err) {
             setPreview(null);
-} finally {
-        setCheckLoading(false);
+        } finally {
+            setCheckLoading(false);
         }
     };
 
     const handleCheckClose = async () => {
         if (!selectedMarket) return;
+        const marketId = getMarketId();
+        if (!marketId) return;
         const val = closePatti.replace(/\D/g, '').slice(0, 3);
         setCheckCloseLoading(true);
         setPreviewClose(null);
         try {
-            const url = `${API_BASE_URL}/markets/preview-declare-close/${selectedMarket._id}?closingNumber=${encodeURIComponent(val)}`;
+            const url = `${API_BASE_URL}/markets/preview-declare-close/${encodeURIComponent(marketId)}?closingNumber=${encodeURIComponent(val)}`;
             const res = await fetch(url, { headers: getAuthHeaders() });
             const data = await res.json();
-            if (data.success) setPreviewClose(data.data);
-            else setPreviewClose({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
+            if (data.success && data.data != null) {
+                setPreviewClose({
+                    totalBetAmount: Number(data.data.totalBetAmount) ?? 0,
+                    totalWinAmount: Number(data.data.totalWinAmount) ?? 0,
+                    noOfPlayers: Number(data.data.noOfPlayers) ?? 0,
+                    profit: Number(data.data.profit) ?? 0,
+                });
+            } else {
+                setPreviewClose({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
+            }
         } catch (err) {
             setPreviewClose(null);
         } finally {
