@@ -141,6 +141,7 @@ const BetHistory = () => {
   const [page, setPage] = useState(1);
   const [markets, setMarkets] = useState([]);
   const [ratesMap, setRatesMap] = useState(null);
+  const [localVersion, setLocalVersion] = useState(0);
 
   const { userId, bets } = useMemo(() => {
     const u = safeParse(localStorage.getItem('user') || 'null', null);
@@ -149,7 +150,7 @@ const BetHistory = () => {
     const list = Array.isArray(all) ? all : [];
     const onlyMine = uid ? list.filter((x) => x?.userId === uid) : list;
     return { userId: uid, bets: onlyMine };
-  }, []);
+  }, [localVersion]);
 
   const flat = useMemo(() => {
     const out = [];
@@ -220,16 +221,80 @@ const BetHistory = () => {
       const session = (r?.type || x?.session || '').toString().trim().toUpperCase();
       const marketTitle = (x?.marketTitle || '').toString().trim() || 'MARKET';
       const m = marketByName.get(normalizeMarketName(marketTitle));
-      const verdict = evaluateBet({
+      const computed = evaluateBet({
         market: m,
         betNumberRaw: r?.number,
         amount: points,
         session,
         ratesMap,
       });
-      return { x, r, idx, points, session, marketTitle, verdict };
+
+      const storedState = (r?.settledState || '').toString();
+      const storedPayout = Number(r?.settledPayout || 0) || 0;
+      const finalVerdict =
+        storedState === 'won' || storedState === 'lost'
+          ? { ...computed, state: storedState, payout: storedPayout }
+          : computed;
+
+      return { x, r, idx, points, session, marketTitle, computedVerdict: computed, verdict: finalVerdict };
     });
   }, [flat, marketByName, ratesMap]);
+
+  // Persist settled verdicts so refresh always shows same message
+  const toPersist = useMemo(() => {
+    return (enriched || [])
+      .filter((row) => {
+        const r = row?.r;
+        if (!r?.id) return false;
+        if (r?.settledState) return false;
+        return row?.computedVerdict?.state === 'won' || row?.computedVerdict?.state === 'lost';
+      })
+      .map((row) => ({
+        entryId: row.x?.id,
+        rowId: row.r?.id,
+        state: row.computedVerdict.state,
+        payout: Number(row.computedVerdict.payout || 0) || 0,
+      }))
+      .filter((x) => x.entryId && x.rowId);
+  }, [enriched]);
+
+  useEffect(() => {
+    if (!toPersist.length) return;
+    try {
+      const raw = localStorage.getItem('betHistory');
+      const prev = raw ? safeParse(raw, []) : [];
+      if (!Array.isArray(prev) || prev.length === 0) return;
+
+      let changed = false;
+      const next = prev.map((entry) => {
+        const entryId = entry?.id;
+        const matches = toPersist.filter((u) => u.entryId === entryId);
+        if (!matches.length) return entry;
+
+        const rows = Array.isArray(entry?.rows) ? entry.rows : [];
+        const newRows = rows.map((r) => {
+          const m = matches.find((u) => u.rowId === r?.id);
+          if (!m) return r;
+          if (r?.settledState) return r;
+          changed = true;
+          return {
+            ...r,
+            settledState: m.state,
+            settledPayout: m.payout,
+            settledAt: new Date().toISOString(),
+          };
+        });
+        return changed ? { ...entry, rows: newRows } : entry;
+      });
+
+      if (changed) {
+        localStorage.setItem('betHistory', JSON.stringify(next));
+        setLocalVersion((v) => v + 1);
+      }
+    } catch {
+      // ignore
+    }
+  }, [toPersist]);
 
   const filtered = useMemo(() => {
     return (enriched || []).filter((row) => {
