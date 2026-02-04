@@ -8,12 +8,12 @@ const BottomNavbar = () => {
   const navItems = [
     {
       id: 'my-bids',
-      label: 'My Bids',
+      label: 'My Bets',
       path: '/bids',
       icon: (
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777192/auction_ofhpps.png"
-          alt="My Bids"
+          alt="My Bets"
           className="w-6 h-6 object-contain [image-rendering:-webkit-optimize-contrast]"
         />
       )
@@ -132,9 +132,9 @@ const BottomNavbar = () => {
                 {item.icon}
               </div>
               {/* Active indicator dot below icon */}
-              <div className="h-1.5 flex items-center justify-center">
+              <div className="h-1.5 w-full flex items-center justify-center">
                 {active && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#f3b61b] shadow-[0_0_8px_rgba(0,0,0,0.4)]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f3b61b] shadow-[0_0_8px_rgba(0,0,0,0.4)] mx-auto" />
                 )}
               </div>
               <span

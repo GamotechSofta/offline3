@@ -56,6 +56,34 @@ const BidReviewModal = ({
     try {
       const fn = onSubmit?.();
       if (fn && typeof fn.then === 'function') await fn;
+
+      // Persist bet history (only after successful submit)
+      try {
+        const u = JSON.parse(localStorage.getItem('user') || 'null');
+        const userId =
+          u?._id || u?.id || u?.userId || u?.userid || u?.user_id || u?.uid || null;
+
+        const entry = {
+          id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+          userId,
+          marketTitle: marketTitle || '',
+          dateText: dateText || '',
+          labelKey,
+          rows: Array.isArray(rows) ? rows : [],
+          totalBets: Number(totalBids) || 0,
+          totalAmount: Number(totalAmount) || 0,
+          session: (rows?.[0]?.type || '').toString(),
+          createdAt: new Date().toISOString(),
+        };
+
+        const raw = localStorage.getItem('betHistory');
+        const prev = raw ? JSON.parse(raw) : [];
+        const next = Array.isArray(prev) ? [entry, ...prev] : [entry];
+        localStorage.setItem('betHistory', JSON.stringify(next.slice(0, 200)));
+      } catch (e) {
+        // ignore storage errors
+      }
+
       setStage('success');
     } catch (e) {
       setSubmitError(e?.message || 'Failed to place bet');
@@ -157,11 +185,11 @@ const BidReviewModal = ({
                 <div className="rounded-2xl overflow-hidden border border-white/10">
                   <div className="grid grid-cols-2">
                     <div className="p-3 sm:p-4 text-center border-r border-b border-white/10">
-                      <div className="text-gray-400 text-[11px] sm:text-sm">Total Bids</div>
+                      <div className="text-gray-400 text-[11px] sm:text-sm">Total Bets</div>
                       <div className="text-white font-bold text-base sm:text-lg leading-tight">{totalBids}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center border-b border-white/10">
-                      <div className="text-gray-400 text-[11px] sm:text-sm">Total Bid Amount</div>
+                      <div className="text-gray-400 text-[11px] sm:text-sm">Total Bet Amount</div>
                       <div className="text-white font-bold text-base sm:text-lg text-[#f2c14e] leading-tight">{amount}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center border-r border-white/10">
@@ -199,7 +227,7 @@ const BidReviewModal = ({
 
               {/* Note */}
               <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-3 sm:pb-4 text-center text-red-400 font-semibold text-[12px] sm:text-base shrink-0">
-                *Note: Bid once played cannot be cancelled*
+                *Note: Bet once placed cannot be cancelled*
               </div>
             </div>
 

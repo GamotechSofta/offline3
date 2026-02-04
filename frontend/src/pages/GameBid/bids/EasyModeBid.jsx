@@ -102,18 +102,18 @@ const EasyModeBid = ({
         }
 
         if (!n) {
-            showWarning(maxLength === 2 ? 'Please enter Jodi (00-99).' : `Please enter ${labelKey}.`);
+            showWarning(maxLength === 2 ? 'Please enter Digit (00-99).' : `Please enter ${labelKey}.`);
             return;
         }
 
         // Jodi specific: must be exactly 2 digits (00-99)
         if (maxLength === 2 && n.length !== 2) {
-            showWarning('Please enter 2-digit Jodi (00-99).');
+            showWarning('Please enter 2-digit Digit (00-99).');
             return;
         }
 
         if (!isValid(n)) {
-            showWarning(maxLength === 2 ? 'Invalid Jodi. Use 00-99.' : 'Invalid number.');
+            showWarning(maxLength === 2 ? 'Invalid Digit. Use 00-99.' : 'Invalid number.');
             return;
         }
 
@@ -144,7 +144,7 @@ const EasyModeBid = ({
             }));
         if (!toAdd.length) {
             const label =
-                specialModeType === 'jodi' ? 'Jodi (00-99)'
+                specialModeType === 'jodi' ? 'Digit (00-99)'
                 : (specialModeType === 'doublePana' ? 'Double Pana' : 'Single Pana');
             showWarning(`Please enter points for at least one ${label}.`);
             return;
@@ -170,7 +170,7 @@ const EasyModeBid = ({
 
         if (!toAdd.length && bids.length === 0) {
             const label =
-                specialModeType === 'jodi' ? 'Jodi (00-99)'
+                specialModeType === 'jodi' ? 'Digit (00-99)'
                 : (specialModeType === 'doublePana' ? 'Double Pana' : 'Single Pana');
             showWarning(`Please enter points for at least one ${label}.`);
             return;
@@ -437,7 +437,16 @@ const EasyModeBid = ({
                         key={bid.id}
                         className="grid grid-cols-4 gap-1 sm:gap-2 text-center items-center py-2.5 px-2 bg-[#202124] rounded-lg border border-white/10 text-sm"
                     >
-                        <div className="font-bold text-white">{bid.number}</div>
+                        <div className="font-bold text-white">
+                            {maxLength === 2 && typeof bid.number === 'string' && bid.number.length === 2 ? (
+                                <span className="inline-flex items-center gap-2 justify-center">
+                                    <span>{bid.number[0]}</span>
+                                    <span>{bid.number[1]}</span>
+                                </span>
+                            ) : (
+                                bid.number
+                            )}
+                        </div>
                         <div className="font-bold text-[#f2c14e]">{bid.points}</div>
                         <div className="text-sm text-gray-400">{bid.type}</div>
                         <div className="flex justify-center">
@@ -534,7 +543,11 @@ const EasyModeBid = ({
                                     {jodiNumbers.map((num) => (
                                         <div key={num} className="flex items-center gap-1.5">
                                             <div className="w-10 h-9 bg-[#202124] border border-white/10 text-[#f2c14e] flex items-center justify-center rounded-l-md font-bold text-xs shrink-0">
-                                                {num}
+                                                <span className="inline-flex items-center gap-1">
+                                                    <span>{num[0]}</span>
+                                                    <span className="text-white/30">|</span>
+                                                    <span>{num[1]}</span>
+                                                </span>
                                             </div>
                                             <input
                                                 type="number"

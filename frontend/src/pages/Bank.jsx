@@ -80,7 +80,7 @@ const Bank = () => {
 
             <div className="grid grid-cols-2 gap-6 mt-4 text-sm text-gray-300">
               <div className="text-center">
-                <div className="font-semibold text-white">Bid Play</div>
+                <div className="font-semibold text-white">Bet Play</div>
                 <div className="text-gray-300">{tx.bidPlay}</div>
               </div>
               <div className="text-center">

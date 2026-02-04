@@ -12,7 +12,7 @@ const AppHeader = () => {
     { label: 'Top Winners', path: '/support' },
     { label: 'Starline Winners', path: '/support' },
     { label: 'Telegram Channel', path: '/support' },
-    { label: 'My Bids', path: '/bids' },
+    { label: 'My Bets', path: '/bids' },
     { label: 'Bank', path: '/bank' },
     { label: 'Funds', path: '/funds' },
     { label: 'Notification', path: '/support' },
@@ -233,10 +233,10 @@ const AppHeader = () => {
                         alt="Telegram"
                         className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
                       />
-                    ) : item.label === 'My Bids' ? (
+                    ) : item.label === 'My Bets' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777192/auction_ofhpps.png"
-                        alt="My Bids"
+                        alt="My Bets"
                         className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
                       />
                     ) : item.label === 'Bank' ? (

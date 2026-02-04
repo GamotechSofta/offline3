@@ -15,6 +15,7 @@ import Passbook from '../pages/Passbook';
 import Support from '../pages/Support';
 import Bids from '../pages/Bids';
 import Profile from '../pages/Profile';
+import BetHistory from '../pages/BetHistory';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -74,11 +75,21 @@ const Layout = ({ children }) => {
   }
 
   const isBidPage = location.pathname.includes('game-bid') || location.pathname === '/bidoptions';
+  const isDarkPage = isBidPage || location.pathname === '/bids' || location.pathname === '/bet-history';
+  const isBetsPage = location.pathname === '/bids';
 
   return (
-    <div className={`min-h-screen pb-16 md:pb-0 w-full max-w-full overflow-x-hidden ${isBidPage ? 'bg-black' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen pb-16 md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkPage ? 'bg-black' : 'bg-gray-50'}`}>
       <AppHeader />
-      <div className="pt-[60px] sm:pt-[68px] md:pt-[80px]">
+      {/* Reduce mobile top-gap under fixed header */}
+      {/* Desktop: ensure no overlap under fixed header */}
+      <div
+        className={
+          isBidPage
+            ? 'pt-[60px] sm:pt-[76px] md:pt-[80px]'
+            : (isBetsPage ? 'pt-[56px] sm:pt-[68px] md:pt-[88px]' : 'pt-[56px] sm:pt-[68px] md:pt-[80px]')
+        }
+      >
         {children}
       </div>
       <BottomNavbar />
@@ -103,6 +114,7 @@ const AppRoutes = () => {
           <Route path="/support" element={<Support />} />
           <Route path="/login" element={<Login />} />
           <Route path="/bids" element={<Bids />} />
+          <Route path="/bet-history" element={<BetHistory />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </Layout>

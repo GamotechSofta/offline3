@@ -42,7 +42,7 @@ const BidLayout = ({
     walletBalance,
     onSubmit = () => {},
     showFooterStats = true,
-    submitLabel = 'Submit Bids',
+    submitLabel = 'Submit Bets',
     contentPaddingClass,
 }) => {
     const navigate = useNavigate();
@@ -180,7 +180,7 @@ const BidLayout = ({
                         {showFooterStats && (
                             <div className="flex items-center gap-6 sm:gap-8 shrink-0">
                                 <div className="text-center">
-                                    <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Bids</div>
+                                    <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Bets</div>
                                     <div className="text-base sm:text-lg font-bold text-[#f2c14e]">{bidsCount}</div>
                                 </div>
                                 <div className="text-center">
