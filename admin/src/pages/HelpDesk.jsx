@@ -3,6 +3,7 @@ import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+const UPLOAD_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1').replace(/\/api\/v1\/?$/, '') || 'http://localhost:3010';
 
 const HelpDesk = () => {
     const navigate = useNavigate();
@@ -168,7 +169,7 @@ const HelpDesk = () => {
                                                 {selectedTicket.screenshots.map((screenshot, index) => (
                                                     <img
                                                         key={index}
-                                                        src={`http://localhost:3010${screenshot}`}
+                                                        src={`${UPLOAD_BASE_URL}${screenshot}`}
                                                         alt={`Screenshot ${index + 1}`}
                                                         className="w-full h-32 object-cover rounded border border-gray-700"
                                                     />
