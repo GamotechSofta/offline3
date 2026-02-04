@@ -9,15 +9,33 @@ const HelpDesk = () => {
     const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [bookies, setBookies] = useState([]);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [fullScreenImage, setFullScreenImage] = useState(null);
     const [filters, setFilters] = useState({
         status: '',
+        userSource: '',
+        bookieId: '',
     });
 
     useEffect(() => {
         fetchTickets();
     }, [filters]);
+
+    useEffect(() => {
+        const fetchBookies = async () => {
+            try {
+                const admin = JSON.parse(localStorage.getItem('admin'));
+                const password = sessionStorage.getItem('adminPassword') || '';
+                const res = await fetch(`${API_BASE_URL}/admin/bookies`, {
+                    headers: { 'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}` },
+                });
+                const data = await res.json();
+                if (data.success && data.data) setBookies(data.data);
+            } catch (_) {}
+        };
+        fetchBookies();
+    }, []);
 
     const fetchTickets = async () => {
         try {
@@ -26,6 +44,8 @@ const HelpDesk = () => {
             const password = sessionStorage.getItem('adminPassword') || '';
             const queryParams = new URLSearchParams();
             if (filters.status) queryParams.append('status', filters.status);
+            if (filters.userSource) queryParams.append('userSource', filters.userSource);
+            if (filters.bookieId) queryParams.append('bookieId', filters.bookieId);
 
             const response = await fetch(`${API_BASE_URL}/help-desk/tickets?${queryParams}`, {
                 headers: {
@@ -78,7 +98,7 @@ const HelpDesk = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Help Desk</h1>
 
                     {/* Filters */}
-                    <div className="bg-gray-800 rounded-lg p-4 mb-4 sm:mb-6">
+                    <div className="bg-gray-800 rounded-lg p-4 mb-4 sm:mb-6 flex flex-wrap gap-3 items-center">
                         <select
                             value={filters.status}
                             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
@@ -90,6 +110,34 @@ const HelpDesk = () => {
                             <option value="resolved">Resolved</option>
                             <option value="closed">Closed</option>
                         </select>
+                        <select
+                            value={filters.userSource}
+                            onChange={(e) => setFilters({ ...filters, userSource: e.target.value })}
+                            className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                        >
+                            <option value="">All Users</option>
+                            <option value="bookie">Bookie user only</option>
+                            <option value="super_admin">Admin user only</option>
+                        </select>
+                        {bookies.length > 0 && (
+                            <select
+                                value={filters.bookieId}
+                                onChange={(e) => setFilters({ ...filters, bookieId: e.target.value })}
+                                className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
+                            >
+                                <option value="">All bookies</option>
+                                {bookies.map((b) => (
+                                    <option key={b._id} value={b._id}>{b.username}</option>
+                                ))}
+                            </select>
+                        )}
+                        <button
+                            type="button"
+                            onClick={() => setFilters({ status: '', userSource: '', bookieId: '' })}
+                            className="px-4 py-2 bg-gray-600 hover:bg-gray-500 border border-gray-500 rounded-lg text-white text-sm font-medium"
+                        >
+                            Clear filter
+                        </button>
                     </div>
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
@@ -129,7 +177,11 @@ const HelpDesk = () => {
                                             </div>
                                             <p className="text-sm text-gray-400 truncate">{ticket.description}</p>
                                             <p className="text-xs text-gray-500 mt-2">
-                                                {ticket.userId?.username || 'Unknown'} • {new Date(ticket.createdAt).toLocaleDateString()}
+                                                {ticket.userId?.username || 'Unknown'}
+                                                {ticket.userId?.source === 'bookie'
+                                                    ? ` — bookie user${ticket.userId?.referredBy?.username ? ` (${ticket.userId.referredBy.username})` : ''}`
+                                                    : ' — admin user'}
+                                                {' • '}{new Date(ticket.createdAt).toLocaleDateString()}
                                             </p>
                                         </div>
                                     ))}
@@ -155,7 +207,12 @@ const HelpDesk = () => {
 
                                     <div className="mb-4">
                                         <p className="text-gray-400 text-sm mb-1">Player</p>
-                                        <p className="font-semibold">{selectedTicket.userId?.username || selectedTicket.userId}</p>
+                                        <p className="font-semibold">
+                                            {selectedTicket.userId?.username || selectedTicket.userId}
+                                            {selectedTicket.userId?.source === 'bookie'
+                                                ? ` — bookie user${selectedTicket.userId?.referredBy?.username ? ` (${selectedTicket.userId.referredBy.username})` : ''}`
+                                                : ' — admin user'}
+                                        </p>
                                     </div>
 
                                     <div className="mb-4">

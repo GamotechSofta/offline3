@@ -50,7 +50,7 @@ const HelpDesk = () => {
     return (
         <Layout title="Help Desk">
             <h1 className="text-3xl font-bold mb-6">Help Desk</h1>
-            <div className="bg-gray-800 rounded-lg p-4 mb-6">
+            <div className="bg-gray-800 rounded-lg p-4 mb-6 flex flex-wrap gap-3 items-center">
                 <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
                     <option value="">All Status</option>
                     <option value="open">Open</option>
@@ -58,6 +58,13 @@ const HelpDesk = () => {
                     <option value="resolved">Resolved</option>
                     <option value="closed">Closed</option>
                 </select>
+                <button
+                    type="button"
+                    onClick={() => setFilters({ status: '' })}
+                    className="px-4 py-2 bg-gray-600 hover:bg-gray-500 border border-gray-500 rounded-lg text-white text-sm font-medium"
+                >
+                    Clear filter
+                </button>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-gray-800 rounded-lg overflow-hidden">
@@ -71,7 +78,13 @@ const HelpDesk = () => {
                                         <span className={`px-2 py-1 rounded text-xs ${ticket.status === 'resolved' ? 'bg-green-600' : ticket.status === 'in-progress' ? 'bg-yellow-600' : ticket.status === 'closed' ? 'bg-gray-600' : 'bg-blue-600'}`}>{ticket.status}</span>
                                     </div>
                                     <p className="text-sm text-gray-400 truncate">{ticket.description}</p>
-                                    <p className="text-xs text-gray-500 mt-2">{ticket.userId?.username || 'Unknown'} • {new Date(ticket.createdAt).toLocaleDateString()}</p>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        {ticket.userId?.username || 'Unknown'}
+                                        {ticket.userId?.source === 'bookie'
+                                            ? ` — bookie user${ticket.userId?.referredBy?.username ? ` (${ticket.userId.referredBy.username})` : ''}`
+                                            : ' — admin user'}
+                                        {' • '}{new Date(ticket.createdAt).toLocaleDateString()}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -84,7 +97,7 @@ const HelpDesk = () => {
                                 <h2 className="text-2xl font-bold">{selectedTicket.subject}</h2>
                                 <span className={`px-3 py-1 rounded text-sm ${selectedTicket.status === 'resolved' ? 'bg-green-600' : selectedTicket.status === 'in-progress' ? 'bg-yellow-600' : selectedTicket.status === 'closed' ? 'bg-gray-600' : 'bg-blue-600'}`}>{selectedTicket.status}</span>
                             </div>
-                            <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Player</p><p className="font-semibold">{selectedTicket.userId?.username || selectedTicket.userId}</p></div>
+                            <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Player</p><p className="font-semibold">{selectedTicket.userId?.username || selectedTicket.userId}{selectedTicket.userId?.source === 'bookie' ? ` — bookie user${selectedTicket.userId?.referredBy?.username ? ` (${selectedTicket.userId.referredBy.username})` : ''}` : ' — admin user'}</p></div>
                             <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Description</p><p className="whitespace-pre-wrap">{selectedTicket.description}</p></div>
                             {selectedTicket.screenshots?.length > 0 && (
                                 <div className="mb-4">
