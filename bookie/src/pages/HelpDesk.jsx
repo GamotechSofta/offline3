@@ -49,8 +49,8 @@ const HelpDesk = () => {
 
     return (
         <Layout title="Help Desk">
-            <h1 className="text-3xl font-bold mb-6">Help Desk</h1>
-            <div className="bg-gray-800 rounded-lg p-4 mb-6 flex flex-wrap gap-3 items-center">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Help Desk</h1>
+            <div className="bg-gray-800 rounded-lg p-4 mb-4 sm:mb-6 flex flex-wrap gap-3 items-center">
                 <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
                     <option value="">All Status</option>
                     <option value="open">Open</option>
@@ -66,7 +66,7 @@ const HelpDesk = () => {
                     Clear filter
                 </button>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
                 <div className="bg-gray-800 rounded-lg overflow-hidden">
                     <div className="p-4 border-b border-gray-700"><h2 className="text-xl font-semibold">Tickets</h2></div>
                     {loading ? <div className="p-12 text-center text-gray-400">Loading...</div> : tickets.length === 0 ? <div className="p-12 text-center text-gray-400">No tickets found</div> : (

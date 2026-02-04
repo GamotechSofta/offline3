@@ -70,7 +70,11 @@ const BetHistory = () => {
                                     <tr key={bet._id} className="hover:bg-gray-700">
                                         <td className="px-6 py-4 text-sm">{bet._id?.slice(-8)}</td>
                                         <td className="px-6 py-4 text-sm">{bet.userId?.username || bet.userId}</td>
-                                        <td className="px-6 py-4 text-sm">{bet.marketId?.marketName || bet.marketId}</td>
+                                        <td className="px-6 py-4 text-sm">
+                                            {typeof bet.marketId === 'object' && bet.marketId !== null
+                                                ? (bet.marketId.marketName || '—')
+                                                : (bet.marketId ? String(bet.marketId) : '—')}
+                                        </td>
                                         <td className="px-6 py-4 text-sm">{bet.betType}</td>
                                         <td className="px-6 py-4 text-sm">₹{bet.amount}</td>
                                         <td className="px-6 py-4 text-sm">
