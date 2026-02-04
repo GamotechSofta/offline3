@@ -20,7 +20,8 @@ const AppHeader = () => {
     { label: 'Game Rate', path: '/support' },
     { label: 'Time Table', path: '/support' },
     { label: 'Notice board / Rules', path: '/support' },
-    { label: 'Settings', path: '/support' },
+    { label: 'Help Desk', path: '/support' },
+    { label: 'Settings', path: '/profile' },
     { label: 'How to play', path: '/support' },
     { label: 'Share App', path: '/support' },
     { label: 'Logout', path: '/login' }
@@ -281,6 +282,12 @@ const AppHeader = () => {
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798736/checklist_xnr6yh.png"
                         alt="Notice board / Rules"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
+                      />
+                    ) : item.label === 'Help Desk' ? (
+                      <img
+                        src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777618/customer-support_du0zcj.png"
+                        alt="Help Desk"
                         className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
                       />
                     ) : item.label === 'Settings' ? (

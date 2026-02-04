@@ -93,6 +93,22 @@ export const getTickets = async (req, res) => {
     }
 };
 
+/** Get tickets for a specific user (by userId query) - for Support page "my tickets" */
+export const getMyTickets = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ success: false, message: 'userId is required' });
+        }
+        const tickets = await HelpDesk.find({ userId })
+            .sort({ createdAt: -1 })
+            .lean();
+        res.status(200).json({ success: true, data: tickets });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 export const updateTicketStatus = async (req, res) => {
     try {
         const { id } = req.params;

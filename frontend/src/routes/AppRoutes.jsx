@@ -11,7 +11,9 @@ import Funds from '../pages/Funds';
 import Download from '../pages/Download';
 import Login from '../pages/Login';
 import Passbook from '../pages/Passbook';
-import Support from '../pages/Support';
+import SupportLanding from '../pages/Support/SupportLanding';
+import SupportNew from '../pages/Support/SupportNew';
+import SupportStatus from '../pages/Support/SupportStatus';
 import Bids from '../pages/Bids';
 import Profile from '../pages/Profile';
 import BetHistory from '../pages/BetHistory';
@@ -73,7 +75,8 @@ const Layout = ({ children }) => {
   }
 
   const isBidPage = location.pathname.includes('game-bid') || location.pathname === '/bidoptions';
-  const isDarkPage = isBidPage || location.pathname === '/bids' || location.pathname === '/bet-history';
+  const isSupportPage = location.pathname === '/support' || location.pathname === '/support/new' || location.pathname === '/support/status';
+  const isDarkPage = isBidPage || location.pathname === '/bids' || location.pathname === '/bet-history' || isSupportPage;
   const isBetsPage = location.pathname === '/bids';
 
   return (
@@ -109,7 +112,9 @@ const AppRoutes = () => {
           <Route path="/funds" element={<Funds />} />
           <Route path="/download" element={<Download />} />
           <Route path="/passbook" element={<Passbook />} />
-          <Route path="/support" element={<Support />} />
+          <Route path="/support" element={<SupportLanding />} />
+          <Route path="/support/new" element={<SupportNew />} />
+          <Route path="/support/status" element={<SupportStatus />} />
           <Route path="/login" element={<Login />} />
           <Route path="/bids" element={<Bids />} />
           <Route path="/bet-history" element={<BetHistory />} />

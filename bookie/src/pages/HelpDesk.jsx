@@ -8,6 +8,7 @@ const HelpDesk = () => {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedTicket, setSelectedTicket] = useState(null);
+    const [fullScreenImage, setFullScreenImage] = useState(null);
     const [filters, setFilters] = useState({ status: '' });
 
     useEffect(() => {
@@ -87,10 +88,17 @@ const HelpDesk = () => {
                             <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Description</p><p className="whitespace-pre-wrap">{selectedTicket.description}</p></div>
                             {selectedTicket.screenshots?.length > 0 && (
                                 <div className="mb-4">
-                                    <p className="text-gray-400 text-sm mb-2">Screenshots</p>
+                                    <p className="text-gray-400 text-sm mb-2">Screenshots (click to open full)</p>
                                     <div className="grid grid-cols-2 gap-2">
                                         {selectedTicket.screenshots.map((s, i) => (
-                                            <img key={i} src={`${BASE_URL}${s}`} alt={`Screenshot ${i + 1}`} className="w-full h-32 object-cover rounded border border-gray-700" />
+                                            <button
+                                                key={i}
+                                                type="button"
+                                                onClick={() => setFullScreenImage(`${BASE_URL}${s}`)}
+                                                className="w-full h-32 rounded border border-gray-700 overflow-hidden focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                                            >
+                                                <img src={`${BASE_URL}${s}`} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover cursor-pointer" />
+                                            </button>
                                         ))}
                                     </div>
                                 </div>
@@ -112,6 +120,33 @@ const HelpDesk = () => {
                     )}
                 </div>
             </div>
+
+            {/* Full-screen screenshot lightbox */}
+            {fullScreenImage && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+                    onClick={() => setFullScreenImage(null)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Escape' && setFullScreenImage(null)}
+                    aria-label="Close"
+                >
+                    <button
+                        type="button"
+                        onClick={() => setFullScreenImage(null)}
+                        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 text-white text-2xl leading-none flex items-center justify-center"
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+                    <img
+                        src={fullScreenImage}
+                        alt="Screenshot full size"
+                        className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </Layout>
     );
 };
