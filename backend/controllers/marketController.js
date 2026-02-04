@@ -2,6 +2,7 @@ import Market from '../models/market/market.js';
 import Bet from '../models/bet/bet.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
+import { previewDeclareOpen, settleOpening, settleClosing } from '../utils/settleBets.js';
 
 /**
  * Create a new market.
@@ -287,6 +288,101 @@ export const setWinNumber = async (req, res) => {
         if (error.name === 'CastError') {
             return res.status(400).json({ success: false, message: 'Invalid market ID' });
         }
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Preview declare open: ?openingNumber=156 returns totalBetAmount, totalWinAmount, noOfPlayers, profit.
+ */
+export const previewDeclareOpenResult = async (req, res) => {
+    try {
+        const { id: marketId } = req.params;
+        const openingNumber = (req.query.openingNumber || req.body?.openingNumber || '').toString().trim();
+        const market = await Market.findById(marketId);
+        if (!market) {
+            return res.status(404).json({ success: false, message: 'Market not found' });
+        }
+        const stats = await previewDeclareOpen(marketId, openingNumber || null);
+        res.status(200).json({ success: true, data: stats });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Declare open result: set opening number and settle single + panna bets.
+ * Body: { openingNumber: "156" }
+ */
+export const declareOpenResult = async (req, res) => {
+    try {
+        const { id: marketId } = req.params;
+        const { openingNumber } = req.body;
+        const openVal = (openingNumber ?? '').toString().trim();
+        if (!/^\d{3}$/.test(openVal)) {
+            return res.status(400).json({ success: false, message: 'openingNumber must be exactly 3 digits' });
+        }
+        const market = await Market.findById(marketId);
+        if (!market) {
+            return res.status(404).json({ success: false, message: 'Market not found' });
+        }
+        await settleOpening(marketId, openVal);
+        if (req.admin) {
+            await logActivity({
+                action: 'declare_open_result',
+                performedBy: req.admin.username,
+                performedByType: req.admin.role || 'super_admin',
+                targetType: 'market',
+                targetId: marketId,
+                details: `Market "${market.marketName}" – open result declared: ${openVal}`,
+                ip: getClientIp(req),
+            });
+        }
+        const updated = await Market.findById(marketId);
+        const response = updated.toObject();
+        response.displayResult = updated.getDisplayResult();
+        res.status(200).json({ success: true, message: 'Open result declared', data: response });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Declare close result: set closing number and settle jodi, half-sangam, full-sangam.
+ * Body: { closingNumber: "456" }
+ */
+export const declareCloseResult = async (req, res) => {
+    try {
+        const { id: marketId } = req.params;
+        const { closingNumber } = req.body;
+        const closeVal = (closingNumber ?? '').toString().trim();
+        if (!/^\d{3}$/.test(closeVal)) {
+            return res.status(400).json({ success: false, message: 'closingNumber must be exactly 3 digits' });
+        }
+        const market = await Market.findById(marketId);
+        if (!market) {
+            return res.status(404).json({ success: false, message: 'Market not found' });
+        }
+        if (!market.openingNumber || !/^\d{3}$/.test(market.openingNumber)) {
+            return res.status(400).json({ success: false, message: 'Opening number must be declared before closing' });
+        }
+        await settleClosing(marketId, closeVal);
+        if (req.admin) {
+            await logActivity({
+                action: 'declare_close_result',
+                performedBy: req.admin.username,
+                performedByType: req.admin.role || 'super_admin',
+                targetType: 'market',
+                targetId: marketId,
+                details: `Market "${market.marketName}" – close result declared: ${closeVal}`,
+                ip: getClientIp(req),
+            });
+        }
+        const updated = await Market.findById(marketId);
+        const response = updated.toObject();
+        response.displayResult = updated.getDisplayResult();
+        res.status(200).json({ success: true, message: 'Close result declared', data: response });
+    } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };

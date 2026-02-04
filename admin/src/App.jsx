@@ -17,6 +17,7 @@ import AllUsers from './pages/AllUsers';
 import PlayerDetail from './pages/PlayerDetail';
 import PlayerDevices from './pages/PlayerDevices';
 import AddResult from './pages/AddResult';
+import UpdateRate from './pages/UpdateRate';
 import MarketDetail from './pages/MarketDetail';
 
 // Scroll to top on route change
@@ -74,6 +75,14 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <AddResult />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/update-rate"
+                    element={
+                        <PrivateRoute>
+                            <UpdateRate />
                         </PrivateRoute>
                     }
                 />

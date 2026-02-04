@@ -11,6 +11,7 @@ import walletRoutes from './routes/wallet/walletRoutes.js';
 import reportRoutes from './routes/report/reportRoutes.js';
 import helpDeskRoutes from './routes/helpDesk/helpDeskRoutes.js';
 import dashboardRoutes from './routes/dashboard/dashboardRoutes.js';
+import rateRoutes from './routes/rate/rateRoutes.js';
 import { getClientIp } from './utils/activityLogger.js';
 import cors from 'cors';
 import path from 'path';
@@ -56,6 +57,7 @@ app.use('/api/v1/wallet', walletRoutes);
 app.use('/api/v1/reports', reportRoutes);
 app.use('/api/v1/help-desk', helpDeskRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
+app.use('/api/v1/rates', rateRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

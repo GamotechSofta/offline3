@@ -9,6 +9,9 @@ import {
     setClosingNumber,
     setWinNumber,
     deleteMarket,
+    previewDeclareOpenResult,
+    declareOpenResult,
+    declareCloseResult,
 } from '../../controllers/marketController.js';
 import { verifyAdmin, verifySuperAdmin } from '../../middleware/adminAuth.js';
 
@@ -20,6 +23,11 @@ router.get('/get-market/:id', getMarketById);
 
 // Admin: market detail stats (amount & no. of bets per option)
 router.get('/get-market-stats/:id', verifyAdmin, getMarketStats);
+
+// Super admin: declare result (preview, declare open, declare close)
+router.get('/preview-declare-open/:id', verifySuperAdmin, previewDeclareOpenResult);
+router.post('/declare-open/:id', verifySuperAdmin, declareOpenResult);
+router.post('/declare-close/:id', verifySuperAdmin, declareCloseResult);
 
 // Super admin only - market management
 router.post('/create-market', verifySuperAdmin, createMarket);

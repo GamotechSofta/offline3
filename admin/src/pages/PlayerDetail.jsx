@@ -10,7 +10,6 @@ const TABS = [
     { id: 'wallet', label: 'Wallet Statement' },
     { id: 'bets', label: 'Bet History' },
     { id: 'profile', label: 'Profile' },
-    { id: 'exposure', label: 'Exposure' },
 ];
 
 const getAuthHeaders = () => {
@@ -568,7 +567,7 @@ const PlayerDetail = () => {
                     </div>
                 </div>
             )}
-            {/* Date range - visible for all tabs (Statement, Wallet, Bet History, Profile, Exposure) */}
+            {/* Date range - visible for all tabs (Statement, Wallet, Bet History, Profile) */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
                 <span className="text-gray-400 text-sm">Date range:</span>
                     <div className="relative" ref={dropdownRef}>
@@ -734,11 +733,6 @@ const PlayerDetail = () => {
                     </div>
                 )}
 
-                {activeTab === 'exposure' && (
-                    <div className="p-8 text-center text-gray-500">
-                        Exposure data will be shown here when available.
-                    </div>
-                )}
             </div>
 
             {/* Edit Wallet Modal */}

@@ -4,7 +4,6 @@ import {
     FaTachometerAlt,
     FaChartBar,
     FaUserPlus,
-    FaPlusCircle,
     FaHistory,
     FaTrophy,
     FaChartLine,
@@ -16,7 +15,8 @@ import {
     FaUserFriends,
     FaEdit,
     FaTimes,
-    FaClipboardList
+    FaClipboardList,
+    FaCoins
 } from 'react-icons/fa';
 
 const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
@@ -29,8 +29,8 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         { path: '/bookie-management', label: 'Bookie Accounts', icon: FaUsers },
         { path: '/markets', label: 'Markets', icon: FaChartBar },
         { path: '/add-result', label: 'Add Result', icon: FaEdit },
+        { path: '/update-rate', label: 'Update Rate', icon: FaCoins },
         { path: '/add-user', label: 'Add Player', icon: FaUserPlus },
-        { path: '/add-market', label: 'Add New Market', icon: FaPlusCircle },
         { path: '/bet-history', label: 'Bet History', icon: FaHistory },
         { path: '/top-winners', label: 'Top Winners', icon: FaTrophy },
         { path: '/reports', label: 'Report', icon: FaChartLine },
