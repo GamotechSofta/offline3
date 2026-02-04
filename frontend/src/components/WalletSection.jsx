@@ -58,16 +58,6 @@ const WalletSection = () => {
 
   const displayBalance = balance != null ? Number(balance) : 0;
   const formattedBalance = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0, minimumFractionDigits: 0 }).format(displayBalance);
-  
-  // Calculate responsive font size based on balance length
-  const balanceLength = formattedBalance.length;
-  const getBalanceFontSize = () => {
-    if (balanceLength <= 4) return 'text-4xl sm:text-5xl md:text-6xl';
-    if (balanceLength <= 6) return 'text-3xl sm:text-4xl md:text-5xl';
-    if (balanceLength <= 8) return 'text-2xl sm:text-3xl md:text-4xl';
-    if (balanceLength <= 10) return 'text-xl sm:text-2xl md:text-3xl';
-    return 'text-lg sm:text-xl md:text-2xl';
-  };
 
   return (
     <section className="w-full bg-black py-3 sm:py-4 px-4 sm:px-6">
@@ -83,10 +73,10 @@ const WalletSection = () => {
             {/* Top Row - Balance and Action Buttons */}
             <div className="flex items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-5">
               {/* Left Side - Wallet Icon and Balance */}
-              <div className="flex items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
-                {/* Wallet Icon - Larger Design */}
+              <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                {/* Wallet Icon - Premium Design */}
                 <div className="relative shrink-0">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-[#2a2a2a] rounded-2xl p-2 sm:p-2.5 border border-white/10 shadow-lg flex items-center justify-center">
+                  <div className="w-[72px] h-[72px] sm:w-20 sm:h-20 md:w-[88px] md:h-[88px] bg-[#2a2a2a] rounded-2xl sm:rounded-3xl p-3 sm:p-3.5 border border-white/10 shadow-lg flex items-center justify-center">
                     <img
                       src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769780438/Untitled_90_x_160_px_1080_x_1080_px_ychsx6.png"
                       alt="Wallet Icon"
@@ -95,9 +85,9 @@ const WalletSection = () => {
                   </div>
                 </div>
 
-                {/* Balance Text - Responsive */}
+                {/* Balance Text */}
                 <div className="flex flex-col gap-1.5 sm:gap-2 min-w-0 flex-1">
-                  <h2 className={`${getBalanceFontSize()} leading-none font-black text-white tracking-tight break-words`}>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl leading-none font-black text-white tracking-tight">
                     ₹ {formattedBalance}
                   </h2>
                 </div>
