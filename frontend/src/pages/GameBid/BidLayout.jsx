@@ -144,7 +144,7 @@ const BidLayout = ({
     return (
         <div className="min-h-screen bg-black font-sans w-full max-w-full overflow-x-hidden">
             {/* Header - Home theme dark */}
-            <div className="bg-[#202124] border-b border-white/10 px-4 sm:px-6 py-2 flex items-center justify-between gap-2 sticky top-0 z-10">
+            <div className="bg-[#202124] border-b border-white/10 px-4 sm:px-6 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4">
                 <button
                     onClick={() => market ? navigate('/bidoptions', { state: { market } }) : navigate(-1)}
                     className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full active:scale-95 transition-colors"
@@ -172,104 +172,105 @@ const BidLayout = ({
             {extraHeader}
 
             {showDateSession && (
-                <div className={`px-4 sm:px-6 pb-4 pt-2 grid grid-cols-2 gap-3 ${dateSessionGridClassName}`}>
-                    <div className="relative flex items-center gap-2">
-                        <div className="relative flex-1">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <input
-                                ref={dateInputRef}
-                                type="date"
-                                value={currentDate}
-                                min={minDate}
-                                max="2099-12-31"
-                                onChange={(e) => {
-                                    const selected = e.target.value;
-                                    // Ensure selected date is not in the past
-                                    if (selected >= minDate) {
-                                        setCurrentDate(selected);
-                                    }
-                                }}
-                                onKeyDown={(e) => {
-                                    // Prevent manual typing - only allow calendar selection
-                                    e.preventDefault();
-                                    return false;
-                                }}
-                                onPaste={(e) => {
-                                    // Prevent pasting dates
-                                    e.preventDefault();
-                                    return false;
-                                }}
-                                className={`w-full pl-10 py-3 sm:py-2.5 min-h-[44px] bg-[#202124] border border-white/10 text-white rounded-full text-sm font-bold text-center focus:outline-none focus:border-[#d4af37] cursor-pointer ${dateSessionControlClassName}`}
-                                style={{
-                                    colorScheme: 'dark',
-                                }}
-                                title="Select date for scheduling your bet"
-                            />
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                // Open the date picker when Schedule button is clicked
-                                if (dateInputRef.current) {
-                                    // Try modern showPicker API first
-                                    if (typeof dateInputRef.current.showPicker === 'function') {
-                                        dateInputRef.current.showPicker().catch(() => {
-                                            // Fallback if showPicker fails
-                                            dateInputRef.current.focus();
-                                            dateInputRef.current.click();
-                                        });
-                                    } else {
-                                        // Fallback for browsers that don't support showPicker
-                                        dateInputRef.current.focus();
-                                        dateInputRef.current.click();
-                                    }
-                                }
-                            }}
-                            className={`shrink-0 px-2.5 sm:px-3 py-2 sm:py-2.5 min-h-[44px] font-bold text-xs sm:text-sm rounded-full transition-all active:scale-[0.98] shadow-md whitespace-nowrap flex items-center gap-1.5 ${
-                                isScheduled
-                                    ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-400 hover:to-green-500 cursor-pointer'
-                                    : 'bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] hover:from-[#e5c04a] hover:to-[#d4af37] cursor-pointer'
-                            }`}
-                            title={isScheduled ? "Bet scheduled! Click to change date" : "Click to open calendar and schedule bet"}
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`px-4 sm:px-6 pb-4 pt-2 flex flex-row gap-2 sm:gap-3 ${dateSessionGridClassName}`}>
+                    {/* Date Input Button */}
+                    <div className="relative flex-1 min-w-0">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span>{isScheduled ? 'Scheduled' : 'Schedule'}</span>
-                            {isScheduled && (
-                                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                            )}
-                        </button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="relative flex-1 min-w-0">
-                            <select
-                                value={session}
-                                onChange={(e) => setSession(e.target.value)}
-                                disabled={lockSessionSelect || (isToday && isRunning)}
-                                className={`w-full appearance-none bg-[#202124] border border-white/10 text-white font-bold text-sm py-3 sm:py-2.5 min-h-[44px] px-4 rounded-full text-center focus:outline-none focus:border-[#d4af37] ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-80 cursor-not-allowed' : ''} ${dateSessionControlClassName}`}
-                            >
-                                {sessionOptions.map((opt) => (
-                                    <option key={opt} value={opt}>
-                                        {opt}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 md:px-6 text-gray-400">
-                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </div>
                         </div>
-
-                        {sessionRightSlot}
+                        <input
+                            ref={dateInputRef}
+                            type="date"
+                            value={currentDate}
+                            min={minDate}
+                            max="2099-12-31"
+                            onChange={(e) => {
+                                const selected = e.target.value;
+                                // Ensure selected date is not in the past
+                                if (selected >= minDate) {
+                                    setCurrentDate(selected);
+                                }
+                            }}
+                            onKeyDown={(e) => {
+                                // Prevent manual typing - only allow calendar selection
+                                e.preventDefault();
+                                return false;
+                            }}
+                            onPaste={(e) => {
+                                // Prevent pasting dates
+                                e.preventDefault();
+                                return false;
+                            }}
+                            className={`w-full pl-9 sm:pl-10 pr-3 py-2.5 min-h-[44px] h-[44px] bg-[#202124] border border-white/10 text-white rounded-full text-xs sm:text-sm font-bold text-center focus:outline-none focus:border-[#d4af37] cursor-pointer truncate ${dateSessionControlClassName}`}
+                            style={{
+                                colorScheme: 'dark',
+                            }}
+                            title="Select date for scheduling your bet"
+                        />
                     </div>
+                    
+                    {/* Schedule Button */}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            // Open the date picker when Schedule button is clicked
+                            if (dateInputRef.current) {
+                                // Try modern showPicker API first
+                                if (typeof dateInputRef.current.showPicker === 'function') {
+                                    dateInputRef.current.showPicker().catch(() => {
+                                        // Fallback if showPicker fails
+                                        dateInputRef.current.focus();
+                                        dateInputRef.current.click();
+                                    });
+                                } else {
+                                    // Fallback for browsers that don't support showPicker
+                                    dateInputRef.current.focus();
+                                    dateInputRef.current.click();
+                                }
+                            }
+                        }}
+                        className={`flex-[0.85] min-w-0 px-3 py-2.5 min-h-[44px] h-[44px] font-bold text-xs sm:text-sm rounded-full transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-1.5 ${
+                            isScheduled
+                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-400 hover:to-green-500 cursor-pointer'
+                                : 'bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] hover:from-[#e5c04a] hover:to-[#d4af37] cursor-pointer'
+                        }`}
+                        title={isScheduled ? "Bet scheduled! Click to change date" : "Click to open calendar and schedule bet"}
+                    >
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span className="whitespace-nowrap truncate">{isScheduled ? 'Scheduled' : 'Schedule'}</span>
+                        {isScheduled && (
+                            <svg className="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                        )}
+                    </button>
+                    
+                    {/* Session Select */}
+                    <div className="relative flex-1 min-w-0">
+                        <select
+                            value={session}
+                            onChange={(e) => setSession(e.target.value)}
+                            disabled={lockSessionSelect || (isToday && isRunning)}
+                            className={`w-full appearance-none bg-[#202124] border border-white/10 text-white font-bold text-xs sm:text-sm py-2.5 min-h-[44px] h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-[#d4af37] ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-80 cursor-not-allowed' : ''} ${dateSessionControlClassName}`}
+                        >
+                            {sessionOptions.map((opt) => (
+                                <option key={opt} value={opt}>
+                                    {opt}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {sessionRightSlot}
                 </div>
             )}
 

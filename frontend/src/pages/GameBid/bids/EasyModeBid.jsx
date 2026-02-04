@@ -557,7 +557,7 @@ const EasyModeBid = ({
                 setReviewRows(bids);
                 setIsReviewOpen(true);
             }}
-            showDateSession={!showModeTabs}
+            showDateSession={true}
             extraHeader={null}
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}

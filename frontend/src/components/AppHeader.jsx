@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { getBalance, updateUserBalance } from '../api/bets';
 
 const AppHeader = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [balance, setBalance] = useState(null);
 
   const menuItems = [
     { label: 'My Bets', path: '/bids' },
@@ -27,6 +29,16 @@ const AppHeader = () => {
     { label: 'Logout', path: '/login' }
   ];
 
+  const loadStoredBalance = () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const b = user?.balance ?? user?.walletBalance ?? user?.wallet ?? 0;
+      setBalance(Number(b));
+    } catch (_) {
+      setBalance(0);
+    }
+  };
+
   useEffect(() => {
     // Check if user is logged in
     const checkUser = () => {
@@ -40,9 +52,26 @@ const AppHeader = () => {
       } else {
         setUser(null);
       }
+      loadStoredBalance();
     };
 
     checkUser();
+
+    // Fetch balance from server
+    const fetchAndUpdateBalance = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        const userId = user?.id || user?._id;
+        if (!userId) return;
+        const res = await getBalance();
+        if (res.success && res.data?.balance != null) {
+          updateUserBalance(res.data.balance);
+          setBalance(res.data.balance);
+        }
+      } catch (_) {}
+    };
+
+    fetchAndUpdateBalance();
 
     // Listen for storage changes (when user logs in/out in another tab)
     window.addEventListener('storage', checkUser);
@@ -85,6 +114,9 @@ const AppHeader = () => {
   const handleProfileClick = () => {
     navigate(user ? '/profile' : '/login');
   };
+
+  const displayBalance = balance != null ? Number(balance) : 0;
+  const formattedBalance = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0, minimumFractionDigits: 0 }).format(displayBalance);
 
   return (
     <>
@@ -142,7 +174,7 @@ const AppHeader = () => {
               alt="Wallet"
               className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 object-contain"
             />
-            <span className="text-sm md:text-base lg:text-lg font-bold text-white">2,853</span>
+            <span className="text-sm md:text-base lg:text-lg font-bold text-white">{formattedBalance}</span>
           </button>
 
           {/* Profile Icon - improved mobile touch target */}
