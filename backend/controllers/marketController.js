@@ -7,6 +7,51 @@ import { isSinglePatti, buildSinglePattiFirstDigitSummary } from '../utils/singl
 import { previewDeclareOpen, previewDeclareClose, settleOpening, settleClosing } from '../utils/settleBets.js';
 import { ensureResultsResetForNewDay } from '../utils/resultReset.js';
 
+const toDateKeyIST = (d = new Date()) => {
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).format(d); // YYYY-MM-DD
+};
+
+const computeDisplayResultFromNumbers = (openingNumber, closingNumber) => {
+    const opening = openingNumber && /^\d{3}$/.test(String(openingNumber)) ? String(openingNumber) : null;
+    const closing = closingNumber && /^\d{3}$/.test(String(closingNumber)) ? String(closingNumber) : null;
+    const openingDisplay = opening ? opening : '***';
+    const closingDisplay = closing ? closing : '***';
+    const sumDigits = (s) => [...s].reduce((acc, c) => acc + parseInt(c, 10), 0);
+    let displayResult = '***-**-***';
+    if (opening) {
+        const first = sumDigits(opening) % 10;
+        if (!closing) {
+            displayResult = `${openingDisplay}-${first}*-${closingDisplay}`;
+        } else {
+            const second = sumDigits(closing) % 10;
+            displayResult = `${openingDisplay}-${first}${second}-${closingDisplay}`;
+        }
+    }
+    return displayResult;
+};
+
+const upsertMarketResultSnapshot = async (marketDoc, dateKey) => {
+    if (!marketDoc?._id || !dateKey) return;
+    const displayResult = computeDisplayResultFromNumbers(marketDoc.openingNumber, marketDoc.closingNumber);
+    await MarketResult.findOneAndUpdate(
+        { marketId: marketDoc._id, dateKey },
+        {
+            $set: {
+                marketName: marketDoc.marketName,
+                openingNumber: marketDoc.openingNumber || null,
+                closingNumber: marketDoc.closingNumber || null,
+                displayResult: displayResult || '***-**-***',
+            },
+        },
+        { upsert: true, new: true }
+    );
+};
+
 /**
  * Create a new market.
  * Body: { marketName, startingTime, closingTime, betClosureTime? }
@@ -194,6 +239,13 @@ export const setOpeningNumber = async (req, res) => {
 
         const response = market.toObject();
         response.displayResult = market.getDisplayResult();
+
+        // Store snapshot for history when setting opening (do not overwrite history on clear)
+        if (value) {
+            try {
+                await upsertMarketResultSnapshot(market, toDateKeyIST(new Date()));
+            } catch (_) {}
+        }
         res.status(200).json({ success: true, data: response });
     } catch (error) {
         if (error.name === 'CastError') {
@@ -249,6 +301,13 @@ export const setClosingNumber = async (req, res) => {
 
         const response = market.toObject();
         response.displayResult = market.getDisplayResult();
+
+        // Store snapshot for history when setting closing (do not overwrite history on clear)
+        if (value) {
+            try {
+                await upsertMarketResultSnapshot(market, toDateKeyIST(new Date()));
+            } catch (_) {}
+        }
         res.status(200).json({ success: true, data: response });
     } catch (error) {
         if (error.name === 'CastError') {
@@ -349,29 +408,7 @@ export const declareOpenResult = async (req, res) => {
         response.displayResult = updated.getDisplayResult();
 
         // Upsert today's result snapshot for history (IST date)
-        try {
-            const dateKey = new Intl.DateTimeFormat('en-CA', {
-                timeZone: 'Asia/Kolkata',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-            }).format(new Date()); // YYYY-MM-DD
-
-            await MarketResult.findOneAndUpdate(
-                { marketId: updated._id, dateKey },
-                {
-                    $set: {
-                        marketName: updated.marketName,
-                        openingNumber: updated.openingNumber || null,
-                        closingNumber: updated.closingNumber || null,
-                        displayResult: response.displayResult || '***-**-***',
-                    },
-                },
-                { upsert: true, new: true }
-            );
-        } catch (_) {
-            // ignore history storage failures
-        }
+        try { await upsertMarketResultSnapshot(updated, toDateKeyIST(new Date())); } catch (_) {}
 
         res.status(200).json({ success: true, message: 'Open result declared', data: response });
     } catch (error) {
@@ -434,29 +471,7 @@ export const declareCloseResult = async (req, res) => {
         response.displayResult = updated.getDisplayResult();
 
         // Upsert today's result snapshot for history (IST date)
-        try {
-            const dateKey = new Intl.DateTimeFormat('en-CA', {
-                timeZone: 'Asia/Kolkata',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-            }).format(new Date()); // YYYY-MM-DD
-
-            await MarketResult.findOneAndUpdate(
-                { marketId: updated._id, dateKey },
-                {
-                    $set: {
-                        marketName: updated.marketName,
-                        openingNumber: updated.openingNumber || null,
-                        closingNumber: updated.closingNumber || null,
-                        displayResult: response.displayResult || '***-**-***',
-                    },
-                },
-                { upsert: true, new: true }
-            );
-        } catch (_) {
-            // ignore history storage failures
-        }
+        try { await upsertMarketResultSnapshot(updated, toDateKeyIST(new Date())); } catch (_) {}
 
         res.status(200).json({ success: true, message: 'Close result declared', data: response });
     } catch (error) {
@@ -502,12 +517,7 @@ export const clearResult = async (req, res) => {
  */
 export const getMarketResultHistory = async (req, res) => {
     try {
-        const todayKey = new Intl.DateTimeFormat('en-CA', {
-            timeZone: 'Asia/Kolkata',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        }).format(new Date());
+        const todayKey = toDateKeyIST(new Date());
 
         const dateKey = (req.query.date || todayKey).toString().trim();
         if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
@@ -519,50 +529,54 @@ export const getMarketResultHistory = async (req, res) => {
             return res.status(200).json({ success: true, data: [] });
         }
 
-        // For today's date: show all markets with current displayResult (past/present), even if not declared yet.
-        // This matches the expected UI where current-date list is always visible.
-        if (dateKey === todayKey) {
-            const markets = await Market.find().sort({ startingTime: 1 }).lean();
-            const data = markets.map((m) => {
-                const doc = { ...m };
-                // Mongoose lean() doesn't include instance methods; compute displayResult using schema helper via Market model instance.
-                // We'll reconstruct displayResult similar to Market.getDisplayResult() logic:
-                const opening = doc.openingNumber && /^\d{3}$/.test(String(doc.openingNumber)) ? String(doc.openingNumber) : null;
-                const closing = doc.closingNumber && /^\d{3}$/.test(String(doc.closingNumber)) ? String(doc.closingNumber) : null;
-                const openingDisplay = opening ? opening : '***';
-                const closingDisplay = closing ? closing : '***';
-                const sumDigits = (s) => [...s].reduce((acc, c) => acc + parseInt(c, 10), 0);
-                let displayResult = '***-**-***';
-                if (opening) {
-                    const first = sumDigits(opening) % 10;
-                    if (!closing) {
-                        displayResult = `${openingDisplay}-${first}*-${closingDisplay}`;
-                    } else {
-                        const second = sumDigits(closing) % 10;
-                        displayResult = `${openingDisplay}-${first}${second}-${closingDisplay}`;
-                    }
-                }
+        // Always return a row for every market (today and past), merging stored snapshots if present.
+        const markets = await Market.find().sort({ startingTime: 1 }).lean();
 
-                return {
-                    marketId: doc._id,
-                    marketName: doc.marketName,
-                    dateKey,
-                    displayResult,
-                    openingNumber: doc.openingNumber || null,
-                    closingNumber: doc.closingNumber || null,
-                    startingTime: doc.startingTime,
-                    closingTime: doc.closingTime,
-                };
-            });
-            return res.status(200).json({ success: true, data });
+        let stored = [];
+        if (dateKey !== todayKey) {
+            stored = await MarketResult.find({ dateKey })
+                .select('marketId marketName dateKey displayResult openingNumber closingNumber')
+                .lean();
         }
+        const storedByMarketId = new Map((stored || []).map((r) => [String(r.marketId), r]));
 
-        const results = await MarketResult.find({ dateKey })
-            .select('marketId marketName dateKey displayResult openingNumber closingNumber createdAt updatedAt')
-            .sort({ marketName: 1 })
-            .lean();
+        const data = (markets || []).map((m) => {
+            const key = String(m._id);
+            const snap = dateKey === todayKey ? null : storedByMarketId.get(key);
 
-        res.status(200).json({ success: true, data: results });
+            const openingNumber = dateKey === todayKey ? (m.openingNumber || null) : (snap?.openingNumber || null);
+            const closingNumber = dateKey === todayKey ? (m.closingNumber || null) : (snap?.closingNumber || null);
+            const displayResult =
+                dateKey === todayKey
+                    ? computeDisplayResultFromNumbers(m.openingNumber, m.closingNumber)
+                    : (snap?.displayResult || computeDisplayResultFromNumbers(openingNumber, closingNumber));
+
+            return {
+                marketId: m._id,
+                marketName: snap?.marketName || m.marketName,
+                dateKey,
+                displayResult: displayResult || '***-**-***',
+                openingNumber,
+                closingNumber,
+                startingTime: m.startingTime,
+                closingTime: m.closingTime,
+            };
+        });
+
+        // Include snapshots for markets that were deleted later (optional, show at end)
+        const extras = (dateKey === todayKey)
+            ? []
+            : (stored || []).filter((r) => !(markets || []).some((m) => String(m._id) === String(r.marketId)))
+                .map((r) => ({
+                    marketId: r.marketId,
+                    marketName: r.marketName,
+                    dateKey,
+                    displayResult: r.displayResult || '***-**-***',
+                    openingNumber: r.openingNumber || null,
+                    closingNumber: r.closingNumber || null,
+                }));
+
+        res.status(200).json({ success: true, data: [...data, ...extras] });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
