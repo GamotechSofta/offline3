@@ -651,18 +651,30 @@ export const getMarketStats = async (req, res) => {
                     singlePatti.totalBets += 1;
                 }
                 /* Invalid panna not counted */
-            } else if (type === 'half-sangam' && num.length > 0) {
-                if (!halfSangam.items[num]) halfSangam.items[num] = { amount: 0, count: 0 };
-                halfSangam.items[num].amount += amount;
-                halfSangam.items[num].count += 1;
-                halfSangam.totalAmount += amount;
-                halfSangam.totalBets += 1;
-            } else if (type === 'full-sangam' && num.length > 0) {
-                if (!fullSangam.items[num]) fullSangam.items[num] = { amount: 0, count: 0 };
-                fullSangam.items[num].amount += amount;
-                fullSangam.items[num].count += 1;
-                fullSangam.totalAmount += amount;
-                fullSangam.totalBets += 1;
+            } else if (type === 'half-sangam') {
+                const parts = num.split('-').map((p) => (p || '').trim());
+                const a = parts[0] || '';
+                const b = parts[1] || '';
+                const isFormatA = /^[0-9]{3}$/.test(a) && /^[0-9]$/.test(b);
+                const isFormatB = /^[0-9]$/.test(a) && /^[0-9]{3}$/.test(b);
+                if (isFormatA || isFormatB) {
+                    if (!halfSangam.items[num]) halfSangam.items[num] = { amount: 0, count: 0 };
+                    halfSangam.items[num].amount += amount;
+                    halfSangam.items[num].count += 1;
+                    halfSangam.totalAmount += amount;
+                    halfSangam.totalBets += 1;
+                }
+            } else if (type === 'full-sangam') {
+                const parts = num.split('-').map((p) => (p || '').trim());
+                const a = parts[0] || '';
+                const b = parts[1] || '';
+                if (/^[0-9]{3}$/.test(a) && /^[0-9]{3}$/.test(b)) {
+                    if (!fullSangam.items[num]) fullSangam.items[num] = { amount: 0, count: 0 };
+                    fullSangam.items[num].amount += amount;
+                    fullSangam.items[num].count += 1;
+                    fullSangam.totalAmount += amount;
+                    fullSangam.totalBets += 1;
+                }
             }
         }
 

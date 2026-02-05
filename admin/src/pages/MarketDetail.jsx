@@ -215,32 +215,359 @@ const getDoublePattiTotalsFromByAnk = (byAnk) => {
     return { totalAmount, totalBets };
 };
 
-/** List section for Patti / Sangam (single/double/half/full) - used for Half Sangam, Full Sangam */
-const ListSection = ({ title, items = {}, totalAmount = 0, totalBets = 0 }) => (
-    <SectionCard title={title}>
-        <div className="flex flex-wrap items-center gap-2 mb-3 pb-3 border-b border-gray-700">
-            <span className="text-gray-400 text-sm">Total Amount:</span>
-            <span className="font-mono font-semibold text-amber-400">₹{formatNum(totalAmount)}</span>
-            <span className="text-gray-500">|</span>
-            <span className="text-gray-400 text-sm">No. of Bets:</span>
-            <span className="font-semibold text-white">{formatNum(totalBets)}</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-            {Object.entries(items).length === 0 ? (
-                <span className="text-gray-500 text-sm">No bets in this category</span>
+/** Parse Half Sangam key "156-6" or "6-156" into human-readable label */
+const getHalfSangamLabel = (key) => {
+    const parts = String(key || '').split('-').map((p) => (p || '').trim());
+    const first = parts[0] || '';
+    const second = parts[1] || '';
+    if (/^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second)) {
+        return `Open Pana ${first} · Close Ank ${second}`;
+    }
+    if (/^[0-9]$/.test(first) && /^[0-9]{3}$/.test(second)) {
+        return `Open Ank ${first} · Close Pana ${second}`;
+    }
+    return key;
+};
+
+/** Parse Full Sangam key "123-456" into human-readable label */
+const getFullSangamLabel = (key) => {
+    const parts = String(key || '').split('-').map((p) => (p || '').trim());
+    const open3 = parts[0] || '';
+    const close3 = parts[1] || '';
+    if (/^[0-9]{3}$/.test(open3) && /^[0-9]{3}$/.test(close3)) {
+        return `Open ${open3} · Close ${close3}`;
+    }
+    return key;
+};
+
+/** Build Half Sangam Format A matrix: Open Pana (rows) × Close Ank 0-9 (cols) */
+const buildHalfSangamFormatAMatrix = (items) => {
+    const openPanas = [];
+    const grid = {};
+    DIGITS.forEach((ank) => { grid[ank] = {}; });
+    for (const [key, v] of Object.entries(items)) {
+        const parts = key.split('-').map((p) => (p || '').trim());
+        const a = parts[0] || '';
+        const b = parts[1] || '';
+        if (/^[0-9]{3}$/.test(a) && /^[0-9]$/.test(b)) {
+            if (!grid[b][a]) grid[b][a] = { amount: 0, count: 0 };
+            grid[b][a].amount += v.amount ?? 0;
+            grid[b][a].count += v.count ?? 0;
+            if (!openPanas.includes(a)) openPanas.push(a);
+        }
+    }
+    openPanas.sort();
+    return { openPanas, grid };
+};
+
+/** Build Half Sangam Format B matrix: Open Ank 0-9 (rows) × Close Pana (cols) */
+const buildHalfSangamFormatBMatrix = (items) => {
+    const closePanas = [];
+    const grid = {};
+    DIGITS.forEach((ank) => { grid[ank] = {}; });
+    for (const [key, v] of Object.entries(items)) {
+        const parts = key.split('-').map((p) => (p || '').trim());
+        const a = parts[0] || '';
+        const b = parts[1] || '';
+        if (/^[0-9]$/.test(a) && /^[0-9]{3}$/.test(b)) {
+            if (!grid[a][b]) grid[a][b] = { amount: 0, count: 0 };
+            grid[a][b].amount += v.amount ?? 0;
+            grid[a][b].count += v.count ?? 0;
+            if (!closePanas.includes(b)) closePanas.push(b);
+        }
+    }
+    closePanas.sort();
+    return { closePanas, grid };
+};
+
+/** Half Sangam section: explainer + matrix (Format A & B) + table */
+const HalfSangamSection = ({ items = {}, totalAmount = 0, totalBets = 0 }) => {
+    const entries = Object.entries(items).sort(([a], [b]) => String(a).localeCompare(b));
+    const formatA = buildHalfSangamFormatAMatrix(items);
+    const formatB = buildHalfSangamFormatBMatrix(items);
+    const hasFormatA = formatA.openPanas.length > 0;
+    const hasFormatB = formatB.closePanas.length > 0;
+    return (
+        <SectionCard title="Half Sangam">
+            <div className="mb-4 p-3 sm:p-4 rounded-lg bg-gray-700/50 border border-gray-600">
+                <p className="text-sm font-semibold text-yellow-500 mb-1">What is Half Sangam?</p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                    Half Sangam = <strong className="text-white">one 3-digit Pana + one 1-digit Ank</strong> from Open and Close.
+                </p>
+                <ul className="mt-2 text-gray-300 text-sm space-y-1 list-disc list-inside">
+                    <li><strong className="text-amber-400">Format A:</strong> Open Pana (3 digits) + Close Ank (1 digit), e.g. <span className="font-mono">156-6</span></li>
+                    <li><strong className="text-amber-400">Format B:</strong> Open Ank (1 digit) + Close Pana (3 digits), e.g. <span className="font-mono">6-156</span></li>
+                </ul>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 mb-3 pb-3 border-b border-gray-700">
+                <span className="text-gray-400 text-sm">Total Amount:</span>
+                <span className="font-mono font-semibold text-amber-400">₹{formatNum(totalAmount)}</span>
+                <span className="text-gray-500">|</span>
+                <span className="text-gray-400 text-sm">No. of Bets:</span>
+                <span className="font-semibold text-white">{formatNum(totalBets)}</span>
+            </div>
+            {entries.length === 0 ? (
+                <p className="text-gray-500 text-sm">No bets in this category</p>
             ) : (
-                Object.entries(items).map(([key, v]) => (
-                    <span
-                        key={key}
-                        className="bg-gray-700/80 text-gray-200 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono border border-gray-600"
-                    >
-                        {key}: <span className="text-amber-400">₹{formatNum(v.amount)}</span> ({v.count || 0})
-                    </span>
-                ))
+                <>
+                    {hasFormatA && (
+                        <div className="mb-6">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Format A — Open Pana × Close Ank</p>
+                            <div className="overflow-x-auto rounded-xl border border-gray-700 bg-gray-800">
+                                <table className="w-full text-sm border-collapse min-w-[320px]">
+                                    <thead>
+                                        <tr className="bg-gray-700/80 border-b-2 border-gray-600">
+                                            <th className="py-2 px-2 text-center font-semibold text-yellow-500 border-r-2 border-gray-600 bg-gray-700/90 w-14">Open Pana ↓</th>
+                                            {DIGITS.map((d) => (
+                                                <th key={d} className="py-2 px-1.5 text-center font-bold text-yellow-500 border-r border-gray-600 min-w-[3.5rem]" title={`Close Ank ${d}`}>{d}</th>
+                                            ))}
+                                            <th className="py-2 px-2 text-center font-semibold text-amber-400 bg-amber-500/10 border-l-2 min-w-[4rem]">Row total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {formatA.openPanas.map((pana) => {
+                                            const rowTotal = DIGITS.reduce((sum, d) => sum + (formatA.grid[d][pana]?.amount ?? 0), 0);
+                                            const rowBets = DIGITS.reduce((sum, d) => sum + (formatA.grid[d][pana]?.count ?? 0), 0);
+                                            return (
+                                                <tr key={pana} className="border-b border-gray-700 hover:bg-gray-700/25">
+                                                    <td className="py-1.5 px-2 text-center font-bold text-amber-400 border-r-2 border-gray-600 bg-gray-700/50 font-mono text-xs">{pana}</td>
+                                                    {DIGITS.map((d) => {
+                                                        const cell = formatA.grid[d][pana];
+                                                        return (
+                                                            <td key={d} className="p-1 border-r border-gray-700 text-center">
+                                                                <div className="rounded bg-gray-700/40 border border-gray-600 px-1.5 py-1 min-h-[2.5rem] flex flex-col items-center justify-center gap-0">
+                                                                    <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(cell?.amount)}</span>
+                                                                    <span className="font-mono text-gray-400 text-[10px]">{cell?.count ?? 0}</span>
+                                                                </div>
+                                                            </td>
+                                                        );
+                                                    })}
+                                                    <td className="p-1.5 bg-amber-500/5 border-l-2 border-amber-500/20 text-center">
+                                                        <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(rowTotal)}</span>
+                                                        <span className="block font-mono text-gray-400 text-[10px]">{formatNum(rowBets)}</span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+                    {hasFormatB && (
+                        <div className="mb-6">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Format B — Open Ank × Close Pana</p>
+                            <div className="overflow-x-auto rounded-xl border border-gray-700 bg-gray-800">
+                                <table className="w-full text-sm border-collapse min-w-[320px]">
+                                    <thead>
+                                        <tr className="bg-gray-700/80 border-b-2 border-gray-600">
+                                            <th className="py-2 px-2 text-center font-semibold text-yellow-500 border-r-2 border-gray-600 bg-gray-700/90 w-12">Open Ank ↓</th>
+                                            {formatB.closePanas.map((pana) => (
+                                                <th key={pana} className="py-2 px-1.5 text-center font-bold text-yellow-500 border-r border-gray-600 min-w-[3.5rem] font-mono text-xs" title={`Close Pana ${pana}`}>{pana}</th>
+                                            ))}
+                                            <th className="py-2 px-2 text-center font-semibold text-amber-400 bg-amber-500/10 border-l-2 min-w-[4rem]">Row total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {DIGITS.map((ank) => {
+                                            const rowTotal = formatB.closePanas.reduce((sum, pana) => sum + (formatB.grid[ank][pana]?.amount ?? 0), 0);
+                                            const rowBets = formatB.closePanas.reduce((sum, pana) => sum + (formatB.grid[ank][pana]?.count ?? 0), 0);
+                                            return (
+                                                <tr key={ank} className="border-b border-gray-700 hover:bg-gray-700/25">
+                                                    <td className="py-1.5 px-2 text-center font-bold text-amber-400 border-r-2 border-gray-600 bg-gray-700/50">{ank}</td>
+                                                    {formatB.closePanas.map((pana) => {
+                                                        const cell = formatB.grid[ank][pana];
+                                                        return (
+                                                            <td key={pana} className="p-1 border-r border-gray-700 text-center">
+                                                                <div className="rounded bg-gray-700/40 border border-gray-600 px-1.5 py-1 min-h-[2.5rem] flex flex-col items-center justify-center gap-0">
+                                                                    <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(cell?.amount)}</span>
+                                                                    <span className="font-mono text-gray-400 text-[10px]">{cell?.count ?? 0}</span>
+                                                                </div>
+                                                            </td>
+                                                        );
+                                                    })}
+                                                    <td className="p-1.5 bg-amber-500/5 border-l-2 border-amber-500/20 text-center">
+                                                        <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(rowTotal)}</span>
+                                                        <span className="block font-mono text-gray-400 text-[10px]">{formatNum(rowBets)}</span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+                    <p className="text-xs text-gray-500 mb-2">List view</p>
+                    <div className="overflow-x-auto rounded-lg border border-gray-700 bg-gray-800">
+                        <table className="w-full text-sm border-collapse min-w-[320px]">
+                            <thead>
+                                <tr className="bg-gray-700/70 border-b border-gray-600">
+                                    <th className="text-left py-2.5 px-3 font-semibold text-yellow-500">Option</th>
+                                    <th className="text-right py-2.5 px-3 font-semibold text-gray-300">Amount (₹)</th>
+                                    <th className="text-right py-2.5 px-3 font-semibold text-gray-300">No. of Bets</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {entries.map(([key, v]) => (
+                                    <tr key={key} className="border-b border-gray-700 hover:bg-gray-700/30">
+                                        <td className="py-2 px-3 text-gray-200 font-mono text-xs sm:text-sm" title={key}>
+                                            {getHalfSangamLabel(key)}
+                                        </td>
+                                        <td className="py-2 px-3 text-right font-mono text-amber-400 font-semibold">₹{formatNum(v.amount)}</td>
+                                        <td className="py-2 px-3 text-right text-gray-300">{formatNum(v.count || 0)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </>
             )}
-        </div>
-    </SectionCard>
-);
+        </SectionCard>
+    );
+};
+
+/** Build Full Sangam matrix: Open Pana (rows) × Close Pana (columns) */
+const buildFullSangamMatrix = (items) => {
+    const openPanas = [];
+    const closePanas = [];
+    const grid = {};
+    for (const [key, v] of Object.entries(items)) {
+        const parts = key.split('-').map((p) => (p || '').trim());
+        const open3 = parts[0] || '';
+        const close3 = parts[1] || '';
+        if (/^[0-9]{3}$/.test(open3) && /^[0-9]{3}$/.test(close3)) {
+            if (!grid[open3]) grid[open3] = {};
+            if (!grid[open3][close3]) grid[open3][close3] = { amount: 0, count: 0 };
+            grid[open3][close3].amount += v.amount ?? 0;
+            grid[open3][close3].count += v.count ?? 0;
+            if (!openPanas.includes(open3)) openPanas.push(open3);
+            if (!closePanas.includes(close3)) closePanas.push(close3);
+        }
+    }
+    openPanas.sort();
+    closePanas.sort();
+    return { openPanas, closePanas, grid };
+};
+
+/** Full Sangam section: explainer + matrix (Open × Close) + table */
+const FullSangamSection = ({ items = {}, totalAmount = 0, totalBets = 0 }) => {
+    const entries = Object.entries(items).sort(([a], [b]) => String(a).localeCompare(b));
+    const { openPanas, closePanas, grid } = buildFullSangamMatrix(items);
+    const hasMatrix = openPanas.length > 0 && closePanas.length > 0;
+    return (
+        <SectionCard title="Full Sangam">
+            <div className="mb-4 p-3 sm:p-4 rounded-lg bg-gray-700/50 border border-gray-600">
+                <p className="text-sm font-semibold text-yellow-500 mb-1">What is Full Sangam?</p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                    Full Sangam = exact <strong className="text-white">Open Pana (3 digits) + Close Pana (3 digits)</strong>. E.g. Open 123, Close 456 → bet <span className="font-mono text-amber-400">123-456</span>.
+                </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 mb-3 pb-3 border-b border-gray-700">
+                <span className="text-gray-400 text-sm">Total Amount:</span>
+                <span className="font-mono font-semibold text-amber-400">₹{formatNum(totalAmount)}</span>
+                <span className="text-gray-500">|</span>
+                <span className="text-gray-400 text-sm">No. of Bets:</span>
+                <span className="font-semibold text-white">{formatNum(totalBets)}</span>
+            </div>
+            {entries.length === 0 ? (
+                <p className="text-gray-500 text-sm">No bets in this category</p>
+            ) : (
+                <>
+                    {hasMatrix && (
+                        <div className="mb-6">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Matrix — Open Pana (row) × Close Pana (column)</p>
+                            <div className="overflow-x-auto rounded-xl border border-gray-700 bg-gray-800">
+                                <table className="w-full text-sm border-collapse min-w-[320px]">
+                                    <thead>
+                                        <tr className="bg-gray-700/80 border-b-2 border-gray-600">
+                                            <th className="py-2 px-2 text-center font-semibold text-yellow-500 border-r-2 border-gray-600 bg-gray-700/90 w-14">Open Pana ↓</th>
+                                            {closePanas.map((pana) => (
+                                                <th key={pana} className="py-2 px-1.5 text-center font-bold text-yellow-500 border-r border-gray-600 min-w-[3.5rem] font-mono text-xs" title={`Close Pana ${pana}`}>{pana}</th>
+                                            ))}
+                                            <th className="py-2 px-2 text-center font-semibold text-amber-400 bg-amber-500/10 border-l-2 min-w-[4rem]">Row total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {openPanas.map((openPana) => {
+                                            const rowTotal = closePanas.reduce((sum, closePana) => sum + (grid[openPana]?.[closePana]?.amount ?? 0), 0);
+                                            const rowBets = closePanas.reduce((sum, closePana) => sum + (grid[openPana]?.[closePana]?.count ?? 0), 0);
+                                            return (
+                                                <tr key={openPana} className="border-b border-gray-700 hover:bg-gray-700/25">
+                                                    <td className="py-1.5 px-2 text-center font-bold text-amber-400 border-r-2 border-gray-600 bg-gray-700/50 font-mono text-xs">{openPana}</td>
+                                                    {closePanas.map((closePana) => {
+                                                        const cell = grid[openPana]?.[closePana];
+                                                        return (
+                                                            <td key={closePana} className="p-1 border-r border-gray-700 text-center">
+                                                                <div className="rounded bg-gray-700/40 border border-gray-600 px-1.5 py-1 min-h-[2.5rem] flex flex-col items-center justify-center gap-0">
+                                                                    <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(cell?.amount)}</span>
+                                                                    <span className="font-mono text-gray-400 text-[10px]">{cell?.count ?? 0}</span>
+                                                                </div>
+                                                            </td>
+                                                        );
+                                                    })}
+                                                    <td className="p-1.5 bg-amber-500/5 border-l-2 border-amber-500/20 text-center">
+                                                        <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(rowTotal)}</span>
+                                                        <span className="block font-mono text-gray-400 text-[10px]">{formatNum(rowBets)}</span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr className="bg-gray-700/70 font-semibold border-t-2 border-gray-600">
+                                            <td className="py-2 px-2 text-center border-r-2 border-gray-600 bg-gray-700/80 text-gray-400 text-xs">All</td>
+                                            {closePanas.map((closePana) => {
+                                                const colTotal = openPanas.reduce((sum, openPana) => sum + (grid[openPana]?.[closePana]?.amount ?? 0), 0);
+                                                const colBets = openPanas.reduce((sum, openPana) => sum + (grid[openPana]?.[closePana]?.count ?? 0), 0);
+                                                return (
+                                                    <td key={closePana} className="p-1.5 border-r border-gray-600 text-center bg-amber-500/5">
+                                                        <span className="font-mono text-amber-400 text-xs font-semibold">₹{formatNum(colTotal)}</span>
+                                                        <span className="block font-mono text-gray-400 text-[10px]">{formatNum(colBets)}</span>
+                                                    </td>
+                                                );
+                                            })}
+                                            <td className="py-2 px-2 text-center border-l-2 border-amber-500/30 bg-amber-500/10">
+                                                <span className="font-mono text-amber-400 text-xs font-bold">₹{formatNum(totalAmount)}</span>
+                                                <span className="block font-mono text-white text-[10px] font-semibold">{formatNum(totalBets)}</span>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <p className="text-gray-500 text-xs mt-2 text-center">
+                                Row = Open Pana, Column = Close Pana. Total: ₹{formatNum(totalAmount)} · {formatNum(totalBets)} bets
+                            </p>
+                        </div>
+                    )}
+                    <p className="text-xs text-gray-500 mb-2">List view</p>
+                    <div className="overflow-x-auto rounded-lg border border-gray-700 bg-gray-800">
+                        <table className="w-full text-sm border-collapse min-w-[320px]">
+                            <thead>
+                                <tr className="bg-gray-700/70 border-b border-gray-600">
+                                    <th className="text-left py-2.5 px-3 font-semibold text-yellow-500">Option (Open · Close)</th>
+                                    <th className="text-right py-2.5 px-3 font-semibold text-gray-300">Amount (₹)</th>
+                                    <th className="text-right py-2.5 px-3 font-semibold text-gray-300">No. of Bets</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {entries.map(([key, v]) => (
+                                    <tr key={key} className="border-b border-gray-700 hover:bg-gray-700/30">
+                                        <td className="py-2 px-3 text-gray-200 font-mono text-xs sm:text-sm" title={key}>
+                                            {getFullSangamLabel(key)}
+                                        </td>
+                                        <td className="py-2 px-3 text-right font-mono text-amber-400 font-semibold">₹{formatNum(v.amount)}</td>
+                                        <td className="py-2 px-3 text-right text-gray-300">{formatNum(v.count || 0)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </>
+            )}
+        </SectionCard>
+    );
+};
 
 const MarketDetail = () => {
     const { marketId } = useParams();
@@ -249,6 +576,9 @@ const MarketDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [singlePattiSummary, setSinglePattiSummary] = useState(null);
+    /** 'open' | 'closed' – view only open bets or only closed bets */
+    const [statusView, setStatusView] = useState('open');
+    const initialStatusSetForMarketId = React.useRef(null);
 
     useEffect(() => {
         const admin = localStorage.getItem('admin');
@@ -273,6 +603,12 @@ const MarketDetail = () => {
                     return;
                 }
                 setData(statsJson.data);
+                const d = statsJson.data;
+                const hasOpenDeclared = d?.market?.openingNumber && /^\d{3}$/.test(String(d.market.openingNumber));
+                if (initialStatusSetForMarketId.current !== marketId) {
+                    initialStatusSetForMarketId.current = marketId;
+                    setStatusView(hasOpenDeclared ? 'closed' : 'open');
+                }
                 if (summaryRes.ok) {
                     const summaryJson = await summaryRes.json();
                     if (summaryJson.success && summaryJson.data) {
@@ -304,6 +640,18 @@ const MarketDetail = () => {
     // Double Patti: grouped by Ank (0–9), same as user side
     const doublePattiByAnk = useMemo(() => buildDoublePattiByAnk(data?.doublePatti?.items), [data?.doublePatti?.items]);
     const doublePattiTotals = useMemo(() => getDoublePattiTotalsFromByAnk(doublePattiByAnk), [doublePattiByAnk]);
+
+    // View-dependent data: open view = open-type sections have data, closed-type blank; closed view = opposite
+    const singlePattiByAnkForView = useMemo(
+        () => buildSinglePattiByAnk(statusView === 'open' ? data?.singlePatti?.items : {}),
+        [data?.singlePatti?.items, statusView]
+    );
+    const singlePattiTotalsForView = useMemo(() => getSinglePattiTotalsFromByAnk(singlePattiByAnkForView), [singlePattiByAnkForView]);
+    const doublePattiByAnkForView = useMemo(
+        () => buildDoublePattiByAnk(statusView === 'open' ? data?.doublePatti?.items : {}),
+        [data?.doublePatti?.items, statusView]
+    );
+    const doublePattiTotalsForView = useMemo(() => getDoublePattiTotalsFromByAnk(doublePattiByAnkForView), [doublePattiByAnkForView]);
 
     // Sanity check: Ank grouping matches user side
     useEffect(() => {
@@ -378,6 +726,34 @@ const MarketDetail = () => {
         (halfSangam?.totalBets ?? 0) +
         (fullSangam?.totalBets ?? 0);
 
+    const openTotalAmount =
+        (singleDigit?.totalAmount ?? 0) +
+        (singlePattiTotals?.totalAmount ?? 0) +
+        (doublePattiTotals?.totalAmount ?? 0) +
+        (triplePatti?.totalAmount ?? 0);
+    const openTotalBets =
+        (singleDigit?.totalBets ?? 0) +
+        (singlePattiTotals?.totalBets ?? 0) +
+        (doublePattiTotals?.totalBets ?? 0) +
+        (triplePatti?.totalBets ?? 0);
+    const closedTotalAmount = (jodi?.totalAmount ?? 0) + (halfSangam?.totalAmount ?? 0) + (fullSangam?.totalAmount ?? 0);
+    const closedTotalBets = (jodi?.totalBets ?? 0) + (halfSangam?.totalBets ?? 0) + (fullSangam?.totalBets ?? 0);
+    const displayAmount = statusView === 'open' ? openTotalAmount : closedTotalAmount;
+    const displayBets = statusView === 'open' ? openTotalBets : closedTotalBets;
+
+    // Section data by view: open view shows open-type data, closed view shows closed-type data; other is blank
+    const singleDigitDisplay = statusView === 'open' ? singleDigit : { digits: {}, totalAmount: 0, totalBets: 0 };
+    const jodiDisplay = statusView === 'closed' ? jodi : { items: {}, totalAmount: 0, totalBets: 0 };
+    const triplePattiDisplay = statusView === 'open' ? triplePatti : { items: {}, totalAmount: 0, totalBets: 0 };
+    const halfSangamDisplay = statusView === 'closed' ? halfSangam : { items: {}, totalAmount: 0, totalBets: 0 };
+    const fullSangamDisplay = statusView === 'closed' ? fullSangam : { items: {}, totalAmount: 0, totalBets: 0 };
+
+    const handleStatusViewChange = (e) => {
+        const v = e.target.value;
+        if (v === 'open') setStatusView('open');
+        else if (v === 'closed') setStatusView('closed');
+    };
+
     return (
         <AdminLayout onLogout={handleLogout} title="Market Detail">
             <div className="w-full min-w-0 px-0 sm:px-1 pb-6 sm:pb-8">
@@ -388,8 +764,8 @@ const MarketDetail = () => {
                     <FaArrowLeft className="w-4 h-4" /> Markets Management
                 </Link>
 
-                {/* Overview card – market info + result + totals */}
-                <div className="rounded-xl border border-gray-700 bg-gray-800/80 shadow-xl overflow-hidden mb-6 sm:mb-8">
+                {/* Overview card – updates when Open/Closed view changes (key forces refresh) */}
+                <div key={`overview-${statusView}`} className="rounded-xl border border-gray-700 bg-gray-800/80 shadow-xl overflow-hidden mb-6 sm:mb-8">
                     <div className="bg-gray-800 border-b border-gray-700 px-4 py-3">
                         <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{market.marketName}</h1>
                         <p className="text-gray-400 text-sm mt-0.5">Market overview & result</p>
@@ -415,6 +791,9 @@ const MarketDetail = () => {
                                 <p className="text-xs text-gray-500">
                                     Open: {hasOpen ? market.openingNumber : '—'} · Close: {hasClose ? market.closingNumber : '—'}
                                 </p>
+                                <p className="text-[10px] text-amber-400/90 mt-0.5">
+                                    Viewing totals: <strong>{statusView === 'open' ? 'Open' : 'Closed'}</strong> bets
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -423,36 +802,39 @@ const MarketDetail = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-gray-400 uppercase tracking-wider">Total Bet Amount</p>
-                                <p className="font-mono text-lg font-semibold text-white">₹{formatNum(grandTotalAmount)}</p>
-                                <p className="text-xs text-gray-500">{formatNum(grandTotalBets)} bets</p>
+                                <p className="font-mono text-lg font-semibold text-white">₹{formatNum(displayAmount)}</p>
+                                <p className="text-xs text-gray-500">{formatNum(displayBets)} bets</p>
+                                <p className="text-[10px] text-gray-500">({statusView === 'open' ? 'Open bets only' : 'Closed bets only'})</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="shrink-0">
-                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Status</p>
-                                <span
-                                    className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
-                                        isClosed ? 'bg-red-600/80 text-white' : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                                    }`}
+                            <div className="shrink-0 w-full sm:w-auto">
+                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">View</p>
+                                <select
+                                    value={statusView}
+                                    onChange={handleStatusViewChange}
+                                    aria-label="View open bets or closed bets"
+                                    className="w-full sm:w-auto min-w-[140px] rounded-lg border border-gray-600 bg-gray-700 text-white px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none cursor-pointer"
                                 >
-                                    {isClosed ? 'Closed' : 'Open'}
-                                </span>
+                                    <option value="open">Open bets only</option>
+                                    <option value="closed">Closed bets only</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Bet type sections – same card style */}
-                <div className="space-y-6">
+                {/* All games shown in both views; section data updates by Open/Closed (other view = blank). */}
+                <div key={`sections-${statusView}`} className="space-y-6">
                     <StatTable
                         title="Single Digit"
                         rowLabel1="Digit"
                         rowLabel2="Amount (₹)"
                         columns={DIGITS}
-                        getAmount={(d) => formatNum(singleDigit.digits?.[d]?.amount)}
-                        getCount={(d) => singleDigit.digits?.[d]?.count ?? 0}
-                        totalAmount={singleDigit.totalAmount}
-                        totalBets={singleDigit.totalBets}
+                        getAmount={(d) => formatNum(singleDigitDisplay.digits?.[d]?.amount)}
+                        getCount={(d) => singleDigitDisplay.digits?.[d]?.count ?? 0}
+                        totalAmount={singleDigitDisplay.totalAmount}
+                        totalBets={singleDigitDisplay.totalBets}
                     />
 
                     <SectionCard title="Jodi">
@@ -486,8 +868,8 @@ const MarketDetail = () => {
                                 </thead>
                                 <tbody>
                                     {DIGITS.map((firstDigit) => {
-                                        const rowTotal = DIGITS.reduce((sum, secondDigit) => sum + (jodi.items?.[firstDigit + secondDigit]?.amount ?? 0), 0);
-                                        const rowBets = DIGITS.reduce((sum, secondDigit) => sum + (jodi.items?.[firstDigit + secondDigit]?.count ?? 0), 0);
+                                        const rowTotal = DIGITS.reduce((sum, secondDigit) => sum + (jodiDisplay.items?.[firstDigit + secondDigit]?.amount ?? 0), 0);
+                                        const rowBets = DIGITS.reduce((sum, secondDigit) => sum + (jodiDisplay.items?.[firstDigit + secondDigit]?.count ?? 0), 0);
                                         return (
                                             <tr key={firstDigit} className="border-b border-gray-700 hover:bg-gray-700/25">
                                                 <td className="py-2 px-2 text-center font-bold text-amber-400 border-r-2 border-gray-600 bg-gray-700/50 align-middle w-12" title={`Row = 1st digit ${firstDigit}`}>
@@ -495,7 +877,7 @@ const MarketDetail = () => {
                                                 </td>
                                                 {DIGITS.map((secondDigit) => {
                                                     const jodiKey = firstDigit + secondDigit;
-                                                    const item = jodi.items?.[jodiKey];
+                                                    const item = jodiDisplay.items?.[jodiKey];
                                                     const amt = item?.amount ?? 0;
                                                     const cnt = item?.count ?? 0;
                                                     return (
@@ -533,9 +915,9 @@ const MarketDetail = () => {
                                         <td className="py-3 px-3 border-l-2 border-amber-500/30 bg-amber-500/10">
                                             <div className="text-center">
                                                 <p className="text-xs text-amber-400 font-semibold">Total Amt</p>
-                                                <p className="font-mono text-amber-400 font-bold text-base">₹{formatNum(jodi.totalAmount)}</p>
+                                                <p className="font-mono text-amber-400 font-bold text-base">₹{formatNum(jodiDisplay.totalAmount)}</p>
                                                 <p className="text-xs text-gray-400 font-semibold mt-1">No of Bets</p>
-                                                <p className="font-mono text-white font-bold text-base">{formatNum(jodi.totalBets)}</p>
+                                                <p className="font-mono text-white font-bold text-base">{formatNum(jodiDisplay.totalBets)}</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -543,9 +925,20 @@ const MarketDetail = () => {
                             </table>
                         </div>
                         <p className="text-gray-500 text-xs mt-3 text-center">
-                            <span className="text-gray-400">Row = 1st digit, Column = 2nd digit.</span> Total: ₹{formatNum(jodi.totalAmount)} · {formatNum(jodi.totalBets)} bets
+                            <span className="text-gray-400">Row = 1st digit, Column = 2nd digit.</span> Total: ₹{formatNum(jodiDisplay.totalAmount)} · {formatNum(jodiDisplay.totalBets)} bets
                         </p>
                     </SectionCard>
+
+                    <HalfSangamSection
+                        items={halfSangamDisplay.items}
+                        totalAmount={halfSangamDisplay.totalAmount}
+                        totalBets={halfSangamDisplay.totalBets}
+                    />
+                    <FullSangamSection
+                        items={fullSangamDisplay.items}
+                        totalAmount={fullSangamDisplay.totalAmount}
+                        totalBets={fullSangamDisplay.totalBets}
+                    />
 
                     <SectionCard title="Single Patti">
                         <div className="mb-4 p-3 sm:p-4 rounded-lg bg-gray-700/50 border border-gray-600 space-y-2">
@@ -559,7 +952,7 @@ const MarketDetail = () => {
                             let maxAnk = 0;
                             let maxAmt = 0;
                             DIGITS.forEach((d) => {
-                                const a = singlePattiByAnk[d]?.totalAmount ?? 0;
+                                const a = singlePattiByAnkForView[d]?.totalAmount ?? 0;
                                 if (a > maxAmt) { maxAmt = a; maxAnk = Number(d); }
                             });
                             return (
@@ -577,7 +970,7 @@ const MarketDetail = () => {
                                         <tbody>
                                             <tr>
                                                 {DIGITS.map((d) => {
-                                                    const g = singlePattiByAnk[d] || { totalAmount: 0, totalBets: 0 };
+                                                    const g = singlePattiByAnkForView[d] || { totalAmount: 0, totalBets: 0 };
                                                     const isMax = Number(d) === maxAnk;
                                                     return (
                                                         <td key={d} className={`p-2 border-r border-gray-700 text-center ${isMax ? 'bg-amber-500/25' : ''}`}>
@@ -587,8 +980,8 @@ const MarketDetail = () => {
                                                     );
                                                 })}
                                                 <td className="py-2 px-2 text-center font-semibold bg-amber-500/10 border-l-2 border-amber-500/30">
-                                                    <p className="font-mono text-amber-400 font-bold text-xs">₹{formatNum(singlePattiTotals.totalAmount)}</p>
-                                                    <p className="font-mono text-white text-[10px]">{formatNum(singlePattiTotals.totalBets)}</p>
+                                                    <p className="font-mono text-amber-400 font-bold text-xs">₹{formatNum(singlePattiTotalsForView.totalAmount)}</p>
+                                                    <p className="font-mono text-white text-[10px]">{formatNum(singlePattiTotalsForView.totalBets)}</p>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -599,7 +992,7 @@ const MarketDetail = () => {
                         {/* 10 panels by Ank (0–9), same layout as user Single Panna */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                             {DIGITS.map((ank) => {
-                                const group = singlePattiByAnk[ank] || { pattis: [], totalAmount: 0, totalBets: 0 };
+                                const group = singlePattiByAnkForView[ank] || { pattis: [], totalAmount: 0, totalBets: 0 };
                                 return (
                                     <div key={ank} className="rounded-xl border border-gray-600 bg-gray-800/80 overflow-hidden">
                                         <div className="flex items-center justify-between px-3 py-2 bg-gray-700/80 border-b border-gray-600">
@@ -622,7 +1015,7 @@ const MarketDetail = () => {
                             })}
                         </div>
                         <p className="text-gray-500 text-xs mt-3 text-center">
-                            Total Single Patti: ₹{formatNum(singlePattiTotals.totalAmount)} · {formatNum(singlePattiTotals.totalBets)} bets
+                            Total Single Patti: ₹{formatNum(singlePattiTotalsForView.totalAmount)} · {formatNum(singlePattiTotalsForView.totalBets)} bets
                         </p>
                     </SectionCard>
 
@@ -637,7 +1030,7 @@ const MarketDetail = () => {
                             let maxAnk = 0;
                             let maxAmt = 0;
                             DIGITS.forEach((d) => {
-                                const a = doublePattiByAnk[d]?.totalAmount ?? 0;
+                                const a = doublePattiByAnkForView[d]?.totalAmount ?? 0;
                                 if (a > maxAmt) { maxAmt = a; maxAnk = Number(d); }
                             });
                             return (
@@ -655,7 +1048,7 @@ const MarketDetail = () => {
                                         <tbody>
                                             <tr>
                                                 {DIGITS.map((d) => {
-                                                    const g = doublePattiByAnk[d] || { totalAmount: 0, totalBets: 0 };
+                                                    const g = doublePattiByAnkForView[d] || { totalAmount: 0, totalBets: 0 };
                                                     const isMax = Number(d) === maxAnk;
                                                     return (
                                                         <td key={d} className={`p-2 border-r border-gray-700 text-center ${isMax ? 'bg-amber-500/25' : ''}`}>
@@ -665,8 +1058,8 @@ const MarketDetail = () => {
                                                     );
                                                 })}
                                                 <td className="py-2 px-2 text-center font-semibold bg-amber-500/10 border-l-2 border-amber-500/30">
-                                                    <p className="font-mono text-amber-400 font-bold text-xs">₹{formatNum(doublePattiTotals.totalAmount)}</p>
-                                                    <p className="font-mono text-white text-[10px]">{formatNum(doublePattiTotals.totalBets)}</p>
+                                                    <p className="font-mono text-amber-400 font-bold text-xs">₹{formatNum(doublePattiTotalsForView.totalAmount)}</p>
+                                                    <p className="font-mono text-white text-[10px]">{formatNum(doublePattiTotalsForView.totalBets)}</p>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -676,7 +1069,7 @@ const MarketDetail = () => {
                         })()}
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                             {DIGITS.map((ank) => {
-                                const group = doublePattiByAnk[ank] || { pattis: [], totalAmount: 0, totalBets: 0 };
+                                const group = doublePattiByAnkForView[ank] || { pattis: [], totalAmount: 0, totalBets: 0 };
                                 return (
                                     <div key={ank} className="rounded-xl border border-gray-600 bg-gray-800/80 overflow-hidden">
                                         <div className="flex items-center justify-between px-3 py-2 bg-gray-700/80 border-b border-gray-600">
@@ -699,7 +1092,7 @@ const MarketDetail = () => {
                             })}
                         </div>
                         <p className="text-gray-500 text-xs mt-3 text-center">
-                            Total Double Patti: ₹{formatNum(doublePattiTotals.totalAmount)} · {formatNum(doublePattiTotals.totalBets)} bets
+                            Total Double Patti: ₹{formatNum(doublePattiTotalsForView.totalAmount)} · {formatNum(doublePattiTotalsForView.totalBets)} bets
                         </p>
                     </SectionCard>
 
@@ -708,23 +1101,10 @@ const MarketDetail = () => {
                         rowLabel1="Patti"
                         rowLabel2="Amount (₹)"
                         columns={TRIPLE_PATTI_DIGITS}
-                        getAmount={(d) => formatNum(triplePatti.items?.[d]?.amount)}
-                        getCount={(d) => triplePatti.items?.[d]?.count ?? 0}
-                        totalAmount={triplePatti.totalAmount}
-                        totalBets={triplePatti.totalBets}
-                    />
-
-                    <ListSection
-                        title="Half Sangam"
-                        items={halfSangam.items}
-                        totalAmount={halfSangam.totalAmount}
-                        totalBets={halfSangam.totalBets}
-                    />
-                    <ListSection
-                        title="Full Sangam"
-                        items={fullSangam.items}
-                        totalAmount={fullSangam.totalAmount}
-                        totalBets={fullSangam.totalBets}
+                        getAmount={(d) => formatNum(triplePattiDisplay.items?.[d]?.amount)}
+                        getCount={(d) => triplePattiDisplay.items?.[d]?.count ?? 0}
+                        totalAmount={triplePattiDisplay.totalAmount}
+                        totalBets={triplePattiDisplay.totalBets}
                     />
                 </div>
 
