@@ -2,19 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
+import { isValidAnyPana } from './panaRules';
 
 const sanitizeDigits = (v, maxLen) => (v ?? '').toString().replace(/\D/g, '').slice(0, maxLen);
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
-
-// Single Panna rule: H < T < U (ascending digits)
-const isValidPana = (v) => {
-    const s = (v ?? '').toString().trim();
-    if (!/^[0-9]{3}$/.test(s)) return false;
-    const h = Number(s[0]);
-    const t = Number(s[1]);
-    const u = Number(s[2]);
-    return h < t && t < u;
-};
 
 const FullSangamBid = ({ market, title }) => {
     // Full Sangam: force OPEN only (no CLOSE selection)
@@ -127,12 +118,12 @@ const FullSangamBid = ({ market, title }) => {
             showWarning('Please enter points.');
             return;
         }
-        if (!isValidPana(openPana)) {
-            showWarning('Open Pana must be 3 digits in ascending order (H < T < U).');
+        if (!isValidAnyPana(openPana)) {
+            showWarning('Open Pana must be a valid Single / Double / Triple Pana (3 digits).');
             return;
         }
-        if (!isValidPana(closePana)) {
-            showWarning('Close Pana must be 3 digits in ascending order (H < T < U).');
+        if (!isValidAnyPana(closePana)) {
+            showWarning('Close Pana must be a valid Single / Double / Triple Pana (3 digits).');
             return;
         }
 
@@ -206,6 +197,11 @@ const FullSangamBid = ({ market, title }) => {
                                     inputMode="numeric"
                                     value={openPana}
                                     onChange={(e) => setOpenPana(sanitizeDigits(e.target.value, 3))}
+                                    onBlur={() => {
+                                        if (openPana && openPana.length === 3 && !isValidAnyPana(openPana)) {
+                                            showWarning('Open Pana must be a valid Single / Double / Triple Pana (3 digits).');
+                                        }
+                                    }}
                                     placeholder="Pana"
                                     className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
                                 />
@@ -218,6 +214,11 @@ const FullSangamBid = ({ market, title }) => {
                                     inputMode="numeric"
                                     value={closePana}
                                     onChange={(e) => setClosePana(sanitizeDigits(e.target.value, 3))}
+                                    onBlur={() => {
+                                        if (closePana && closePana.length === 3 && !isValidAnyPana(closePana)) {
+                                            showWarning('Close Pana must be a valid Single / Double / Triple Pana (3 digits).');
+                                        }
+                                    }}
                                     placeholder="Pana"
                                     className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
                                 />
