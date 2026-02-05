@@ -5,6 +5,23 @@ const BottomNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const scrollToTop = () => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+      // Also scroll any scrollable containers (match AppRoutes behavior)
+      setTimeout(() => {
+        const scrollableElements = document.querySelectorAll(
+          '[class*="overflow-y-auto"], [class*="overflow-y-scroll"], [class*="overflow-auto"]'
+        );
+        scrollableElements.forEach((el) => {
+          if (el && typeof el.scrollTop === 'number') el.scrollTop = 0;
+        });
+      }, 10);
+    } catch (_) {}
+  };
+
   const navItems = [
     {
       id: 'my-bids',
@@ -90,7 +107,13 @@ const BottomNavbar = () => {
             return (
               <button
                 key={item.id}
-                onClick={() => navigate(item.path)}
+                onClick={() => {
+                  if (item.path === '/' && location.pathname === '/') {
+                    scrollToTop();
+                    return;
+                  }
+                  navigate(item.path);
+                }}
                 className="flex flex-col items-center justify-center -mt-6 relative z-10 active:scale-90 transition-transform duration-150 touch-manipulation"
               >
                 <div
@@ -123,7 +146,13 @@ const BottomNavbar = () => {
           return (
             <button
               key={item.id}
-              onClick={() => navigate(item.path)}
+              onClick={() => {
+                if (item.path === '/' && location.pathname === '/') {
+                  scrollToTop();
+                  return;
+                }
+                navigate(item.path);
+              }}
               className="relative flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl min-w-[56px] active:scale-95 transition-all duration-150 touch-manipulation"
             >
               {/* Icon: white when inactive, golden when active - same as text */}

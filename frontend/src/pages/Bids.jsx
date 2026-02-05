@@ -210,6 +210,15 @@ const Bids = () => {
   const isGameResultsPanel = activeTitle === 'Game Results';
   const rightPanelTitle = activeTitle === 'Game Results' ? 'Market Result History' : activeTitle;
 
+  // Desktop Bet History filters (desktop panel inside My Bets)
+  const [isDesktopFilterOpen, setIsDesktopFilterOpen] = useState(false);
+  const [selectedSessions, setSelectedSessions] = useState([]); // ['OPEN','CLOSE']
+  const [selectedStatuses, setSelectedStatuses] = useState([]); // ['Win','Loose','Pending']
+  const [selectedMarkets, setSelectedMarkets] = useState([]); // normalized market keys
+  const [draftSessions, setDraftSessions] = useState([]);
+  const [draftStatuses, setDraftStatuses] = useState([]);
+  const [draftMarkets, setDraftMarkets] = useState([]);
+
   // Keep selected desktop panel on refresh (via ?tab=...)
   useEffect(() => {
     const t = TAB_TO_TITLE[tabParam];
@@ -360,6 +369,59 @@ const Bids = () => {
     return out;
   }, [desktopBetHistory.items]);
 
+  const desktopRows = useMemo(() => {
+    return (desktopBetHistoryFlat || []).map(({ x, r, idx }) => {
+      const betValue = r?.number != null ? renderBetNumber(r.number) : '-';
+      const gameType = (x?.labelKey || 'Bet').toString();
+      const points = Number(r?.points || 0) || 0;
+      const session = (r?.type || x?.session || '').toString().trim().toUpperCase();
+      const market = (x?.marketTitle || '').toString().trim() || 'MARKET';
+      const marketKey = normalizeMarketName(market);
+      const m = marketByName.get(marketKey);
+      const verdict = evaluateBet({
+        market: m,
+        betNumberRaw: r?.number,
+        amount: points,
+        session,
+        ratesMap,
+      });
+      const statusLabel = verdict.state === 'won' ? 'Win' : verdict.state === 'lost' ? 'Loose' : 'Pending';
+      return { x, r, idx, betValue, gameType, points, session, market, marketKey, verdict, statusLabel };
+    });
+  }, [desktopBetHistoryFlat, marketByName, ratesMap]);
+
+  const marketOptions = useMemo(() => {
+    const fromApi = (markets || [])
+      .map((m) => (m?.marketName || '').toString().trim())
+      .filter(Boolean);
+    const fromHistory = (desktopBetHistory.items || [])
+      .map((x) => (x?.marketTitle || '').toString().trim())
+      .filter(Boolean);
+    const uniq = Array.from(new Set([...fromApi, ...fromHistory]));
+    uniq.sort((a, b) => a.localeCompare(b));
+    return uniq.map((label) => ({ label, key: normalizeMarketName(label) }));
+  }, [markets, desktopBetHistory.items]);
+
+  const filteredDesktopRows = useMemo(() => {
+    return (desktopRows || []).filter((row) => {
+      if (selectedSessions.length > 0 && !selectedSessions.includes(row.session)) return false;
+      if (selectedMarkets.length > 0 && !selectedMarkets.includes(row.marketKey)) return false;
+      if (selectedStatuses.length > 0 && !selectedStatuses.includes(row.statusLabel)) return false;
+      return true;
+    });
+  }, [desktopRows, selectedMarkets, selectedSessions, selectedStatuses]);
+
+  useEffect(() => {
+    if (!isDesktopFilterOpen) return;
+    setDraftSessions(selectedSessions);
+    setDraftStatuses(selectedStatuses);
+    setDraftMarkets(selectedMarkets);
+  }, [isDesktopFilterOpen, selectedMarkets, selectedSessions, selectedStatuses]);
+
+  const toggleDraft = (arr, value, setArr) => {
+    setArr((prev) => (prev.includes(value) ? prev.filter((x) => x !== value) : [...prev, value]));
+  };
+
   return (
     <div className="min-h-screen bg-black text-white pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 pb-24">
       <style>{`
@@ -400,6 +462,16 @@ const Bids = () => {
                   buttonClassName="px-4 py-2 rounded-full bg-black/40 border border-white/10 text-white font-bold text-sm shadow-sm hover:border-[#d4af37]/40 transition-colors"
                 />
               </div>
+            ) : isBetHistoryPanel ? (
+              <button
+                type="button"
+                onClick={() => setIsDesktopFilterOpen(true)}
+                className="px-4 py-2 rounded-full bg-black/40 border border-white/10 text-[#d4af37] font-bold text-sm shadow-sm hover:border-[#d4af37]/40 transition-colors"
+                aria-label="Filter By"
+                title="Filter By"
+              >
+                Filter By
+              </button>
             ) : null}
           </div>
         </div>
@@ -517,7 +589,7 @@ const Bids = () => {
             {activeTitle === 'Bet History' ? (
               <div className={isBetHistoryPanel ? 'mt-0' : 'mt-6'}>
                 <div className="max-h-[calc(100vh-220px)] overflow-y-auto hide-scrollbar">
-                  {desktopBetHistory.uid && desktopBetHistoryFlat.length === 0 ? (
+                  {desktopBetHistory.uid && filteredDesktopRows.length === 0 ? (
                     <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-gray-300 text-sm">
                       No bets found.
                     </div>
@@ -527,20 +599,7 @@ const Bids = () => {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      {desktopBetHistoryFlat.map(({ x, r, idx }) => {
-                        const betValue = r?.number != null ? renderBetNumber(r.number) : '-';
-                        const gameType = (x?.labelKey || 'Bet').toString();
-                        const points = Number(r?.points || 0) || 0;
-                        const session = (r?.type || x?.session || '').toString();
-                        const market = (x?.marketTitle || '').toString().trim() || 'MARKET';
-                        const m = marketByName.get(normalizeMarketName(market));
-                        const verdict = evaluateBet({
-                          market: m,
-                          betNumberRaw: r?.number,
-                          amount: points,
-                          session,
-                          ratesMap,
-                        });
+                      {filteredDesktopRows.map(({ x, r, idx, betValue, gameType, points, session, market, verdict }) => {
 
                         return (
                           <div
@@ -627,6 +686,113 @@ const Bids = () => {
           </main>
         </div>
       </div>
+
+      {/* Desktop Bet History Filter modal */}
+      {isDesktopFilterOpen ? (
+        <div className="fixed inset-0 z-[999] hidden md:flex items-center justify-center px-3 sm:px-4">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/60"
+            aria-label="Close filter"
+            onClick={() => setIsDesktopFilterOpen(false)}
+          />
+
+          <div className="relative w-full max-w-md rounded-[28px] overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.65)] border border-white/10 bg-[#202124]">
+            <div className="bg-black text-white text-center py-4 text-2xl font-extrabold border-b border-white/10">
+              Filter Type
+            </div>
+
+            <div className="bg-[#202124] text-white">
+              <div className="px-5 py-4 max-h-[70vh] overflow-y-auto">
+                <div className="text-lg font-bold text-[#d4af37] mb-3">By Game Type</div>
+                <div className="flex items-center justify-around gap-6 pb-4">
+                  <label className="flex items-center gap-3 text-base sm:text-lg">
+                    <input
+                      type="checkbox"
+                      className="w-6 h-6 accent-[#d4af37]"
+                      checked={draftSessions.includes('OPEN')}
+                      onChange={() => toggleDraft(draftSessions, 'OPEN', setDraftSessions)}
+                    />
+                    Open
+                  </label>
+                  <label className="flex items-center gap-3 text-base sm:text-lg">
+                    <input
+                      type="checkbox"
+                      className="w-6 h-6 accent-[#d4af37]"
+                      checked={draftSessions.includes('CLOSE')}
+                      onChange={() => toggleDraft(draftSessions, 'CLOSE', setDraftSessions)}
+                    />
+                    Close
+                  </label>
+                </div>
+
+                <div className="h-px bg-white/10 my-3" />
+
+                <div className="text-lg font-bold text-[#d4af37] mb-3">By Winning Status</div>
+                <div className="flex items-center justify-around gap-3 pb-4">
+                  {['Win', 'Loose', 'Pending'].map((s) => (
+                    <label key={s} className="flex items-center gap-3 text-base sm:text-lg">
+                      <input
+                        type="checkbox"
+                        className="w-6 h-6 accent-[#d4af37]"
+                        checked={draftStatuses.includes(s)}
+                        onChange={() => toggleDraft(draftStatuses, s, setDraftStatuses)}
+                      />
+                      {s}
+                    </label>
+                  ))}
+                </div>
+
+                <div className="h-px bg-white/10 my-3" />
+
+                <div className="text-lg font-bold text-[#d4af37] mb-3">By Games</div>
+                <div className="space-y-3 pb-2">
+                  {marketOptions.map((name) => (
+                    <label
+                      key={name.key}
+                      className="flex items-center gap-4 bg-black/25 rounded-xl border border-white/10 shadow-sm px-4 py-4 hover:border-[#d4af37]/40 transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        className="w-6 h-6 accent-[#d4af37]"
+                        checked={draftMarkets.includes(name.key)}
+                        onChange={() => toggleDraft(draftMarkets, name.key, setDraftMarkets)}
+                      />
+                      <span className="text-sm sm:text-base font-semibold tracking-wide text-white">
+                        {name.label.toUpperCase()}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="px-5 pb-5 pt-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsDesktopFilterOpen(false)}
+                    className="rounded-full bg-black border border-white/10 text-white font-bold py-4 text-base sm:text-lg shadow-md active:scale-[0.99] hover:border-[#d4af37]/40 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSessions(draftSessions);
+                      setSelectedStatuses(draftStatuses);
+                      setSelectedMarkets(draftMarkets);
+                      setIsDesktopFilterOpen(false);
+                    }}
+                    className="rounded-full bg-gradient-to-r from-[#d4af37] to-[#cca84d] text-[#4b3608] font-extrabold py-4 text-base sm:text-lg shadow-md active:scale-[0.99] hover:from-[#e5c04a] hover:to-[#d4af37] transition-colors"
+                  >
+                    Filter
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

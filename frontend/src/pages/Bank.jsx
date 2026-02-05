@@ -59,6 +59,8 @@ const Bank = () => {
     return n.toFixed(2);
   };
 
+  const formatINR = (value) => `₹${formatMoney(value)}`;
+
   const formatTime = (iso) => {
     try {
       const d = new Date(iso);
@@ -248,7 +250,7 @@ const Bank = () => {
                   >
                     <div className="flex items-center justify-between text-sm">
                       <div className={`font-semibold ${topColor}`}>
-                        {tx.type} {formatMoney(tx.amount)} <span className="ml-1">₹</span>
+                        {tx.type} <span className="ml-1">{formatINR(tx.amount)}</span>
                       </div>
                       <div className="text-gray-300">{tx.time}</div>
                     </div>
@@ -286,7 +288,7 @@ const Bank = () => {
                         <div
                           className={`mt-1 text-[16px] font-semibold ${tx.transactionAmount >= 0 ? 'text-[#2eaf58]' : 'text-red-400'}`}
                         >
-                          {tx.transactionAmount >= 0 ? '+' : '-'} {formatMoney(Math.abs(tx.transactionAmount))} ₹
+                          {tx.transactionAmount >= 0 ? '+' : '-'} <span className="ml-1">{formatINR(Math.abs(tx.transactionAmount))}</span>
                         </div>
                       </div>
                     </div>
