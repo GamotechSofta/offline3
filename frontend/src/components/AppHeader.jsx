@@ -10,13 +10,13 @@ const AppHeader = () => {
 
   const menuItems = [
     { label: 'My Bets', path: '/bids' },
+    { label: 'Bank', path: '/bank' },
+    { label: 'Funds', path: '/funds' },
     { label: 'Home', path: '/' },
     { label: 'Profile', path: '/profile' },
     { label: 'Top Winners', path: '/support' },
     { label: 'Starline Winners', path: '/support' },
     { label: 'Telegram Channel', path: '/support' },
-    { label: 'Bank', path: '/bank' },
-    { label: 'Funds', path: '/funds' },
     { label: 'Notification', path: '/support' },
     { label: 'Game Chart', path: '/support' },
     { label: 'Game Rate', path: '/support' },
