@@ -3,7 +3,9 @@ import Bet from '../models/bet/bet.js';
 import MarketResult from '../models/marketResult/marketResult.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
+import { isSinglePatti, buildSinglePattiFirstDigitSummary } from '../utils/singlePattiUtils.js';
 import { previewDeclareOpen, previewDeclareClose, settleOpening, settleClosing } from '../utils/settleBets.js';
+import { ensureResultsResetForNewDay } from '../utils/resultReset.js';
 
 /**
  * Create a new market.
@@ -57,9 +59,11 @@ export const createMarket = async (req, res) => {
 
 /**
  * Get all markets.
+ * Results (opening/closing numbers) are reset at midnight IST so each new day starts with no declared result.
  */
 export const getMarkets = async (req, res) => {
     try {
+        await ensureResultsResetForNewDay(Market);
         const markets = await Market.find().sort({ startingTime: 1 });
         const data = markets.map((m) => {
             const doc = m.toObject();
@@ -625,13 +629,14 @@ export const getMarketStats = async (req, res) => {
                     doublePatti.items[num].count += 1;
                     doublePatti.totalAmount += amount;
                     doublePatti.totalBets += 1;
-                } else {
+                } else if (isSinglePatti(num)) {
                     if (!singlePatti.items[num]) singlePatti.items[num] = { amount: 0, count: 0 };
                     singlePatti.items[num].amount += amount;
                     singlePatti.items[num].count += 1;
                     singlePatti.totalAmount += amount;
                     singlePatti.totalBets += 1;
                 }
+                /* Invalid panna not counted */
             } else if (type === 'half-sangam' && num.length > 0) {
                 if (!halfSangam.items[num]) halfSangam.items[num] = { amount: 0, count: 0 };
                 halfSangam.items[num].amount += amount;
@@ -672,6 +677,45 @@ export const getMarketStats = async (req, res) => {
         if (error.name === 'CastError') {
             return res.status(400).json({ success: false, message: 'Invalid market ID' });
         }
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * GET /api/v1/markets/get-single-patti-summary/:id
+ * Returns Single Patti aggregated by first digit (0–9): buckets, maxIndex, totalAmount, totalBets.
+ * Query: date= (optional), session= (optional).
+ */
+export const getSinglePattiSummary = async (req, res) => {
+    try {
+        const { id: marketId } = req.params;
+        const { date, session } = req.query;
+        const market = await Market.findById(marketId);
+        if (!market) return res.status(404).json({ success: false, message: 'Market not found' });
+
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        const matchFilter = { marketId };
+        if (bookieUserIds !== null) matchFilter.userId = { $in: bookieUserIds };
+        if (date) {
+            const start = new Date(date); start.setHours(0, 0, 0, 0);
+            const end = new Date(date); end.setHours(23, 59, 59, 999);
+            matchFilter.createdAt = { $gte: start, $lte: end };
+        }
+        if (session) matchFilter.session = session;
+
+        const bets = await Bet.find(matchFilter).select('betType betNumber amount').lean();
+        const summary = buildSinglePattiFirstDigitSummary(bets);
+        res.status(200).json({
+            success: true,
+            data: {
+                buckets: summary.buckets,
+                maxIndex: summary.maxIndex,
+                totalAmount: summary.totalAmount,
+                totalBets: summary.totalBets,
+            },
+        });
+    } catch (error) {
+        if (error.name === 'CastError') return res.status(400).json({ success: false, message: 'Invalid market ID' });
         res.status(500).json({ success: false, message: error.message });
     }
 };
