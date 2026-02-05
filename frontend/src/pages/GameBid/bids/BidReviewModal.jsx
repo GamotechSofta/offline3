@@ -16,6 +16,14 @@ const formatDateTitle = (marketTitle, dateText) => {
 
 const renderBetNumber = (val) => {
   const s = (val ?? '').toString().trim();
+  // Full Sangam display: OPEN3-JODI-CLOSE3 (e.g. 225-255 => 225-92-255)
+  if (/^\d{3}-\d{3}$/.test(s)) {
+    const [open, close] = s.split('-');
+    const sumDigits = (x) => [...String(x)].reduce((acc, c) => acc + (Number(c) || 0), 0);
+    const j1 = sumDigits(open) % 10;
+    const j2 = sumDigits(close) % 10;
+    return `${open}-${j1}${j2}-${close}`;
+  }
   if (/^\d{2}$/.test(s)) {
     return (
       <span className="inline-flex items-center justify-center gap-2">

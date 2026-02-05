@@ -7,6 +7,16 @@ import { isValidAnyPana } from './panaRules';
 const sanitizeDigits = (v, maxLen) => (v ?? '').toString().replace(/\D/g, '').slice(0, maxLen);
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
+const formatFullSangamDisplay = (val) => {
+    const s = (val ?? '').toString().trim();
+    if (!/^\d{3}-\d{3}$/.test(s)) return s || '-';
+    const [open, close] = s.split('-');
+    const sumDigits = (x) => [...String(x)].reduce((acc, c) => acc + (Number(c) || 0), 0);
+    const j1 = sumDigits(open) % 10;
+    const j2 = sumDigits(close) % 10;
+    return `${open}-${j1}${j2}-${close}`;
+};
+
 const FullSangamBid = ({ market, title }) => {
     // Full Sangam: force OPEN only (no CLOSE selection)
     const [session, setSession] = useState('OPEN');
@@ -276,7 +286,7 @@ const FullSangamBid = ({ market, title }) => {
                                         key={b.id}
                                         className="grid grid-cols-[1.4fr_0.7fr_0.7fr_0.5fr] gap-2 sm:gap-3 text-center items-center py-2.5 px-3 bg-[#202124] rounded-lg border border-white/10 text-sm"
                                     >
-                                        <div className="font-bold text-white truncate">{b.number}</div>
+                                        <div className="font-bold text-white truncate">{formatFullSangamDisplay(b.number)}</div>
                                         <div className="font-bold text-[#f2c14e] truncate">{b.points}</div>
                                         <div className="text-sm text-gray-400 uppercase truncate">{b.type}</div>
                                         <div className="flex justify-center">
