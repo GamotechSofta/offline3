@@ -5,11 +5,17 @@ const BidOptions = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const market = location.state?.market;
+  const marketType = (location.state?.marketType || '').toString().trim().toLowerCase();
+  const isStarline = marketType === 'starline' || marketType === 'startline' || marketType === 'star-line';
 
   // Redirect to home if no market (direct URL access or refresh)
   useEffect(() => {
     if (!market) {
       navigate('/', { replace: true });
+      return;
+    }
+    if (isStarline && market?.status === 'closed') {
+      navigate('/startline-dashboard', { replace: true });
     }
   }, [market, navigate]);
 
@@ -154,8 +160,25 @@ const BidOptions = () => {
 
   // When market is "CLOSED IS RUNNING", hide options that require OPEN session.
   const isRunning = market.status === 'running';
-  const visibleOptions = isRunning
+  const visibleOptionsBase = isStarline
     ? options.filter((opt) => {
+        const t = (opt.title || '').toString().trim();
+        const allowed = new Set([
+          'Single Digit',
+          'Single Digit Bulk',
+          'Single Pana',
+          'Single Pana Bulk',
+          'Double Pana',
+          'Double Pana Bulk',
+          'Triple Pana',
+          'Half Sangam (O)',
+        ]);
+        return allowed.has(t);
+      })
+    : options;
+
+  const visibleOptions = (!isStarline && isRunning)
+    ? visibleOptionsBase.filter((opt) => {
         const t = (opt.title || '').toLowerCase().trim();
         // Support both legacy (A/B) and current (O/C) naming.
         const hideWhenRunning = new Set([
@@ -167,7 +190,7 @@ const BidOptions = () => {
         ]);
         return !hideWhenRunning.has(t);
       })
-    : options;
+    : visibleOptionsBase;
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center">
@@ -186,6 +209,11 @@ const BidOptions = () => {
           <h1 className="text-white font-bold text-lg tracking-wider uppercase inline-block border-b-2 border-yellow-500 pb-1 px-2 py-1">
             {market?.gameName || 'SELECT MARKET'}
           </h1>
+          {isStarline ? (
+            <div className="mt-2 text-xs font-extrabold tracking-[0.22em] text-[#d4af37] uppercase">
+              STARLINE MARKET
+            </div>
+          ) : null}
         </div>
       </div>
 

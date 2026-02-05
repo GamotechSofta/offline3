@@ -177,12 +177,12 @@ const Bids = () => {
       iconUrl: 'https://res.cloudinary.com/dzd47mpdo/image/upload/v1769799295/result_ekwn16.png'
     },
     {
-      title: 'Sara Starline Bet History',
+      title: 'Starline Bet History',
       subtitle: 'You can view starline history',
       color: '#ef4444'
     },
     {
-      title: 'Sara Starline Result History',
+      title: 'King Bazaar Bet History',
       subtitle: 'You can view starline result',
       color: '#3b82f6'
     },
@@ -192,14 +192,14 @@ const Bids = () => {
   const TAB_TO_TITLE = useMemo(() => ({
     'bet-history': 'Bet History',
     'game-results': 'Game Results',
-    'starline-bet-history': 'Sara Starline Bet History',
-    'starline-result-history': 'Sara Starline Result History',
+    'starline-bet-history': 'Starline Bet History',
+    'starline-result-history': 'King Bazaar Bet History',
   }), []);
   const TITLE_TO_TAB = useMemo(() => ({
     'Bet History': 'bet-history',
     'Game Results': 'game-results',
-    'Sara Starline Bet History': 'starline-bet-history',
-    'Sara Starline Result History': 'starline-result-history',
+    'Starline Bet History': 'starline-bet-history',
+    'King Bazaar Bet History': 'starline-result-history',
   }), []);
 
   const tabParam = (searchParams.get('tab') || '').toString();
@@ -241,6 +241,10 @@ const Bids = () => {
       navigate('/bet-history');
       return;
     }
+    if (item?.title === 'Starline Bet History') {
+      navigate('/starline-bet-history');
+      return;
+    }
     if (item?.title === 'Game Results') {
       navigate('/market-result-history');
       return;
@@ -251,6 +255,10 @@ const Bids = () => {
 
   const handleDesktopItemClick = (item) => {
     // Desktop: show content on right panel (no navigation)
+    if (item?.title === 'Starline Bet History') {
+      navigate('/starline-bet-history');
+      return;
+    }
     setActiveTitle(item.title);
   };
 

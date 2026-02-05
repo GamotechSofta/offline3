@@ -180,7 +180,7 @@ const WalletSection = () => {
       {/* Market Category Buttons */}
       <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-3 sm:gap-4 max-w-lg mx-auto">
         <button 
-          onClick={() => navigate('/bidoptions', { state: { marketType: 'startline' } })}
+          onClick={() => navigate('/startline-dashboard')}
           className="group relative rounded-2xl sm:rounded-3xl bg-[#1a1a1a] p-4 sm:p-5 md:p-6 text-left shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-yellow-500/30 hover:bg-[#222] active:scale-95 transition-all duration-200"
         >
           <div className="flex items-center justify-between gap-3">

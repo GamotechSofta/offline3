@@ -132,7 +132,7 @@ const evaluateBet = ({ market, betNumberRaw, amount, session, ratesMap }) => {
   return { state: 'won', kind, payout };
 };
 
-const BetHistory = () => {
+const BetHistory = ({ pageTitle = 'Bet History', marketScope = null } = {}) => {
   const navigate = useNavigate();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedSessions, setSelectedSessions] = useState([]); // ['OPEN','CLOSE']
@@ -143,14 +143,25 @@ const BetHistory = () => {
   const [ratesMap, setRatesMap] = useState(null);
   const [localVersion, setLocalVersion] = useState(0);
 
+  const scope = (marketScope || '').toString().trim().toLowerCase();
+  const inScope = (marketTitle) => {
+    if (!scope) return true;
+    const k = normalizeMarketName(marketTitle);
+    if (scope === 'starline' || scope === 'startline') {
+      return k.includes('starline') || k.includes('startline') || k.includes('star line') || k.includes('start line');
+    }
+    return true;
+  };
+
   const { userId, bets } = useMemo(() => {
     const u = safeParse(localStorage.getItem('user') || 'null', null);
     const uid = u?._id || u?.id || u?.userId || u?.userid || u?.user_id || u?.uid || null;
     const all = safeParse(localStorage.getItem('betHistory') || '[]', []);
     const list = Array.isArray(all) ? all : [];
     const onlyMine = uid ? list.filter((x) => x?.userId === uid) : list;
-    return { userId: uid, bets: onlyMine };
-  }, [localVersion]);
+    const scoped = scope ? onlyMine.filter((x) => inScope(x?.marketTitle)) : onlyMine;
+    return { userId: uid, bets: scoped };
+  }, [localVersion, scope]);
 
   const flat = useMemo(() => {
     const out = [];
@@ -210,7 +221,7 @@ const BetHistory = () => {
     const fromHistory = (bets || [])
       .map((x) => (x?.marketTitle || '').toString().trim())
       .filter(Boolean);
-    const uniq = Array.from(new Set([...fromApi, ...fromHistory]));
+    const uniq = Array.from(new Set([...fromApi, ...fromHistory])).filter((name) => inScope(name));
     uniq.sort((a, b) => a.localeCompare(b));
     return uniq.map((label) => ({ label, key: normalizeMarketName(label) }));
   }, [markets, bets]);
@@ -381,7 +392,7 @@ const BetHistory = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-xl sm:text-2xl font-bold truncate">Bet History</h1>
+            <h1 className="text-xl sm:text-2xl font-bold truncate">{pageTitle}</h1>
           </div>
 
           <button
