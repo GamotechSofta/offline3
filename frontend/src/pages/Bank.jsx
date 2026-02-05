@@ -61,6 +61,22 @@ const Bank = () => {
 
   const formatINR = (value) => `₹${formatMoney(value)}`;
 
+  const scrollToTop = () => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+      setTimeout(() => {
+        const scrollableElements = document.querySelectorAll(
+          '[class*="overflow-y-auto"], [class*="overflow-y-scroll"], [class*="overflow-auto"]'
+        );
+        scrollableElements.forEach((el) => {
+          if (el && typeof el.scrollTop === 'number') el.scrollTop = 0;
+        });
+      }, 10);
+    } catch (_) {}
+  };
+
   const formatTime = (iso) => {
     try {
       const d = new Date(iso);
@@ -320,7 +336,10 @@ const Bank = () => {
               <div className="bg-[#202124] rounded-full border border-white/10 px-4 py-2 flex items-center justify-between shadow-[0_10px_22px_rgba(0,0,0,0.40)]">
                 <button
                   type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => {
+                    setPage((p) => Math.max(1, p - 1));
+                    scrollToTop();
+                  }}
                   disabled={currentPage <= 1}
                   className="flex items-center gap-1 text-white/90 font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >
@@ -337,7 +356,10 @@ const Bank = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  onClick={() => {
+                    setPage((p) => Math.min(totalPages, p + 1));
+                    scrollToTop();
+                  }}
                   disabled={currentPage >= totalPages}
                   className="flex items-center gap-1 text-white/90 font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >

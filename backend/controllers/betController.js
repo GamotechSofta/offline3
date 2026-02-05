@@ -122,13 +122,28 @@ export const placeBet = async (req, res) => {
             createdBets.push(bet);
         }
 
-        await WalletTransaction.create({
-            userId,
-            type: 'debit',
-            amount: totalAmount,
-            description: `Bet placed – ${market.marketName} (${bets.length} bet(s))`,
-            referenceId: betIds[0]?.toString() || marketId,
-        });
+        const labelForType = (t) => {
+            const s = String(t || '').toLowerCase();
+            if (s === 'single') return 'Single Ank';
+            if (s === 'jodi') return 'Digit';
+            if (s === 'panna') return 'Panna';
+            if (s === 'half-sangam') return 'Half Sangam';
+            if (s === 'full-sangam') return 'Full Sangam';
+            return 'Bet';
+        };
+
+        // Create debit transaction per bet (bet-wise transaction history)
+        if (createdBets.length > 0) {
+            await WalletTransaction.insertMany(
+                createdBets.map((b) => ({
+                    userId,
+                    type: 'debit',
+                    amount: Number(b.amount) || 0,
+                    description: `Bet placed – ${market.marketName} (${labelForType(b.betType)} ${String(b.betNumber || '').trim()})`,
+                    referenceId: b._id.toString(),
+                }))
+            );
+        }
 
         res.status(201).json({
             success: true,
