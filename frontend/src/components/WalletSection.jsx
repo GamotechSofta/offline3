@@ -60,23 +60,23 @@ const WalletSection = () => {
   const formattedBalance = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0, minimumFractionDigits: 0 }).format(displayBalance);
 
   return (
-    <section className="w-full bg-black py-3 sm:py-4 px-4 sm:px-6">
+    <section className="w-full bg-black py-2 sm:py-4 px-4 sm:px-6">
       {/* Available Points Balance Card */}
-      <div className="relative w-full max-w-lg mx-auto mb-8 sm:mb-12">
+      <div className="relative w-full max-w-lg mx-auto mb-6 sm:mb-12">
         {/* Main Card - Premium Design */}
-        <div className="relative bg-[#1e1e1e] rounded-2xl sm:rounded-3xl px-3 pt-3 pb-0 sm:px-6 sm:pt-5 sm:pb-0 md:px-7 md:pt-6 md:pb-0 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 z-10 overflow-visible">
+        <div className="relative bg-[#1e1e1e] rounded-2xl sm:rounded-3xl px-3 pt-2.5 pb-0 sm:px-6 sm:pt-5 sm:pb-0 md:px-7 md:pt-6 md:pb-0 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 z-10 overflow-visible">
           {/* Subtle background glow */}
           <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-yellow-500/8 via-yellow-500/4 to-transparent rounded-t-2xl sm:rounded-t-3xl"></div>
           
           {/* Content */}
           <div className="relative flex flex-col">
             {/* Top Row - Balance and Action Buttons */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-5">
+            <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 sm:gap-4 pb-2.5 sm:pb-5">
               {/* Left Side - Wallet Icon and Balance */}
               <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 {/* Wallet Icon - Premium Design */}
                 <div className="relative shrink-0">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-[88px] md:h-[88px] bg-[#2a2a2a] rounded-2xl sm:rounded-3xl p-3 sm:p-3.5 border border-white/10 shadow-lg flex items-center justify-center">
+                  <div className="w-[60px] h-[60px] sm:w-20 sm:h-20 md:w-[88px] md:h-[88px] bg-[#2a2a2a] rounded-2xl sm:rounded-3xl p-3 sm:p-3.5 border border-white/10 shadow-lg flex items-center justify-center">
                     <img
                       src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769780438/Untitled_90_x_160_px_1080_x_1080_px_ychsx6.png"
                       alt="Wallet Icon"
@@ -137,11 +137,11 @@ const WalletSection = () => {
             <div className="flex justify-center border-t border-white/10 relative">
               <button 
                 onClick={() => navigate('/bank')}
-                className="relative group cursor-pointer active:scale-95 transition-transform duration-200 -mb-[14px] sm:-mb-[21px] md:-mb-[23px]"
+                className="relative group cursor-pointer active:scale-95 transition-transform duration-200 -mb-0 sm:-mb-[6px] md:-mb-[8px]"
               >
                 {/* Angular Shape Container */}
                 <div
-                  className="w-[170px] sm:w-[190px] md:w-[210px] h-[38px] sm:h-[42px] md:h-[46px] bg-gradient-to-b from-[#d4af37] via-[#cca84d] to-[#b8941f] flex items-center justify-center gap-2.5 sm:gap-3 shadow-[0_8px_24px_rgba(212,175,55,0.5)]"
+                  className="w-[170px] sm:w-[190px] md:w-[210px] h-[34px] sm:h-[42px] md:h-[46px] bg-gradient-to-b from-[#d4af37] via-[#cca84d] to-[#b8941f] flex items-center justify-center gap-2.5 sm:gap-3 shadow-[0_8px_24px_rgba(212,175,55,0.5)]"
                   style={{
                     clipPath: 'polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%)',
                   }}
