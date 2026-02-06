@@ -889,7 +889,14 @@ export const getMarketStats = async (req, res) => {
 
         for (const b of bets) {
             applyBet(allStats, b);
-            let session = (b?.betOn === 'close') ? 'close' : (b?.betOn === 'open' ? 'open' : null);
+            const betType = (b?.betType || '').toString().trim().toLowerCase();
+
+            // Jodi / Half Sangam / Full Sangam are always "close" category in admin views
+            // because they are settled on closing and should appear under "Close bets only".
+            let session =
+                (betType === 'jodi' || betType === 'half-sangam' || betType === 'full-sangam')
+                    ? 'close'
+                    : ((b?.betOn === 'close') ? 'close' : (b?.betOn === 'open' ? 'open' : null));
             // Backfill for older bets: infer from bet time (IST) vs market starting time
             if (!session && startMin != null && b?.createdAt) {
                 const betMin = minutesIST(b.createdAt);

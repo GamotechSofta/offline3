@@ -666,10 +666,12 @@ const MarketDetail = () => {
 
     // Section data by view (Open/Closed): show session-specific bets in all sections
     const singleDigitDisplay = viewStats?.singleDigit || { digits: {}, totalAmount: 0, totalBets: 0 };
-    const jodiDisplay = viewStats?.jodi || { items: {}, totalAmount: 0, totalBets: 0 };
+    // Jodi + Full Sangam should show in both views, but are always "close" category.
+    // Do NOT include them in Open totals (openTotalAmount/openTotalBets remain unchanged).
+    const jodiDisplay = statsClose?.jodi || { items: {}, totalAmount: 0, totalBets: 0 };
     const triplePattiDisplay = viewStats?.triplePatti || { items: {}, totalAmount: 0, totalBets: 0 };
     const halfSangamDisplay = viewStats?.halfSangam || { items: {}, totalAmount: 0, totalBets: 0 };
-    const fullSangamDisplay = viewStats?.fullSangam || { items: {}, totalAmount: 0, totalBets: 0 };
+    const fullSangamDisplay = statsClose?.fullSangam || { items: {}, totalAmount: 0, totalBets: 0 };
 
     // Open view: Single Digit, Single Patti, Double Patti, Triple Patti, Half Sangam
     const openTotalAmount =
