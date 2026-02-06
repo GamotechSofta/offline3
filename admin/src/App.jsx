@@ -6,7 +6,6 @@ import Markets from './pages/Markets';
 import AddUser from './pages/AddUser';
 import AddMarket from './pages/AddMarket';
 import BetHistory from './pages/BetHistory';
-import TopWinners from './pages/TopWinners';
 import Reports from './pages/Reports';
 import PaymentManagement from './pages/PaymentManagement';
 import Wallet from './pages/Wallet';
@@ -126,14 +125,6 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <BetHistory />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/top-winners"
-                    element={
-                        <PrivateRoute>
-                            <TopWinners />
                         </PrivateRoute>
                     }
                 />
