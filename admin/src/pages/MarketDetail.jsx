@@ -662,29 +662,31 @@ const MarketDetail = () => {
         (halfSangam?.totalBets ?? 0) +
         (fullSangam?.totalBets ?? 0);
 
-    const openTotalAmount =
-        (singleDigit?.totalAmount ?? 0) +
-        (singlePattiTotals?.totalAmount ?? 0) +
-        (doublePattiTotals?.totalAmount ?? 0) +
-        (triplePatti?.totalAmount ?? 0);
-    const openTotalBets =
-        (singleDigit?.totalBets ?? 0) +
-        (singlePattiTotals?.totalBets ?? 0) +
-        (doublePattiTotals?.totalBets ?? 0) +
-        (triplePatti?.totalBets ?? 0);
-    const closedTotalAmount = (jodi?.totalAmount ?? 0) + (halfSangam?.totalAmount ?? 0) + (fullSangam?.totalAmount ?? 0);
-    const closedTotalBets = (jodi?.totalBets ?? 0) + (halfSangam?.totalBets ?? 0) + (fullSangam?.totalBets ?? 0);
-    const displayAmount = statusView === 'open' ? openTotalAmount : closedTotalAmount;
-    const displayBets = statusView === 'open' ? openTotalBets : closedTotalBets;
-
     // Section data by view: open view shows open-type data, closed view shows closed-type data; other is blank
     const singleDigitDisplay = statusView === 'open' ? singleDigit : { digits: {}, totalAmount: 0, totalBets: 0 };
-    // Jodi section always shows actual jodi bets (bet history); overview totals still filter by open/closed
     const jodiDisplay = jodi;
     const triplePattiDisplay = statusView === 'open' ? triplePatti : { items: {}, totalAmount: 0, totalBets: 0 };
-    // Half Sangam & Full Sangam always show actual bets (bet history); overview totals still filter by open/closed
     const halfSangamDisplay = halfSangam;
     const fullSangamDisplay = fullSangam;
+
+    // Open view: Single Digit, Single Patti, Double Patti, Triple Patti, Half Sangam. Do not include Jodi or Full Sangam.
+    const openTotalAmount =
+        (singleDigitDisplay?.totalAmount ?? 0) +
+        (singlePattiTotalsForView?.totalAmount ?? 0) +
+        (doublePattiTotalsForView?.totalAmount ?? 0) +
+        (triplePattiDisplay?.totalAmount ?? 0) +
+        (halfSangamDisplay?.totalAmount ?? 0);
+    const openTotalBets =
+        (singleDigitDisplay?.totalBets ?? 0) +
+        (singlePattiTotalsForView?.totalBets ?? 0) +
+        (doublePattiTotalsForView?.totalBets ?? 0) +
+        (triplePattiDisplay?.totalBets ?? 0) +
+        (halfSangamDisplay?.totalBets ?? 0);
+    // Closed view: Total = Jodi + Full Sangam only (Half Sangam is not in closed view)
+    const closedTotalAmount = (jodiDisplay?.totalAmount ?? 0) + (fullSangamDisplay?.totalAmount ?? 0);
+    const closedTotalBets = (jodiDisplay?.totalBets ?? 0) + (fullSangamDisplay?.totalBets ?? 0);
+    const displayAmount = statusView === 'open' ? openTotalAmount : closedTotalAmount;
+    const displayBets = statusView === 'open' ? openTotalBets : closedTotalBets;
 
     const handleStatusViewChange = (e) => {
         const v = e.target.value;
@@ -1034,11 +1036,13 @@ const MarketDetail = () => {
                         totalBets={triplePattiDisplay.totalBets}
                     />
 
-                    <HalfSangamSection
-                        items={halfSangamDisplay.items}
-                        totalAmount={halfSangamDisplay.totalAmount}
-                        totalBets={halfSangamDisplay.totalBets}
-                    />
+                    {statusView === 'open' && (
+                        <HalfSangamSection
+                            items={halfSangamDisplay.items}
+                            totalAmount={halfSangamDisplay.totalAmount}
+                            totalBets={halfSangamDisplay.totalBets}
+                        />
+                    )}
                     <FullSangamSection
                         items={fullSangamDisplay.items}
                         totalAmount={fullSangamDisplay.totalAmount}
