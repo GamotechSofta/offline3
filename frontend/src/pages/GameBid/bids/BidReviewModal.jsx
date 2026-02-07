@@ -182,7 +182,7 @@ const BidReviewModal = ({
             {/* Content: only history list scrolls */}
             <div className="flex-1 flex flex-col min-h-0">
               {/* History (scroll only this section) */}
-              <div className="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-4 pt-3 sm:pt-4 min-h-0">
+              <div className="flex-1 overflow-y-auto overscroll-contain ios-scroll-touch px-3 sm:px-4 pt-3 sm:pt-4 min-h-0">
                 <div className="grid grid-cols-3 text-center font-semibold text-[#d4af37] text-[11px] sm:text-base">
                   <div className="truncate">{labelKey}</div>
                   <div className="truncate">Points</div>

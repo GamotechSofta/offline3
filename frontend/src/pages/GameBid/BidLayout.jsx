@@ -142,9 +142,12 @@ const BidLayout = ({
     }, [location.pathname]);
 
     return (
-        <div className="min-h-screen bg-black font-sans w-full max-w-full overflow-x-hidden">
-            {/* Header - Home theme dark */}
-            <div className="bg-[#202124] border-b border-white/10 px-3 sm:px-6 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4">
+        <div className="min-h-screen min-h-ios-screen bg-black font-sans w-full max-w-full overflow-x-hidden">
+            {/* Header - Home theme dark - iOS safe area padding */}
+            <div
+                className="bg-[#202124] border-b border-white/10 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4"
+                style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
+            >
                 <button
                     onClick={() => market ? navigate('/bidoptions', { state: { market } }) : navigate(-1)}
                     className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full active:scale-95 transition-colors touch-manipulation"
@@ -173,7 +176,10 @@ const BidLayout = ({
             {extraHeader}
 
             {showDateSession && (
-                <div className={`px-4 sm:px-6 pb-4 pt-2 flex flex-row gap-2 sm:gap-3 ${dateSessionGridClassName}`}>
+                <div
+                    className={`pb-4 pt-2 flex flex-row flex-wrap gap-2 sm:gap-3 ${dateSessionGridClassName}`}
+                    style={{ paddingLeft: 'max(1rem, env(safe-area-inset-left))', paddingRight: 'max(1rem, env(safe-area-inset-right))' }}
+                >
                     {/* Date Input Button */}
                     <div className="relative flex-1 min-w-0">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
@@ -250,8 +256,8 @@ const BidLayout = ({
                         )}
                     </button>
                     
-                    {/* Session Select */}
-                    <div className="relative flex-1 min-w-0">
+                    {/* Session Select - hidden on mobile, each bid screen has its own session control */}
+                    <div className="relative flex-1 min-w-0 hidden md:block">
                         <select
                             value={session}
                             onChange={(e) => setSession(e.target.value)}
@@ -277,16 +283,23 @@ const BidLayout = ({
 
             <div
                 ref={contentRef}
-                className={`flex-1 overflow-y-auto overflow-x-hidden w-full max-w-full ${
+                className={`flex-1 overflow-y-auto overflow-x-hidden w-full max-w-full ios-scroll-touch ${
                     contentPaddingClass ?? (hideFooter ? 'pb-6' : 'pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-32')
                 }`}
+                style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
             >
                 {children}
             </div>
 
-            {/* Footer - Card centered in right 50% on desktop (hidden when submit card is in content) */}
+            {/* Footer - Card centered in right 50% on desktop (hidden when submit card is in content) - iOS safe area */}
             {!hideFooter && (
-            <div className="fixed bottom-[calc(80px+env(safe-area-inset-bottom,0px))] left-0 right-0 md:bottom-0 z-10 px-3 sm:px-4 py-3 md:grid md:grid-cols-2 md:gap-0">
+            <div
+                className="fixed bottom-[calc(80px+env(safe-area-inset-bottom,0px))] left-0 right-0 md:bottom-0 z-10 py-3 md:grid md:grid-cols-2 md:gap-0"
+                style={{
+                    paddingLeft: 'max(0.75rem, env(safe-area-inset-left))',
+                    paddingRight: 'max(0.75rem, env(safe-area-inset-right))',
+                }}
+            >
                 <div className="hidden md:block" />
                 <div className="flex justify-center md:justify-center">
                     <div

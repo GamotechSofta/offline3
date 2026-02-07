@@ -106,12 +106,18 @@ input[type="date"]::-webkit-clear-button {
 html {
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
+  background: #000;
 }
 
 body {
   overflow-x: hidden;
   min-height: 100dvh;
   padding-bottom: env(safe-area-inset-bottom, 0);
+  background: #000;
+}
+
+#root {
+  background: #000;
 }
 
 /* Mobile optimizations */
@@ -122,5 +128,17 @@ body {
   
   button, a, input, select, textarea {
     touch-action: manipulation;
+  }
+}
+
+/* iOS Safari - Game Bid screen fixes */
+.ios-scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* iOS viewport height fix - prevents layout jump when address bar shows/hides */
+@supports (-webkit-touch-callout: none) {
+  .min-h-ios-screen {
+    min-height: -webkit-fill-available;
   }
 }
