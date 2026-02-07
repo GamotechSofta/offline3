@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
     FaTachometerAlt,
     FaChartBar,
-    FaUserPlus,
     FaHistory,
     FaChartLine,
     FaCreditCard,
@@ -32,7 +31,6 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         { path: '/startline', label: 'Starline', icon: FaStar },
         { path: '/add-result', label: 'Add Result', icon: FaEdit },
         { path: '/update-rate', label: 'Update Rate', icon: FaCoins },
-        { path: '/add-user', label: 'Add Player', icon: FaUserPlus },
         { path: '/bet-history', label: 'Bet History', icon: FaHistory },
         { path: '/reports', label: 'Report', icon: FaChartLine },
         { path: '/payment-management', label: 'Payments', icon: FaCreditCard },

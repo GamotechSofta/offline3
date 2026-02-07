@@ -586,10 +586,12 @@ export const getSecretDeclarePasswordStatus = async (req, res) => {
  * PATCH /admin/me/secret-declare-password
  * Super admin only. Set or update secret declare password.
  * Body: { secretDeclarePassword: string } – min 4 chars
+ *       { currentSecretDeclarePassword: string } – required when updating (if you remember it)
+ *       { adminLoginPassword: string } – alternative when forgot secret: use admin login password to reset
  */
 export const setSecretDeclarePassword = async (req, res) => {
     try {
-        const { secretDeclarePassword } = req.body;
+        const { secretDeclarePassword, currentSecretDeclarePassword, adminLoginPassword } = req.body;
         const val = (secretDeclarePassword ?? '').toString().trim();
         if (val.length < 4) {
             return res.status(400).json({
@@ -597,9 +599,36 @@ export const setSecretDeclarePassword = async (req, res) => {
                 message: 'Secret declare password must be at least 4 characters',
             });
         }
-        const admin = await Admin.findById(req.admin._id);
+        const admin = await Admin.findById(req.admin._id).select('+secretDeclarePassword');
         if (!admin) {
             return res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+        // If secret is already set, require verification: either current secret OR admin login password (forgot flow)
+        if (admin.secretDeclarePassword && admin.secretDeclarePassword.length > 0) {
+            const current = (currentSecretDeclarePassword ?? '').toString().trim();
+            const adminPwd = (adminLoginPassword ?? '').toString().trim();
+            if (current) {
+                const isMatch = await admin.compareSecretDeclarePassword(current);
+                if (!isMatch) {
+                    return res.status(401).json({
+                        success: false,
+                        message: 'Current secret password is incorrect',
+                    });
+                }
+            } else if (adminPwd) {
+                const isLoginMatch = await admin.comparePassword(adminPwd);
+                if (!isLoginMatch) {
+                    return res.status(401).json({
+                        success: false,
+                        message: 'Admin login password is incorrect',
+                    });
+                }
+            } else {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Enter current secret password, or your admin login password if you forgot it',
+                });
+            }
         }
         admin.secretDeclarePassword = val;
         await admin.save({ validateBeforeSave: false });
