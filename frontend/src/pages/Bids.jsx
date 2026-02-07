@@ -446,7 +446,7 @@ const Bids = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 pb-24">
+    <div className="min-h-screen bg-black text-white pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
       <style>{`
         .hide-scrollbar {
           scrollbar-width: none; /* Firefox */

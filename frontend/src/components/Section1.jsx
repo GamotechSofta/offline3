@@ -87,25 +87,19 @@ const Section1 = () => {
 
 
   return (
-    <section className="w-full bg-black pt-4 pb-20 sm:pt-6 sm:pb-10 px-3 sm:px-4 md:px-8 md:pb-8">
-      {/* MARKETS Header */}
-      {/* MARKETS Header */}
-      <div className="flex items-end justify-center mb-8 w-full max-w-7xl mx-auto">
-        {/* Left Line */}
-        <div className="flex-1 h-[2px] bg-[#d4af37]"></div>
-
-        {/* Center Trapezoid */}
-        <div className="relative shrink-0">
-          <svg width="240" height="40" viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <section className="w-full bg-black pt-3 min-[375px]:pt-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 sm:pb-10 px-2 min-[375px]:px-3 sm:px-4 md:px-8 md:pb-8 max-w-full overflow-x-hidden">
+      {/* MARKETS Header - responsive width */}
+      <div className="flex items-end justify-center mb-4 min-[375px]:mb-6 sm:mb-8 w-full max-w-7xl mx-auto gap-1 min-[375px]:gap-2 sm:gap-4">
+        <div className="flex-1 h-[2px] bg-[#d4af37] shrink min-w-0" />
+        <div className="relative shrink-0 w-[110px] min-[375px]:w-[140px] sm:w-[180px] md:w-[240px] h-[24px] min-[375px]:h-[28px] sm:h-[34px] md:h-[40px]">
+          <svg className="w-full h-full" viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <path d="M0 39 L30 2 L210 2 L240 39" stroke="#d4af37" strokeWidth="2" fill="black" />
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center pt-3">
-            <h2 className="text-white text-2xl font-bold tracking-wider">MARKETS</h2>
+          <div className="absolute inset-0 flex items-center justify-center pt-2 sm:pt-3">
+            <h2 className="text-white text-sm min-[375px]:text-base sm:text-xl md:text-2xl font-bold tracking-wider">MARKETS</h2>
           </div>
         </div>
-
-        {/* Right Line */}
-        <div className="flex-1 h-[2px] bg-[#d4af37]"></div>
+        <div className="flex-1 h-[2px] bg-[#d4af37] shrink min-w-0" />
       </div>
       {/* Market Cards Grid */}
       {loading ? (
@@ -117,7 +111,7 @@ const Section1 = () => {
           <p className="text-gray-400">No markets available</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 min-[375px]:gap-3 sm:gap-4">
           {markets.map((market) => {
             // open + running = clickable; closed = not clickable
             const isClickable = market.status === 'open' || market.status === 'running';
@@ -134,8 +128,8 @@ const Section1 = () => {
               {/* Status: ***-**-***=Open(green), 156-2*-***=Running(green), 987-45-456=Closed(red) */}
               <div className={`${
                 market.status === 'closed' ? 'bg-red-600' : 'bg-green-600'
-              } py-2 px-3 text-center`}>
-                <p className="text-white text-xs sm:text-sm font-semibold">
+              } py-1.5 min-[375px]:py-2 px-2 min-[375px]:px-3 text-center`}>
+                <p className="text-white text-[10px] min-[375px]:text-xs sm:text-sm font-semibold leading-tight">
                   {market.status === 'open' && 'MARKET IS OPEN'}
                   {market.status === 'running' && 'CLOSED IS RUNNING'}
                   {market.status === 'closed' && 'MARKET CLOSED'}
@@ -143,28 +137,28 @@ const Section1 = () => {
               </div>
 
             {/* Card Content */}
-            <div className="p-3 sm:p-4">
+            <div className="p-2 min-[375px]:p-3 sm:p-4">
               {/* Time with Clock Icon */}
-              <div className="flex items-center gap-1.5 mb-2">
+              <div className="flex items-center gap-1 mb-1.5 min-[375px]:mb-2">
                 <svg
-                  className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-gray-400 text-xs sm:text-sm">{market.timeRange}</p>
+                <p className="text-gray-400 text-[10px] min-[375px]:text-xs sm:text-sm truncate">{market.timeRange}</p>
               </div>
 
               {/* Game Name */}
-              <h3 className="text-white text-sm sm:text-base md:text-lg font-semibold mb-3">
+              <h3 className="text-white text-xs min-[375px]:text-sm sm:text-base md:text-lg font-semibold mb-2 min-[375px]:mb-3 truncate">
                 {market.gameName}
               </h3>
 
               {/* Result */}
               <div>
-                <p className="text-yellow-400 text-xl sm:text-2xl md:text-3xl font-bold">
+                <p className="text-yellow-400 text-lg min-[375px]:text-xl sm:text-2xl md:text-3xl font-bold">
                   {market.result}
                 </p>
               </div>

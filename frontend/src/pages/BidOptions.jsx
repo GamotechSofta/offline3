@@ -184,18 +184,19 @@ const BidOptions = () => {
   return (
     <div className="min-h-screen bg-black flex flex-col items-center">
       {/* Header */}
-      <div className="w-full flex items-center px-4 pt-5 pb-4 bg-black border-b border-gray-800 relative">
+      <div className="w-full flex items-center px-3 sm:px-4 pt-4 sm:pt-5 pb-3 sm:pb-4 bg-black border-b border-gray-800 relative">
         <button
           onClick={() => navigate(isStarline ? '/startline-dashboard' : '/')}
-          className="absolute left-4 text-gray-400 hover:text-white"
+          className="absolute left-3 sm:left-4 flex items-center justify-center min-w-[44px] min-h-[44px] -ml-1 text-gray-400 hover:text-white active:scale-95 touch-manipulation"
+          aria-label="Back"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </button>
-        <div className="w-full text-center">
+        <div className="w-full text-center pr-12 pl-12 min-w-0">
           {/* Dynamic market name from selected market */}
-          <h1 className="text-white font-bold text-lg tracking-wider uppercase inline-block border-b-2 border-yellow-500 pb-1 px-2 py-1">
+          <h1 className="text-white font-bold text-base sm:text-lg tracking-wider uppercase inline-block border-b-2 border-yellow-500 pb-1 px-2 py-1 truncate max-w-full">
             {market?.gameName || 'SELECT MARKET'}
           </h1>
           {isStarline ? (
@@ -207,7 +208,7 @@ const BidOptions = () => {
       </div>
 
       {/* Grid Content */}
-      <div className="w-full max-w-md lg:max-w-none px-3 pt-3 pb-20 md:pb-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="w-full max-w-md lg:max-w-none px-3 sm:px-4 pt-3 sm:pt-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3">
         {visibleOptions.map((option) => (
           <div
             key={option.id}
@@ -218,15 +219,15 @@ const BidOptions = () => {
                 gameMode: option.title.toLowerCase().includes('bulk') ? 'bulk' : 'easy'
               }
             })}
-            className="relative rounded-2xl bg-gradient-to-br from-[#1b1d22] via-[#15171b] to-[#0f1013] border border-white/10 p-3 flex flex-col items-center justify-center gap-2 hover:from-[#23262d] hover:via-[#1a1d22] hover:to-[#121418] active:scale-[0.98] transition-all cursor-pointer shadow-[0_10px_25px_rgba(0,0,0,0.35)] group"
+            className="relative rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#1b1d22] via-[#15171b] to-[#0f1013] border border-white/10 p-2.5 sm:p-3 flex flex-col items-center justify-center gap-1.5 sm:gap-2 hover:from-[#23262d] hover:via-[#1a1d22] hover:to-[#121418] active:scale-[0.98] transition-all cursor-pointer shadow-[0_10px_25px_rgba(0,0,0,0.35)] group touch-manipulation min-h-[88px] sm:min-h-[100px]"
           >
             {/* Icon Container with subtle glow effect */}
-            <div className="flex items-center justify-center w-30 h-30 transform scale-90 group-hover:scale-100 transition-transform duration-300">
+            <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 transform scale-90 group-hover:scale-100 transition-transform duration-300">
               {option.icon}
             </div>
 
             {/* Title */}
-            <span className="text-white text-[10px] sm:text-xs font-semibold tracking-[0.18em] uppercase text-center">
+            <span className="text-white text-[9px] sm:text-[10px] md:text-xs font-semibold tracking-[0.12em] sm:tracking-[0.18em] uppercase text-center line-clamp-2 leading-tight">
               {option.title}
             </span>
           </div>

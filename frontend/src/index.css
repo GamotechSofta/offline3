@@ -102,13 +102,25 @@ input[type="date"]::-webkit-clear-button {
   -webkit-appearance: none;
 }
 
+/* Mobile-first responsive base */
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
   * {
     -webkit-tap-highlight-color: transparent;
   }
   
-  button, a {
+  button, a, input, select, textarea {
     touch-action: manipulation;
   }
 }

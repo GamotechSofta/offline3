@@ -169,7 +169,7 @@ const SingleDigitBulkBid = ({ market, title }) => {
             hideFooter={false}
             showFooterStats={false}
             submitLabel="Submit Bet"
-            contentPaddingClass="pb-24 md:pb-32"
+            contentPaddingClass="pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-32"
             walletBalance={walletBefore}
         >
             <div className="px-3 py-2 w-full max-w-full overflow-x-hidden">

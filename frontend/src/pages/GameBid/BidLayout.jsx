@@ -144,16 +144,17 @@ const BidLayout = ({
     return (
         <div className="min-h-screen bg-black font-sans w-full max-w-full overflow-x-hidden">
             {/* Header - Home theme dark */}
-            <div className="bg-[#202124] border-b border-white/10 px-4 sm:px-6 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4">
+            <div className="bg-[#202124] border-b border-white/10 px-3 sm:px-6 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4">
                 <button
                     onClick={() => market ? navigate('/bidoptions', { state: { market } }) : navigate(-1)}
-                    className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full active:scale-95 transition-colors"
+                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full active:scale-95 transition-colors touch-manipulation"
+                    aria-label="Back"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </button>
-                <h1 className="text-sm sm:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-white">
+                <h1 className="text-xs sm:text-base md:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-white min-w-0">
                     {market?.gameName ? `${market.gameName} - ${title}` : title}
                 </h1>
                 <div className="bg-[#f2c14e] text-[#4b3608] px-2 sm:px-3 py-1 rounded-full flex items-center gap-1.5 text-[11px] sm:text-sm font-bold shadow-md shrink-0">
@@ -277,7 +278,7 @@ const BidLayout = ({
             <div
                 ref={contentRef}
                 className={`flex-1 overflow-y-auto overflow-x-hidden w-full max-w-full ${
-                    contentPaddingClass ?? (hideFooter ? 'pb-6' : 'pb-44 md:pb-32')
+                    contentPaddingClass ?? (hideFooter ? 'pb-6' : 'pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-32')
                 }`}
             >
                 {children}
@@ -285,7 +286,7 @@ const BidLayout = ({
 
             {/* Footer - Card centered in right 50% on desktop (hidden when submit card is in content) */}
             {!hideFooter && (
-            <div className="fixed bottom-[88px] left-0 right-0 md:bottom-0 z-10 px-3 sm:px-4 py-3 md:grid md:grid-cols-2 md:gap-0">
+            <div className="fixed bottom-[calc(80px+env(safe-area-inset-bottom,0px))] left-0 right-0 md:bottom-0 z-10 px-3 sm:px-4 py-3 md:grid md:grid-cols-2 md:gap-0">
                 <div className="hidden md:block" />
                 <div className="flex justify-center md:justify-center">
                     <div

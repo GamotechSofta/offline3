@@ -189,7 +189,7 @@ const HalfSangamBBid = ({ market, title }) => {
             lockSessionSelect
             hideFooter
             walletBalance={walletBefore}
-            contentPaddingClass="pb-24 md:pb-6"
+            contentPaddingClass="pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-6"
         >
             <div className="px-3 sm:px-4 py-4 md:max-w-7xl md:mx-auto">
                 <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">

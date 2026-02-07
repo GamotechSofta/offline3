@@ -88,7 +88,7 @@ const SupportNew = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 sm:px-6 md:px-8 pb-24">
+    <div className="min-h-screen bg-black text-white px-3 sm:px-6 md:px-8 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
       <div className="w-full max-w-xl mx-auto">
         <div className="flex items-center gap-3 pt-4 pb-3">
           <button

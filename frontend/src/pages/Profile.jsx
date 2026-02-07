@@ -105,7 +105,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white px-3 sm:px-5 md:px-6 lg:px-8 pt-4 pb-24">
+    <div className="min-h-screen bg-black text-white px-3 sm:px-5 md:px-6 lg:px-8 pt-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
       <div className="w-full max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-4">
           <button

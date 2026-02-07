@@ -76,9 +76,9 @@ const Layout = ({ children }) => {
   // Same header (logoipsum, Download App, bell) for all pages - mobile-style
   if (isHomePage) {
     return (
-      <div className="min-h-screen pb-16 md:pb-0 bg-black">
+      <div className="min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-black">
         <AppHeader />
-        <div className="pt-[72px] sm:pt-[76px] md:pt-[88px]">
+        <div className="pt-[calc(72px+env(safe-area-inset-top,0px))] sm:pt-[calc(76px+env(safe-area-inset-top,0px))] md:pt-[calc(88px+env(safe-area-inset-top,0px))]">
           {children}
         </div>
         <BottomNavbar />
@@ -109,15 +109,15 @@ const Layout = ({ children }) => {
     location.pathname === '/bet-history' || location.pathname === '/market-result-history';
 
   return (
-    <div className={`min-h-screen pb-16 md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkPage ? 'bg-black' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkPage ? 'bg-black' : 'bg-gray-50'}`}>
       <AppHeader />
       {/* Reduce mobile top-gap under fixed header */}
       {/* Desktop: ensure no overlap under fixed header */}
       <div
         className={
           isBidPage
-            ? 'pt-[52px] sm:pt-[68px] md:pt-[70px]'
-            : ((isBetsPage || isHistoryPage) ? 'pt-[72px] sm:pt-[76px] md:pt-[88px]' : 'pt-[56px] sm:pt-[68px] md:pt-[72px]')
+            ? 'pt-[calc(52px+env(safe-area-inset-top,0px))] sm:pt-[calc(68px+env(safe-area-inset-top,0px))] md:pt-[calc(70px+env(safe-area-inset-top,0px))]'
+            : ((isBetsPage || isHistoryPage) ? 'pt-[calc(72px+env(safe-area-inset-top,0px))] sm:pt-[calc(76px+env(safe-area-inset-top,0px))] md:pt-[calc(88px+env(safe-area-inset-top,0px))]' : 'pt-[calc(56px+env(safe-area-inset-top,0px))] sm:pt-[calc(68px+env(safe-area-inset-top,0px))] md:pt-[calc(72px+env(safe-area-inset-top,0px))]')
         }
       >
         {children}

@@ -383,7 +383,7 @@ const BetHistory = ({ pageTitle = 'Bet History', marketScope = null } = {}) => {
   };
 
   return (
-    <div className={`min-h-screen bg-black text-white px-3 sm:px-4 pt-3 ${hasPagination ? 'pb-[100px]' : 'pb-28'}`}>
+    <div className={`min-h-screen bg-black text-white px-3 sm:px-4 pt-3 ${hasPagination ? 'pb-[calc(100px+env(safe-area-inset-bottom,0px))]' : 'pb-[calc(7rem+env(safe-area-inset-bottom,0px))]'}`}>
       <div className="w-full max-w-3xl mx-auto">
         {/* Header row */}
         <div className="flex items-center justify-between gap-3 mb-4">

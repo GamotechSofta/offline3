@@ -215,7 +215,7 @@ const JodiBulkBid = ({ market, title }) => {
             }
             walletBalance={walletBefore}
             hideFooter
-            contentPaddingClass="pb-24 md:pb-6"
+            contentPaddingClass="pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-6"
         >
             <div className="px-2 sm:px-4 md:px-4 py-1 md:py-1 w-full">
                 {warning && (
