@@ -1,8 +1,8 @@
 /**
- * Market betting window: market opens at midnight (00:00) and closes at closing time each day.
- * Users can bet only between midnight and (closing time - betClosureTime).
+ * Market betting window: market opens at midnight (00:00) IST and closes at closing time each day.
+ * Users can bet only between midnight IST and (closing time - betClosureTime).
  * Times are in "HH:MM" or "HH:MM:SS"; betClosureTime is seconds before closing when betting stops.
- * Uses server local time (assume market times are in same timezone as server).
+ * Uses IST (Asia/Kolkata) to match market reset and user expectations.
  *
  * @param {Object} market - { closingTime, betClosureTime } (startingTime is not used for the betting window)
  * @param {Date} [now] - current time (default: new Date())
@@ -17,26 +17,35 @@ export function isBettingAllowed(market, now = new Date()) {
         return { allowed: false, message: 'Market timing not configured.' };
     }
 
-    const openAt = startOfDay(now);
-    let closeAt = parseTimeToDate(closeStr, now);
-    if (!closeAt) {
+    const todayIST = getTodayIST();
+    const openAt = parseISTDateTime(`${todayIST}T00:00:00+05:30`);
+    let closeAt = parseISTDateTime(`${todayIST}T${normalizeTimeStr(closeStr)}+05:30`);
+    if (!openAt || !closeAt) {
         return { allowed: false, message: 'Invalid market time format.' };
     }
 
-    if (closeAt.getTime() <= openAt.getTime()) {
-        closeAt = new Date(closeAt);
-        closeAt.setDate(closeAt.getDate() + 1);
+    if (closeAt <= openAt) {
+        const baseDate = new Date(`${todayIST}T12:00:00+05:30`);
+        baseDate.setDate(baseDate.getDate() + 1);
+        const nextDayStr = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Kolkata',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        }).format(baseDate);
+        closeAt = parseISTDateTime(`${nextDayStr}T${normalizeTimeStr(closeStr)}+05:30`);
     }
 
-    const lastBetAt = new Date(closeAt.getTime() - closureSec * 1000);
+    const lastBetAt = closeAt - closureSec * 1000;
+    const nowMs = now.getTime();
 
-    if (now.getTime() < openAt.getTime()) {
+    if (nowMs < openAt) {
         return {
             allowed: false,
             message: 'Betting opens at 12:00 AM (midnight). You can place bets after midnight.',
         };
     }
-    if (now.getTime() > lastBetAt.getTime()) {
+    if (nowMs > lastBetAt) {
         return {
             allowed: false,
             message: `Betting has closed for this market. Bets are not accepted after ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
@@ -45,21 +54,22 @@ export function isBettingAllowed(market, now = new Date()) {
     return { allowed: true };
 }
 
-function startOfDay(d) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+function getTodayIST() {
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).format(new Date());
 }
 
-/**
- * Parse "HH:MM" or "HH:MM:SS" to a Date on the same calendar day as refDate.
- */
-function parseTimeToDate(timeStr, refDate) {
-    if (!timeStr) return null;
-    const parts = timeStr.split(':').map((p) => parseInt(p, 10));
-    const h = parts[0];
-    const m = parts[1] ?? 0;
-    const s = parts[2] ?? 0;
-    if (!Number.isFinite(h) || h < 0 || h > 23 || !Number.isFinite(m) || m < 0 || m > 59) return null;
-    const d = new Date(refDate.getFullYear(), refDate.getMonth(), refDate.getDate(), h, m, s, 0);
-    return d;
+function normalizeTimeStr(timeStr) {
+    const parts = timeStr.split(':').map((p) => String(parseInt(p, 10) || 0).padStart(2, '0'));
+    return `${parts[0] || '00'}:${parts[1] || '00'}:${parts[2] || '00'}`;
+}
+
+function parseISTDateTime(isoStr) {
+    const d = new Date(isoStr);
+    return isNaN(d.getTime()) ? null : d.getTime();
 }
 

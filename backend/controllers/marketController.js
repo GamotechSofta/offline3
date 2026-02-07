@@ -183,9 +183,11 @@ export const getMarkets = async (req, res) => {
 
 /**
  * Get a single market by ID.
+ * Ensures result reset at midnight IST so today's market shows cleared results after midnight.
  */
 export const getMarketById = async (req, res) => {
     try {
+        await ensureResultsResetForNewDay(Market);
         const { id } = req.params;
         const market = await Market.findById(id);
         if (!market) {
@@ -672,9 +674,11 @@ export const clearResult = async (req, res) => {
 /**
  * Public: Get market result history for a dateKey (YYYY-MM-DD IST).
  * Query: ?date=YYYY-MM-DD (optional, defaults to today IST)
+ * Ensures result reset at midnight IST so today's data shows cleared results after midnight.
  */
 export const getMarketResultHistory = async (req, res) => {
     try {
+        await ensureResultsResetForNewDay(Market);
         const todayKey = toDateKeyIST(new Date());
 
         const dateKey = (req.query.date || todayKey).toString().trim();
@@ -743,9 +747,11 @@ export const getMarketResultHistory = async (req, res) => {
 /**
  * Get market statistics (amount and no. of bets per option) for admin market detail view.
  * Returns: singleDigit, jodi, singlePatti, doublePatti, triplePatti with per-option amount/count and totals.
+ * Ensures result reset at midnight IST so Market overview & result screen shows cleared data after midnight.
  */
 export const getMarketStats = async (req, res) => {
     try {
+        await ensureResultsResetForNewDay(Market);
         const { id: marketId } = req.params;
         const market = await Market.findById(marketId);
         if (!market) {
@@ -757,6 +763,12 @@ export const getMarketStats = async (req, res) => {
         if (bookieUserIds !== null) {
             matchFilter.userId = { $in: bookieUserIds };
         }
+
+        // Filter bets by today IST – Market overview shows only today's bets; resets after midnight
+        const todayKey = toDateKeyIST(new Date());
+        const startOfTodayIST = new Date(`${todayKey}T00:00:00+05:30`);
+        const endOfTodayIST = new Date(`${todayKey}T23:59:59.999+05:30`);
+        matchFilter.createdAt = { $gte: startOfTodayIST, $lte: endOfTodayIST };
 
         const bets = await Bet.find(matchFilter).lean();
 
@@ -942,6 +954,7 @@ export const getMarketStats = async (req, res) => {
  */
 export const getSinglePattiSummary = async (req, res) => {
     try {
+        await ensureResultsResetForNewDay(Market);
         const { id: marketId } = req.params;
         const { date, session } = req.query;
         const market = await Market.findById(marketId);
@@ -950,11 +963,10 @@ export const getSinglePattiSummary = async (req, res) => {
         const bookieUserIds = await getBookieUserIds(req.admin);
         const matchFilter = { marketId };
         if (bookieUserIds !== null) matchFilter.userId = { $in: bookieUserIds };
-        if (date) {
-            const start = new Date(date); start.setHours(0, 0, 0, 0);
-            const end = new Date(date); end.setHours(23, 59, 59, 999);
-            matchFilter.createdAt = { $gte: start, $lte: end };
-        }
+        const dateKey = date || toDateKeyIST(new Date());
+        const startOfDay = new Date(`${dateKey}T00:00:00+05:30`);
+        const endOfDay = new Date(`${dateKey}T23:59:59.999+05:30`);
+        matchFilter.createdAt = { $gte: startOfDay, $lte: endOfDay };
         // Back-compat: older callers used `session=`; bets store `betOn` ('open' | 'close')
         if (session) matchFilter.betOn = session;
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
@@ -34,15 +35,6 @@ const AddResult = () => {
     const [clearLoading, setClearLoading] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const admin = localStorage.getItem('admin');
-        if (!admin) {
-            navigate('/');
-            return;
-        }
-        fetchMarkets();
-    }, [navigate]);
-
     const fetchMarkets = async () => {
         try {
             setLoading(true);
@@ -61,6 +53,17 @@ const AddResult = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const admin = localStorage.getItem('admin');
+        if (!admin) {
+            navigate('/');
+            return;
+        }
+        fetchMarkets();
+    }, [navigate]);
+
+    useRefreshOnMarketReset(fetchMarkets);
 
     const handleLogout = () => {
         localStorage.removeItem('admin');

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 import { getRatesCurrent } from '../api/bets';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const safeParse = (raw, fallback) => {
   try {
@@ -176,27 +177,32 @@ const BetHistory = ({ pageTitle = 'Bet History', marketScope = null } = {}) => {
     return out;
   }, [bets]);
 
+  const fetchMarkets = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
+      const data = await res.json();
+      if (data?.success && Array.isArray(data?.data)) {
+        setMarkets(data.data);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     let alive = true;
-    const fetchMarkets = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
-        const data = await res.json();
-        if (!alive) return;
-        if (data?.success && Array.isArray(data?.data)) {
-          setMarkets(data.data);
-        }
-      } catch {
-        // ignore
-      }
+    const wrapped = async () => {
+      await fetchMarkets();
     };
-    fetchMarkets();
-    const id = setInterval(fetchMarkets, 30000);
+    wrapped();
+    const id = setInterval(wrapped, 30000);
     return () => {
       alive = false;
       clearInterval(id);
     };
   }, []);
+
+  useRefreshOnMarketReset(fetchMarkets);
   useEffect(() => {
     let alive = true;
     getRatesCurrent().then((result) => {

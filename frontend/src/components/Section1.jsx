@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 import { isPastClosingTime } from '../utils/marketTiming';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const Section1 = () => {
   const navigate = useNavigate();
@@ -42,49 +43,47 @@ const Section1 = () => {
   };
 
   // Fetch markets from API
-  useEffect(() => {
-    const fetchMarkets = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/markets/get-markets`);
-        const data = await response.json();
-        
-        if (data.success) {
-          // Exclude startline markets (they appear only on Startline Dashboard)
-          const mainOnly = (data.data || []).filter((m) => m.marketType !== 'startline');
-          const transformedMarkets = mainOnly.map((market) => {
-            const st = getMarketStatus(market);
-            return {
-              id: market._id,
-              gameName: market.marketName,
-              timeRange: `${formatTime(market.startingTime)} - ${formatTime(market.closingTime)}`,
-              result: market.displayResult || '***-**-***',
-              status: st.status,
-              timer: st.timer,
-              winNumber: market.winNumber,
-              startingTime: market.startingTime,
-              closingTime: market.closingTime,
-              betClosureTime: market.betClosureTime ?? 0,
-              openingNumber: market.openingNumber,
-              closingNumber: market.closingNumber
-            };
-          });
-          setMarkets(transformedMarkets);
-        }
-      } catch (error) {
-        console.error('Error fetching markets:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchMarkets = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/markets/get-markets`);
+      const data = await response.json();
 
+      if (data.success) {
+        const mainOnly = (data.data || []).filter((m) => m.marketType !== 'startline');
+        const transformedMarkets = mainOnly.map((market) => {
+          const st = getMarketStatus(market);
+          return {
+            id: market._id,
+            gameName: market.marketName,
+            timeRange: `${formatTime(market.startingTime)} - ${formatTime(market.closingTime)}`,
+            result: market.displayResult || '***-**-***',
+            status: st.status,
+            timer: st.timer,
+            winNumber: market.winNumber,
+            startingTime: market.startingTime,
+            closingTime: market.closingTime,
+            betClosureTime: market.betClosureTime ?? 0,
+            openingNumber: market.openingNumber,
+            closingNumber: market.closingNumber
+          };
+        });
+        setMarkets(transformedMarkets);
+      }
+    } catch (error) {
+      console.error('Error fetching markets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMarkets();
-    
-    // Refresh market data every 30 seconds
     const dataInterval = setInterval(fetchMarkets, 30000);
-    
     return () => clearInterval(dataInterval);
   }, []);
+
+  useRefreshOnMarketReset(fetchMarkets);
 
 
   return (

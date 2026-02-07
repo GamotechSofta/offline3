@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
 import MarketList from '../components/MarketList';
 import MarketForm from '../components/MarketForm';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
@@ -16,15 +17,6 @@ const Markets = () => {
     const navigate = useNavigate();
 
     const mainMarkets = useMemo(() => (markets || []).filter((m) => m.marketType !== 'startline'), [markets]);
-
-    useEffect(() => {
-        const admin = localStorage.getItem('admin');
-        if (!admin) {
-            navigate('/');
-            return;
-        }
-        fetchMarkets();
-    }, [navigate]);
 
     const fetchMarkets = async () => {
         try {
@@ -42,6 +34,17 @@ const Markets = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const admin = localStorage.getItem('admin');
+        if (!admin) {
+            navigate('/');
+            return;
+        }
+        fetchMarkets();
+    }, [navigate]);
+
+    useRefreshOnMarketReset(fetchMarkets);
 
     const handleLogout = () => {
         localStorage.removeItem('admin');

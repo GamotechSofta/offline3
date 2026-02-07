@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { FaArrowLeft, FaClock, FaHashtag, FaChartBar } from 'react-icons/fa';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
 
@@ -516,53 +517,57 @@ const MarketDetail = () => {
     const [statusView, setStatusView] = useState('open');
     const initialStatusSetForMarketId = React.useRef(null);
 
+    const fetchStats = async () => {
+        if (!marketId) return;
+        const headers = getAuthHeaders();
+        setLoading(true);
+        setError('');
+        setSinglePattiSummary(null);
+        try {
+            const [statsRes, summaryRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/markets/get-market-stats/${marketId}`, { headers }),
+                fetch(`${API_BASE_URL}/markets/get-single-patti-summary/${marketId}`, { headers }),
+            ]);
+            const statsJson = await statsRes.json();
+            if (!statsJson.success) {
+                setError(statsJson.message || 'Failed to load market detail');
+                setLoading(false);
+                return;
+            }
+            setData(statsJson.data);
+            const d = statsJson.data;
+            const hasOpenDeclared = d?.market?.openingNumber && /^\d{3}$/.test(String(d.market.openingNumber));
+            if (initialStatusSetForMarketId.current !== marketId) {
+                initialStatusSetForMarketId.current = marketId;
+            }
+            setStatusView(hasOpenDeclared ? 'closed' : 'open');
+            if (summaryRes.ok) {
+                const summaryJson = await summaryRes.json();
+                if (summaryJson.success && summaryJson.data) {
+                    setSinglePattiSummary(summaryJson.data);
+                } else {
+                    setSinglePattiSummary(null);
+                }
+            } else {
+                setSinglePattiSummary(null);
+            }
+        } catch (err) {
+            setError('Network error. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         const admin = localStorage.getItem('admin');
         if (!admin) {
             navigate('/');
             return;
         }
-        const headers = getAuthHeaders();
-        const fetchStats = async () => {
-            setLoading(true);
-            setError('');
-            setSinglePattiSummary(null);
-            try {
-                const [statsRes, summaryRes] = await Promise.all([
-                    fetch(`${API_BASE_URL}/markets/get-market-stats/${marketId}`, { headers }),
-                    fetch(`${API_BASE_URL}/markets/get-single-patti-summary/${marketId}`, { headers }),
-                ]);
-                const statsJson = await statsRes.json();
-                if (!statsJson.success) {
-                    setError(statsJson.message || 'Failed to load market detail');
-                    setLoading(false);
-                    return;
-                }
-                setData(statsJson.data);
-                const d = statsJson.data;
-                const hasOpenDeclared = d?.market?.openingNumber && /^\d{3}$/.test(String(d.market.openingNumber));
-                if (initialStatusSetForMarketId.current !== marketId) {
-                    initialStatusSetForMarketId.current = marketId;
-                    setStatusView(hasOpenDeclared ? 'closed' : 'open');
-                }
-                if (summaryRes.ok) {
-                    const summaryJson = await summaryRes.json();
-                    if (summaryJson.success && summaryJson.data) {
-                        setSinglePattiSummary(summaryJson.data);
-                    } else {
-                        setSinglePattiSummary(null);
-                    }
-                } else {
-                    setSinglePattiSummary(null);
-                }
-            } catch (err) {
-                setError('Network error. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchStats();
     }, [marketId, navigate]);
+
+    useRefreshOnMarketReset(fetchStats);
 
     const handleLogout = () => {
         localStorage.removeItem('admin');

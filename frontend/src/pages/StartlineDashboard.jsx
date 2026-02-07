@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 import { isPastClosingTime } from '../utils/marketTiming';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const formatTime = (time24) => {
   if (!time24) return '';
@@ -56,50 +57,48 @@ const StartlineDashboard = () => {
     } catch (_) {}
   }, [notifyOn]);
 
-  useEffect(() => {
-    let alive = true;
-    const fetchMarkets = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
-        const data = await res.json();
-        if (!alive) return;
-        if (data?.success && Array.isArray(data?.data)) {
-          const onlyStarline = data.data.filter((m) => {
-            if (m.marketType === 'startline') return true;
-            const name = (m?.marketName || '').toString().toLowerCase();
-            return name.includes('starline') || name.includes('startline') || name.includes('star line') || name.includes('start line');
-          });
-          const mapped = onlyStarline
-            .map((m) => {
-              const status = getMarketStatus(m);
-              return {
-                id: m._id,
-                marketName: m.marketName,
-                startingTime: m.startingTime,
-                closingTime: m.closingTime,
-                openingNumber: m.openingNumber || null,
-                closingNumber: m.closingNumber || null,
-                displayResult: m.displayResult || null,
-                status,
-              };
-            })
-            .sort((a, b) => String(a.startingTime || '').localeCompare(String(b.startingTime || '')));
-          setMarkets(mapped);
-        } else {
-          setMarkets([]);
-        }
-      } catch {
-        if (alive) setMarkets([]);
-      } finally {
-        if (alive) setLoading(false);
+  const fetchMarkets = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
+      const data = await res.json();
+      if (data?.success && Array.isArray(data?.data)) {
+        const onlyStarline = data.data.filter((m) => {
+          if (m.marketType === 'startline') return true;
+          const name = (m?.marketName || '').toString().toLowerCase();
+          return name.includes('starline') || name.includes('startline') || name.includes('star line') || name.includes('start line');
+        });
+        const mapped = onlyStarline
+          .map((m) => {
+            const status = getMarketStatus(m);
+            return {
+              id: m._id,
+              marketName: m.marketName,
+              startingTime: m.startingTime,
+              closingTime: m.closingTime,
+              openingNumber: m.openingNumber || null,
+              closingNumber: m.closingNumber || null,
+              displayResult: m.displayResult || null,
+              status,
+            };
+          })
+          .sort((a, b) => String(a.startingTime || '').localeCompare(String(b.startingTime || '')));
+        setMarkets(mapped);
+      } else {
+        setMarkets([]);
       }
-    };
+    } catch {
+      setMarkets([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMarkets();
-    return () => {
-      alive = false;
-    };
   }, []);
+
+  useRefreshOnMarketReset(fetchMarkets);
 
   const chips = [
     { title: 'Single Digit', range: '1-10' },

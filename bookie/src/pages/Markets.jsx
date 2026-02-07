@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { API_BASE_URL } from '../utils/api';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const Markets = () => {
     const [markets, setMarkets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
-    useEffect(() => {
-        fetchMarkets();
-    }, []);
 
     const fetchMarkets = async () => {
         try {
@@ -24,6 +21,12 @@ const Markets = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchMarkets();
+    }, []);
+
+    useRefreshOnMarketReset(fetchMarkets);
 
     // ***-**-*** → Open (green), 156-2*-*** → Running (green), 987-45-456 → Closed (red)
     const getMarketStatus = (market) => {

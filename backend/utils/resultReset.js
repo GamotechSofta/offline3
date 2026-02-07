@@ -88,12 +88,11 @@ let lastResultResetDate = null;
  */
 export async function ensureResultsResetForNewDay(Market) {
     const today = getTodayIST();
-    if (lastResultResetDate === null) {
-        lastResultResetDate = today;
-        return;
-    }
-    if (today <= lastResultResetDate) return;
+    // Same day already reset – skip
+    if (lastResultResetDate !== null && today <= lastResultResetDate) return;
 
+    // Midnight passed or server restart: save yesterday's results and clear all markets
+    // (Server restart after midnight: lastResultResetDate was null, so reset runs and clears declared results)
     // Preserve yesterday's results into MarketResult before clearing live data
     try {
         await saveYesterdaySnapshotsToHistory(Market);

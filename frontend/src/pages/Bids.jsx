@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 import { getRatesCurrent } from '../api/bets';
 import ResultDatePicker from '../components/ResultDatePicker';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const safeParse = (raw, fallback) => {
   try {
@@ -273,27 +274,76 @@ const Bids = () => {
 
   const [markets, setMarkets] = useState([]);
   const [ratesMap, setRatesMap] = useState(null);
+
+  const toDateKeyIST = (d) => {
+    try {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(d || new Date());
+    } catch {
+      return '';
+    }
+  };
+
+  const todayKey = useMemo(() => toDateKeyIST(new Date()), []);
+
+  const [resultsDate, setResultsDate] = useState(() => new Date());
+  const [resultsRows, setResultsRows] = useState([]);
+
+  const fetchMarkets = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
+      const data = await res.json();
+      if (data?.success && Array.isArray(data?.data)) {
+        setMarkets(data.data);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      const dateKey = toDateKeyIST(resultsDate) || toDateKeyIST(new Date());
+      const res = await fetch(`${API_BASE_URL}/markets/result-history?date=${encodeURIComponent(dateKey)}`);
+      const data = await res.json();
+      if (data?.success && Array.isArray(data?.data)) {
+        const mapped = data.data.map((x) => ({
+          id: x?._id || `${x?.marketId || ''}-${x?.dateKey || ''}`,
+          name: (x?.marketName || '').toString().trim(),
+          result: (x?.displayResult || '***-**-***').toString().trim(),
+        })).filter((x) => x.name);
+        mapped.sort((a, b) => a.name.localeCompare(b.name));
+        setResultsRows(mapped);
+      } else {
+        setResultsRows([]);
+      }
+    } catch {
+      setResultsRows([]);
+    }
+  };
+
+  const refetchAll = async () => {
+    await Promise.all([fetchMarkets(), fetchHistory()]);
+  };
+
   useEffect(() => {
     let alive = true;
-    const fetchMarkets = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
-        const data = await res.json();
-        if (!alive) return;
-        if (data?.success && Array.isArray(data?.data)) {
-          setMarkets(data.data);
-        }
-      } catch {
-        // ignore
-      }
+    const run = async () => {
+      await fetchMarkets();
     };
-    fetchMarkets();
-    const id = setInterval(fetchMarkets, 30000);
+    run();
+    const id = setInterval(run, 30000);
     return () => {
       alive = false;
       clearInterval(id);
     };
   }, []);
+
+  useRefreshOnMarketReset(refetchAll);
   useEffect(() => {
     let alive = true;
     getRatesCurrent().then((result) => {
@@ -311,23 +361,6 @@ const Bids = () => {
     return map;
   }, [markets]);
 
-  const toDateKeyIST = (d) => {
-    try {
-      return new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'Asia/Kolkata',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(d); // YYYY-MM-DD
-    } catch {
-      return '';
-    }
-  };
-  const todayKey = useMemo(() => toDateKeyIST(new Date()), []);
-
-  const [resultsRows, setResultsRows] = useState([]);
-
-  const [resultsDate, setResultsDate] = useState(() => new Date());
   useEffect(() => {
     const k = toDateKeyIST(resultsDate);
     if (k && k > todayKey) setResultsDate(new Date());
@@ -335,29 +368,11 @@ const Bids = () => {
 
   useEffect(() => {
     let alive = true;
-    const fetchHistory = async () => {
-      try {
-        const dateKey = toDateKeyIST(resultsDate) || todayKey;
-        const res = await fetch(`${API_BASE_URL}/markets/result-history?date=${encodeURIComponent(dateKey)}`);
-        const data = await res.json();
-        if (!alive) return;
-        if (data?.success && Array.isArray(data?.data)) {
-          const mapped = data.data.map((x) => ({
-            id: x?._id || `${x?.marketId || ''}-${x?.dateKey || ''}`,
-            name: (x?.marketName || '').toString().trim(),
-            result: (x?.displayResult || '***-**-***').toString().trim(),
-          })).filter((x) => x.name);
-          mapped.sort((a, b) => a.name.localeCompare(b.name));
-          setResultsRows(mapped);
-        } else {
-          setResultsRows([]);
-        }
-      } catch {
-        setResultsRows([]);
-      }
+    const run = async () => {
+      await fetchHistory();
     };
-    fetchHistory();
-    const id = setInterval(fetchHistory, 30000);
+    run();
+    const id = setInterval(run, 30000);
     return () => {
       alive = false;
       clearInterval(id);

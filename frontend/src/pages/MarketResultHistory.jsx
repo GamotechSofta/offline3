@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 import ResultDatePicker from '../components/ResultDatePicker';
+import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const toDateKeyIST = (d) => {
   try {
@@ -36,26 +37,31 @@ const MarketResultHistory = () => {
     if (k && k > todayKey) setSelectedDate(new Date());
   }, [selectedDate, todayKey]);
 
+  const fetchResults = async () => {
+    try {
+      const dateKey = toDateKeyIST(selectedDate) || todayKey;
+      const res = await fetch(`${API_BASE_URL}/markets/result-history?date=${encodeURIComponent(dateKey)}`);
+      const data = await res.json();
+      if (data?.success && Array.isArray(data?.data)) setResults(data.data);
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     let alive = true;
-    const fetchResults = async () => {
-      try {
-        const dateKey = toDateKeyIST(selectedDate) || todayKey;
-        const res = await fetch(`${API_BASE_URL}/markets/result-history?date=${encodeURIComponent(dateKey)}`);
-        const data = await res.json();
-        if (!alive) return;
-        if (data?.success && Array.isArray(data?.data)) setResults(data.data);
-      } catch {
-        // ignore
-      }
+    const run = async () => {
+      await fetchResults();
     };
-    fetchResults();
-    const id = setInterval(fetchResults, 30000);
+    run();
+    const id = setInterval(run, 30000);
     return () => {
       alive = false;
       clearInterval(id);
     };
   }, [selectedDate, todayKey]);
+
+  useRefreshOnMarketReset(fetchResults);
 
   const rows = useMemo(() => {
     const list = Array.isArray(results) ? results : [];
