@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
@@ -10,6 +10,7 @@ const SingleDigitBid = ({ market, title }) => {
     const [bids, setBids] = useState([]);
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
+    const pointsInputRef = useRef(null);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
@@ -88,8 +89,14 @@ const SingleDigitBid = ({ market, title }) => {
     };
 
     const handleNumberInputChange = (e) => {
+        const prevLen = (inputNumber ?? '').toString().length;
         const digit = e.target.value.replace(/\D/g, '').slice(-1);
         setInputNumber(digit);
+        if (digit && digit.length === 1 && prevLen === 0) {
+            window.requestAnimationFrame(() => {
+                pointsInputRef.current?.focus?.();
+            });
+        }
     };
 
     const handleAddSpecialModeBids = () => {
@@ -207,6 +214,7 @@ const SingleDigitBid = ({ market, title }) => {
                         <div className="flex flex-row items-center gap-2">
                             <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                             <input
+                                ref={pointsInputRef}
                                 type="text"
                                 inputMode="numeric"
                                 value={inputPoints}

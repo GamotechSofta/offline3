@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
@@ -20,11 +20,13 @@ const EasyModeBid = ({
     validSinglePanas = [],
 }) => {
     const [activeTab, setActiveTab] = useState('easy'); // easy | special
-    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
+    const lockSessionToOpen = specialModeType === 'jodi';
+    const [session, setSession] = useState(() => (lockSessionToOpen ? 'OPEN' : (market?.status === 'running' ? 'CLOSE' : 'OPEN')));
     const [bids, setBids] = useState([]);
     const [reviewRows, setReviewRows] = useState([]);
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
+    const pointsInputRef = useRef(null);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [matchingPanas, setMatchingPanas] = useState([]);
@@ -63,8 +65,12 @@ const EasyModeBid = ({
 
     const isRunning = market?.status === 'running'; // "CLOSED IS RUNNING"
     useEffect(() => {
+        if (lockSessionToOpen) {
+            if (session !== 'OPEN') setSession('OPEN');
+            return;
+        }
         if (isRunning) setSession('CLOSE');
-    }, [isRunning]);
+    }, [isRunning, lockSessionToOpen, session]);
 
     const jodiNumbers = useMemo(
         () => Array.from({ length: 100 }, (_, i) => String(i).padStart(2, '0')),
@@ -300,17 +306,37 @@ const EasyModeBid = ({
 
     const handleNumberInputChange = (e) => {
         const val = e.target.value;
+        const prevLen = (inputNumber ?? '').toString().length;
+        const focusPointsIfComplete = (nextVal) => {
+            if (!maxLength) return;
+            const nextLen = (nextVal ?? '').toString().length;
+            if (nextLen === maxLength && nextLen > prevLen) {
+                // Only move focus if the number is valid
+                const ok = isValid(nextVal);
+                if (!ok) {
+                    // Show warning here itself; don't jump to points
+                    showWarning(maxLength === 2 ? 'Invalid Digit. Use 00-99.' : 'Invalid number.');
+                    return;
+                }
+                window.requestAnimationFrame(() => {
+                    pointsInputRef.current?.focus?.();
+                });
+            }
+        };
         if (maxLength === 1) {
             const digit = val.replace(/\D/g, '').slice(-1);
             setInputNumber(digit);
+            focusPointsIfComplete(digit);
         } else if (maxLength === 2) {
             // Allow only 2 digits (00-99) and keep leading zeros
             const twoDigits = val.replace(/\D/g, '').slice(0, 2);
             setInputNumber(twoDigits);
+            focusPointsIfComplete(twoDigits);
         } else if (maxLength === 3) {
             // Allow only 3 digits
             const threeDigits = val.replace(/\D/g, '').slice(0, 3);
             setInputNumber(threeDigits);
+            focusPointsIfComplete(threeDigits);
         } else {
             setInputNumber(val);
         }
@@ -321,6 +347,9 @@ const EasyModeBid = ({
     const dateText = new Date().toLocaleDateString('en-GB'); // dd/mm/yyyy
     const marketTitle = market?.gameName || market?.marketName || title;
     const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+    const showInvalidNumberStyle = maxLength === 3; // Pana inputs
+    const isNumberComplete = !!inputNumber && (!!maxLength ? String(inputNumber).length === maxLength : true);
+    const isNumberInvalid = showInvalidNumberStyle && isNumberComplete && !isValid(inputNumber);
 
     // Calculate total points betted for each sum (0-9) for double pana
     const pointsBySum = useMemo(() => {
@@ -416,12 +445,14 @@ const EasyModeBid = ({
                     <select
                         value={session}
                         onChange={(e) => setSession(e.target.value)}
-                        disabled={isRunning}
+                        disabled={isRunning || lockSessionToOpen}
                         className={`w-full appearance-none bg-[#202124] border border-white/10 text-white font-bold text-sm py-3 sm:py-2.5 min-h-[44px] px-4 ${
                             specialModeType === 'jodi' && activeTab === 'special' ? 'pr-12' : ''
-                        } rounded-full text-center focus:outline-none focus:border-[#d4af37] ${isRunning ? 'opacity-80 cursor-not-allowed' : ''}`}
+                        } rounded-full text-center focus:outline-none focus:border-[#d4af37] ${(isRunning || lockSessionToOpen) ? 'opacity-80 cursor-not-allowed' : ''}`}
                     >
-                        {isRunning ? (
+                        {lockSessionToOpen ? (
+                            <option value="OPEN">OPEN</option>
+                        ) : isRunning ? (
                             <option value="CLOSE">CLOSE</option>
                         ) : (
                             <>
@@ -534,7 +565,7 @@ const EasyModeBid = ({
             betType,
             betNumber: String(r?.number ?? '').trim(),
             amount: Number(r?.points) || 0,
-            betOn: String(r?.type || session).toUpperCase() === 'CLOSE' ? 'close' : 'open',
+            betOn: lockSessionToOpen ? 'open' : (String(r?.type || session).toUpperCase() === 'CLOSE' ? 'close' : 'open'),
         })).filter((b) => b.betNumber && b.amount > 0);
         if (!payload.length) throw new Error('No valid bets to place');
         
@@ -560,6 +591,8 @@ const EasyModeBid = ({
             totalPoints={totalPoints}
             session={session}
             setSession={setSession}
+            sessionOptionsOverride={lockSessionToOpen ? ['OPEN'] : null}
+            lockSessionSelect={lockSessionToOpen}
             hideFooter={!showFooterSubmit}
             walletBalance={walletBefore}
             onSubmit={() => {
@@ -646,6 +679,7 @@ const EasyModeBid = ({
                                             <div className="flex flex-row items-center gap-2">
                                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                                 <input
+                                                    ref={pointsInputRef}
                                                     type="text"
                                                     inputMode="numeric"
                                                     value={inputPoints}
@@ -794,12 +828,15 @@ const EasyModeBid = ({
                             onChange={handleNumberInputChange}
                             placeholder={labelKey}
                             maxLength={maxLength}
-                            className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
+                            className={`flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
+                                isNumberInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-[#d4af37] focus:border-[#d4af37]'
+                            }`}
                         />
                     </div>
                     <div className="flex flex-row items-center gap-2">
                         <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                         <input
+                                            ref={pointsInputRef}
                                             type="text"
                                             inputMode="numeric"
                                             value={inputPoints}

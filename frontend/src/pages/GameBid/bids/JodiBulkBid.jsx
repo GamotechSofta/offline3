@@ -8,7 +8,7 @@ const DIGITS = Array.from({ length: 10 }, (_, i) => String(i));
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
 const JodiBulkBid = ({ market, title }) => {
-    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
+    const [session, setSession] = useState('OPEN');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
@@ -44,10 +44,10 @@ const JodiBulkBid = ({ market, title }) => {
         showWarning._t = window.setTimeout(() => setWarning(''), 2400);
     };
 
-    const isRunning = market?.status === 'running'; // "CLOSED IS RUNNING"
     useEffect(() => {
-        if (isRunning) setSession('CLOSE');
-    }, [isRunning]);
+        // Jodi: allow OPEN only (no CLOSE bets)
+        if (session !== 'OPEN') setSession('OPEN');
+    }, [session]);
 
     // cell values: key "rc" (row digit + col digit) => points string
     const [cells, setCells] = useState(() => {
@@ -169,7 +169,7 @@ const JodiBulkBid = ({ market, title }) => {
             betType: 'jodi',
             betNumber: String(r.number),
             amount: Number(r.points) || 0,
-            betOn: String(r?.type || session).toUpperCase() === 'CLOSE' ? 'close' : 'open',
+            betOn: 'open',
         }));
         
         // Check if date is in the future (scheduled bet)
@@ -194,6 +194,8 @@ const JodiBulkBid = ({ market, title }) => {
             totalPoints={totalPoints}
             session={session}
             setSession={setSession}
+            sessionOptionsOverride={['OPEN']}
+            lockSessionSelect
             // Desktop only: make date ~1/3 width and keep controls same height
             dateSessionGridClassName="md:grid-cols-[1fr_2fr]"
             dateSessionControlClassName="md:min-h-[52px] md:text-base"

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
@@ -23,6 +23,9 @@ const FullSangamBid = ({ market, title }) => {
     const [openPana, setOpenPana] = useState('');
     const [closePana, setClosePana] = useState('');
     const [points, setPoints] = useState('');
+    const pointsInputRef = useRef(null);
+    const [openPanaInvalid, setOpenPanaInvalid] = useState(false);
+    const [closePanaInvalid, setClosePanaInvalid] = useState(false);
     const [bids, setBids] = useState([]);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
@@ -207,14 +210,20 @@ const FullSangamBid = ({ market, title }) => {
                                     type="text"
                                     inputMode="numeric"
                                     value={openPana}
-                                    onChange={(e) => setOpenPana(sanitizeDigits(e.target.value, 3))}
+                                    onChange={(e) => {
+                                        const next = sanitizeDigits(e.target.value, 3);
+                                        setOpenPana(next);
+                                        setOpenPanaInvalid(!!next && next.length === 3 && !isValidAnyPana(next));
+                                    }}
                                     onBlur={() => {
                                         if (openPana && openPana.length === 3 && !isValidAnyPana(openPana)) {
                                             showWarning('Open Pana must be a valid Single / Double / Triple Pana (3 digits).');
                                         }
                                     }}
                                     placeholder="Pana"
-                                    className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
+                                    className={`flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
+                                        openPanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-[#d4af37] focus:border-[#d4af37]'
+                                    }`}
                                 />
                             </div>
 
@@ -224,20 +233,37 @@ const FullSangamBid = ({ market, title }) => {
                                     type="text"
                                     inputMode="numeric"
                                     value={closePana}
-                                    onChange={(e) => setClosePana(sanitizeDigits(e.target.value, 3))}
+                                    onChange={(e) => {
+                                        const prevLen = (closePana ?? '').toString().length;
+                                        const next = sanitizeDigits(e.target.value, 3);
+                                        setClosePana(next);
+                                        setClosePanaInvalid(!!next && next.length === 3 && !isValidAnyPana(next));
+                                        if (next.length === 3 && prevLen < 3) {
+                                            if (!isValidAnyPana(next)) {
+                                                showWarning('Close Pana must be a valid Single / Double / Triple Pana (3 digits).');
+                                                return;
+                                            }
+                                            window.requestAnimationFrame(() => {
+                                                pointsInputRef.current?.focus?.();
+                                            });
+                                        }
+                                    }}
                                     onBlur={() => {
                                         if (closePana && closePana.length === 3 && !isValidAnyPana(closePana)) {
                                             showWarning('Close Pana must be a valid Single / Double / Triple Pana (3 digits).');
                                         }
                                     }}
                                     placeholder="Pana"
-                                    className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
+                                    className={`flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
+                                        closePanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-[#d4af37] focus:border-[#d4af37]'
+                                    }`}
                                 />
                             </div>
 
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-40">Enter Points:</label>
                                 <input
+                                    ref={pointsInputRef}
                                     type="text"
                                     inputMode="numeric"
                                     value={points}

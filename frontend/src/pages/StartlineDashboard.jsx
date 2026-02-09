@@ -141,7 +141,7 @@ const StartlineDashboard = () => {
               </svg>
             </button>
             <div className="text-lg sm:text-xl font-extrabold tracking-wide truncate">
-              STARTLINE DASHBOARD
+              STARLINE DASHBOARD
             </div>
           </div>
 

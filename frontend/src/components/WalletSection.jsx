@@ -188,7 +188,9 @@ const WalletSection = () => {
               <div className="h-10 w-10 min-[375px]:h-12 min-[375px]:w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-lg min-[375px]:rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#f2c14e] to-[#d4af37] text-[#4b3608] flex items-center justify-center text-lg min-[375px]:text-xl sm:text-2xl md:text-3xl font-bold shadow-[0_6px_16px_rgba(242,193,78,0.4)] shrink-0">
                 ★
               </div>
-              <p className="text-white text-xs min-[375px]:text-sm sm:text-base md:text-lg font-bold truncate">STARTLINE</p>
+              <p className="text-white text-xs min-[375px]:text-sm sm:text-base md:text-lg font-bold leading-tight whitespace-normal break-words">
+                STARLINE
+              </p>
             </div>
             <span className="text-white/30 text-xl sm:text-2xl group-hover:text-yellow-500/60 transition-colors">›</span>
           </div>
@@ -203,7 +205,9 @@ const WalletSection = () => {
               <div className="h-10 w-10 min-[375px]:h-12 min-[375px]:w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-lg min-[375px]:rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#e8e1ff] to-[#d4c5ff] text-[#4a3c9a] flex items-center justify-center text-lg min-[375px]:text-xl sm:text-2xl md:text-3xl shadow-[0_6px_16px_rgba(232,225,255,0.4)] shrink-0">
                 🎲
               </div>
-              <p className="text-white text-xs min-[375px]:text-sm sm:text-base md:text-lg font-bold truncate">KING BAZAAR</p>
+              <p className="text-white text-xs min-[375px]:text-sm sm:text-base md:text-lg font-bold leading-tight whitespace-normal break-words">
+                KING BAZAAR
+              </p>
             </div>
             <span className="text-white/30 text-xl sm:text-2xl group-hover:text-purple-500/60 transition-colors">›</span>
           </div>

@@ -195,7 +195,7 @@ const HeroSection = () => {
                 </svg>
               </div>
               <span className="text-sm font-extrabold flex-1 text-left tracking-wide text-white">
-                STARTLINE
+                STARLINE
               </span>
               <svg className="w-5 h-5 shrink-0 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
@@ -15,6 +15,7 @@ const TriplePanaBid = ({ market, title }) => {
     const [bids, setBids] = useState([]);
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
+    const pointsInputRef = useRef(null);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
@@ -190,8 +191,16 @@ const TriplePanaBid = ({ market, title }) => {
 
         // typing path: if user types at least one digit, snap to triple
         const d = raw[0];
-        setInputNumber(`${d}${d}${d}`);
+        const nextVal = `${d}${d}${d}`;
+        const prevVal = (inputNumber ?? '').toString();
+        setInputNumber(nextVal);
+        if (nextVal.length === 3 && prevVal !== nextVal) {
+            window.requestAnimationFrame(() => {
+                pointsInputRef.current?.focus?.();
+            });
+        }
     };
+    const isPanaInvalid = !!inputNumber && inputNumber.length === 3 && !isValidTriplePana(inputNumber);
 
     const modeTabs = (
         <div className="grid grid-cols-2 gap-3">
@@ -303,12 +312,15 @@ const TriplePanaBid = ({ market, title }) => {
                                         onChange={handleNumberInputChange}
                                         placeholder="Pana"
                                         maxLength={3}
-                                        className="flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none"
+                                        className={`flex-1 min-w-0 bg-[#202124] border border-white/10 text-white placeholder-gray-500 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
+                                            isPanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-[#d4af37] focus:border-[#d4af37]'
+                                        }`}
                                     />
                                 </div>
                                 <div className="flex flex-row items-center gap-2">
                                     <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                     <input
+                                        ref={pointsInputRef}
                                         type="text"
                                         inputMode="numeric"
                                         value={inputPoints}
