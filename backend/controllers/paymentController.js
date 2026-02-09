@@ -5,6 +5,7 @@ import Admin from '../models/admin/admin.js';
 import bcrypt from 'bcryptjs';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
 // ============ CONFIG API ============
 
@@ -54,10 +55,18 @@ export const createDepositRequest = async (req, res) => {
             });
         }
 
-        // Handle screenshot file if uploaded
+        // Upload screenshot to Cloudinary if provided
         let screenshotUrl = null;
         if (req.file) {
-            screenshotUrl = `/uploads/payments/${req.file.filename}`;
+            try {
+                const result = await uploadToCloudinary(req.file.buffer, 'payments');
+                screenshotUrl = result.secure_url;
+            } catch (uploadError) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to upload screenshot. Please try again.',
+                });
+            }
         }
 
         const payment = await Payment.create({

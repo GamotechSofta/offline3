@@ -107,10 +107,10 @@ const HelpDesk = () => {
                                             <button
                                                 key={i}
                                                 type="button"
-                                                onClick={() => setFullScreenImage(`${BASE_URL}${s}`)}
+                                                onClick={() => setFullScreenImage(s.startsWith('http') ? s : `${BASE_URL}${s}`)}
                                                 className="w-full h-32 rounded border border-gray-700 overflow-hidden focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                                             >
-                                                <img src={`${BASE_URL}${s}`} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover cursor-pointer" />
+                                                <img src={s.startsWith('http') ? s : `${BASE_URL}${s}`} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover cursor-pointer" />
                                             </button>
                                         ))}
                                     </div>

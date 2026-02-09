@@ -183,7 +183,7 @@ const AddFundHistory = () => {
                             {deposit.screenshotUrl && (
                                 <div className="mt-3">
                                     <a
-                                        href={`${API_BASE_URL.replace('/api/v1', '')}${deposit.screenshotUrl}`}
+                                        href={deposit.screenshotUrl.startsWith('http') ? deposit.screenshotUrl : `${API_BASE_URL.replace('/api/v1', '')}${deposit.screenshotUrl}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-2 text-blue-400 text-sm hover:text-blue-300"

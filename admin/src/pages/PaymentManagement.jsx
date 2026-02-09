@@ -408,7 +408,7 @@ const PaymentManagement = () => {
                                                             <button
                                                                 onClick={() => setImageModal({ 
                                                                     show: true, 
-                                                                    url: `${API_BASE_URL.replace('/api/v1', '')}${payment.screenshotUrl}` 
+                                                                    url: payment.screenshotUrl.startsWith('http') ? payment.screenshotUrl : `${API_BASE_URL.replace('/api/v1', '')}${payment.screenshotUrl}` 
                                                                 })}
                                                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-600/20 border border-blue-500/40 rounded text-xs text-blue-400 hover:bg-blue-600/30 transition-colors"
                                                                 title="View screenshot"
@@ -559,12 +559,12 @@ const PaymentManagement = () => {
                             <div className="mb-4">
                                 <p className="text-gray-400 text-sm mb-2">Payment Screenshot:</p>
                                 <img
-                                    src={`${API_BASE_URL.replace('/api/v1', '')}${actionModal.payment.screenshotUrl}`}
+                                    src={actionModal.payment.screenshotUrl.startsWith('http') ? actionModal.payment.screenshotUrl : `${API_BASE_URL.replace('/api/v1', '')}${actionModal.payment.screenshotUrl}`}
                                     alt="Payment proof"
                                     className="w-full max-h-48 object-contain rounded-lg border border-gray-700 cursor-pointer"
                                     onClick={() => setImageModal({ 
                                         show: true, 
-                                        url: `${API_BASE_URL.replace('/api/v1', '')}${actionModal.payment.screenshotUrl}` 
+                                        url: actionModal.payment.screenshotUrl.startsWith('http') ? actionModal.payment.screenshotUrl : `${API_BASE_URL.replace('/api/v1', '')}${actionModal.payment.screenshotUrl}` 
                                     })}
                                 />
                             </div>
@@ -821,12 +821,12 @@ const PaymentManagement = () => {
                                     <div className="mt-4">
                                         <p className="text-gray-500 text-sm mb-2">Payment Screenshot:</p>
                                         <img
-                                            src={`${API_BASE_URL.replace('/api/v1', '')}${detailModal.payment.screenshotUrl}`}
+                                            src={detailModal.payment.screenshotUrl.startsWith('http') ? detailModal.payment.screenshotUrl : `${API_BASE_URL.replace('/api/v1', '')}${detailModal.payment.screenshotUrl}`}
                                             alt="Payment proof"
                                             className="w-full max-h-60 object-contain rounded-lg border border-gray-700 cursor-pointer"
                                             onClick={() => setImageModal({ 
                                                 show: true, 
-                                                url: `${API_BASE_URL.replace('/api/v1', '')}${detailModal.payment.screenshotUrl}` 
+                                                url: detailModal.payment.screenshotUrl.startsWith('http') ? detailModal.payment.screenshotUrl : `${API_BASE_URL.replace('/api/v1', '')}${detailModal.payment.screenshotUrl}` 
                                             })}
                                         />
                                     </div>

@@ -4,22 +4,10 @@ import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = 'uploads/help-desk';
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    },
-});
+// Configure multer with memory storage for Cloudinary uploads
+const storage = multer.memoryStorage();
 
 export const upload = multer({
     storage,
@@ -38,7 +26,23 @@ export const upload = multer({
 export const createTicket = async (req, res) => {
     try {
         const { userId, subject, description } = req.body;
-        const screenshots = req.files ? req.files.map(file => `/uploads/help-desk/${file.filename}`) : [];
+
+        // Upload screenshots to Cloudinary
+        let screenshots = [];
+        if (req.files && req.files.length > 0) {
+            try {
+                const uploadPromises = req.files.map(file =>
+                    uploadToCloudinary(file.buffer, 'help-desk')
+                );
+                const results = await Promise.all(uploadPromises);
+                screenshots = results.map(result => result.secure_url);
+            } catch (uploadError) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to upload screenshots. Please try again.',
+                });
+            }
+        }
 
         if (!userId || !subject || !description) {
             return res.status(400).json({
