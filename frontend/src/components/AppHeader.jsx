@@ -14,7 +14,7 @@ const AppHeader = () => {
     { label: 'Funds', path: '/funds' },
     { label: 'Home', path: '/' },
     { label: 'Profile', path: '/profile' },
-    { label: 'Top Winners', path: '/support' },
+    { label: 'Top Winners', path: '/top-winners' },
     { label: 'Starline Winners', path: '/support' },
     { label: 'Telegram Channel', path: '/support' },
     { label: 'Notification', path: '/support' },
