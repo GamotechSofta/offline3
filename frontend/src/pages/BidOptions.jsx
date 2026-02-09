@@ -6,7 +6,15 @@ const BidOptions = () => {
   const location = useLocation();
   const market = location.state?.market;
   const marketType = (location.state?.marketType || '').toString().trim().toLowerCase();
-  const isStarline = marketType === 'starline' || marketType === 'startline' || marketType === 'star-line';
+  const inferredStarline = (() => {
+    const t = marketType;
+    if (t === 'starline' || t === 'startline' || t === 'star-line') return true;
+    const mType = (market?.marketType || '').toString().trim().toLowerCase();
+    if (mType === 'startline' || mType === 'starline') return true;
+    const name = (market?.marketName || market?.gameName || '').toString().toLowerCase();
+    return name.includes('starline') || name.includes('startline') || name.includes('star line') || name.includes('start line');
+  })();
+  const isStarline = inferredStarline;
 
   // Redirect to home if no market (direct URL access or refresh)
   useEffect(() => {

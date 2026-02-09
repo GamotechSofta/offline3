@@ -21,6 +21,7 @@ import StarlineBetHistory from '../pages/StarlineBetHistory';
 import MarketResultHistory from '../pages/MarketResultHistory';
 import StartlineDashboard from '../pages/StartlineDashboard';
 import TopWinners from '../pages/TopWinners';
+import StarlineMarket from '../pages/StarlineMarket';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -169,6 +170,7 @@ const AppRoutes = () => {
           <Route path="/starline-bet-history" element={<StarlineBetHistory />} />
           <Route path="/market-result-history" element={<MarketResultHistory />} />
           <Route path="/startline-dashboard" element={<StartlineDashboard />} />
+          <Route path="/starline-market" element={<StarlineMarket />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/top-winners" element={<TopWinners />} />
         </Routes>

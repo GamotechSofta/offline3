@@ -4,18 +4,6 @@ import { API_BASE_URL } from '../config/api';
 import { isPastClosingTime } from '../utils/marketTiming';
 import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
-const formatTime = (time24) => {
-  if (!time24) return '';
-  const [hours, minutes] = String(time24).split(':');
-  const hour = parseInt(hours, 10);
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  const hour12 = hour % 12 || 12;
-  return `${hour12}:${minutes} ${ampm}`;
-};
-
-const sumDigits = (s) => [...String(s)].reduce((acc, c) => acc + (Number(c) || 0), 0);
-const openDigit = (open3) => (open3 && /^\d{3}$/.test(String(open3)) ? String(sumDigits(open3) % 10) : '*');
-
 const getMarketStatus = (market) => {
   if (isPastClosingTime(market)) return 'closed';
   const hasOpening = market.openingNumber && /^\d{3}$/.test(String(market.openingNumber));
@@ -29,8 +17,6 @@ const getMarketStatus = (market) => {
 
 const StartlineDashboard = () => {
   const navigate = useNavigate();
-  const [notifyOn, setNotifyOn] = useState(false);
-  const [warning, setWarning] = useState('');
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,19 +29,6 @@ const StartlineDashboard = () => {
       return '0';
     }
   }, []);
-
-  useEffect(() => {
-    try {
-      const v = localStorage.getItem('startlineNotifyOn');
-      setNotifyOn(v === '1');
-    } catch (_) {}
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('startlineNotifyOn', notifyOn ? '1' : '0');
-    } catch (_) {}
-  }, [notifyOn]);
 
   const fetchMarkets = async () => {
     try {
@@ -100,28 +73,20 @@ const StartlineDashboard = () => {
 
   useRefreshOnMarketReset(fetchMarkets);
 
-  const chips = [
-    { title: 'Single Digit', range: '1-10' },
-    { title: 'Double Pana', range: '1-320' },
-    { title: 'Single Pana', range: '1-160' },
-    { title: 'Triple Pana', range: '1-900' },
-  ];
-
-  // Static fallback cards (when backend has no starline markets yet)
-  const fallbackMarkets = useMemo(() => ([
-    { id: 'sl-0100', marketName: 'STARLINE 01:00 AM', startingTime: '01:00', closingTime: '01:00', openingNumber: null, closingNumber: null, status: 'open' },
-    { id: 'sl-1800', marketName: 'STARLINE 06:00 PM', startingTime: '18:00', closingTime: '18:00', openingNumber: null, closingNumber: null, status: 'closed' },
-    { id: 'sl-1900', marketName: 'STARLINE 07:00 PM', startingTime: '19:00', closingTime: '19:00', openingNumber: null, closingNumber: null, status: 'closed' },
-    { id: 'sl-2000', marketName: 'STARLINE 08:00 PM', startingTime: '20:00', closingTime: '20:00', openingNumber: null, closingNumber: null, status: 'running' },
-    { id: 'sl-2100', marketName: 'STARLINE 09:00 PM', startingTime: '21:00', closingTime: '21:00', openingNumber: null, closingNumber: null, status: 'running' },
-    { id: 'sl-2200', marketName: 'STARLINE 10:00 PM', startingTime: '22:00', closingTime: '22:00', openingNumber: null, closingNumber: null, status: 'open' },
-    { id: 'sl-2300', marketName: 'STARLINE 11:00 PM', startingTime: '23:00', closingTime: '23:00', openingNumber: null, closingNumber: null, status: 'open' },
+  const starlineMenuMarkets = useMemo(() => ([
+    { key: 'kalyan', label: 'Kalyan Starline' },
+    { key: 'milan', label: 'Milan Starline' },
+    { key: 'radha', label: 'Radha Starline' },
   ]), []);
 
-  const showWarning = (msg) => {
-    setWarning(msg);
-    window.clearTimeout(showWarning._t);
-    showWarning._t = window.setTimeout(() => setWarning(''), 2200);
+  const openStarlineMarket = (key) => {
+    const label = starlineMenuMarkets.find((m) => m.key === key)?.label || 'Starline';
+    navigate('/starline-market', {
+      state: {
+        marketKey: key,
+        marketLabel: label,
+      },
+    });
   };
 
   return (
@@ -162,149 +127,42 @@ const StartlineDashboard = () => {
 
         <div className="mt-4 h-px bg-white/10" />
 
-        {/* History + Notification toggle row */}
-        <div className="mt-3 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => navigate('/bids?tab=starline-bet-history')}
-            className="flex items-center gap-3 text-white/80 hover:text-white transition-colors"
-          >
-            <div className="w-10 h-10 rounded-2xl bg-[#202124] border border-white/10 flex items-center justify-center">
-              <svg className="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <span className="text-base font-semibold">History</span>
-          </button>
-
-          <div className="flex items-center gap-3">
-            <span className="text-base text-white/70">Notification</span>
-            <button
-              type="button"
-              onClick={() => setNotifyOn((v) => !v)}
-              className={`w-14 h-8 rounded-full border transition-colors ${
-                notifyOn ? 'bg-[#25d366]/25 border-[#25d366]/40' : 'bg-[#202124] border-white/10'
-              }`}
-              aria-label="Toggle notifications"
-            >
-              <div
-                className={`h-7 w-7 rounded-full bg-white transition-transform ${
-                  notifyOn ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Chips */}
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {chips.map((c) => (
-            <div
-              key={c.title}
-              className="rounded-2xl bg-[#202124] border border-white/10 px-4 py-3 flex items-center justify-between shadow-[0_10px_22px_rgba(0,0,0,0.35)]"
-            >
-              <div className="font-semibold text-white">{c.title}</div>
-              <div className="font-extrabold text-[#d4af37]">{c.range}</div>
+        {/* 3 Starline markets (as per screenshot) */}
+        <div className="mt-5 grid grid-cols-3 gap-3">
+          {starlineMenuMarkets.map((m) => (
+            <div key={m.key} className="text-center">
+              <button
+                type="button"
+                onClick={() => openStarlineMarket(m.key)}
+                className="group w-full rounded-2xl border border-white/10 bg-[#202124] px-2.5 py-3 shadow-[0_10px_22px_rgba(0,0,0,0.35)] hover:border-[#d4af37]/40 hover:bg-[#222] active:scale-[0.98] transition-all"
+                aria-label={m.label}
+              >
+                <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f2c14e] to-[#d4af37] border border-black/20 flex items-center justify-center text-[#4b3608] shadow-[0_8px_18px_rgba(242,193,78,0.22)]">
+                  {m.key === 'kalyan' ? (
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  ) : m.key === 'milan' ? (
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 12a8 8 0 1016 0 8 8 0 00-16 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3l2.6 5.27 5.8.84-4.2 4.09 1 5.8L12 16.9 6.8 19l1-5.8-4.2-4.09 5.8-.84L12 3z" />
+                    </svg>
+                  )}
+                </div>
+                <div className="mt-2 text-[10px] min-[375px]:text-[11px] font-semibold text-[#d4af37]/90">
+                  Click to Play Game
+                </div>
+              </button>
+              <div className="mt-2 text-[11px] min-[375px]:text-xs font-semibold text-white/90 leading-tight">
+                {m.label}
+              </div>
             </div>
           ))}
-        </div>
-
-        {/* List */}
-        <div className="mt-4 space-y-3">
-          {warning ? (
-            <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-center text-red-200 text-sm">
-              {warning}
-            </div>
-          ) : null}
-          {loading ? (
-            <div className="rounded-2xl border border-white/10 bg-[#202124] p-6 text-center text-gray-300">
-              Loading...
-            </div>
-          ) : (
-            (markets.length ? markets : fallbackMarkets).map((m) => {
-              const timeLabel = formatTime(m.startingTime) || '-';
-              const closedText = m.status === 'closed' ? 'Close for today' : m.status === 'running' ? 'Running' : 'Open';
-              const pill = (m.displayResult && String(m.displayResult).includes(' - '))
-                ? String(m.displayResult)
-                : `${m.openingNumber && /^\d{3}$/.test(String(m.openingNumber)) ? String(m.openingNumber) : '***'} - ${openDigit(m.openingNumber)}`;
-              const statusColor = m.status === 'closed' ? 'text-red-400' : m.status === 'running' ? 'text-[#43b36a]' : 'text-[#43b36a]';
-              const isFallback = String(m.id || '').startsWith('sl-');
-              const canPlay = m.status !== 'closed';
-
-              return (
-                <div
-                  key={m.id}
-                  className="rounded-2xl bg-[#202124] border border-white/10 p-3 sm:p-4 shadow-[0_10px_22px_rgba(0,0,0,0.35)] grid grid-cols-[92px_1fr_auto] sm:grid-cols-[120px_1fr_auto] items-center gap-3"
-                >
-                  <div className="min-w-0">
-                    <div className="text-base sm:text-lg font-extrabold text-white leading-tight">{timeLabel}</div>
-                    <div className={`text-xs sm:text-sm font-semibold ${statusColor} leading-tight`}>{closedText}</div>
-                  </div>
-
-                  <div className="justify-self-center px-5 sm:px-6 py-2 rounded-full bg-black text-white font-extrabold tracking-wide border border-white/10 whitespace-nowrap leading-none text-[15px] sm:text-base">
-                    {pill}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!canPlay) return;
-                      if (isFallback) {
-                        // UI-only mock starline market: still allow BidOptions open.
-                        navigate('/bidoptions', {
-                          state: {
-                            marketType: 'starline',
-                            market: {
-                              _id: m.id,
-                              marketName: m.marketName,
-                              gameName: m.marketName,
-                              startingTime: m.startingTime,
-                              closingTime: m.closingTime,
-                              betClosureTime: 0,
-                              openingNumber: null,
-                              closingNumber: null,
-                              status: m.status,
-                              isMock: true,
-                            },
-                          },
-                        });
-                        return;
-                      }
-                      navigate('/bidoptions', {
-                        state: {
-                          marketType: 'starline',
-                          market: {
-                            _id: m.id,
-                            marketName: m.marketName,
-                            gameName: m.marketName,
-                            startingTime: m.startingTime,
-                            closingTime: m.closingTime,
-                            openingNumber: m.openingNumber,
-                            closingNumber: m.closingNumber,
-                            status: m.status,
-                          },
-                        },
-                      });
-                    }}
-                    disabled={!canPlay}
-                    className={`justify-self-end rounded-full border px-3 sm:px-4 py-2 font-bold flex items-center gap-2 whitespace-nowrap min-w-0 transition-colors ${
-                      canPlay
-                        ? 'bg-black/20 border-white/20 text-white hover:border-[#d4af37]/40'
-                        : 'bg-black/15 border-white/10 text-white/40 cursor-not-allowed'
-                    }`}
-                  >
-                    <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
-                      <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M6 4l10 6-10 6V4z" />
-                      </svg>
-                    </span>
-                    <span className="text-[13px] sm:text-sm">Play Game</span>
-                  </button>
-                </div>
-              );
-            })
-          )}
         </div>
       </div>
     </div>

@@ -102,7 +102,9 @@ const BottomNavbar = () => {
         paddingRight: 'max(0.75rem, env(safe-area-inset-right))',
       }}
     >
-      <div className="bg-black rounded-3xl border border-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-end justify-around px-1 py-2 min-h-[64px]">
+      {/* Backplate to prevent white background showing behind navbar */}
+      <div className="absolute inset-0 bg-black pointer-events-none" />
+      <div className="relative bg-black rounded-3xl border border-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex items-end justify-around px-1 py-2 min-h-[64px]">
         {navItems.map((item) => {
           const active = isActive(item.path);
           const isCenter = item.isCenter;
