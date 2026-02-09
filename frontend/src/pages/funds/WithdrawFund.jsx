@@ -128,18 +128,42 @@ const WithdrawFund = () => {
     return (
         <div className="space-y-6">
             {/* Wallet Balance Card */}
-            <div className="bg-gradient-to-r from-red-900/40 to-red-800/30 rounded-2xl p-5 border border-red-500/30">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-gray-400 text-sm">Available Balance</p>
-                        <p className="text-3xl font-bold text-white">₹{walletBalance.toLocaleString()}</p>
-                    </div>
-                    <div className="bg-red-500/20 p-4 rounded-full">
-                        <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="rounded-2xl bg-black/0 p-0">
+                <div className="bg-[#202124] rounded-2xl shadow-[0_18px_40px_rgba(0,0,0,0.45)] border border-white/10 overflow-hidden">
+                    <div className="px-4 pt-3 pb-2 flex items-center justify-center gap-2 text-sm text-gray-300">
+                        <svg className="w-4 h-4 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 2c3.5 3.5 3.5 16.5 0 20" />
                         </svg>
+                        <span className="font-semibold tracking-wide">GoldenBets.com</span>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-[#d4af37] via-[#cca84d] to-[#b8941f] px-4 py-3 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-black/25 border border-black/20 flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-black/40 flex items-center justify-center text-sm font-extrabold text-black">
+                                ₹
+                            </div>
+                        </div>
+                        <div className="min-w-0">
+                            <div className="text-[11px] font-semibold text-black/70 leading-none">Available Balance</div>
+                            <div className="text-black font-extrabold text-lg sm:text-xl leading-tight truncate">
+                                ₹ {Number(walletBalance || 0).toLocaleString('en-IN')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="px-4 py-3 flex items-center justify-between">
+                        <div className="text-sm text-white/90 truncate">
+                            {user?.username || user?.name || 'User'}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
+                            <span className="w-3 h-3 rounded-full bg-[#d4af37] inline-block" />
+                        </div>
                     </div>
                 </div>
+
                 <div className="mt-3 text-gray-400 text-sm">
                     Min: ₹{config?.minWithdrawal || 500} | Max: ₹{config?.maxWithdrawal || 25000}
                 </div>
@@ -159,9 +183,9 @@ const WithdrawFund = () => {
 
             {/* No Bank Account Warning */}
             {bankAccounts.length === 0 && (
-                <div className="p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-xl text-yellow-300 text-sm">
+                <div className="p-3 bg-yellow-900/30 border border-yellow-600/50 rounded-xl text-yellow-300 text-xs sm:text-sm">
                     <p className="font-medium">No bank account added!</p>
-                    <p className="text-yellow-400/80 mt-1">Please add a bank account first from the "Bank Detail" section to withdraw funds.</p>
+                    <p className="text-yellow-400/80 mt-1 leading-snug">Please add a bank account first from the "Bank Detail" section to withdraw funds.</p>
                 </div>
             )}
 

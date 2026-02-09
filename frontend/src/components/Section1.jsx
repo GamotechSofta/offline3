@@ -89,11 +89,12 @@ const Section1 = () => {
   return (
     <section className="w-full bg-black pt-3 min-[375px]:pt-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 sm:pb-10 px-2 min-[375px]:px-3 sm:px-4 md:px-8 md:pb-8 max-w-full overflow-x-hidden">
       {/* MARKETS Header - responsive width */}
-      <div className="flex items-end justify-center mb-4 min-[375px]:mb-6 sm:mb-8 w-full max-w-7xl mx-auto gap-1 min-[375px]:gap-2 sm:gap-4">
+      <div className="flex items-end justify-center mb-4 min-[375px]:mb-6 sm:mb-8 w-full max-w-7xl mx-auto gap-0">
         <div className="flex-1 h-[2px] bg-[#d4af37] shrink min-w-0" />
         <div className="relative shrink-0 w-[110px] min-[375px]:w-[140px] sm:w-[180px] md:w-[240px] h-[24px] min-[375px]:h-[28px] sm:h-[34px] md:h-[40px]">
           <svg className="w-full h-full" viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <path d="M0 39 L30 2 L210 2 L240 39" stroke="#d4af37" strokeWidth="2" fill="black" />
+            {/* Add small bottom "wings" so lines join like screenshot */}
+            <path d="M0 39 H26 L40 2 H200 L214 39 H240" stroke="#d4af37" strokeWidth="2" />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center pt-2 sm:pt-3">
             <h2 className="text-white text-sm min-[375px]:text-base sm:text-xl md:text-2xl font-bold tracking-wider">MARKETS</h2>
