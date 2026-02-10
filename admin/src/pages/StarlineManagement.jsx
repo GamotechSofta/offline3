@@ -30,7 +30,7 @@ const toDisplayTime = (hour12, minute, ampm) => {
 const HOURS_12 = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
 
-const StarlineManagement = () => {
+const StarlineManagement = ({ embedded = false }) => {
     const [markets, setMarkets] = useState([]);
     const [starlineGroups, setStarlineGroups] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -430,8 +430,7 @@ const StarlineManagement = () => {
 
     const formatNum = (n) => (n != null && Number.isFinite(n) ? Number(n).toLocaleString('en-IN') : '0');
 
-    return (
-        <AdminLayout onLogout={handleLogout} title="Starline">
+    const content = (
             <div className="min-w-0">
                 {error && (
                     <div className="mb-3 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm">{error}</div>
@@ -877,6 +876,12 @@ const StarlineManagement = () => {
                     </div>
                 )}
             </div>
+    );
+
+    if (embedded) return content;
+    return (
+        <AdminLayout onLogout={handleLogout} title="Starline">
+            {content}
         </AdminLayout>
     );
 };

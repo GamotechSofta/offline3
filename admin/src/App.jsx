@@ -22,7 +22,6 @@ import DeclareConfirm from './pages/DeclareConfirm';
 import DeclareSuccess from './pages/DeclareSuccess';
 import UpdateRate from './pages/UpdateRate';
 import MarketDetail from './pages/MarketDetail';
-import StarlineManagement from './pages/StarlineManagement';
 import Settings from './pages/Settings';
 import TopWinners from './pages/TopWinners';
 
@@ -76,14 +75,7 @@ const App = () => {
                         </PrivateRoute>
                     }
                 />
-                <Route
-                    path="/starline"
-                    element={
-                        <PrivateRoute>
-                            <StarlineManagement />
-                        </PrivateRoute>
-                    }
-                />
+                <Route path="/starline" element={<PrivateRoute><Navigate to="/markets" replace state={{ marketType: 'starline' }} /></PrivateRoute>} />
                 <Route
                     path="/add-result"
                     element={

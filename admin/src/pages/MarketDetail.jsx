@@ -1074,8 +1074,8 @@ const MarketDetail = () => {
                 <div className="mt-8 pt-4 border-t border-gray-700 flex flex-wrap items-center gap-3">
                     {market.marketType === 'startline' ? (
                         <Link
-                            to="/starline"
-                            state={{ starlineMarketKey: (market.starlineGroup || '').toString().trim().toLowerCase() }}
+                            to="/markets"
+                            state={{ marketType: 'starline', starlineMarketKey: (market.starlineGroup || '').toString().trim().toLowerCase() }}
                             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-black font-semibold border border-amber-500 transition-colors"
                         >
                             <FaArrowLeft /> Back to Starline

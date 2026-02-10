@@ -335,7 +335,7 @@ const AdminDashboard = () => {
                             </Link>
                         )}
                         {starlinePendingCount > 0 && (
-                            <Link to="/starline" className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-black font-medium text-sm">
+                            <Link to="/markets" state={{ marketType: 'starline' }} className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-black font-medium text-sm">
                                 {starlinePendingCount} Starline slot{starlinePendingCount !== 1 ? 's' : ''} result pending →
                             </Link>
                         )}

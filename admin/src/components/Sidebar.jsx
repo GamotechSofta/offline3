@@ -17,7 +17,6 @@ import {
     FaCoins,
     FaCog,
     FaMoneyBillWave,
-    FaStar,
 } from 'react-icons/fa';
 
 const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
@@ -29,7 +28,6 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         { path: '/all-users', label: 'All Players', icon: FaUserFriends },
         { path: '/bookie-management', label: 'Bookie Accounts', icon: FaUsers },
         { path: '/markets', label: 'Markets', icon: FaChartBar },
-        { path: '/starline', label: 'Starline', icon: FaStar },
         { path: '/add-result', label: 'Add Result', icon: FaEdit },
         { path: '/update-rate', label: 'Update Rate', icon: FaCoins },
         { path: '/bet-history', label: 'Bet History', icon: FaHistory },
@@ -43,7 +41,7 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
     ];
 
     const isActive = (path) => {
-        if (path === '/all-users' || path === '/markets' || path === '/starline') {
+        if (path === '/all-users' || path === '/markets') {
             return location.pathname === path || location.pathname.startsWith(path + '/');
         }
         if (path === '/reports') {
