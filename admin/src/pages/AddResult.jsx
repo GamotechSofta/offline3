@@ -399,7 +399,7 @@ const AddResult = () => {
 
                             {selectedMarket.marketType === 'startline' && (
                                 <p className="text-xs text-gray-400 mb-3 p-2 rounded bg-gray-700/50 border border-amber-500/20">
-                                    Startline has only one result (Open Digit/Patti). To update <strong>closing time</strong>, use the Starline tab.
+                                    Startline has only one result (Open Digit/Patti). To update <strong>closing time</strong>, use Markets and edit the market.
                                 </p>
                             )}
 

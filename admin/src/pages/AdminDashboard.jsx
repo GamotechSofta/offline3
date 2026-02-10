@@ -11,7 +11,6 @@ import {
     FaWallet,
     FaCreditCard,
     FaUserFriends,
-    FaStar,
     FaLifeRing,
     FaClipboardList,
     FaArrowRight,
@@ -475,9 +474,6 @@ const AdminDashboard = () => {
                     </Link>
                     <Link to="/add-market" className="px-4 py-3 rounded-lg bg-gray-700 hover:bg-amber-500/20 border border-gray-600 hover:border-amber-500/60 text-gray-200 hover:text-amber-400 text-sm font-medium transition-all text-center">
                         Add Market
-                    </Link>
-                    <Link to="/startline" className="px-4 py-3 rounded-lg bg-gray-700 hover:bg-amber-500/20 border border-gray-600 hover:border-amber-500/60 text-gray-200 hover:text-amber-400 text-sm font-medium transition-all text-center flex items-center justify-center gap-1">
-                        <FaStar className="w-3.5 h-3.5" /> Starline
                     </Link>
                     <Link to="/logs" className="px-4 py-3 rounded-lg bg-gray-700 hover:bg-amber-500/20 border border-gray-600 hover:border-amber-500/60 text-gray-200 hover:text-amber-400 text-sm font-medium transition-all text-center">
                         Activity Logs

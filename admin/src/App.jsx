@@ -22,7 +22,6 @@ import DeclareConfirm from './pages/DeclareConfirm';
 import DeclareSuccess from './pages/DeclareSuccess';
 import UpdateRate from './pages/UpdateRate';
 import MarketDetail from './pages/MarketDetail';
-import StartlineMarkets from './pages/StartlineMarkets';
 import Settings from './pages/Settings';
 import TopWinners from './pages/TopWinners';
 
@@ -73,14 +72,6 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <MarketDetail />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/startline"
-                    element={
-                        <PrivateRoute>
-                            <StartlineMarkets />
                         </PrivateRoute>
                     }
                 />
