@@ -679,7 +679,8 @@ const MarketDetail = () => {
     // Do NOT include them in Open totals (openTotalAmount/openTotalBets remain unchanged).
     const jodiDisplay = statsClose?.jodi || { items: {}, totalAmount: 0, totalBets: 0 };
     const triplePattiDisplay = viewStats?.triplePatti || { items: {}, totalAmount: 0, totalBets: 0 };
-    const halfSangamDisplay = viewStats?.halfSangam || { items: {}, totalAmount: 0, totalBets: 0 };
+    // Half Sangam is always in close session in API; for Starline we only show open view, so use close data for Half Sangam
+    const halfSangamDisplay = (isStartlineMarket ? statsClose?.halfSangam : viewStats?.halfSangam) || { items: {}, totalAmount: 0, totalBets: 0 };
     const fullSangamDisplay = statsClose?.fullSangam || { items: {}, totalAmount: 0, totalBets: 0 };
 
     // Open view: Single Digit, Single Patti, Double Patti, Triple Patti, Half Sangam
