@@ -30,7 +30,37 @@ const toDisplayTime = (hour12, minute, ampm) => {
 const HOURS_12 = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
 
+// Same as user side: slot is "closed for today" when closing time (IST) has passed
+const getTodayIST = (now = new Date()) =>
+    new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+const addDaysIST = (yyyyMmDd, days) => {
+    const base = new Date(`${yyyyMmDd}T12:00:00+05:30`);
+    base.setDate(base.getDate() + days);
+    return getTodayIST(base);
+};
+const normalizeHHMM = (t) => {
+    const s = (t || '').toString().trim().slice(0, 5);
+    const [hh, mm] = s.split(':');
+    const h = String(Number(hh) || 0).padStart(2, '0');
+    const m = String(Number(mm) || 0).padStart(2, '0');
+    return `${h}:${m}`;
+};
+const getTodayTargetMsIST = (timeHHMM, nowMs) => {
+    const todayIST = getTodayIST(new Date(nowMs));
+    const t = normalizeHHMM(timeHHMM);
+    if (!/^\d{2}:\d{2}$/.test(t)) return null;
+    const dateStr = t === '00:00' ? addDaysIST(todayIST, 1) : todayIST;
+    const targetToday = new Date(`${dateStr}T${t}:00+05:30`).getTime();
+    return Number.isNaN(targetToday) ? null : targetToday;
+};
+const isSlotClosedTodayIST = (timeHHMM, nowMs) => {
+    const targetToday = getTodayTargetMsIST(timeHHMM, nowMs);
+    if (targetToday == null) return true;
+    return nowMs >= targetToday;
+};
+
 const StarlineManagement = ({ embedded = false }) => {
+    const [tick, setTick] = useState(() => Date.now());
     const [markets, setMarkets] = useState([]);
     const [starlineGroups, setStarlineGroups] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -143,6 +173,11 @@ const StarlineManagement = ({ embedded = false }) => {
             .then((res) => res.json())
             .then((json) => { if (json.success) setHasSecretDeclarePassword(!!json.hasSecretDeclarePassword); })
             .catch(() => setHasSecretDeclarePassword(false));
+    }, []);
+
+    useEffect(() => {
+        const t = setInterval(() => setTick(Date.now()), 60000);
+        return () => clearInterval(t);
     }, []);
 
     useRefreshOnMarketReset(fetchMarkets);
@@ -630,11 +665,14 @@ const StarlineManagement = ({ embedded = false }) => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                         {slotsForTab.map((m) => {
                                             const hasOpen = m.openingNumber && /^\d{3}$/.test(String(m.openingNumber));
+                                            const slotClosedToday = isSlotClosedTodayIST(m.closingTime || m.startingTime, tick);
+                                            const statusLabel = hasOpen ? 'Result declared' : slotClosedToday ? 'Close For Today' : 'Open';
+                                            const statusVariant = hasOpen ? 'red' : slotClosedToday ? 'red' : 'emerald';
                                             return (
                                                 <div key={m._id} className="bg-gray-800 rounded-xl border border-gray-600 p-4 hover:border-amber-500/40 transition-colors">
                                                     <div className="flex items-center justify-between gap-2 mb-2">
-                                                        <span className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${hasOpen ? 'bg-red-900/50 text-red-300' : 'bg-emerald-900/50 text-emerald-300'}`}>
-                                                            {hasOpen ? 'Result declared' : 'Open'}
+                                                        <span className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${statusVariant === 'red' ? 'bg-red-900/50 text-red-300' : 'bg-emerald-900/50 text-emerald-300'}`}>
+                                                            {statusLabel}
                                                         </span>
                                                     </div>
                                                     <h3 className="text-sm font-bold text-white truncate mb-1" title={m.marketName}>{m.marketName}</h3>
