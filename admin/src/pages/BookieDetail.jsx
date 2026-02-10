@@ -224,7 +224,7 @@ const BookieDetail = () => {
                 {activeTab === 'overview' && revenue && (
                     <div className="space-y-4">
                         {/* Revenue Cards */}
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-2 gap-3">
                             <div className="bg-gray-800/80 rounded-xl p-3 sm:p-4 border border-gray-700/60 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-blue-500" />
                                 <p className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Total Bets</p>
@@ -258,6 +258,10 @@ const BookieDetail = () => {
                                 <div className="flex justify-between py-1.5 border-b border-gray-700/40">
                                     <span className="text-gray-400">Total Bet Amount</span>
                                     <span className="text-white font-medium">{formatCurrency(revenue.totalBetAmount)}</span>
+                                </div>
+                                <div className="flex justify-between py-1.5 border-b border-gray-700/40">
+                                    <span className="text-gray-400">Total Bet Count</span>
+                                    <span className="text-white font-medium">{formatNumber(revenue.totalBetCount)} bets <span className="text-gray-500">({formatNumber(revenue.winningBets)} W / {formatNumber(revenue.losingBets)} L)</span></span>
                                 </div>
                                 <div className="flex justify-between py-1.5 border-b border-gray-700/40">
                                     <span className="text-gray-400">Bookie Commission ({bookie?.commissionPercentage}%)</span>

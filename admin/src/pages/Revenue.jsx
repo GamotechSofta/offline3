@@ -194,7 +194,7 @@ const Revenue = () => {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
                         {[1, 2, 3, 4].map((i) => (
                             <div key={i} className="bg-gray-800/60 rounded-xl h-24 sm:h-28 animate-pulse border border-gray-700/50" />
                         ))}
@@ -202,7 +202,7 @@ const Revenue = () => {
                 ) : data ? (
                     <>
                         {/* Summary Cards - 2 cols on mobile, 4 on desktop */}
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
                             {/* Total Bets Volume */}
                             <div className="bg-gray-800/80 rounded-xl p-3 sm:p-5 border border-gray-700/60 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400" />

@@ -106,6 +106,8 @@ export const getRevenueReport = async (req, res) => {
                         bookieRevenue: 0,
                         totalUsers: 0,
                         totalBets: 0,
+                        winningBets: 0,
+                        losingBets: 0,
                     },
                 });
             }
@@ -125,6 +127,8 @@ export const getRevenueReport = async (req, res) => {
             const totalBets = betAgg?.count || 0;
             const commissionPct = admin.commissionPercentage || 0;
             const bookieRevenue = Math.round((totalBetAmount * commissionPct / 100) * 100) / 100;
+            const winningBets = await Bet.countDocuments({ status: 'won', ...betFilter });
+            const losingBets = await Bet.countDocuments({ status: 'lost', ...betFilter });
 
             return res.status(200).json({
                 success: true,
@@ -135,6 +139,8 @@ export const getRevenueReport = async (req, res) => {
                     bookieRevenue,
                     totalUsers: userIds.length,
                     totalBets,
+                    winningBets,
+                    losingBets,
                 },
             });
         }
