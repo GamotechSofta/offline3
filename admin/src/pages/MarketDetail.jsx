@@ -647,6 +647,7 @@ const MarketDetail = () => {
         triplePatti = { items: {}, totalAmount: 0, totalBets: 0 },
         halfSangam = { items: {}, totalAmount: 0, totalBets: 0 },
         fullSangam = { items: {}, totalAmount: 0, totalBets: 0 },
+        resultOnPatti = { open: null, close: null },
     } = data;
 
     const hasOpen = market.openingNumber && /^\d{3}$/.test(String(market.openingNumber));
@@ -679,11 +680,11 @@ const MarketDetail = () => {
     // Do NOT include them in Open totals (openTotalAmount/openTotalBets remain unchanged).
     const jodiDisplay = statsClose?.jodi || { items: {}, totalAmount: 0, totalBets: 0 };
     const triplePattiDisplay = viewStats?.triplePatti || { items: {}, totalAmount: 0, totalBets: 0 };
-    // Half Sangam is always in close session in API; for Starline we only show open view, so use close data for Half Sangam
-    const halfSangamDisplay = (isStartlineMarket ? statsClose?.halfSangam : viewStats?.halfSangam) || { items: {}, totalAmount: 0, totalBets: 0 };
+    // Half Sangam is open-only; use open session data
+    const halfSangamDisplay = statsOpen?.halfSangam || { items: {}, totalAmount: 0, totalBets: 0 };
     const fullSangamDisplay = statsClose?.fullSangam || { items: {}, totalAmount: 0, totalBets: 0 };
 
-    // Open view: Single Digit, Single Patti, Double Patti, Triple Patti, Half Sangam
+    // Open view: open-session (Single Digit, Patti) + Half Sangam (close data shown in section, so include in total so "Total Bet Amount" matches visible bets).
     const openTotalAmount =
         (singleDigitDisplay?.totalAmount ?? 0) +
         (singlePattiTotalsForView?.totalAmount ?? 0) +
@@ -696,7 +697,7 @@ const MarketDetail = () => {
         (doublePattiTotalsForView?.totalBets ?? 0) +
         (triplePattiDisplay?.totalBets ?? 0) +
         (halfSangamDisplay?.totalBets ?? 0);
-    // Closed view: show close bets totals in all key games (as requested)
+    // Closed view: close bets only; Half Sangam is open-only so not shown or counted in closed
     const closedTotalAmount =
         (singleDigitDisplay?.totalAmount ?? 0) +
         (jodiDisplay?.totalAmount ?? 0) +
@@ -738,6 +739,9 @@ const MarketDetail = () => {
                     <div className="bg-gray-800 border-b border-gray-700 px-4 py-3">
                         <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{market.marketName}</h1>
                         <p className="text-gray-400 text-sm mt-0.5">Market overview & result</p>
+                        {marketId && (
+                            <p className="text-[11px] text-gray-500 mt-1 font-mono" title="Same ID as in Add Result → Check">ID: {marketId}</p>
+                        )}
                     </div>
                     <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                         <div className="flex items-center gap-3">
@@ -764,6 +768,45 @@ const MarketDetail = () => {
                                     Viewing totals: <strong>{effectiveView === 'open' ? 'Open' : 'Closed'}</strong> bets
                                     {isStartline && <span className="text-gray-500"> (Starline: open only)</span>}
                                 </p>
+                                {(resultOnPatti?.open || resultOnPatti?.close) && (
+                                    <div className="mt-3 pt-3 border-t border-gray-600 space-y-2 text-[11px]">
+                                        <p className="text-gray-400 font-semibold uppercase tracking-wider">Result on Patti</p>
+                                        {resultOnPatti?.open && (
+                                            <div className="rounded bg-gray-700/40 border border-gray-600 p-2 space-y-1">
+                                                <p className="text-gray-500 font-medium mb-1">Open</p>
+                                                <div className="flex justify-between items-center gap-2">
+                                                    <span className="text-gray-400 shrink-0">Total Bet Amount on Patti</span>
+                                                    <span className="font-mono text-amber-400">₹{formatNum(resultOnPatti.open.totalBetAmountOnPatti)}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center gap-2">
+                                                    <span className="text-gray-400 shrink-0">Total Win Amount on Patti</span>
+                                                    <span className="font-mono text-amber-400">₹{formatNum(resultOnPatti.open.totalWinAmountOnPatti)}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center gap-2">
+                                                    <span className="text-gray-400 shrink-0">Total Players Bet on Patti</span>
+                                                    <span className="font-mono text-amber-400">{formatNum(resultOnPatti.open.totalPlayersBetOnPatti)}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {resultOnPatti?.close && (
+                                            <div className="rounded bg-gray-700/40 border border-gray-600 p-2 space-y-1">
+                                                <p className="text-gray-500 font-medium mb-1">Close</p>
+                                                <div className="flex justify-between items-center gap-2">
+                                                    <span className="text-gray-400 shrink-0">Total Bet Amount on Patti</span>
+                                                    <span className="font-mono text-amber-400">₹{formatNum(resultOnPatti.close.totalBetAmountOnPatti)}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center gap-2">
+                                                    <span className="text-gray-400 shrink-0">Total Win Amount on Patti</span>
+                                                    <span className="font-mono text-amber-400">₹{formatNum(resultOnPatti.close.totalWinAmountOnPatti)}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center gap-2">
+                                                    <span className="text-gray-400 shrink-0">Total Players Bet on Patti</span>
+                                                    <span className="font-mono text-amber-400">{formatNum(resultOnPatti.close.totalPlayersBetOnPatti)}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -1070,12 +1113,12 @@ const MarketDetail = () => {
                         totalBets={triplePattiDisplay.totalBets}
                     />
 
-                    {statusView === 'open' && (
-                        <HalfSangamSection
-                            items={halfSangamDisplay.items}
-                            totalAmount={halfSangamDisplay.totalAmount}
-                            totalBets={halfSangamDisplay.totalBets}
-                        />
+                    {effectiveView === 'open' && (
+                    <HalfSangamSection
+                        items={halfSangamDisplay.items}
+                        totalAmount={halfSangamDisplay.totalAmount}
+                        totalBets={halfSangamDisplay.totalBets}
+                    />
                     )}
                     {!isStartline && (
                     <FullSangamSection
@@ -1087,22 +1130,13 @@ const MarketDetail = () => {
                 </div>
 
                 <div className="mt-8 pt-4 border-t border-gray-700 flex flex-wrap items-center gap-3">
-                    {market.marketType === 'startline' ? (
-                        <Link
-                            to="/markets"
-                            state={{ marketType: 'starline', starlineMarketKey: (market.starlineGroup || '').toString().trim().toLowerCase() }}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-black font-semibold border border-amber-500 transition-colors"
-                        >
-                            <FaArrowLeft /> Back to Starline
-                        </Link>
-                    ) : (
-                        <Link
-                            to="/markets"
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-semibold border border-gray-600 transition-colors"
-                        >
-                            <FaArrowLeft /> Back to Markets
-                        </Link>
-                    )}
+                    <Link
+                        to="/markets"
+                        state={market.marketType === 'startline' ? { marketType: 'starline', starlineMarketKey: (market.starlineGroup || '').toString().trim().toLowerCase() } : undefined}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-semibold border border-gray-600 transition-colors"
+                    >
+                        <FaArrowLeft /> Back to Markets
+                    </Link>
                     <Link
                         to="/add-result"
                         state={{ preselectedMarket: market }}

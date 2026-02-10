@@ -8,7 +8,25 @@ import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { isSinglePatti, buildSinglePattiFirstDigitSummary } from '../utils/singlePattiUtils.js';
 import { previewDeclareOpen, previewDeclareClose, settleOpening, settleClosing, getWinningBetsForOpen, getWinningBetsForClose } from '../utils/settleBets.js';
 import { ensureResultsResetForNewDay } from '../utils/resultReset.js';
+import { getRatesMap } from '../models/rate/rate.js';
 import bcrypt from 'bcryptjs';
+
+/** Last digit of sum of 3 digits (0–9). e.g. "156" → "2" */
+function digitFromPatti(threeDigitStr) {
+    const s = String(threeDigitStr || '').trim();
+    if (!/^\d{3}$/.test(s)) return null;
+    const sum = Number(s[0]) + Number(s[1]) + Number(s[2]);
+    return String(sum % 10);
+}
+
+/** Panna type rate key for 3-digit string */
+function getPannaRateKey(threeDigitStr) {
+    if (!threeDigitStr || threeDigitStr.length !== 3) return 'singlePatti';
+    const a = threeDigitStr[0], b = threeDigitStr[1], c = threeDigitStr[2];
+    if (a === b && b === c) return 'triplePatti';
+    if (a === b || b === c || a === c) return 'doublePatti';
+    return 'singlePatti';
+}
 
 const toDateKeyIST = (d = new Date()) => {
     return new Intl.DateTimeFormat('en-CA', {
@@ -177,11 +195,17 @@ export const getMarkets = async (req, res) => {
     try {
         await ensureResultsResetForNewDay(Market);
         const markets = await Market.find().sort({ startingTime: 1 });
-        const data = markets.map((m) => {
+        let data = markets.map((m) => {
             const doc = m.toObject();
             doc.displayResult = m.getDisplayResult();
             return doc;
         });
+        const marketTypeFilter = (req.query.marketType || '').toString().toLowerCase();
+        if (marketTypeFilter === 'main') {
+            data = data.filter((m) => (m.marketType || '').toString().toLowerCase() !== 'startline');
+        } else if (marketTypeFilter === 'startline') {
+            data = data.filter((m) => (m.marketType || '').toString().toLowerCase() === 'startline');
+        }
         res.status(200).json({ success: true, data });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -225,6 +249,7 @@ export const updateMarket = async (req, res) => {
         const { marketName, startingTime, closingTime, betClosureTime, marketType } = req.body;
         const updates = {};
         if (existing.marketType === 'startline') {
+            if (marketName !== undefined) updates.marketName = marketName;
             if (closingTime !== undefined && closingTime != null && String(closingTime).trim() !== '') {
                 updates.closingTime = String(closingTime).trim().slice(0, 5);
                 updates.startingTime = updates.closingTime; // keep slot time in sync for startline
@@ -445,25 +470,20 @@ export const setWinNumber = async (req, res) => {
 export const previewDeclareOpenResult = async (req, res) => {
     try {
         const { id: marketIdParam } = req.params;
-        const openingNumber = (req.query.openingNumber || req.body?.openingNumber || '').toString().trim();
+        const raw = (req.query.openingNumber || req.body?.openingNumber || '').toString().trim().replace(/\D/g, '').slice(0, 3);
+        const openingNumber = raw.length === 3 ? raw.padStart(3, '0') : null;
         const market = await Market.findById(marketIdParam);
         if (!market) {
             return res.status(404).json({ success: false, message: 'Market not found' });
         }
         const marketId = market._id.toString();
-        const oid = market._id;
         const bookieUserIds = await getBookieUserIds(req.admin);
-        const stats = await previewDeclareOpen(marketId, openingNumber || null, {
+        const stats = await previewDeclareOpen(marketId, openingNumber, {
             bookieUserIds: bookieUserIds ?? undefined,
         });
-        const matchFilter = { marketId: oid };
-        if (bookieUserIds != null && Array.isArray(bookieUserIds) && bookieUserIds.length > 0) {
-            matchFilter.userId = { $in: bookieUserIds };
-        }
-        const totalPlayersInMarket = await Bet.distinct('userId', matchFilter).then((ids) => ids.length);
         res.status(200).json({
             success: true,
-            data: { ...stats, totalPlayersInMarket },
+            data: stats,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -538,12 +558,13 @@ export const previewDeclareCloseResult = async (req, res) => {
         }
         const marketId = market._id.toString();
         const oid = market._id;
-        const stats = await previewDeclareClose(marketId, closingNumber || null, {});
-        const matchFilter = { marketId: oid };
-        const totalPlayersInMarket = await Bet.distinct('userId', matchFilter).then((ids) => ids.length);
+        const bookieUserIds = await getBookieUserIds(req.admin);
+        const stats = await previewDeclareClose(marketId, closingNumber || null, {
+            bookieUserIds: bookieUserIds ?? undefined,
+        });
         res.status(200).json({
             success: true,
-            data: { ...stats, totalPlayersInMarket },
+            data: stats,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -580,7 +601,7 @@ export const getWinningBetsPreview = async (req, res) => {
             declareType = 'open';
             number = openingNumber;
         } else if (closingNumber && /^\d{3}$/.test(closingNumber)) {
-            const result = await getWinningBetsForClose(marketId, closingNumber, {});
+            const result = await getWinningBetsForClose(marketId, closingNumber, { bookieUserIds: bookieUserIds ?? undefined });
             winningBets = result.winningBets;
             totalWinAmount = result.totalWinAmount;
             declareType = 'close';
@@ -870,15 +891,16 @@ export const getMarketStats = async (req, res) => {
             }
 
             if (type === 'half-sangam') {
-                const parts = num.split('-').map((p) => (p || '').trim());
+                const parts = num.split('-').map((p) => (p || '').trim()).filter(Boolean);
                 const a = parts[0] || '';
                 const b = parts[1] || '';
                 const isFormatA = /^[0-9]{3}$/.test(a) && /^[0-9]$/.test(b);
                 const isFormatB = /^[0-9]$/.test(a) && /^[0-9]{3}$/.test(b);
                 if (isFormatA || isFormatB) {
-                    if (!stats.halfSangam.items[num]) stats.halfSangam.items[num] = { amount: 0, count: 0 };
-                    stats.halfSangam.items[num].amount += amount;
-                    stats.halfSangam.items[num].count += 1;
+                    const key = `${a}-${b}`;
+                    if (!stats.halfSangam.items[key]) stats.halfSangam.items[key] = { amount: 0, count: 0 };
+                    stats.halfSangam.items[key].amount += amount;
+                    stats.halfSangam.items[key].count += 1;
                     stats.halfSangam.totalAmount += amount;
                     stats.halfSangam.totalBets += 1;
                 }
@@ -886,13 +908,14 @@ export const getMarketStats = async (req, res) => {
             }
 
             if (type === 'full-sangam') {
-                const parts = num.split('-').map((p) => (p || '').trim());
+                const parts = num.split('-').map((p) => (p || '').trim()).filter(Boolean);
                 const a = parts[0] || '';
                 const b = parts[1] || '';
                 if (/^[0-9]{3}$/.test(a) && /^[0-9]{3}$/.test(b)) {
-                    if (!stats.fullSangam.items[num]) stats.fullSangam.items[num] = { amount: 0, count: 0 };
-                    stats.fullSangam.items[num].amount += amount;
-                    stats.fullSangam.items[num].count += 1;
+                    const key = `${a}-${b}`;
+                    if (!stats.fullSangam.items[key]) stats.fullSangam.items[key] = { amount: 0, count: 0 };
+                    stats.fullSangam.items[key].amount += amount;
+                    stats.fullSangam.items[key].count += 1;
                     stats.fullSangam.totalAmount += amount;
                     stats.fullSangam.totalBets += 1;
                 }
@@ -937,12 +960,12 @@ export const getMarketStats = async (req, res) => {
             applyBet(allStats, b);
             const betType = (b?.betType || '').toString().trim().toLowerCase();
 
-            // Jodi / Half Sangam / Full Sangam are always "close" category in admin views
-            // because they are settled on closing and should appear under "Close bets only".
+            // Jodi / Full Sangam are "close" category (settled on closing). Half Sangam is open-only.
             let session =
-                (betType === 'jodi' || betType === 'half-sangam' || betType === 'full-sangam')
+                (betType === 'jodi' || betType === 'full-sangam')
                     ? 'close'
                     : ((b?.betOn === 'close') ? 'close' : (b?.betOn === 'open' ? 'open' : null));
+            if (betType === 'half-sangam') session = 'open';
             // Backfill for older bets: infer from bet time (IST) vs market starting time
             if (!session && startMin != null && b?.createdAt) {
                 const betMin = minutesIST(b.createdAt);
@@ -952,6 +975,114 @@ export const getMarketStats = async (req, res) => {
             }
             if (!session) session = 'open';
             applyBet(session === 'close' ? closeStats : openStats, b);
+        }
+
+        // Result-on-patti stats: Total Bet Amount / Win Amount / Players on the declared result (for display in Market Detail).
+        // Computed by iterating bets with same session + normalization as previewDeclareOpen/previewDeclareClose so values match.
+        const norm3 = (s) => (String(s || '').replace(/\D/g, '').slice(0, 3).padStart(3, '0'));
+        const resultOnPatti = { open: null, close: null };
+        const open3Raw = (market.openingNumber || '').toString().replace(/\D/g, '').slice(0, 3);
+        const close3Raw = (market.closingNumber || '').toString().replace(/\D/g, '').slice(0, 3);
+        const open3 = open3Raw.length === 3 ? open3Raw.padStart(3, '0') : null;
+        const close3 = close3Raw.length === 3 ? close3Raw.padStart(3, '0') : null;
+        const hasOpen3 = open3 != null;
+        const hasClose3 = close3 != null;
+        const lastDigitOpen = hasOpen3 ? digitFromPatti(open3) : null;
+        const lastDigitClose = hasClose3 ? digitFromPatti(close3) : null;
+        const jodiKey = (lastDigitOpen != null && lastDigitClose != null) ? (lastDigitOpen + lastDigitClose) : null;
+
+        let rates = {};
+        try {
+            rates = await getRatesMap();
+        } catch (_) {}
+        const singleRate = Number(rates.single) || 0;
+        const jodiRate = Number(rates.jodi) || 0;
+
+        if (hasOpen3 && lastDigitOpen != null) {
+            let totalBetAmountOnOpenPatti = 0;
+            let totalWinAmountOnOpenPatti = 0;
+            const playersOnOpenPatti = new Set();
+            const pannaRateOpen = Number(rates[getPannaRateKey(open3)]) || 0;
+            const halfSangamRate = Number(rates.halfSangam) || 0;
+            for (const b of bets) {
+                const betType = (b?.betType || '').toString().trim().toLowerCase();
+                let session = (betType === 'jodi' || betType === 'full-sangam') ? 'close' : ((b?.betOn === 'close') ? 'close' : (b?.betOn === 'open' ? 'open' : null));
+                if (betType === 'half-sangam') session = 'open';
+                if (!session && startMin != null && b?.createdAt) {
+                    const betMin = minutesIST(b.createdAt);
+                    if (betMin != null) session = betMin < startMin ? 'open' : 'close';
+                }
+                if (!session) session = 'open';
+                if (session !== 'open') continue;
+                const num = (b.betNumber || '').toString().trim();
+                const amount = Number(b.amount) || 0;
+                if (betType === 'single' && /^[0-9]$/.test(num) && num === lastDigitOpen) {
+                    totalBetAmountOnOpenPatti += amount;
+                    totalWinAmountOnOpenPatti += amount * singleRate;
+                    playersOnOpenPatti.add(b.userId.toString());
+                } else if (betType === 'panna') {
+                    const panna3 = norm3(num);
+                    if (panna3.length === 3 && panna3 === open3) {
+                        totalBetAmountOnOpenPatti += amount;
+                        totalWinAmountOnOpenPatti += amount * pannaRateOpen;
+                        playersOnOpenPatti.add(b.userId.toString());
+                    }
+                } else if (betType === 'half-sangam') {
+                    const parts = num.split('-').map((p) => (p || '').trim());
+                    const first = parts[0] || '';
+                    const second = parts[1] || '';
+                    if (/^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second) && first === open3 && second === lastDigitOpen) {
+                        totalBetAmountOnOpenPatti += amount;
+                        totalWinAmountOnOpenPatti += amount * halfSangamRate;
+                        playersOnOpenPatti.add(b.userId.toString());
+                    }
+                }
+            }
+            totalWinAmountOnOpenPatti = Math.round(totalWinAmountOnOpenPatti * 100) / 100;
+            resultOnPatti.open = {
+                totalBetAmountOnPatti: Math.round(totalBetAmountOnOpenPatti * 100) / 100,
+                totalWinAmountOnPatti: totalWinAmountOnOpenPatti,
+                totalBetsOnPatti: 0,
+                totalPlayersBetOnPatti: playersOnOpenPatti.size,
+            };
+        }
+
+        if (hasClose3 && lastDigitClose != null) {
+            let totalBetAmountOnClosePatti = 0;
+            let totalWinAmountOnClosePatti = 0;
+            const playersOnClosePatti = new Set();
+            const pannaRateClose = Number(rates[getPannaRateKey(close3)]) || 0;
+            for (const b of bets) {
+                const betType = (b?.betType || '').toString().trim().toLowerCase();
+                const isCloseSession = (b?.betOn || '').toString().toLowerCase() === 'close';
+                const isCloseSettleType = betType === 'jodi' || betType === 'full-sangam' || (betType === 'single' && isCloseSession) || (betType === 'panna' && isCloseSession);
+                if (!isCloseSettleType) continue;
+                const num = (b.betNumber || '').toString().trim();
+                const amount = Number(b.amount) || 0;
+                if (betType === 'single' && isCloseSession && /^[0-9]$/.test(num) && num === lastDigitClose) {
+                    totalBetAmountOnClosePatti += amount;
+                    totalWinAmountOnClosePatti += amount * singleRate;
+                    playersOnClosePatti.add(b.userId.toString());
+                } else if (betType === 'panna' && isCloseSession) {
+                    const panna3 = norm3(num);
+                    if (panna3.length === 3 && panna3 === close3) {
+                        totalBetAmountOnClosePatti += amount;
+                        totalWinAmountOnClosePatti += amount * pannaRateClose;
+                        playersOnClosePatti.add(b.userId.toString());
+                    }
+                } else if (betType === 'jodi' && /^[0-9]{2}$/.test(num) && num === jodiKey) {
+                    totalBetAmountOnClosePatti += amount;
+                    totalWinAmountOnClosePatti += amount * jodiRate;
+                    playersOnClosePatti.add(b.userId.toString());
+                }
+            }
+            totalWinAmountOnClosePatti = Math.round(totalWinAmountOnClosePatti * 100) / 100;
+            resultOnPatti.close = {
+                totalBetAmountOnPatti: Math.round(totalBetAmountOnClosePatti * 100) / 100,
+                totalWinAmountOnPatti: totalWinAmountOnClosePatti,
+                totalBetsOnPatti: 0,
+                totalPlayersBetOnPatti: playersOnClosePatti.size,
+            };
         }
 
         res.status(200).json({
@@ -972,6 +1103,7 @@ export const getMarketStats = async (req, res) => {
                     open: openStats,
                     close: closeStats,
                 },
+                resultOnPatti,
             },
         });
     } catch (error) {

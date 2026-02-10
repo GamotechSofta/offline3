@@ -75,7 +75,6 @@ const App = () => {
                         </PrivateRoute>
                     }
                 />
-                <Route path="/starline" element={<PrivateRoute><Navigate to="/markets" replace state={{ marketType: 'starline' }} /></PrivateRoute>} />
                 <Route
                     path="/add-result"
                     element={

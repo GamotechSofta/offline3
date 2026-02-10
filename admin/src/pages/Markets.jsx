@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
 import MarketList from '../components/MarketList';
@@ -26,7 +26,7 @@ const Markets = () => {
     const [activeTab, setActiveTab] = useState('regular');
     const navigate = useNavigate();
 
-    const mainMarkets = useMemo(() => (markets || []).filter((m) => m.marketType !== 'startline'), [markets]);
+    const mainMarkets = markets || [];
 
     useEffect(() => {
         const type = (location.state?.marketType || '').toString().toLowerCase();
@@ -36,7 +36,7 @@ const Markets = () => {
     const fetchMarkets = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/markets/get-markets`);
+            const response = await fetch(`${API_BASE_URL}/markets/get-markets?marketType=main`);
             const data = await response.json();
             if (data.success) {
                 setMarkets(data.data || []);

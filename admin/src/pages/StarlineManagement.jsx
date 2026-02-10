@@ -114,7 +114,7 @@ const StarlineManagement = ({ embedded = false }) => {
         try {
             setLoading(true);
             setError('');
-            const res = await fetch(`${API_BASE_URL}/markets/get-markets`);
+            const res = await fetch(`${API_BASE_URL}/markets/get-markets?marketType=startline`);
             const data = await res.json();
             if (data.success) setMarkets(data.data || []);
             else setError('Failed to fetch markets');

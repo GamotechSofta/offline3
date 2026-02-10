@@ -47,8 +47,9 @@ const DeclareConfirm = () => {
             navigate('/add-result', { replace: true });
             return;
         }
+        const marketIdStr = String(marketId);
         const query = declareType === 'open' ? `openingNumber=${encodeURIComponent(number)}` : `closingNumber=${encodeURIComponent(number)}`;
-        const url = `${API_BASE_URL}/markets/winning-bets-preview/${encodeURIComponent(marketId)}?${query}`;
+        const url = `${API_BASE_URL}/markets/winning-bets-preview/${encodeURIComponent(marketIdStr)}?${query}`;
         setLoading(true);
         setError('');
         fetch(url, { headers: getAuthHeaders() })
@@ -64,13 +65,14 @@ const DeclareConfirm = () => {
     const performDeclare = async (secretDeclarePasswordValue) => {
         const marketId = market._id ?? market.id;
         if (!marketId) return;
+        const marketIdStr = String(marketId);
         setDeclaring(true);
         setPasswordError('');
         try {
             const endpoint = declareType === 'open' ? 'declare-open' : 'declare-close';
             const body = declareType === 'open' ? { openingNumber: number } : { closingNumber: number };
             if (secretDeclarePasswordValue) body.secretDeclarePassword = secretDeclarePasswordValue;
-            const res = await fetch(`${API_BASE_URL}/markets/${endpoint}/${marketId}`, {
+            const res = await fetch(`${API_BASE_URL}/markets/${endpoint}/${marketIdStr}`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(body),
