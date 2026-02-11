@@ -385,12 +385,11 @@ const StarlineManagement = ({ embedded = false }) => {
             if (data.success && data.data != null) {
                 setPreview({
                     totalBetAmount: safeNum(data.data.totalBetAmount),
-                    totalWinAmount: safeNum(data.data.totalWinAmount),
                     noOfPlayers: safeNum(data.data.noOfPlayers),
                     profit: safeNum(data.data.profit),
                 });
             } else {
-                setPreview({ totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0 });
+                setPreview({ totalBetAmount: 0, noOfPlayers: 0, profit: 0 });
             }
         } catch {
             setPreview(null);

@@ -370,7 +370,7 @@ export async function settleClosing(marketId, closingNumber) {
 export async function previewDeclareOpen(marketId, openingNumber, options = {}) {
     const oid = toObjectId(marketId);
     if (!oid) {
-        return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
+        return { totalBetAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
     }
     const marketIdStr = String(marketId).trim();
     const bookieUserIds = options.bookieUserIds;
@@ -478,7 +478,6 @@ export async function previewDeclareOpen(marketId, openingNumber, options = {}) 
 
     return {
         totalBetAmount,
-        totalWinAmount,
         noOfPlayers: userIds.size,
         profit,
         totalBetAmountOnPatti,
@@ -497,11 +496,11 @@ export async function previewDeclareOpen(marketId, openingNumber, options = {}) 
  */
 export async function previewDeclareClose(marketId, closingNumber, options = {}) {
     const oid = toObjectId(marketId);
-    if (!oid) return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
+    if (!oid) return { totalBetAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
     const market = await Market.findById(oid).lean();
-    if (!market) return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
+    if (!market) return { totalBetAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
     const open3 = (market.openingNumber || '').toString();
-    if (!/^\d{3}$/.test(open3)) return { totalBetAmount: 0, totalWinAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
+    if (!/^\d{3}$/.test(open3)) return { totalBetAmount: 0, noOfPlayers: 0, profit: 0, totalBetAmountOnPatti: 0, totalPlayersBetOnPatti: 0, totalPlayersInMarket: 0 };
 
     const marketIdStr = String(marketId).trim();
     const bookieUserIds = options.bookieUserIds;
@@ -542,8 +541,6 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
     };
 
     if (!closingNumber || !/^\d{3}$/.test(closingNumber)) {
-        let hsAmount = 0;
-        let hsCount = 0;
         for (const bet of allBetsToday) {
             allMarketUserIds.add(bet.userId.toString());
             if (isCloseSettleTypeBet(bet)) {
@@ -555,7 +552,6 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
         totalBetAmount = Math.round(totalBetAmount * 100) / 100;
         return {
             totalBetAmount,
-            totalWinAmount: 0,
             noOfPlayers: userIds.size,
             profit: totalBetAmount,
             totalBetAmountOnPatti: 0,
@@ -563,7 +559,6 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
             totalPlayersBetOnPatti: 0,
             totalPlayersInMarket: allMarketUserIds.size,
             totalBetAmountHalfSangam: 0,
-            totalWinAmountHalfSangam: 0,
             totalBetsHalfSangam: 0,
         };
     }
@@ -577,9 +572,6 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
     const pannaRateClose = getRateForKey(rates, pannaRateKeyClose);
 
     let totalWinAmountOnPatti = 0;
-    let totalBetAmountHalfSangam = 0;
-    let totalWinAmountHalfSangam = 0;
-    let totalBetsHalfSangam = 0;
 
     for (const bet of allBetsToday) {
         const type = (bet.betType || '').toLowerCase();
@@ -638,7 +630,13 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
             const betOpen3 = parts[0] || '';
             const betClose3 = parts[1] || '';
             if (/^[0-9]{3}$/.test(betOpen3) && /^[0-9]{3}$/.test(betClose3) && betOpen3 === open3 && betClose3 === close3) {
-                if (isPending) totalWinAmount += amount * getRateForKey(rates, 'fullSangam');
+                totalBetAmountOnPatti += amount;
+                playersBetOnPatti.add(bet.userId.toString());
+                if (isPending) {
+                    const payout = amount * getRateForKey(rates, 'fullSangam');
+                    totalWinAmount += payout;
+                    totalWinAmountOnPatti += payout;
+                }
                 isWinning = true;
             }
         }
@@ -648,21 +646,18 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
     totalWinAmount = Math.round(totalWinAmount * 100) / 100;
     totalBetAmountOnPatti = Math.round(totalBetAmountOnPatti * 100) / 100;
     totalWinAmountOnPatti = Math.round(totalWinAmountOnPatti * 100) / 100;
-    totalBetAmountHalfSangam = Math.round(totalBetAmountHalfSangam * 100) / 100;
-    totalWinAmountHalfSangam = Math.round(totalWinAmountHalfSangam * 100) / 100;
     const profit = Math.round((totalBetAmount - totalWinAmount) * 100) / 100;
+    // Same fields as Open: no totalWinAmount, no totalWinAmountHalfSangam
     return {
         totalBetAmount,
-        totalWinAmount,
         noOfPlayers: userIds.size,
         profit,
         totalBetAmountOnPatti,
         totalWinAmountOnPatti,
         totalPlayersBetOnPatti: playersBetOnPatti.size,
         totalPlayersInMarket: allMarketUserIds.size,
-        totalBetAmountHalfSangam,
-        totalWinAmountHalfSangam,
-        totalBetsHalfSangam,
+        totalBetAmountHalfSangam: 0,
+        totalBetsHalfSangam: 0,
     };
 }
 
