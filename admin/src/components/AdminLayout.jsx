@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import { FaBars } from 'react-icons/fa';
+import { FaBars, FaSignOutAlt } from 'react-icons/fa';
 
 const AdminLayout = ({ children, onLogout, title }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,7 +18,14 @@ const AdminLayout = ({ children, onLogout, title }) => {
                     <FaBars className="w-6 h-6 text-yellow-500" />
                 </button>
                 <h1 className="text-lg font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent truncate mx-2">{title || 'Admin'}</h1>
-                <div className="w-10" />
+                <button
+                    type="button"
+                    onClick={onLogout}
+                    className="p-2 rounded-lg hover:bg-red-500/20 transition-colors"
+                    aria-label="Logout"
+                >
+                    <FaSignOutAlt className="w-5 h-5 text-red-400" />
+                </button>
             </header>
 
             {/* Sidebar */}
