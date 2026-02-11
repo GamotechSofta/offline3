@@ -41,6 +41,10 @@ const renderBetNumber = (val) => {
 const sumDigits = (str) => [...String(str)].reduce((acc, c) => acc + (Number(c) || 0), 0);
 const lastDigit = (str) => sumDigits(str) % 10;
 const normalizeMarketName = (s) => (s || '').toString().trim().toLowerCase();
+const isStarlineMarketName = (s) => {
+  const k = normalizeMarketName(s);
+  return k.includes('starline') || k.includes('startline') || k.includes('star line') || k.includes('start line');
+};
 
 const inferBetKind = (betNumberRaw) => {
   const s = (betNumberRaw ?? '').toString().trim();
@@ -237,8 +241,11 @@ const Bids = () => {
   const [activeTitle, setActiveTitle] = useState(initialTitle);
   const activeItem = items.find((i) => i.title === activeTitle) || items[0];
   const isBetHistoryPanel = activeTitle === 'Bet History';
+  const isStarlineBetHistoryPanel = activeTitle === 'Starline Bet History';
   const isGameResultsPanel = activeTitle === 'Game Results';
   const rightPanelTitle = activeTitle === 'Game Results' ? 'Market Result History' : activeTitle;
+  const historyScope = isStarlineBetHistoryPanel ? 'starline' : 'main';
+  const isAnyHistoryPanel = isBetHistoryPanel || isStarlineBetHistoryPanel;
 
   // Desktop Bet History filters (desktop panel inside My Bets)
   const [isDesktopFilterOpen, setIsDesktopFilterOpen] = useState(false);
@@ -285,10 +292,6 @@ const Bids = () => {
 
   const handleDesktopItemClick = (item) => {
     // Desktop: show content on right panel (no navigation)
-    if (item?.title === 'Starline Bet History') {
-      navigate('/starline-bet-history');
-      return;
-    }
     setActiveTitle(item.title);
   };
 
@@ -449,19 +452,35 @@ const Bids = () => {
     const fromHistory = (desktopBetHistory.items || [])
       .map((x) => (x?.marketTitle || '').toString().trim())
       .filter(Boolean);
-    const uniq = Array.from(new Set([...fromApi, ...fromHistory]));
+    const uniqAll = Array.from(new Set([...fromApi, ...fromHistory]));
+    const uniq =
+      isAnyHistoryPanel
+        ? (historyScope === 'starline'
+            ? uniqAll.filter((name) => isStarlineMarketName(name))
+            : uniqAll.filter((name) => !isStarlineMarketName(name)))
+        : uniqAll;
     uniq.sort((a, b) => a.localeCompare(b));
     return uniq.map((label) => ({ label, key: normalizeMarketName(label) }));
-  }, [markets, desktopBetHistory.items]);
+  }, [markets, desktopBetHistory.items, isAnyHistoryPanel, historyScope]);
 
   const filteredDesktopRows = useMemo(() => {
+    const effectiveSelectedMarkets = isAnyHistoryPanel
+      ? (historyScope === 'starline'
+          ? (selectedMarkets || []).filter((k) => isStarlineMarketName(k))
+          : (selectedMarkets || []).filter((k) => !isStarlineMarketName(k)))
+      : selectedMarkets;
     return (desktopRows || []).filter((row) => {
+      if (isAnyHistoryPanel) {
+        const isStar = isStarlineMarketName(row.market);
+        if (historyScope === 'starline' && !isStar) return false;
+        if (historyScope !== 'starline' && isStar) return false;
+      }
       if (selectedSessions.length > 0 && !selectedSessions.includes(row.session)) return false;
-      if (selectedMarkets.length > 0 && !selectedMarkets.includes(row.marketKey)) return false;
+      if (effectiveSelectedMarkets.length > 0 && !effectiveSelectedMarkets.includes(row.marketKey)) return false;
       if (selectedStatuses.length > 0 && !selectedStatuses.includes(row.statusLabel)) return false;
       return true;
     });
-  }, [desktopRows, selectedMarkets, selectedSessions, selectedStatuses]);
+  }, [desktopRows, selectedMarkets, selectedSessions, selectedStatuses, isAnyHistoryPanel, historyScope]);
 
   useEffect(() => {
     if (!isDesktopFilterOpen) return;
@@ -514,7 +533,7 @@ const Bids = () => {
                   buttonClassName="px-4 py-2 rounded-full bg-black/40 border border-white/10 text-white font-bold text-sm shadow-sm hover:border-[#d4af37]/40 transition-colors"
                 />
               </div>
-            ) : isBetHistoryPanel ? (
+            ) : isAnyHistoryPanel ? (
               <button
                 type="button"
                 onClick={() => setIsDesktopFilterOpen(true)}
@@ -611,12 +630,12 @@ const Bids = () => {
 
           <main
             className={
-              (isBetHistoryPanel || isGameResultsPanel)
+              (isAnyHistoryPanel || isGameResultsPanel)
                 ? 'bg-transparent border-0 shadow-none p-0'
                 : 'rounded-2xl bg-[#202124] border border-white/10 shadow-[0_12px_24px_rgba(0,0,0,0.35)] p-6'
             }
           >
-            {(isBetHistoryPanel || isGameResultsPanel) ? null : (
+            {(isAnyHistoryPanel || isGameResultsPanel) ? null : (
               <div className="flex items-center justify-center gap-4">
                 <div
                   className="w-14 h-14 rounded-full flex items-center justify-center text-black shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
@@ -638,8 +657,8 @@ const Bids = () => {
               </div>
             )}
 
-            {activeTitle === 'Bet History' ? (
-              <div className={isBetHistoryPanel ? 'mt-0' : 'mt-6'}>
+            {isAnyHistoryPanel ? (
+              <div className={isAnyHistoryPanel ? 'mt-0' : 'mt-6'}>
                 <div className="max-h-[calc(100vh-220px)] overflow-y-auto hide-scrollbar">
                   {desktopBetHistory.uid && filteredDesktopRows.length === 0 ? (
                     <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-gray-300 text-sm">
