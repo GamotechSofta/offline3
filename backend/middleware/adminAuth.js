@@ -1,32 +1,46 @@
 import Admin from '../models/admin/admin.js';
+import { verifyAdminToken } from '../utils/adminJwt.js';
 
 /**
- * Middleware to verify admin authentication
- * Supports Basic Auth from headers or username/password from body
- * In production, use JWT tokens
+ * Middleware to verify admin authentication.
+ * Prefers Bearer JWT (fast); falls back to Basic Auth (username + password, slower).
  */
 export const verifyAdmin = async (req, res, next) => {
     if (typeof next !== 'function') {
         return res.status(500).json({ success: false, message: 'Server configuration error' });
     }
     try {
-        let username, password;
-
         const authHeader = req.headers.authorization;
+
+        // Prefer Bearer token (no bcrypt – fast)
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.slice(7).trim();
+            if (token) {
+                try {
+                    const payload = verifyAdminToken(token);
+                    const admin = await Admin.findById(payload.id).select('-password');
+                    if (admin && admin.status === 'active') {
+                        req.admin = admin;
+                        return next();
+                    }
+                } catch (err) {
+                    // Token invalid or expired – fall through to Basic auth
+                }
+            }
+        }
+
+        // Fallback: Basic Auth (username + password – slower, one bcrypt per request)
+        let username, password;
         if (authHeader && authHeader.startsWith('Basic ')) {
             try {
                 const credentials = Buffer.from(authHeader.replace('Basic ', ''), 'base64').toString('ascii');
                 [username, password] = credentials.split(':');
-            } catch (err) {
-                // Invalid base64
-            }
+            } catch (err) {}
         }
-
         if (!username || !password) {
             username = req.body?.username;
             password = req.body?.password;
         }
-
         if (!username || !password) {
             return res.status(401).json({
                 success: false,
@@ -41,7 +55,12 @@ export const verifyAdmin = async (req, res, next) => {
                 message: 'Invalid admin credentials',
             });
         }
-
+        if (admin.status === 'inactive') {
+            return res.status(403).json({
+                success: false,
+                message: 'Account suspended',
+            });
+        }
         const isPasswordValid = await admin.comparePassword(password);
         if (!isPasswordValid) {
             return res.status(401).json({

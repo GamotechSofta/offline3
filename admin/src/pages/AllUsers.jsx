@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaUserSlash, FaUserCheck, FaUserPlus, FaSearch } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 const ONLINE_THRESHOLD_MS = 5 * 60 * 1000;
 
 const computeIsOnline = (item) => {
@@ -39,15 +40,6 @@ const AllUsers = () => {
     const [secretPassword, setSecretPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [pendingAction, setPendingAction] = useState(null);
-
-    const getAuthHeaders = () => {
-        const admin = JSON.parse(localStorage.getItem('admin'));
-        const password = sessionStorage.getItem('adminPassword') || '';
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-        };
-    };
 
     const fetchData = async (showLoader = true) => {
         if (showLoader) setLoading(true);
@@ -100,8 +92,7 @@ const AllUsers = () => {
     }, [navigate]);
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

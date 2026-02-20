@@ -3,6 +3,7 @@ import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const formatNum = (num) => {
     if (!num && num !== 0) return '0';
@@ -28,8 +29,6 @@ const BetHistory = () => {
     const fetchBets = async () => {
         try {
             setLoading(true);
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const queryParams = new URLSearchParams();
             if (filters.userId) queryParams.append('userId', filters.userId);
             if (filters.marketId) queryParams.append('marketId', filters.marketId);
@@ -38,9 +37,7 @@ const BetHistory = () => {
             if (filters.endDate) queryParams.append('endDate', filters.endDate);
 
             const response = await fetch(`${API_BASE_URL}/bets/history?${queryParams}`, {
-                headers: {
-                    'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                },
+                headers: getAuthHeaders(),
             });
             const data = await response.json();
             if (data.success) {
@@ -100,8 +97,7 @@ const BetHistory = () => {
     }, [bets]);
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

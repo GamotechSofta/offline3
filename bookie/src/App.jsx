@@ -24,6 +24,8 @@ import BookieGameBid from './pages/GameBid/index';
 import Shortcuts from './pages/Shortcuts';
 import Receipt from './pages/Receipt';
 import BetsByUser from './pages/BetsByUser';
+import Settings from './pages/Settings';
+import { BetLayoutProvider } from './context/BetLayoutContext';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -90,6 +92,7 @@ const AppRoutes = () => (
 
         <Route path="/help-desk" element={<PrivateRoute><HelpDesk /></PrivateRoute>} />
         <Route path="/shortcuts" element={<PrivateRoute><Shortcuts /></PrivateRoute>} />
+        <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
 );
@@ -100,7 +103,9 @@ const App = () => {
             <ScrollToTop />
             <LanguageProvider>
                 <AuthProvider>
-                    <AppRoutes />
+                    <BetLayoutProvider>
+                        <AppRoutes />
+                    </BetLayoutProvider>
                 </AuthProvider>
             </LanguageProvider>
         </Router>

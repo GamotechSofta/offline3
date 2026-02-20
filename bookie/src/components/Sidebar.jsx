@@ -17,6 +17,7 @@ import {
     FaChevronDown,
     FaUserCheck,
     FaCreditCard,
+    FaCog,
 } from 'react-icons/fa';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -39,12 +40,14 @@ const Sidebar = ({ user, onLogout, isOpen = true, onClose }) => {
         { path: '/wallet', label: t('wallet'), icon: FaWallet, key: 'wallet' },
         { path: '/receipt', label: t('receipt'), icon: FaFileInvoiceDollar, key: 'receipt' },
         { path: '/shortcuts', label: t('shortcuts'), icon: FaKeyboard, key: 'shortcuts' },
+        { path: '/settings', label: t('settings'), icon: FaCog, key: 'settings' },
     ];
 
     const isActive = (path) => {
         if (path === '/my-users' || path === '/receipt') {
             return location.pathname === path || location.pathname.startsWith(path + '/');
         }
+        if (path === '/settings') return location.pathname === '/settings';
         return location.pathname === path;
     };
 

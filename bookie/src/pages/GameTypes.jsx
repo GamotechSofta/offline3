@@ -16,22 +16,11 @@ const GAME_OPTIONS = [
     },
     {
         id: 'jodi',
-        title: 'Jodi',
+        title: 'Jodi Bulk',
         icon: (
             <img
                 src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714108/Untitled_1080_x_1080_px_1080_x_1080_px_7_rpzykt.svg"
-                alt="Jodi"
-                className="w-full h-full object-contain"
-            />
-        ),
-    },
-    {
-        id: 'single-pana',
-        title: 'Single Pana',
-        icon: (
-            <img
-                src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714254/Untitled_1080_x_1080_px_1080_x_1080_px_8_jdbxyd.svg"
-                alt="Single Pana"
+                alt="Jodi Bulk"
                 className="w-full h-full object-contain"
             />
         ),
@@ -43,17 +32,6 @@ const GAME_OPTIONS = [
             <img
                 src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769714254/Untitled_1080_x_1080_px_1080_x_1080_px_8_jdbxyd.svg"
                 alt="Single Pana Bulk"
-                className="w-full h-full object-contain"
-            />
-        ),
-    },
-    {
-        id: 'double-pana',
-        title: 'Double Pana',
-        icon: (
-            <img
-                src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769713943/Untitled_1080_x_1080_px_1080_x_1080_px_6_uccv7o.svg"
-                alt="Double Pana"
                 className="w-full h-full object-contain"
             />
         ),

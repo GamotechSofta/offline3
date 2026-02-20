@@ -5,6 +5,7 @@ import MarketForm from '../components/MarketForm';
 import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const safeNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const formatTime = (timeStr) => {
@@ -100,15 +101,6 @@ const StarlineManagement = ({ embedded = false }) => {
     const [deleteGroupLoading, setDeleteGroupLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-
-    const getAuthHeaders = () => {
-        const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-        const password = sessionStorage.getItem('adminPassword') || '';
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-        };
-    };
 
     const fetchMarkets = async () => {
         try {
@@ -266,8 +258,7 @@ const StarlineManagement = ({ embedded = false }) => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

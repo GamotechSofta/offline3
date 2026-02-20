@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft, FaUserPlus, FaUser } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 
@@ -79,9 +80,6 @@ const AddUser = () => {
         setLoading(true);
 
         try {
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
-            
             // If role is 'bookie', create bookie account (Admin collection), otherwise create player (User collection)
             if (formData.role === 'bookie') {
                 const payload = {
@@ -95,10 +93,7 @@ const AddUser = () => {
                 };
                 const response = await fetch(`${API_BASE_URL}/admin/bookies`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                    },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify(payload),
                 });
 
@@ -145,10 +140,7 @@ const AddUser = () => {
                 };
                 const response = await fetch(`${API_BASE_URL}/users/create`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                    },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify(payload),
                 });
 
@@ -188,8 +180,7 @@ const AddUser = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

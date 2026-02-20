@@ -116,10 +116,14 @@ const Layout = ({ children, title }) => {
 
             {/* Main content */}
             <main className="pt-14 lg:pt-0 lg:ml-72 min-h-screen overflow-x-hidden">
-                <div className="p-3 sm:p-4 md:p-6 lg:p-8 lg:pl-10 min-w-0 max-w-full box-border">
+                <div
+                    key={location.pathname}
+                    className="p-3 sm:p-4 md:p-6 lg:p-8 lg:pl-10 min-w-0 max-w-full box-border animate-[fadeInLayout_0.2s_ease-out]"
+                >
                     {children}
                 </div>
             </main>
+            <style>{`@keyframes fadeInLayout{from{opacity:0}to{opacity:1}}`}</style>
         </div>
     );
 };

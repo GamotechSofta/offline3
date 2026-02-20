@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const PRESETS = [
     { id: 'today', label: 'Today', getRange: () => {
@@ -120,15 +121,9 @@ const Reports = () => {
     const fetchReport = async () => {
         try {
             setLoading(true);
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const response = await fetch(
                 `${API_BASE_URL}/reports?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`,
-                {
-                    headers: {
-                        'Authorization': `Basic ${btoa(`${admin?.username}:${password}`)}`,
-                    },
-                }
+                { headers: getAuthHeaders() }
             );
             const data = await response.json();
             if (data.success) {
@@ -154,8 +149,7 @@ const Reports = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

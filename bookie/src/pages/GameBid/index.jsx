@@ -5,41 +5,10 @@ import { BetCartProvider, useBetCart } from './BetCartContext';
 import CartPanel, { CartToggleButton, getStoredWidth, STORAGE_KEY } from './CartPanel';
 import GamesSidebar, { GamesSidebarToggle, getStoredSidebarWidth, SIDEBAR_STORAGE_KEY } from '../../components/GamesSidebar';
 import { API_BASE_URL } from '../../utils/api';
-import SingleDigitBid from './bids/SingleDigitBid';
-
-import JodiBid from './bids/JodiBid';
-
-import SinglePanaBid from './bids/SinglePanaBid';
-import SinglePanaBulkBid from './bids/SinglePanaBulkBid';
-import DoublePanaBid from './bids/DoublePanaBid';
-import DoublePanaBulkBid from './bids/DoublePanaBulkBid';
-import TriplePanaBid from './bids/TriplePanaBid';
-import FullSangamBid from './bids/FullSangamBid';
-import HalfSangamABid from './bids/HalfSangamABid';
-
-const GAME_TYPE_ORDER = [
-    'single-digit',
-    'jodi',
-    'single-pana',
-    'single-pana-bulk',
-    'double-pana',
-    'double-pana-bulk',
-    'triple-pana',
-    'full-sangam',
-    'half-sangam',
-];
-
-const BID_COMPONENTS = {
-    'single-digit': { component: SingleDigitBid, title: 'Single Digit', betType: 'single' },
-    'jodi': { component: JodiBid, title: 'Jodi', betType: 'jodi' },
-    'single-pana': { component: SinglePanaBid, title: 'Single Pana', betType: 'panna' },
-    'single-pana-bulk': { component: SinglePanaBulkBid, title: 'Single Pana Bulk', betType: 'panna' },
-    'double-pana': { component: DoublePanaBid, title: 'Double Pana', betType: 'panna' },
-    'double-pana-bulk': { component: DoublePanaBulkBid, title: 'Double Pana Bulk', betType: 'panna' },
-    'triple-pana': { component: TriplePanaBid, title: 'Triple Pana', betType: 'panna' },
-    'full-sangam': { component: FullSangamBid, title: 'Full Sangam', betType: 'full-sangam' },
-    'half-sangam': { component: HalfSangamABid, title: 'Half Sangam (O)', betType: 'half-sangam' },
-};
+import { GAME_TYPE_ORDER, BID_COMPONENTS } from './gameTypes';
+import { useBetLayout } from '../../context/BetLayoutContext';
+import { LAYOUT_SINGLE } from '../../utils/bookieLayout';
+import SingleScrollGameBid from './SingleScrollGameBid';
 
 /* Inner component that can access BetCartContext */
 const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidComponent }) => {
@@ -170,6 +139,17 @@ const BookieGameBid = () => {
     const [searchParams] = useSearchParams();
     const playerId = searchParams.get('playerId') || '';
     const navigate = useNavigate();
+
+    const { layout: betLayout } = useBetLayout();
+    if (betLayout === LAYOUT_SINGLE) {
+        return (
+            <BetCartProvider>
+                <PlayerBetProvider>
+                    <SingleScrollGameBid />
+                </PlayerBetProvider>
+            </BetCartProvider>
+        );
+    }
 
     const entry = BID_COMPONENTS[gameType];
 

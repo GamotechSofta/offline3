@@ -7,6 +7,7 @@ import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 import { FaChartBar } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const TABS = [
     { id: 'regular', label: 'Regular Market', icon: FaChartBar },
@@ -55,8 +56,7 @@ const Markets = () => {
     useRefreshOnMarketReset(fetchMarkets);
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 
@@ -76,15 +76,6 @@ const Markets = () => {
         setShowForm(false);
         setEditingMarket(null);
         fetchMarkets();
-    };
-
-    const getAuthHeaders = () => {
-        const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-        const password = sessionStorage.getItem('adminPassword') || '';
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-        };
     };
 
     return (

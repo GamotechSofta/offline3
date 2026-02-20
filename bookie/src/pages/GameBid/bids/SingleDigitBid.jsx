@@ -3,7 +3,7 @@ import BookieBidLayout from '../BookieBidLayout';
 import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
 
-const SingleDigitBid = ({ title, gameType, betType }) => {
+const SingleDigitBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
@@ -44,9 +44,21 @@ const SingleDigitBid = ({ title, gameType, betType }) => {
     useEffect(() => { if (isRunning) setSession('CLOSE'); }, [isRunning]);
 
     return (
-        <BookieBidLayout title={title} bidsCount={0} totalPoints={0} showDateSession={true}
-            session={session} setSession={setSession} hideFooter selectedDate={selectedDate} setSelectedDate={handleDateChange}
-            contentPaddingClass="pb-24">
+        <BookieBidLayout
+            title={title}
+            bidsCount={0}
+            totalPoints={0}
+            showDateSession={!embedInSingleScroll}
+            session={session}
+            setSession={setSession}
+            hideFooter
+            noHeader={embedInSingleScroll}
+            noDateSession={embedInSingleScroll}
+            noFooter={embedInSingleScroll}
+            selectedDate={selectedDate}
+            setSelectedDate={handleDateChange}
+            contentPaddingClass="pb-24"
+        >
             <div className="px-3 sm:px-4 py-4 sm:py-2 md:max-w-3xl md:mx-auto md:items-start">
                 <div className="space-y-4">
                     {warning && <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">{warning}</div>}

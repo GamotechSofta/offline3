@@ -3,7 +3,7 @@ import BookieBidLayout from '../BookieBidLayout';
 import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
 
-const SingleDigitBulkBid = ({ title, gameType, betType }) => {
+const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
@@ -89,10 +89,13 @@ const SingleDigitBulkBid = ({ title, gameType, betType }) => {
             title={title}
             bidsCount={0}
             totalPoints={0}
-            showDateSession={true}
+            showDateSession={!embedInSingleScroll}
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}
             session={session}
+            noHeader={embedInSingleScroll}
+            noDateSession={embedInSingleScroll}
+            noFooter={embedInSingleScroll}
             setSession={setSession}
             hideFooter
             contentPaddingClass="pb-24"
@@ -139,7 +142,7 @@ const SingleDigitBulkBid = ({ title, gameType, betType }) => {
 
                 {/* Add to Cart button */}
                 {bulkBidsCount > 0 && (
-                    <div className="mt-4 px-1">
+                    <div className={`px-1 ${embedInSingleScroll ? 'mt-2' : 'mt-4'}`}>
                         <button type="button" onClick={handleAddToCart}
                             className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]">
                             Add {rows.length} bet(s) to Cart

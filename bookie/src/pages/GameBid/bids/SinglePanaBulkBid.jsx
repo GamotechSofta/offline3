@@ -21,7 +21,7 @@ const SINGLE_PANA_BY_SUM = {
 const buildSinglePanas = () =>
     Object.keys(SINGLE_PANA_BY_SUM).sort().flatMap((k) => SINGLE_PANA_BY_SUM[k]);
 
-const SinglePanaBulkBid = ({ title, gameType, betType }) => {
+const SinglePanaBulkBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
@@ -89,6 +89,10 @@ const SinglePanaBulkBid = ({ title, gameType, betType }) => {
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}
             hideFooter
+            showDateSession={!embedInSingleScroll}
+            noHeader={embedInSingleScroll}
+            noDateSession={embedInSingleScroll}
+            noFooter={embedInSingleScroll}
             contentPaddingClass="pb-24"
         >
             <div className="px-2 sm:px-4 py-3 w-full max-w-full overflow-x-hidden">
@@ -120,7 +124,7 @@ const SinglePanaBulkBid = ({ title, gameType, betType }) => {
                         };
 
                         return (
-                            <div key={groupKey} className="bg-gray-50 rounded-xl border border-gray-200 p-3 overflow-hidden">
+                            <div key={groupKey} className={`p-3 overflow-hidden ${embedInSingleScroll ? '' : 'bg-gray-50 rounded-xl border border-gray-200'}`}>
                                 {/* Group header with bulk apply */}
                                 <div className="flex items-center gap-2 mb-3 flex-wrap">
                                     <div className="w-9 h-9 bg-orange-500 text-white flex items-center justify-center rounded-lg font-bold text-sm shrink-0 shadow-sm">
@@ -182,7 +186,7 @@ const SinglePanaBulkBid = ({ title, gameType, betType }) => {
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="mt-5 sticky bottom-3 z-10">
+                <div className={embedInSingleScroll ? 'mt-2' : 'mt-5 sticky bottom-3 z-10'}>
                     <button type="button" onClick={handleAddToCart} disabled={!canSubmit}
                         className={`w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[52px] rounded-lg shadow-lg transition-all active:scale-[0.98] ${!canSubmit ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         Add to Cart {specialCount > 0 && `(${specialCount})`}

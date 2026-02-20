@@ -12,18 +12,19 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // If already logged in, go to dashboard
+    // If already logged in (token or admin), go to dashboard immediately
     React.useEffect(() => {
-        const admin = localStorage.getItem('admin');
-        if (admin) navigate('/dashboard', { replace: true });
+        if (localStorage.getItem('adminToken') || localStorage.getItem('admin')) {
+            navigate('/dashboard', { replace: true });
+        }
     }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        
-        // Frontend validation
-        if (!username || !password) {
+        const u = (username || '').trim();
+        const p = (password || '').trim();
+        if (!u || !p) {
             setError('Username and password are required');
             return;
         }
@@ -33,10 +34,8 @@ const Login = () => {
         try {
             const response = await fetch(`${API_BASE_URL}/admin/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, password: p }),
             });
 
             let data;
@@ -49,9 +48,11 @@ const Login = () => {
             }
 
             if (data.success) {
-                localStorage.setItem('admin', JSON.stringify(data.data));
-                sessionStorage.setItem('adminPassword', password);
-                navigate('/dashboard');
+                const { token, ...adminData } = data.data;
+                localStorage.setItem('admin', JSON.stringify(adminData));
+                if (token) localStorage.setItem('adminToken', token);
+                sessionStorage.setItem('adminPassword', p);
+                navigate('/dashboard', { replace: true });
             } else {
                 setError(data.message || 'Login failed');
             }
@@ -110,6 +111,8 @@ const Login = () => {
                                          focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 
                                          transition-all duration-200 hover:border-gray-400"
                                 placeholder="Enter your username"
+                                autoComplete="username"
+                                autoFocus
                                 required
                             />
                         </div>
@@ -133,6 +136,7 @@ const Login = () => {
                                          focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 
                                          transition-all duration-200 hover:border-gray-400"
                                 placeholder="Enter your password"
+                                autoComplete="current-password"
                                 required
                             />
                             <button

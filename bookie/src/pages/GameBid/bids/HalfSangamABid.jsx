@@ -7,7 +7,7 @@ import { isValidAnyPana } from '../panaRules';
 const sanitizeDigits = (v, maxLen) => (v ?? '').toString().replace(/\D/g, '').slice(0, maxLen);
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
-const HalfSangamABid = ({ title, gameType, betType }) => {
+const HalfSangamABid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [session, setSession] = useState('OPEN');
@@ -56,9 +56,9 @@ const HalfSangamABid = ({ title, gameType, betType }) => {
     };
 
     return (
-        <BookieBidLayout title={title} bidsCount={0} totalPoints={0} showDateSession={true}
+        <BookieBidLayout title={title} bidsCount={0} totalPoints={0} showDateSession={!embedInSingleScroll}
             selectedDate={selectedDate} setSelectedDate={handleDateChange} session={session} setSession={setSession}
-            sessionOptionsOverride={['OPEN']} lockSessionSelect hideSessionSelectCaret hideFooter contentPaddingClass="pb-24">
+            sessionOptionsOverride={['OPEN']} lockSessionSelect hideSessionSelectCaret hideFooter noHeader={embedInSingleScroll} noDateSession={embedInSingleScroll} noFooter={embedInSingleScroll} contentPaddingClass="pb-24">
             <div className="px-3 sm:px-4 py-4 md:max-w-3xl md:mx-auto">
                 <div className="space-y-4">
                     {warning && (

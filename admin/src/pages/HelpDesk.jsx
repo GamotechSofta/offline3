@@ -3,6 +3,7 @@ import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 const UPLOAD_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1').replace(/\/api\/v1\/?$/, '') || 'http://localhost:3010';
 
 const HelpDesk = () => {
@@ -25,10 +26,8 @@ const HelpDesk = () => {
     useEffect(() => {
         const fetchBookies = async () => {
             try {
-                const admin = JSON.parse(localStorage.getItem('admin'));
-                const password = sessionStorage.getItem('adminPassword') || '';
                 const res = await fetch(`${API_BASE_URL}/admin/bookies`, {
-                    headers: { 'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}` },
+                    headers: getAuthHeaders(),
                 });
                 const data = await res.json();
                 if (data.success && data.data) setBookies(data.data);
@@ -40,17 +39,13 @@ const HelpDesk = () => {
     const fetchTickets = async () => {
         try {
             setLoading(true);
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const queryParams = new URLSearchParams();
             if (filters.status) queryParams.append('status', filters.status);
             if (filters.userSource) queryParams.append('userSource', filters.userSource);
             if (filters.bookieId) queryParams.append('bookieId', filters.bookieId);
 
             const response = await fetch(`${API_BASE_URL}/help-desk/tickets?${queryParams}`, {
-                headers: {
-                    'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                },
+                headers: getAuthHeaders(),
             });
             const data = await response.json();
             if (data.success) {
@@ -65,14 +60,9 @@ const HelpDesk = () => {
 
     const handleStatusUpdate = async (ticketId, newStatus) => {
         try {
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const response = await fetch(`${API_BASE_URL}/help-desk/tickets/${ticketId}/status`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ status: newStatus }),
             });
             const data = await response.json();
@@ -88,8 +78,7 @@ const HelpDesk = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

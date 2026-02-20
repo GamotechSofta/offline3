@@ -16,6 +16,7 @@ export default {
     receipt: 'पावती',
     helpDesk: 'हेल्प डेस्क',
     shortcuts: 'शॉर्टकट',
+    settings: 'सेटिंग्स',
     
     // Common
     logout: 'लॉगआउट',

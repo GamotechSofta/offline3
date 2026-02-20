@@ -5,6 +5,7 @@ import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 import { FaExclamationTriangle, FaChartBar } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const ADD_RESULT_TABS = [
     { id: 'regular', label: 'Regular Market', icon: FaChartBar },
@@ -51,15 +52,6 @@ const AddResult = () => {
         [marketsPendingResultList]
     );
     const mainPendingCount = mainPendingList.length;
-
-    const getAuthHeaders = () => {
-        const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-        const password = sessionStorage.getItem('adminPassword') || '';
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-        };
-    };
 
     const fetchMarketsPendingResult = async () => {
         try {
@@ -120,8 +112,7 @@ const AddResult = () => {
     });
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

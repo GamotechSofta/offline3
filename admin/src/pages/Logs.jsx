@@ -3,6 +3,7 @@ import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const ACTION_LABELS = {
     admin_login: 'Admin Login',
@@ -48,15 +49,6 @@ const Logs = () => {
     const [filterType, setFilterType] = useState('');
     const [sortOrder, setSortOrder] = useState('desc');
 
-    const getAuthHeaders = () => {
-        const admin = JSON.parse(localStorage.getItem('admin'));
-        const password = sessionStorage.getItem('adminPassword') || '';
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-        };
-    };
-
     const fetchLogs = async (showLoader = true) => {
         if (showLoader) setLoading(true);
         if (showLoader) setError('');
@@ -94,8 +86,7 @@ const Logs = () => {
     }, [navigate, page, filterAction, filterPerformedBy, filterType, sortOrder]);
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

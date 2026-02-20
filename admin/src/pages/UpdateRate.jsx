@@ -4,6 +4,7 @@ import AdminLayout from '../components/AdminLayout';
 import { FaPencilAlt } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const GAME_LABELS = {
     single: 'Single Digit',
@@ -46,15 +47,6 @@ const UpdateRate = () => {
             .catch(() => setHasSecretDeclarePassword(false));
     }, []);
 
-    const getAuthHeaders = () => {
-        const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-        const password = sessionStorage.getItem('adminPassword') || '';
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-        };
-    };
-
     const fetchRates = async () => {
         try {
             setLoading(true);
@@ -71,8 +63,7 @@ const UpdateRate = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

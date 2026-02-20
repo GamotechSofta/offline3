@@ -7,7 +7,7 @@ const DIGITS = Array.from({ length: 10 }, (_, i) => String(i));
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 const validateJodi = (n) => n && /^[0-9]{2}$/.test(n.toString().trim());
 
-const JodiBid = ({ title, gameType, betType }) => {
+const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [activeTab, setActiveTab] = useState('easy');
@@ -155,7 +155,10 @@ const JodiBid = ({ title, gameType, betType }) => {
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}
             hideFooter
-            showDateSession={true}
+            showDateSession={!embedInSingleScroll}
+            noHeader={embedInSingleScroll}
+            noDateSession={embedInSingleScroll}
+            noFooter={embedInSingleScroll}
             contentPaddingClass="pb-24"
         >
             <div className="px-2 sm:px-4 py-2 w-full">

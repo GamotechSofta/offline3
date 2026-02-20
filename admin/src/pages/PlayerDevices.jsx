@@ -4,15 +4,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
-
-const getAuthHeaders = () => {
-    const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-    const password = sessionStorage.getItem('adminPassword') || '';
-    return {
-        'Content-Type': 'application/json',
-        Authorization: `Basic ${btoa(`${admin.username}:${password}`)}`,
-    };
-};
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const PlayerDevices = () => {
     const { userId } = useParams();
@@ -50,8 +42,7 @@ const PlayerDevices = () => {
     }, [userId, navigate]);
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

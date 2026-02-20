@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fa';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const TABS = [
     { id: 'overview', label: 'Overview' },
@@ -55,12 +56,6 @@ const PRESETS = [
         return { from: `${y}-${String(m + 1).padStart(2, '0')}-01`, to: `${y}-${String(m + 1).padStart(2, '0')}-${String(last.getDate()).padStart(2, '0')}` };
     }},
 ];
-
-const getAuthHeaders = () => {
-    const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-    const password = sessionStorage.getItem('adminPassword') || '';
-    return { 'Content-Type': 'application/json', Authorization: `Basic ${btoa(`${admin.username}:${password}`)}` };
-};
 
 const formatCurrency = (n) => {
     const num = Number(n);
@@ -121,8 +116,7 @@ const BookieDetail = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

@@ -4,7 +4,7 @@ import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
 import { isValidTriplePana } from '../panaRules';
 
-const TriplePanaBid = ({ title, gameType, betType }) => {
+const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [activeTab, setActiveTab] = useState('easy');
@@ -91,9 +91,9 @@ const TriplePanaBid = ({ title, gameType, betType }) => {
     const addToCartBtnClass = 'w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]';
 
     return (
-        <BookieBidLayout title={title} bidsCount={0} totalPoints={0} showDateSession={true}
+        <BookieBidLayout title={title} bidsCount={0} totalPoints={0} showDateSession={!embedInSingleScroll}
             selectedDate={selectedDate} setSelectedDate={handleDateChange} session={session} setSession={setSession}
-            hideFooter contentPaddingClass="pb-24">
+            hideFooter noHeader={embedInSingleScroll} noDateSession={embedInSingleScroll} noFooter={embedInSingleScroll} contentPaddingClass="pb-24">
             <div className="px-3 sm:px-4 py-4 sm:py-2 md:max-w-3xl md:mx-auto md:items-start">
                 <div className="space-y-4">
                     {warning && (

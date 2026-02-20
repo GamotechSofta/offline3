@@ -5,18 +5,10 @@ import { FaArrowLeft, FaClock, FaHashtag, FaChartBar, FaEdit } from 'react-icons
 import { useRefreshOnMarketReset } from '../hooks/useRefreshOnMarketReset';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const TRIPLE_PATTI_DIGITS = DIGITS.map((d) => d + d + d);
-
-const getAuthHeaders = () => {
-    const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-    const password = sessionStorage.getItem('adminPassword') || '';
-    return {
-        'Content-Type': 'application/json',
-        Authorization: `Basic ${btoa(`${admin.username}:${password}`)}`,
-    };
-};
 
 /** Format "10:15" or "10:15:00" for display */
 const formatTime = (timeStr) => {
@@ -1018,8 +1010,7 @@ const MarketDetail = () => {
     useRefreshOnMarketReset(fetchStats);
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

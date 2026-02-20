@@ -1,6 +1,7 @@
 import Admin from '../models/admin/admin.js';
 import bcrypt from 'bcryptjs';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
+import { signAdminToken } from '../utils/adminJwt.js';
 
 /**
  * Admin login
@@ -17,7 +18,7 @@ export const adminLogin = async (req, res) => {
             });
         }
 
-        const admin = await Admin.findOne({ username });
+        const admin = await Admin.findOne({ username }).select('password status role username _id');
         if (!admin) {
             return res.status(401).json({
                 success: false,
@@ -50,7 +51,8 @@ export const adminLogin = async (req, res) => {
             });
         }
 
-        await logActivity({
+        // Log in background so login response returns immediately (no await)
+        logActivity({
             action: 'admin_login',
             performedBy: admin.username,
             performedByType: admin.role === 'super_admin' ? 'super_admin' : 'bookie',
@@ -58,8 +60,9 @@ export const adminLogin = async (req, res) => {
             targetId: admin._id.toString(),
             details: `${admin.username} logged in (${admin.role === 'super_admin' ? 'Admin Panel' : 'Bookie Panel'})`,
             ip: getClientIp(req),
-        });
+        }).catch(() => {});
 
+        const token = signAdminToken(admin);
         res.status(200).json({
             success: true,
             message: 'Login successful',
@@ -67,6 +70,7 @@ export const adminLogin = async (req, res) => {
                 id: admin._id,
                 username: admin.username,
                 role: admin.role,
+                token,
             },
         });
     } catch (error) {

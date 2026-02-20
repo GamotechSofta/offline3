@@ -16,7 +16,8 @@ export default {
     receipt: 'Receipt',
     helpDesk: 'Help Desk',
     shortcuts: 'Shortcuts',
-    
+    settings: 'Settings',
+
     // Common
     logout: 'Logout',
     changeLanguage: 'Change Language',

@@ -3,6 +3,7 @@ import AdminLayout from '../components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010/api/v1';
+import { getAuthHeaders, clearAdminSession } from '../lib/auth';
 
 const Wallet = () => {
     const navigate = useNavigate();
@@ -22,12 +23,8 @@ const Wallet = () => {
     const fetchWallets = async () => {
         try {
             setLoading(true);
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const response = await fetch(`${API_BASE_URL}/wallet/all`, {
-                headers: {
-                    'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                },
+                headers: getAuthHeaders(),
             });
             const data = await response.json();
             if (data.success) {
@@ -43,12 +40,8 @@ const Wallet = () => {
     const fetchTransactions = async () => {
         try {
             setLoading(true);
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const response = await fetch(`${API_BASE_URL}/wallet/transactions`, {
-                headers: {
-                    'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                },
+                headers: getAuthHeaders(),
             });
             const data = await response.json();
             if (data.success) {
@@ -63,14 +56,9 @@ const Wallet = () => {
 
     const handleAdjustBalance = async (userId, amount, type) => {
         try {
-            const admin = JSON.parse(localStorage.getItem('admin'));
-            const password = sessionStorage.getItem('adminPassword') || '';
             const response = await fetch(`${API_BASE_URL}/wallet/adjust`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${btoa(`${admin.username}:${password}`)}`,
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ userId, amount, type }),
             });
             const data = await response.json();
@@ -83,8 +71,7 @@ const Wallet = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('admin');
-        sessionStorage.removeItem('adminPassword');
+        clearAdminSession();
         navigate('/');
     };
 

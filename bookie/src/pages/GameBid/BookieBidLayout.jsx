@@ -19,6 +19,9 @@ const BookieBidLayout = ({
     lockSessionSelect = false,
     hideSessionSelectCaret = false,
     hideFooter = false,
+    noHeader = false,
+    noDateSession = false,
+    noFooter = false,
     onSubmit = () => {},
     showFooterStats = true,
     submitLabel = 'Submit Bets',
@@ -79,7 +82,7 @@ const BookieBidLayout = ({
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans w-full max-w-full overflow-x-hidden">
-            {/* Header */}
+            {!noHeader && (
             <div className="bg-gray-100 border-b border-gray-200 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 px-3">
                 <button
                     onClick={() => {
@@ -101,12 +104,12 @@ const BookieBidLayout = ({
                     {wallet.toFixed(1)}
                 </div>
             </div>
-
+            )}
 
             {extraHeader}
 
             {/* Date & Session Controls */}
-            {showDateSession && (
+            {!noDateSession && showDateSession && (
                 <div className="pb-4 pt-2 flex flex-row flex-wrap gap-2 sm:gap-3 overflow-hidden px-3">
                     {/* Date Input */}
                     <div className="relative flex-1 min-w-0 shrink overflow-hidden">
@@ -192,7 +195,7 @@ const BookieBidLayout = ({
             <div
                 ref={contentRef}
                 className={`flex-1 overflow-y-auto overflow-x-hidden w-full max-w-full ${
-                    contentPaddingClass ?? (hideFooter ? 'pb-6' : 'pb-32')
+                    noFooter ? 'pb-0' : (contentPaddingClass ?? (hideFooter ? 'pb-6' : 'pb-32'))
                 }`}
                 style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
             >
@@ -200,7 +203,7 @@ const BookieBidLayout = ({
             </div>
 
             {/* Footer */}
-            {!hideFooter && (
+            {!noFooter && !hideFooter && (
                 <div className="fixed bottom-0 left-0 right-0 lg:left-56 z-10 py-3 px-3 bg-white/95 backdrop-blur-sm border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
                     <div className="flex justify-center">
                         <div className={`w-full max-w-sm md:max-w-md rounded-2xl flex flex-col sm:flex-row items-center gap-4 sm:gap-6 ${
