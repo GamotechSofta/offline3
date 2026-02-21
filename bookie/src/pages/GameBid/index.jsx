@@ -4,7 +4,8 @@ import { PlayerBetProvider } from './PlayerBetContext';
 import { BetCartProvider, useBetCart } from './BetCartContext';
 import CartPanel, { CartToggleButton, getStoredWidth, STORAGE_KEY } from './CartPanel';
 import GamesSidebar, { GamesSidebarToggle, getStoredSidebarWidth, SIDEBAR_STORAGE_KEY } from '../../components/GamesSidebar';
-import { API_BASE_URL } from '../../utils/api';
+import { API_BASE_URL, getMarketDisplayName } from '../../utils/api';
+import { useLanguage } from '../../context/LanguageContext';
 import { GAME_TYPE_ORDER, BID_COMPONENTS } from './gameTypes';
 import { useBetLayout } from '../../context/BetLayoutContext';
 import { LAYOUT_SINGLE } from '../../utils/bookieLayout';
@@ -13,9 +14,10 @@ import SingleScrollGameBid from './SingleScrollGameBid';
 /* Inner component that can access BetCartContext */
 const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidComponent }) => {
     const navigate = useNavigate();
+    const { language } = useLanguage();
     const [gamesSidebarOpen, setGamesSidebarOpen] = useState(false);
     const [cartOpen, setCartOpen] = useState(false);
-    const [marketName, setMarketName] = useState('');
+    const [market, setMarket] = useState(null);
 
     // Ctrl + ArrowRight → next game, Ctrl + ArrowLeft → previous game
     useEffect(() => {
@@ -96,7 +98,7 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
                 marketId={marketId}
                 playerId={playerId}
                 activeGameType={gameType}
-                marketName={marketName}
+                marketName={market ? getMarketDisplayName(market, language) : ''}
                 isOpen={gamesSidebarOpen}
                 onClose={() => setGamesSidebarOpen(false)}
                 width={sidebarWidth}
@@ -117,6 +119,7 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
                     title={title}
                     gameType={gameType}
                     betType={betType}
+                    fitSingleScreen={gameType === 'jodi'}
                 />
             </div>
 
