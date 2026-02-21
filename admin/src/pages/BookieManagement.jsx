@@ -30,7 +30,6 @@ const BookieManagement = () => {
         confirmPassword: '',
         commissionPercentage: '',
         canManagePayments: false,
-        balance: '',
     });
 
     const [formLoading, setFormLoading] = useState(false);
@@ -82,7 +81,6 @@ const BookieManagement = () => {
         let processed = value;
         if (name === 'phone') processed = value.replace(/\D/g, '').slice(0, 10);
         if (name === 'commissionPercentage') processed = value.replace(/[^0-9.]/g, '').slice(0, 6);
-        if (name === 'balance') processed = value.replace(/[^0-9.]/g, '').slice(0, 16);
         setFormData({ ...formData, [name]: processed });
         setError('');
     };
@@ -125,7 +123,6 @@ const BookieManagement = () => {
                 password: formData.password,
                 commissionPercentage: formData.commissionPercentage ? Number(formData.commissionPercentage) : 0,
                 canManagePayments: formData.canManagePayments || false,
-                balance: formData.balance !== '' ? Math.max(0, Number(formData.balance)) : 0,
             };
             const response = await fetch(`${API_BASE_URL}/admin/bookies`, {
                 method: 'POST',
@@ -137,7 +134,7 @@ const BookieManagement = () => {
                 const phoneNumber = formData.phone.replace(/\D/g, '').slice(0, 10);
                 setSuccess(`Bookie account created successfully! Login credentials - Phone: ${phoneNumber}, Password: ${formData.password}`);
                 setShowCreateModal(false);
-                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false, balance: '' });
+                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false });
                 fetchBookies();
                 setTimeout(() => setSuccess(''), 10000); // Show for 10 seconds so user can note the credentials
             } else {
@@ -177,7 +174,6 @@ const BookieManagement = () => {
                 phone: formData.phone.replace(/\D/g, '').slice(0, 10) || formData.phone,
                 commissionPercentage: formData.commissionPercentage !== '' ? Number(formData.commissionPercentage) : undefined,
                 canManagePayments: formData.canManagePayments,
-                balance: formData.balance !== '' ? Math.max(0, Number(formData.balance)) : undefined,
             };
             if (formData.password) updateData.password = formData.password;
 
@@ -191,7 +187,7 @@ const BookieManagement = () => {
                 setSuccess('Bookie updated successfully!');
                 setShowEditModal(false);
                 setSelectedBookie(null);
-                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false, balance: '' });
+                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false });
                 fetchBookies();
                 setTimeout(() => setSuccess(''), 3000);
             } else {
@@ -310,7 +306,6 @@ const BookieManagement = () => {
             confirmPassword: '',
             commissionPercentage: bookie.commissionPercentage != null ? String(bookie.commissionPercentage) : '0',
             canManagePayments: bookie.canManagePayments || false,
-            balance: bookie.balance != null ? String(bookie.balance) : '0',
         });
         setShowEditModal(true);
     };
@@ -342,7 +337,7 @@ const BookieManagement = () => {
                         <h1 className="text-2xl sm:text-3xl font-bold">Bookie Accounts Management</h1>
                         <button
                             onClick={() => {
-                                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false, balance: '' });
+                                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false });
                                 setShowCreateModal(true);
                             }}
                             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-gray-800 font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
@@ -400,9 +395,6 @@ const BookieManagement = () => {
                                             Commission
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            Balance
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                                             Payment Management
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
@@ -445,9 +437,6 @@ const BookieManagement = () => {
                                                     <FaPercent className="w-2.5 h-2.5" />
                                                     {bookie.commissionPercentage ?? 0}
                                                 </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                                                ₹{(bookie.balance ?? 0).toLocaleString('en-IN')}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -608,19 +597,6 @@ const BookieManagement = () => {
                                     <p className="mt-1 text-xs text-gray-500">Commission this bookie earns (0–100%). Default: 0%</p>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-2">Initial Balance (₹)</label>
-                                    <input
-                                        type="text"
-                                        inputMode="decimal"
-                                        name="balance"
-                                        value={formData.balance}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                        placeholder="0"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Balance allocated to this bookie. Deducted when they give balance to players they create.</p>
-                                </div>
-                                <div>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="checkbox"
@@ -763,19 +739,6 @@ const BookieManagement = () => {
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
                                     </div>
                                     <p className="mt-1 text-xs text-gray-500">Commission this bookie earns (0–100%).</p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-2">Balance (₹)</label>
-                                    <input
-                                        type="text"
-                                        inputMode="decimal"
-                                        name="balance"
-                                        value={formData.balance}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                        placeholder="0"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Bookie account balance. Deducted when they give balance to players they create.</p>
                                 </div>
                                 <div>
                                     <label className="flex items-center gap-2 cursor-pointer">
