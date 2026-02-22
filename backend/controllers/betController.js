@@ -353,25 +353,25 @@ export const placeBetForPlayer = async (req, res) => {
             sanitized.push({ betType, betNumber, amount, betOn });
         }
 
+        // Deduct from BOOKIE's balance (not user's wallet)
         // Use atomic operation to prevent race conditions
-        // Try to decrement balance atomically - this will fail if balance is insufficient
-        const walletUpdate = await Wallet.findOneAndUpdate(
-            { userId, balance: { $gte: totalAmount } },
+        const bookieUpdate = await Admin.findOneAndUpdate(
+            { _id: bookie._id, balance: { $gte: totalAmount } },
             { $inc: { balance: -totalAmount } },
-            { new: true, upsert: false }
+            { new: true }
         );
 
-        if (!walletUpdate) {
-            // Check if wallet exists to provide better error message
-            const existingWallet = await Wallet.findOne({ userId });
-            const currentBalance = existingWallet?.balance ?? 0;
+        if (!bookieUpdate) {
+            // Check bookie's current balance for better error message
+            const currentBookie = await Admin.findById(bookie._id).select('balance').lean();
+            const currentBalance = currentBookie?.balance ?? 0;
             return res.status(400).json({
                 success: false,
-                message: `Insufficient balance. Required: ₹${totalAmount}, Available: ₹${currentBalance}`,
+                message: `Insufficient bookie balance. Required: ₹${totalAmount}, Available: ₹${currentBalance}`,
             });
         }
 
-        const wallet = walletUpdate;
+        const newBookieBalance = bookieUpdate.balance;
 
         const betIds = [];
         const createdBets = [];
@@ -395,52 +395,22 @@ export const placeBetForPlayer = async (req, res) => {
                 createdBets.push(bet);
             }
         } catch (createErr) {
-            // Rollback: restore balance atomically
-            await Wallet.findOneAndUpdate(
-                { userId },
-                { $inc: { balance: totalAmount } },
-                { upsert: false }
+            // Rollback: restore bookie balance atomically
+            await Admin.findOneAndUpdate(
+                { _id: bookie._id },
+                { $inc: { balance: totalAmount } }
             );
             throw createErr;
         }
 
-        const labelForType = (t) => {
-            const s = String(t || '').toLowerCase();
-            if (s === 'single') return 'Single Ank';
-            if (s === 'jodi') return 'Digit';
-            if (s === 'panna') return 'Panna';
-            if (s === 'half-sangam') return 'Half Sangam';
-            if (s === 'full-sangam') return 'Full Sangam';
-            return 'Bet';
-        };
-
-        try {
-            if (createdBets.length > 0) {
-                await WalletTransaction.insertMany(
-                    createdBets.map((b) => ({
-                        userId,
-                        type: 'debit',
-                        amount: Number(b.amount) || 0,
-                        description: `Bet placed by bookie – ${market.marketName} (${labelForType(b.betType)} ${String(b.betNumber || '').trim()})`,
-                        referenceId: b._id.toString(),
-                    }))
-                );
-            }
-        } catch (txErr) {
-            // Rollback: restore balance atomically
-            await Wallet.findOneAndUpdate(
-                { userId },
-                { $inc: { balance: totalAmount } },
-                { upsert: false }
-            );
-            throw txErr;
-        }
+        // Note: No wallet transaction for user since bookie pays from their balance
+        // Bookie's balance is already deducted above
 
         res.status(201).json({
             success: true,
             message: `Bet placed successfully for ${user.username}`,
             data: {
-                newBalance: wallet.balance,
+                newBookieBalance: newBookieBalance,
                 betIds,
                 totalAmount,
                 playerName: user.username,

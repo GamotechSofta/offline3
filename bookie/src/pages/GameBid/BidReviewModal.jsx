@@ -467,11 +467,11 @@ const BidReviewModal = ({
                       <div className="text-gray-800 font-bold text-base sm:text-lg text-orange-500 leading-tight">{amount}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center border-r border-gray-200">
-                      <div className="text-gray-400 text-[11px] sm:text-sm">Player Balance Before</div>
+                      <div className="text-gray-400 text-[11px] sm:text-sm">Your Balance Before</div>
                       <div className="text-gray-800 font-bold text-base sm:text-lg leading-tight">{formatMoney(before)}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center">
-                      <div className="text-gray-400 text-[11px] sm:text-sm">Player Balance After</div>
+                      <div className="text-gray-400 text-[11px] sm:text-sm">Your Balance After</div>
                       <div className={`font-bold text-base sm:text-lg leading-tight ${after < 0 ? 'text-red-500' : 'text-gray-800'}`}>{formatMoney(after)}</div>
                     </div>
                   </div>

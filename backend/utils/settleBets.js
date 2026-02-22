@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Bet from '../models/bet/bet.js';
 import Market from '../models/market/market.js';
 import User from '../models/user/user.js';
+import Admin from '../models/admin/admin.js';
 import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import { getRatesMap, DEFAULT_RATES } from '../models/rate/rate.js';
 
@@ -59,20 +60,36 @@ function getTodayMidnight() {
 }
 
 /**
- * Helper: Pay winnings to user, adding to wallet.
- * Returns the amount added to wallet.
+ * Helper: Pay winnings to the correct account.
+ * - If bet was placed by bookie (placedByBookie=true), credit to BOOKIE's balance
+ * - If bet was placed by player themselves, credit to PLAYER's wallet
+ * Returns the amount added.
  */
-async function payWinnings(userId, payout, description, referenceId) {
+async function payWinnings(userId, payout, description, referenceId, betInfo = {}) {
     if (!payout || payout <= 0) return 0;
 
-    // Add payout to wallet
+    const { placedByBookie, placedByBookieId } = betInfo;
+    console.log(`[payWinnings] betInfo received:`, JSON.stringify(betInfo));
+    console.log(`[payWinnings] placedByBookie=${placedByBookie}, placedByBookieId=${placedByBookieId}`);
+
+    // If bet was placed by bookie, credit winnings to bookie's balance
+    if (placedByBookie && placedByBookieId) {
+        await Admin.findByIdAndUpdate(
+            placedByBookieId,
+            { $inc: { balance: payout } }
+        );
+        console.log(`[payWinnings] Credited ₹${payout} to BOOKIE ${placedByBookieId} (bet placed by bookie)`);
+        return payout;
+    }
+
+    // Otherwise, credit to player's wallet (original behavior)
     await Wallet.findOneAndUpdate(
         { userId },
         { $inc: { balance: payout } },
         { upsert: true }
     );
 
-    // Create transaction record
+    // Create transaction record for player
     await WalletTransaction.create({
         userId,
         type: 'credit',
@@ -81,6 +98,7 @@ async function payWinnings(userId, payout, description, referenceId) {
         referenceId: referenceId?.toString(),
     });
 
+    console.log(`[payWinnings] Credited ₹${payout} to PLAYER ${userId} wallet`);
     return payout;
 }
 
@@ -176,7 +194,7 @@ export async function settleOpening(marketId, openingNumber) {
                 { status: won ? 'won' : 'lost', payout }
             );
             if (won && payout > 0) {
-                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Single ${num})`, bet._id);
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Single ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         } else if (type === 'panna' && /^[0-9]{3}$/.test(num)) {
             const won = num === open3;
@@ -188,7 +206,7 @@ export async function settleOpening(marketId, openingNumber) {
                 { status: won ? 'won' : 'lost', payout }
             );
             if (won && payout > 0) {
-                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Panna ${num})`, bet._id);
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Panna ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         } else if (type === 'half-sangam') {
             // Half Sangam Format A (Open Pana - Open Ank) settled at open: e.g. "156-2" wins when open result is 156 (open ank = 1+5+6 = 2)
@@ -205,7 +223,7 @@ export async function settleOpening(marketId, openingNumber) {
                     { status: won ? 'won' : 'lost', payout }
                 );
                 if (won && payout > 0) {
-                    await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Half Sangam)`, bet._id);
+                    await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Half Sangam)`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
                 }
             }
             // Format B (Open Ank - Close Pana) remains pending until closing
@@ -265,7 +283,7 @@ export async function settleClosing(marketId, closingNumber) {
             const payout = won ? amount * getRateForKey(rates, 'single') : 0;
             await Bet.updateOne({ _id: bet._id }, { status: won ? 'won' : 'lost', payout });
             if (won && payout > 0) {
-                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Single ${num})`, bet._id);
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Single ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         }
         // CLOSE-session Patti/Panna (settles on closing patti)
@@ -276,7 +294,7 @@ export async function settleClosing(marketId, closingNumber) {
             const payout = won ? amount * getRateForKey(rates, rateKey) : 0;
             await Bet.updateOne({ _id: bet._id }, { status: won ? 'won' : 'lost', payout });
             if (won && payout > 0) {
-                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Panna ${num})`, bet._id);
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Panna ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         }
         else if (type === 'jodi' && /^[0-9]{2}$/.test(num)) {
@@ -288,7 +306,7 @@ export async function settleClosing(marketId, closingNumber) {
                 { status: won ? 'won' : 'lost', payout }
             );
             if (won && payout > 0) {
-                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Jodi ${num})`, bet._id);
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Jodi ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         } else if (type === 'half-sangam') {
             // Half Sangam is open-only: settled at Declare Open. Any pending half-sangam at close = lost.
@@ -308,7 +326,7 @@ export async function settleClosing(marketId, closingNumber) {
                 { status: won ? 'won' : 'lost', payout }
             );
             if (won && payout > 0) {
-                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Full Sangam)`, bet._id);
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Full Sangam)`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         }
     }

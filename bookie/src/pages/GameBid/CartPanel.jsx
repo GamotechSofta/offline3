@@ -22,7 +22,7 @@ const getStoredWidth = () => {
 
 const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
     const { cartItems, cartCount, cartTotal, removeFromCart, clearCart } = useBetCart();
-    const { market, placeBet, updatePlayerBalance, walletBalance, playerName, selectedPlayer } = usePlayerBet();
+    const { market, placeBet, updatePlayerBalance, walletBalance, bookieBalance, playerName, selectedPlayer } = usePlayerBet();
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const dragRef = useRef(null);
@@ -125,7 +125,7 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
 
         const result = await placeBet(marketId, payload, scheduledDate);
         if (!result.success) throw new Error(result.message || 'Failed to place bets');
-        if (result.data?.newBalance != null) updatePlayerBalance(result.data.newBalance);
+        // Note: newBookieBalance is returned since bookie pays, not player
         clearCart();
     };
 
@@ -255,10 +255,10 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
                     <div className="px-3 py-3 border-t border-gray-200 bg-white shrink-0 space-y-2">
                         <div className="flex items-center justify-between text-xs px-1">
                             <span className="text-gray-400">
-                                Wallet: <span className="text-gray-800 font-bold">₹{Number(walletBalance || 0).toLocaleString('en-IN')}</span>
+                                Your Balance: <span className="text-gray-800 font-bold">₹{Number(bookieBalance || 0).toLocaleString('en-IN')}</span>
                             </span>
-                            <span className={`font-bold ${(walletBalance - cartTotal) < 0 ? 'text-red-500' : 'text-green-600'}`}>
-                                After: ₹{(walletBalance - cartTotal).toLocaleString('en-IN')}
+                            <span className={`font-bold ${(bookieBalance - cartTotal) < 0 ? 'text-red-500' : 'text-green-600'}`}>
+                                After: ₹{(bookieBalance - cartTotal).toLocaleString('en-IN')}
                             </span>
                         </div>
                         <button
@@ -298,7 +298,7 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
                 dateText={dateText}
                 labelKey="Number"
                 rows={reviewRows}
-                walletBefore={walletBalance}
+                walletBefore={bookieBalance}
                 totalBids={cartCount}
                 totalAmount={cartTotal}
                 playerName={playerName}

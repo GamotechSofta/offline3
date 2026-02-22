@@ -79,6 +79,8 @@ export const bookieLogin = async (req, res) => {
             ip: getClientIp(req),
         });
 
+        console.log(`[Bookie Login] Username: ${bookie.username}, Balance from DB: ${bookie.balance}`);
+        
         res.status(200).json({
             success: true,
             message: 'Login successful',
@@ -88,6 +90,7 @@ export const bookieLogin = async (req, res) => {
                 role: bookie.role,
                 email: bookie.email,
                 phone: bookie.phone,
+                balance: bookie.balance || 0,
                 uiTheme: bookie.uiTheme || { themeId: 'default' },
             },
         });
@@ -163,6 +166,7 @@ export const getProfile = async (req, res) => {
                 email: bookie.email,
                 phone: bookie.phone,
                 role: bookie.role,
+                balance: bookie.balance || 0,
                 uiTheme: bookie.uiTheme || { themeId: 'default' },
                 canManagePayments: bookie.canManagePayments || false,
             },

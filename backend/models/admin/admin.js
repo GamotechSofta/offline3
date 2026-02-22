@@ -56,6 +56,12 @@ const adminSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    /** Bookie-only: Wallet balance. Set by super admin. */
+    balance: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
 }, {
     timestamps: true,
 });

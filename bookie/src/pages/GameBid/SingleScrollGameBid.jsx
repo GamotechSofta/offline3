@@ -18,6 +18,7 @@ const SingleScrollGameBid = () => {
         market,
         selectedPlayer,
         walletBalance,
+        bookieBalance,
         playerName,
         placeBet,
         updatePlayerBalance,
@@ -55,7 +56,7 @@ const SingleScrollGameBid = () => {
 
         const result = await placeBet(mktId, payload, scheduledDate);
         if (!result.success) throw new Error(result.message || 'Failed to place bets');
-        if (result.data?.newBalance != null) updatePlayerBalance(result.data.newBalance);
+        // Note: newBookieBalance is returned since bookie pays, not player
         clearCart();
     };
 
@@ -201,7 +202,7 @@ const SingleScrollGameBid = () => {
                 dateText={dateText}
                 labelKey="Number"
                 rows={reviewRows}
-                walletBefore={walletBalance}
+                walletBefore={bookieBalance}
                 totalBids={cartCount}
                 totalAmount={cartTotal}
                 playerName={playerName}

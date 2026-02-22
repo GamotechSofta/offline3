@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { API_BASE_URL, getBookieAuthHeaders } from '../utils/api';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import {
     FaChartLine,
     FaMoneyBillWave,
@@ -126,6 +127,7 @@ const SkeletonCard = () => (
 
 const Dashboard = () => {
     const { t } = useLanguage();
+    const { updateBookie } = useAuth();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -142,15 +144,27 @@ const Dashboard = () => {
         if (customMode && customFrom && customTo) return { from: customFrom, to: customTo };
         const preset = PRESETS.find((p) => p.id === datePreset);
         const range = preset ? preset.getRange() : PRESETS[0].getRange();
-        // If "all" is selected, return null values to fetch all data
         if (range.from === null && range.to === null) {
             return { from: null, to: null };
         }
         return range;
     };
 
+    const refreshBookieProfile = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/bookie/profile`, { headers: getBookieAuthHeaders() });
+            const data = await response.json();
+            if (data.success && data.data) {
+                updateBookie(data.data);
+            }
+        } catch (err) {
+            console.error('Failed to refresh bookie profile:', err);
+        }
+    };
+
     useEffect(() => {
         fetchDashboardStats();
+        refreshBookieProfile();
     }, []);
 
     const fetchDashboardStats = async (rangeOverride, options = {}) => {

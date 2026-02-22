@@ -142,6 +142,8 @@ const PHONE_REGEX = /^[6-9]\d{9}$/;
  */
 export const createBookie = async (req, res) => {
     try {
+        console.log('[createBookie] Full request body:', JSON.stringify(req.body, null, 2));
+        
         if (req.admin?.role !== 'super_admin') {
             return res.status(403).json({
                 success: false,
@@ -149,7 +151,7 @@ export const createBookie = async (req, res) => {
             });
         }
 
-        const { username, firstName, lastName, email, password, phone, commissionPercentage } = req.body;
+        const { username, firstName, lastName, email, password, phone, commissionPercentage, balance } = req.body;
 
         const derivedUsername = (firstName != null && lastName != null)
             ? `${String(firstName).trim()} ${String(lastName).trim()}`.trim()
@@ -208,6 +210,7 @@ export const createBookie = async (req, res) => {
             return res.status(409).json({ success: false, message: 'A bookie with this name already exists' });
         }
 
+        const initialBalance = (balance != null && Number.isFinite(Number(balance))) ? Math.max(0, Number(balance)) : 0;
         const bookie = new Admin({
             username: derivedUsername,
             password,
@@ -216,11 +219,15 @@ export const createBookie = async (req, res) => {
             phone: trimmedPhone,
             status: 'active',
             commissionPercentage: (commissionPercentage != null && Number.isFinite(Number(commissionPercentage))) ? Math.min(100, Math.max(0, Number(commissionPercentage))) : 0,
+            balance: initialBalance,
         });
         await bookie.save();
         
-        // Verify the bookie was created correctly (for debugging)
-        console.log(`[Bookie Created] ID: ${bookie._id}, Username: ${bookie.username}, Phone: ${bookie.phone}, Status: ${bookie.status}, Role: ${bookie.role}`);
+        console.log(`[Bookie Created] ID: ${bookie._id}, Username: ${bookie.username}, Phone: ${bookie.phone}, Balance: ${bookie.balance}, canManagePayments: ${bookie.canManagePayments}, Status: ${bookie.status}`);
+        
+        // Verify by re-fetching from database
+        const verifyBookie = await Admin.findById(bookie._id).select('balance canManagePayments').lean();
+        console.log(`[Bookie Verify] Database values - Balance: ${verifyBookie?.balance}, canManagePayments: ${verifyBookie?.canManagePayments}`);
 
         await logActivity({
             action: 'create_bookie',
@@ -243,6 +250,7 @@ export const createBookie = async (req, res) => {
                 phone: bookie.phone,
                 status: bookie.status,
                 commissionPercentage: bookie.commissionPercentage,
+                balance: bookie.balance ?? 0,
             },
         });
     } catch (error) {
@@ -300,6 +308,11 @@ export const getAllBookies = async (req, res) => {
             .select('-password')
             .sort({ createdAt: -1 });
 
+        // Debug: log first bookie's balance
+        if (bookies.length > 0) {
+            console.log(`[getAllBookies] First bookie - Username: ${bookies[0].username}, Balance: ${bookies[0].balance}, canManagePayments: ${bookies[0].canManagePayments}`);
+        }
+
         res.status(200).json({
             success: true,
             count: bookies.length,
@@ -349,6 +362,8 @@ export const getBookieById = async (req, res) => {
  */
 export const updateBookie = async (req, res) => {
     try {
+        console.log('[updateBookie] Full request body:', JSON.stringify(req.body, null, 2));
+        
         if (req.admin?.role !== 'super_admin') {
             return res.status(403).json({
                 success: false,
@@ -357,7 +372,7 @@ export const updateBookie = async (req, res) => {
         }
 
         const { id } = req.params;
-        const { username, firstName, lastName, email, phone, status, password, uiTheme, commissionPercentage, canManagePayments } = req.body;
+        const { username, firstName, lastName, email, phone, status, password, uiTheme, commissionPercentage, canManagePayments, balance } = req.body;
 
         const bookie = await Admin.findOne({ _id: id, role: 'bookie' });
         if (!bookie) {
@@ -423,6 +438,16 @@ export const updateBookie = async (req, res) => {
         // Update payment management permission if provided
         if (canManagePayments !== undefined) {
             bookie.canManagePayments = Boolean(canManagePayments);
+        }
+        // Update balance if provided (super admin can set bookie balance)
+        console.log(`[updateBookie] Balance from request: ${balance}, type: ${typeof balance}`);
+        if (balance !== undefined && balance !== null && balance !== '') {
+            const newBal = Number(balance);
+            console.log(`[updateBookie] Setting balance: old=${bookie.balance}, new=${newBal}`);
+            if (Number.isFinite(newBal) && newBal >= 0) {
+                bookie.balance = newBal;
+                console.log(`[updateBookie] Balance set to: ${bookie.balance}`);
+            }
         }
         // Update password if provided
         if (password) {

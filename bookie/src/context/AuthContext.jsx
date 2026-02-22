@@ -47,8 +47,14 @@ export const AuthProvider = ({ children }) => {
         setBookie(null);
     };
 
+    const updateBookie = (newData) => {
+        const updated = { ...bookie, ...newData };
+        localStorage.setItem(AUTH_KEY, JSON.stringify(updated));
+        setBookie(updated);
+    };
+
     return (
-        <AuthContext.Provider value={{ bookie, loading, login, logout }}>
+        <AuthContext.Provider value={{ bookie, loading, login, logout, updateBookie }}>
             {children}
         </AuthContext.Provider>
     );
