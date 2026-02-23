@@ -38,6 +38,7 @@ const GamesSidebar = ({
     playerId,
     activeGameType,
     marketName,
+    visibleGameTypes = null,
     isOpen = false,
     onClose,
     width,
@@ -46,6 +47,11 @@ const GamesSidebar = ({
     const navigate = useNavigate();
     const [isDragging, setIsDragging] = useState(false);
     const dragRef = useRef(null);
+
+    const visibleSet = Array.isArray(visibleGameTypes) ? new Set(visibleGameTypes) : null;
+    const filteredGameTypes = visibleSet
+        ? GAME_TYPES_LIST.filter((g) => visibleSet.has(g.id))
+        : GAME_TYPES_LIST;
 
     const buildUrl = (gameId) => {
         const query = playerId ? `?playerId=${playerId}` : '';
@@ -170,7 +176,7 @@ const GamesSidebar = ({
                     <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 pt-1 pb-2">
                         Game Types
                     </p>
-                    {GAME_TYPES_LIST.map((game) => (
+                    {filteredGameTypes.map((game) => (
                         <button
                             key={game.id}
                             type="button"

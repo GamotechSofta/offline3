@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, userLogin, userSignup, userHeartbeat, getUsers, getSingleUser, togglePlayerStatus, deletePlayer, clearLoginDevices, updatePlayerToGiveToTake } from '../../controllers/userController.js';
+import { createUser, userLogin, userSignup, userHeartbeat, getUsers, getSingleUser, togglePlayerStatus, deletePlayer, clearLoginDevices, updatePlayerToGiveToTake, updatePlayerPassword } from '../../controllers/userController.js';
 import { verifyAdmin, verifySuperAdmin } from '../../middleware/adminAuth.js';
 
 const router = express.Router();
@@ -17,5 +17,6 @@ router.patch('/:id/toggle-status', verifySuperAdmin, togglePlayerStatus);
 router.delete('/:id', verifySuperAdmin, deletePlayer);
 router.patch('/:id/clear-devices', verifyAdmin, clearLoginDevices);
 router.patch('/:id/to-give-take', verifyAdmin, updatePlayerToGiveToTake);
+router.patch('/:id/password', verifyAdmin, updatePlayerPassword);
 
 export default router;

@@ -49,7 +49,7 @@ export function isBettingAllowed(market, now = new Date()) {
   const nowMs = now.getTime();
 
   // After closing time: no betting
-  if (nowMs >= lastBetAt) {
+  if (nowMs > lastBetAt) {
     return {
       allowed: false,
       message: `Betting closed. Closing time has passed. You can place bets until ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,

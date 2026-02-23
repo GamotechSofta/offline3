@@ -8,10 +8,8 @@ const AddUser = () => {
     const { t } = useLanguage();
     const [formData, setFormData] = useState({
         username: '',
-        email: '',
         password: '',
         phone: '',
-        role: 'user',
         balance: 0,
     });
     const [loading, setLoading] = useState(false);
@@ -33,20 +31,27 @@ const AddUser = () => {
         setSuccess('');
         setLoading(true);
         try {
+            const trimmedPhone = String(formData.phone || '').replace(/\D/g, '').slice(0, 10);
+            const payload = {
+                ...formData,
+                // Keep API compatibility while removing visible email/role fields from the form.
+                email: `${trimmedPhone}@player.local`,
+                role: 'user',
+                phone: trimmedPhone,
+            };
+
             const response = await fetch(`${API_BASE_URL}/users/create`, {
                 method: 'POST',
                 headers: getBookieAuthHeaders(),
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
             });
             const data = await response.json();
             if (data.success) {
                 setSuccess(t('playerCreatedSuccess'));
                 setFormData({
                     username: '',
-                    email: '',
                     password: '',
                     phone: '',
-                    role: 'user',
                     balance: 0,
                 });
             } else {
@@ -85,20 +90,6 @@ const AddUser = () => {
                                 type="text"
                                 name="username"
                                 value={formData.username}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-gray-600 text-sm font-medium mb-2">
-                                {t('email')} *
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
                                 onChange={handleChange}
                                 className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
                                 required
@@ -150,21 +141,6 @@ const AddUser = () => {
                                 maxLength="10"
                             />
                             <p className="text-xs text-gray-500 mt-1">{t('phoneRequiredForLogin')}</p>
-                        </div>
-
-                        <div>
-                            <label className="block text-gray-600 text-sm font-medium mb-2">
-                                Role *
-                            </label>
-                            <select
-                                name="role"
-                                value={formData.role}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                required
-                            >
-                                <option value="user">Player</option>
-                            </select>
                         </div>
 
                         <div>

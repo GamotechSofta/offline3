@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BookieBidLayout from '../BookieBidLayout';
 import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
+import { isPastOpeningTime } from '../../../utils/marketTiming';
 
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
@@ -24,7 +25,7 @@ const buildSinglePanas = () =>
 const SinglePanaBulkBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
-    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
+    const [session, setSession] = useState(() => (isPastOpeningTime(market) ? 'CLOSE' : 'OPEN'));
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
         try {
@@ -45,7 +46,7 @@ const SinglePanaBulkBid = ({ title, gameType, betType, embedInSingleScroll = fal
         showWarning._t = window.setTimeout(() => setWarning(''), 2200);
     };
 
-    const isRunning = market?.status === 'running';
+    const isRunning = isPastOpeningTime(market);
     useEffect(() => { if (isRunning) setSession('CLOSE'); }, [isRunning]);
 
     const singlePanas = useMemo(() => buildSinglePanas(), []);

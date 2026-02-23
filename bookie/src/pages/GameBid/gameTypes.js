@@ -16,6 +16,13 @@ export const GAME_TYPE_ORDER = [
     'half-sangam',
 ];
 
+export const CLOSE_SESSION_HIDDEN_GAME_TYPES = ['jodi', 'full-sangam', 'half-sangam'];
+
+export const getBettableGameTypeOrder = (isPastOpenTime) => {
+    if (!isPastOpenTime) return GAME_TYPE_ORDER;
+    return GAME_TYPE_ORDER.filter((id) => !CLOSE_SESSION_HIDDEN_GAME_TYPES.includes(id));
+};
+
 export const BID_COMPONENTS = {
     'single-digit': { component: SingleDigitBid, title: 'Single Digit', betType: 'single' },
     'jodi': { component: JodiBulkBid, title: 'Jodi Bulk', betType: 'jodi' },

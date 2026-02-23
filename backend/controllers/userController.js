@@ -575,6 +575,58 @@ export const updatePlayerToGiveToTake = async (req, res) => {
 };
 
 /**
+ * Set/reset password for a player (Admin/Bookie).
+ * Body: { password }
+ */
+export const updatePlayerPassword = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { password } = req.body;
+        const bookieUserIds = await getBookieUserIds(req.admin);
+
+        if (!password || String(password).length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 6 characters',
+            });
+        }
+
+        const user = await User.findById(id).select('username');
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Player not found' });
+        }
+
+        if (bookieUserIds !== null) {
+            const allowed = bookieUserIds.some((uid) => uid.toString() === id);
+            if (!allowed) {
+                return res.status(403).json({ success: false, message: 'Access denied to this player' });
+            }
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(String(password), salt);
+        await User.updateOne({ _id: id }, { $set: { password: hashedPassword, updatedAt: new Date() } });
+
+        await logActivity({
+            action: 'reset_player_password',
+            performedBy: req.admin?.username || 'Admin',
+            performedByType: req.admin?.role || 'admin',
+            targetType: 'user',
+            targetId: id,
+            details: `Password updated for player "${user.username}"`,
+            ip: getClientIp(req),
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Player password updated successfully',
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
  * Toggle player account status (suspend/unsuspend)
  * Only super_admin can toggle. Sets isActive to false (suspended) or true (active).
  * Body: { secretDeclarePassword?: string } – required if admin has it set

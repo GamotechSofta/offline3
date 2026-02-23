@@ -20,6 +20,12 @@ const getStoredWidth = () => {
     return DEFAULT_WIDTH;
 };
 
+const shouldAutoSwitchToClose = (result) => {
+    const msg = String(result?.message || '').toLowerCase();
+    if (result?.code === 'BETTING_CLOSED' && msg.includes('for close bets')) return true;
+    return msg.includes('opening time') && msg.includes('select close session');
+};
+
 const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
     const { cartItems, cartCount, cartTotal, removeFromCart, clearCart } = useBetCart();
     const { market, placeBet, updatePlayerBalance, walletBalance, bookieBalance, playerName, selectedPlayer } = usePlayerBet();
@@ -123,7 +129,11 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
             }
         } catch (e) { /* ignore */ }
 
-        const result = await placeBet(marketId, payload, scheduledDate);
+        let result = await placeBet(marketId, payload, scheduledDate);
+        if (!result.success && shouldAutoSwitchToClose(result)) {
+            const closePayload = payload.map((b) => ({ ...b, betOn: 'close' }));
+            result = await placeBet(marketId, closePayload, scheduledDate);
+        }
         if (!result.success) throw new Error(result.message || 'Failed to place bets');
         // Note: newBookieBalance is returned since bookie pays, not player
         clearCart();

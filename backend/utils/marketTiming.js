@@ -56,7 +56,7 @@ export function isBettingAllowedForSession(market, now = new Date(), betOn = 'op
                 message: 'Close betting opens at opening time. You can place close bets after the opening time.',
             };
         }
-        if (nowMs >= lastBetAt) {
+        if (nowMs > lastBetAt) {
             return {
                 allowed: false,
                 message: `Betting closed. Closing time has passed. You can place bets until ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
@@ -73,7 +73,7 @@ export function isBettingAllowedForSession(market, now = new Date(), betOn = 'op
             message: `Betting closed. Opening time (${startTimeDisplay}) has passed. You can place open bets until the opening time. For close bets, select Close session.`,
         };
     }
-    if (nowMs >= lastBetAt) {
+    if (nowMs > lastBetAt) {
         return {
             allowed: false,
             message: `Betting closed. Closing time has passed. You can place bets until ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
@@ -99,7 +99,7 @@ export function isBettingAllowed(market, now = new Date()) {
     const { openAt, lastBetAt, startStr, closureSec } = bounds;
     const nowMs = now.getTime();
 
-    if (nowMs >= lastBetAt) {
+    if (nowMs > lastBetAt) {
         return {
             allowed: false,
             message: `Betting closed. Closing time has passed. You can place bets until ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,

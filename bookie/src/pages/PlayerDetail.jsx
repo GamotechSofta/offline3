@@ -114,6 +114,13 @@ const PlayerDetail = () => {
     const [toGiveTakeError, setToGiveTakeError] = useState('');
     const [toGiveTakeSuccess, setToGiveTakeSuccess] = useState('');
 
+    // Password modal
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
+
 
     // Init date to today
     useEffect(() => {
@@ -412,6 +419,41 @@ const PlayerDetail = () => {
         }
     };
 
+    const openPasswordModal = () => {
+        setNewPassword('');
+        setPasswordError('');
+        setPasswordSuccess('');
+        setPasswordModalOpen(true);
+    };
+
+    const handlePasswordSubmit = async () => {
+        if (!newPassword || newPassword.length < 6) {
+            setPasswordError('Password must be at least 6 characters');
+            return;
+        }
+        setPasswordError('');
+        setPasswordSuccess('');
+        setPasswordLoading(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/users/${userId}/password`, {
+                method: 'PATCH',
+                headers: getBookieAuthHeaders(),
+                body: JSON.stringify({ password: newPassword }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setPasswordSuccess('Password updated successfully');
+                setNewPassword('');
+            } else {
+                setPasswordError(data.message || 'Failed to update password');
+            }
+        } catch (err) {
+            setPasswordError('Network error. Please try again.');
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
 
     // Bet stats
     const betStats = {
@@ -581,11 +623,11 @@ const PlayerDetail = () => {
                         <button onClick={() => openFundModal('withdraw')} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold transition-colors">
                             <FaMinusCircle className="w-3.5 h-3.5" /> Withdraw
                         </button>
-                        <button onClick={() => openFundModal('set')} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white text-xs sm:text-sm font-semibold transition-colors">
-                            <FaWallet className="w-3.5 h-3.5" /> Set Balance
-                        </button>
                         <button onClick={openToGiveTakeModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-xs sm:text-sm font-semibold transition-colors">
                             <FaExchangeAlt className="w-3.5 h-3.5" /> To Give/Take
+                        </button>
+                        <button onClick={openPasswordModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-xs sm:text-sm font-semibold transition-colors">
+                            Set Password
                         </button>
                         <button onClick={() => navigate(`/games?playerId=${userId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-semibold transition-colors">
                             <FaGamepad className="w-3.5 h-3.5" /> Place Bet
@@ -1126,6 +1168,56 @@ const PlayerDetail = () => {
 
                                 {fundSuccess && (
                                     <button type="button" onClick={() => setFundModalOpen(false)} className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors">
+                                        Done
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ========== PASSWORD MODAL ========== */}
+                {passwordModalOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
+                        <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-sm">
+                            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                                <h3 className="text-base font-bold text-gray-800">Set Player Password</h3>
+                                <button type="button" onClick={() => setPasswordModalOpen(false)} className="text-gray-400 hover:text-gray-600 text-lg font-bold">×</button>
+                            </div>
+                            <div className="p-4 space-y-4">
+                                {passwordError && <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-3 py-2">{passwordError}</div>}
+                                {passwordSuccess && <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-3 py-2">{passwordSuccess}</div>}
+
+                                {!passwordSuccess && (
+                                    <>
+                                        <div>
+                                            <label className="block text-gray-600 text-sm font-medium mb-1.5">New Password</label>
+                                            <input
+                                                type="password"
+                                                value={newPassword}
+                                                onChange={(e) => setNewPassword(e.target.value)}
+                                                className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                                placeholder="Minimum 6 characters"
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handlePasswordSubmit}
+                                            disabled={passwordLoading || !newPassword}
+                                            className="w-full font-bold py-3 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                        >
+                                            {passwordLoading ? (
+                                                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <>Update Password</>
+                                            )}
+                                        </button>
+                                    </>
+                                )}
+
+                                {passwordSuccess && (
+                                    <button type="button" onClick={() => setPasswordModalOpen(false)} className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors">
                                         Done
                                     </button>
                                 )}

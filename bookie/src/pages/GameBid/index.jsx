@@ -6,10 +6,11 @@ import CartPanel, { CartToggleButton, getStoredWidth, STORAGE_KEY } from './Cart
 import GamesSidebar, { GamesSidebarToggle, getStoredSidebarWidth, SIDEBAR_STORAGE_KEY } from '../../components/GamesSidebar';
 import { API_BASE_URL, getMarketDisplayName } from '../../utils/api';
 import { useLanguage } from '../../context/LanguageContext';
-import { GAME_TYPE_ORDER, BID_COMPONENTS } from './gameTypes';
+import { BID_COMPONENTS, getBettableGameTypeOrder } from './gameTypes';
 import { useBetLayout } from '../../context/BetLayoutContext';
 import { LAYOUT_SINGLE } from '../../utils/bookieLayout';
 import SingleScrollGameBid from './SingleScrollGameBid';
+import { isPastOpeningTime } from '../../utils/marketTiming';
 
 /* Inner component that can access BetCartContext */
 const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidComponent }) => {
@@ -18,25 +19,27 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
     const [gamesSidebarOpen, setGamesSidebarOpen] = useState(false);
     const [cartOpen, setCartOpen] = useState(false);
     const [market, setMarket] = useState(null);
+    const isPastOpenTime = isPastOpeningTime(market);
+    const availableGameTypes = getBettableGameTypeOrder(isPastOpenTime);
 
     // Navigate to previous/next game type (by index)
     const goToPrevGame = useCallback(() => {
-        const currentIdx = GAME_TYPE_ORDER.indexOf(gameType);
+        const currentIdx = availableGameTypes.indexOf(gameType);
         if (currentIdx === -1) return;
-        const nextIdx = (currentIdx - 1 + GAME_TYPE_ORDER.length) % GAME_TYPE_ORDER.length;
-        const nextGame = GAME_TYPE_ORDER[nextIdx];
+        const nextIdx = (currentIdx - 1 + availableGameTypes.length) % availableGameTypes.length;
+        const nextGame = availableGameTypes[nextIdx];
         const query = playerId ? `?playerId=${playerId}` : '';
         navigate(`/games/${marketId}/${nextGame}${query}`);
-    }, [gameType, marketId, playerId, navigate]);
+    }, [availableGameTypes, gameType, marketId, playerId, navigate]);
 
     const goToNextGame = useCallback(() => {
-        const currentIdx = GAME_TYPE_ORDER.indexOf(gameType);
+        const currentIdx = availableGameTypes.indexOf(gameType);
         if (currentIdx === -1) return;
-        const nextIdx = (currentIdx + 1) % GAME_TYPE_ORDER.length;
-        const nextGame = GAME_TYPE_ORDER[nextIdx];
+        const nextIdx = (currentIdx + 1) % availableGameTypes.length;
+        const nextGame = availableGameTypes[nextIdx];
         const query = playerId ? `?playerId=${playerId}` : '';
         navigate(`/games/${marketId}/${nextGame}${query}`);
-    }, [gameType, marketId, playerId, navigate]);
+    }, [availableGameTypes, gameType, marketId, playerId, navigate]);
 
     // ArrowLeft / ArrowRight (or Ctrl+Arrow) → previous/next game box; skip when focus is in input/textarea/select
     useEffect(() => {
@@ -53,7 +56,7 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
             if (isEditable && !withCtrl) return;
 
             e.preventDefault();
-            const currentIdx = GAME_TYPE_ORDER.indexOf(gameType);
+            const currentIdx = availableGameTypes.indexOf(gameType);
             if (currentIdx === -1) return;
 
             if (e.key === 'ArrowRight') {
@@ -65,7 +68,7 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [gameType, goToPrevGame, goToNextGame]);
+    }, [availableGameTypes, gameType, goToPrevGame, goToNextGame]);
 
     // Sidebar width (left)
     const [sidebarWidth, setSidebarWidth] = useState(getStoredSidebarWidth);
@@ -90,12 +93,20 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
                 const data = await res.json();
                 if (data.success && Array.isArray(data.data)) {
                     const found = data.data.find((m) => m._id === marketId);
-                    if (found) setMarketName(found.marketName || '');
+                        if (found) setMarket(found);
                 }
             } catch (err) { /* silent */ }
         };
         fetchMarketName();
     }, [marketId]);
+
+    useEffect(() => {
+        if (!gameType) return;
+        if (availableGameTypes.includes(gameType)) return;
+        if (availableGameTypes.length === 0) return;
+        const query = playerId ? `?playerId=${playerId}` : '';
+        navigate(`/games/${marketId}/${availableGameTypes[0]}${query}`, { replace: true });
+    }, [availableGameTypes, gameType, marketId, navigate, playerId]);
 
     return (
         <div className="min-h-screen bg-white">
@@ -121,6 +132,7 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
                 playerId={playerId}
                 activeGameType={gameType}
                 marketName={market ? getMarketDisplayName(market, language) : ''}
+                visibleGameTypes={availableGameTypes}
                 isOpen={gamesSidebarOpen}
                 onClose={() => setGamesSidebarOpen(false)}
                 width={sidebarWidth}

@@ -159,12 +159,11 @@ const MyUsers = () => {
                     <div>
                         {/* Desktop Table */}
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm min-w-[1000px]">
+                            <table className="w-full text-sm min-w-[900px]">
                                 <thead className="bg-gray-100">
                                     <tr>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase w-8">#</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('username')}</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('email')}</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('phone')}</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('balance')}</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('toGive')}</th>
@@ -184,7 +183,6 @@ const MyUsers = () => {
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3 font-medium">
                                                     <Link to={`/my-users/${item._id}`} className="text-orange-500 hover:text-orange-600 hover:underline truncate block max-w-[140px]">{item.username}</Link>
                                                 </td>
-                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600 truncate max-w-[160px]">{item.email || '—'}</td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{item.phone || '—'}</td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3">
                                                     <span className="font-mono font-medium text-green-600 text-xs sm:text-sm">

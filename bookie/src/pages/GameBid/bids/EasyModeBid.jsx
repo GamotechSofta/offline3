@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BookieBidLayout from '../BookieBidLayout';
 import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
+import { isPastOpeningTime } from '../../../utils/marketTiming';
 
 const EasyModeBid = ({
     title,
@@ -20,7 +21,7 @@ const EasyModeBid = ({
     const { addToCart } = useBetCart();
     const [activeTab, setActiveTab] = useState('easy');
     const lockSessionToOpen = specialModeType === 'jodi';
-    const [session, setSession] = useState(() => (lockSessionToOpen ? 'OPEN' : (market?.status === 'running' ? 'CLOSE' : 'OPEN')));
+    const [session, setSession] = useState(() => (lockSessionToOpen ? 'OPEN' : (isPastOpeningTime(market) ? 'CLOSE' : 'OPEN')));
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
     const pointsInputRef = useRef(null);
@@ -50,7 +51,7 @@ const EasyModeBid = ({
         showWarning._t = window.setTimeout(() => setWarning(''), 2200);
     };
 
-    const isRunning = market?.status === 'running';
+    const isRunning = isPastOpeningTime(market);
     useEffect(() => {
         if (lockSessionToOpen) {
             if (session !== 'OPEN') setSession('OPEN');

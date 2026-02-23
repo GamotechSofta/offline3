@@ -3,12 +3,13 @@ import BookieBidLayout from '../BookieBidLayout';
 import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
 import { isValidTriplePana } from '../panaRules';
+import { isPastOpeningTime } from '../../../utils/marketTiming';
 
 const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
     const [activeTab, setActiveTab] = useState('easy');
-    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
+    const [session, setSession] = useState(() => (isPastOpeningTime(market) ? 'CLOSE' : 'OPEN'));
     const [inputNumber, setInputNumber] = useState('');
     const [inputPoints, setInputPoints] = useState('');
     const pointsInputRef = useRef(null);
@@ -38,7 +39,7 @@ const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }
     );
     const specialInputRefs = useRef({});
 
-    const isRunning = market?.status === 'running';
+    const isRunning = isPastOpeningTime(market);
     useEffect(() => { if (isRunning) setSession('CLOSE'); }, [isRunning]);
 
     const handleAddToCart = () => {

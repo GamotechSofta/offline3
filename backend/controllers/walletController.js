@@ -1,6 +1,7 @@
 import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import User from '../models/user/user.js';
 import Bet from '../models/bet/bet.js';
+import Admin from '../models/admin/admin.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 
@@ -172,6 +173,22 @@ export const adjustBalance = async (req, res) => {
             });
         }
 
+        // When a bookie adds funds to a player, deduct the same amount from the bookie's balance.
+        if (type === 'credit' && req.admin?.role === 'bookie') {
+            const updatedBookie = await Admin.findOneAndUpdate(
+                { _id: req.admin._id, balance: { $gte: numAmount } },
+                { $inc: { balance: -numAmount } },
+                { new: true }
+            ).select('balance');
+
+            if (!updatedBookie) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Insufficient bookie balance',
+                });
+            }
+        }
+
         let wallet = await Wallet.findOne({ userId });
         if (!wallet) {
             wallet = new Wallet({ userId, balance: 0 });
@@ -195,6 +212,14 @@ export const adjustBalance = async (req, res) => {
         }
 
         await wallet.save();
+
+        // When a bookie withdraws funds from a player, add that amount to the bookie's balance.
+        if (type === 'debit' && req.admin?.role === 'bookie') {
+            await Admin.updateOne(
+                { _id: req.admin._id },
+                { $inc: { balance: numAmount } }
+            );
+        }
 
         await WalletTransaction.create({
             userId,

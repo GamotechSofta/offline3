@@ -5,7 +5,14 @@ import { useBetCart } from './BetCartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { getMarketDisplayName } from '../../utils/api';
 import BidReviewModal from './BidReviewModal';
-import { GAME_TYPE_ORDER, BID_COMPONENTS } from './gameTypes';
+import { BID_COMPONENTS, getBettableGameTypeOrder } from './gameTypes';
+import { isPastOpeningTime } from '../../utils/marketTiming';
+
+const shouldAutoSwitchToClose = (result) => {
+    const msg = String(result?.message || '').toLowerCase();
+    if (result?.code === 'BETTING_CLOSED' && msg.includes('for close bets')) return true;
+    return msg.includes('opening time') && msg.includes('select close session');
+};
 
 const SingleScrollGameBid = () => {
     const { marketId } = useParams();
@@ -28,6 +35,7 @@ const SingleScrollGameBid = () => {
     const { language } = useLanguage();
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const marketDisplayName = market ? getMarketDisplayName(market, language) : '';
+    const visibleGameTypes = getBettableGameTypeOrder(isPastOpeningTime(market));
 
     const handlePlaceBet = async () => {
         const mktId = market?._id || market?.id;
@@ -54,7 +62,11 @@ const SingleScrollGameBid = () => {
             }
         } catch (e) { /* ignore */ }
 
-        const result = await placeBet(mktId, payload, scheduledDate);
+        let result = await placeBet(mktId, payload, scheduledDate);
+        if (!result.success && shouldAutoSwitchToClose(result)) {
+            const closePayload = payload.map((b) => ({ ...b, betOn: 'close' }));
+            result = await placeBet(mktId, closePayload, scheduledDate);
+        }
         if (!result.success) throw new Error(result.message || 'Failed to place bets');
         // Note: newBookieBalance is returned since bookie pays, not player
         clearCart();
@@ -142,7 +154,7 @@ const SingleScrollGameBid = () => {
             {/* Scrollable content */}
             <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-behavior-y-contain px-3 sm:px-4 py-3 pb-28">
                 <div className="space-y-3 max-w-4xl mx-auto">
-                    {GAME_TYPE_ORDER.map((gt, i) => {
+                    {visibleGameTypes.map((gt, i) => {
                         const entry = BID_COMPONENTS[gt];
                         if (!entry) return null;
                         const BidComponent = entry.component;

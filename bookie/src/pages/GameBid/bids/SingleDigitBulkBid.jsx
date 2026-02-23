@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import BookieBidLayout from '../BookieBidLayout';
 import { usePlayerBet } from '../PlayerBetContext';
 import { useBetCart } from '../BetCartContext';
+import { isPastOpeningTime } from '../../../utils/marketTiming';
 
 const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
     const { market } = usePlayerBet();
     const { addToCart } = useBetCart();
-    const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
+    const [session, setSession] = useState(() => (isPastOpeningTime(market) ? 'CLOSE' : 'OPEN'));
     const [inputPoints, setInputPoints] = useState('');
     const [bids, setBids] = useState([]);
     const [warning, setWarning] = useState('');
@@ -29,7 +30,7 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
         showWarning._t = window.setTimeout(() => setWarning(''), 2200);
     };
 
-    const isRunning = market?.status === 'running';
+    const isRunning = isPastOpeningTime(market);
     useEffect(() => {
         if (isRunning) setSession('CLOSE');
     }, [isRunning]);

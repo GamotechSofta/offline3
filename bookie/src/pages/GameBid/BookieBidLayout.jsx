@@ -1,6 +1,7 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerBet } from './PlayerBetContext';
+import { isPastOpeningTime } from '../../utils/marketTiming';
 
 /**
  * BookieBidLayout - mirrors frontend's BidLayout interface but adapted for bookie panel.
@@ -60,7 +61,7 @@ const BookieBidLayout = ({
         setInternalDate(newDate);
     };
 
-    const isRunning = market?.status === 'running';
+    const isRunning = isPastOpeningTime(market);
     const isToday = currentDate === minDate;
     const isScheduled = currentDate > minDate;
 

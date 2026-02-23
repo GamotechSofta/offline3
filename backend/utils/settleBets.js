@@ -52,6 +52,83 @@ function digitFromPatti(threeDigitStr) {
 }
 
 /**
+ * Half Sangam winner validation (cross-side only).
+ *
+ * Market result shape:
+ *   OpenPana_OpenClose_ClosePana
+ * Example:
+ *   234_26_222
+ *   - openPana  = 234
+ *   - openAnk   = 2
+ *   - closeAnk  = 6
+ *   - closePana = 222
+ *
+ * Supported bet formats:
+ * 1) Open Half Sangam  -> "OpenPana-CloseAnk" (PPP-D)
+ * 2) Close Half Sangam -> "OpenAnk-ClosePana" (D-PPP)
+ */
+function parseMarketResultParts(openingNumber, closingNumber) {
+    const openPana = /^\d{3}$/.test(String(openingNumber || '').trim()) ? String(openingNumber).trim() : null;
+    const closePana = /^\d{3}$/.test(String(closingNumber || '').trim()) ? String(closingNumber).trim() : null;
+    const openAnk = openPana ? digitFromPatti(openPana) : null;
+    const closeAnk = closePana ? digitFromPatti(closePana) : null;
+    return { openPana, openAnk, closeAnk, closePana };
+}
+
+/**
+ * Partial-result safe gate for Half Sangam:
+ * Half Sangam is close-result dependent and must be evaluated only
+ * after close panna is declared.
+ * - Open Half (PPP-D) needs openPana + closeAnk (derived from closePana)
+ * - Close Half (D-PPP) needs openAnk + closePana
+ * If closePana is missing (open-only declaration), keep bet pending.
+ */
+function canEvaluateHalfSangam(betNumber, resultParts = {}) {
+    const { openPana, openAnk, closeAnk, closePana } = resultParts;
+    if (closePana == null) return false;
+    const normalized = String(betNumber || '').replace(/[._·]/g, '-');
+    const parts = normalized.split('-').map((p) => (p || '').trim()).filter(Boolean);
+    if (parts.length !== 2) return false;
+    const first = parts[0] || '';
+    const second = parts[1] || '';
+
+    const isOpenHalfFormat = /^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second);
+    const isCloseHalfFormat = /^[0-9]$/.test(first) && /^[0-9]{3}$/.test(second);
+
+    if (isOpenHalfFormat) return openPana != null && closeAnk != null;
+    if (isCloseHalfFormat) return openAnk != null && closePana != null;
+    return false;
+}
+
+function isWinningHalfSangam(betNumber, resultParts = {}) {
+    const { openPana, openAnk, closeAnk, closePana } = resultParts;
+    const normalized = String(betNumber || '').replace(/[._·]/g, '-');
+    const parts = normalized.split('-').map((p) => (p || '').trim()).filter(Boolean);
+    if (parts.length !== 2) return false;
+    const first = parts[0] || '';
+    const second = parts[1] || '';
+
+    const isOpenHalfFormat = /^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second);
+    const isCloseHalfFormat = /^[0-9]$/.test(first) && /^[0-9]{3}$/.test(second);
+
+    const isOpenHalfWin =
+        isOpenHalfFormat &&
+        openPana != null &&
+        closeAnk != null &&
+        first === openPana &&
+        second === closeAnk;
+
+    const isCloseHalfWin =
+        isCloseHalfFormat &&
+        openAnk != null &&
+        closePana != null &&
+        first === openAnk &&
+        second === closePana;
+
+    return isOpenHalfWin || isCloseHalfWin;
+}
+
+/**
  * Helper: Get today's date at midnight (start of day) for scheduled bet filtering.
  */
 function getTodayMidnight() {
@@ -209,24 +286,10 @@ export async function settleOpening(marketId, openingNumber) {
                 await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Panna ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         } else if (type === 'half-sangam') {
-            // Half Sangam Format A (Open Pana - Open Ank) settled at open: e.g. "156-2" wins when open result is 156 (open ank = 1+5+6 = 2)
-            const parts = num.split('-').map((p) => (p || '').trim());
-            const first = parts[0] || '';
-            const second = parts[1] || '';
-            const isFormatA = /^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second);
-            const isFormatB = /^[0-9]$/.test(first) && /^[0-9]{3}$/.test(second);
-            if (isFormatA) {
-                const won = first === open3 && openDigit != null && second === openDigit;
-                const payout = won ? amount * getRateForKey(rates, 'halfSangam') : 0;
-                await Bet.updateOne(
-                    { _id: bet._id },
-                    { status: won ? 'won' : 'lost', payout }
-                );
-                if (won && payout > 0) {
-                    await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Half Sangam)`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
-                }
-            }
-            // Format B (Open Ank - Close Pana) remains pending until closing
+            // Correct Half Sangam is cross-side and needs close-side data.
+            // So do NOT settle on opening declaration; keep pending for settleClosing().
+            // - Open Half Sangam:  Open Pana + Close Ank
+            // - Close Half Sangam: Open Ank  + Close Pana
         }
         // jodi, full-sangam remain pending until closing
     }
@@ -246,9 +309,9 @@ export async function settleClosing(marketId, closingNumber) {
     await Market.findByIdAndUpdate(marketId, { closingNumber });
 
     const rates = await getRatesMap();
-    const lastDigitOpen = digitFromPatti(open3);
-    const lastDigitClose = digitFromPatti(closingNumber);
-    const close3 = closingNumber;
+    const close3 = String(closingNumber || '').trim();
+    const parsedResult = parseMarketResultParts(open3, close3);
+    const { openAnk: lastDigitOpen, closeAnk: lastDigitClose } = parsedResult;
 
     const canonicalId = market._id.toString();
     const oid = toObjectId(canonicalId);
@@ -272,6 +335,7 @@ export async function settleClosing(marketId, closingNumber) {
             }
         ]
     }).lean();
+
     for (const bet of pendingBets) {
         const type = (bet.betType || '').toLowerCase();
         const num = (bet.betNumber || '').toString().trim();
@@ -309,11 +373,21 @@ export async function settleClosing(marketId, closingNumber) {
                 await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Jodi ${num})`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
             }
         } else if (type === 'half-sangam') {
-            // Half Sangam is open-only: settled at Declare Open. Any pending half-sangam at close = lost.
+            // Correct cross-side Half Sangam settlement:
+            // 1) Open Half Sangam  -> Open Pana + Close Ank  (PPP-D)
+            // 2) Close Half Sangam -> Open Ank  + Close Pana (D-PPP)
+            // Partial-result safe rule:
+            // if opposite-side result is not available yet, keep as pending for reprocessing.
+            if (!canEvaluateHalfSangam(num, parsedResult)) continue;
+            const won = isWinningHalfSangam(num, parsedResult);
+            const payout = won ? amount * getRateForKey(rates, 'halfSangam') : 0;
             await Bet.updateOne(
                 { _id: bet._id },
-                { status: 'lost', payout: 0 }
+                { status: won ? 'won' : 'lost', payout }
             );
+            if (won && payout > 0) {
+                await payWinnings(bet.userId, payout, `Win – ${market.marketName} (Half Sangam)`, bet._id, { placedByBookie: bet.placedByBookie, placedByBookieId: bet.placedByBookieId });
+            }
         } else if (type === 'full-sangam') {
             const parts = num.split('-');
             const betOpen3 = parts[0]?.trim() || '';
@@ -413,7 +487,7 @@ export async function previewDeclareOpen(marketId, openingNumber, options = {}) 
         }
     }
 
-    // Half Sangam: same as other open games (single, panna) – include in totals and on-patti when Format A matches
+    // Half Sangam is cross-side (needs close ank/close panna), so it is NOT settled in open preview.
     const matchHalfSangam = {
         marketId: oid,
         betType: 'half-sangam',
@@ -424,23 +498,8 @@ export async function previewDeclareOpen(marketId, openingNumber, options = {}) 
     const halfSangamBets = await Bet.find(matchHalfSangam).lean();
     for (const bet of halfSangamBets) {
         const amount = Number(bet.amount) || 0;
-        const isPending = (bet.status || '').toString().toLowerCase() === 'pending';
-        totalBetAmount += amount;
         totalBetAmountHalfSangam += amount;
-        userIds.add(bet.userId.toString());
         allMarketUserIds.add(bet.userId.toString());
-        const num = (bet.betNumber || '').toString().trim();
-        const parts = num.split('-').map((p) => (p || '').trim());
-        const first = parts[0] || '';
-        const second = parts[1] || '';
-        if (/^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second) && open3 != null && lastDigitOpen != null && first === open3 && second === lastDigitOpen) {
-            totalBetAmountOnPatti += amount;
-            playersBetOnPatti.add(bet.userId.toString());
-            if (isPending) {
-                totalWinAmount += amount * getRateForKey(rates, 'halfSangam');
-                totalWinAmountOnPatti += amount * getRateForKey(rates, 'halfSangam');
-            }
-        }
     }
     totalBetAmountHalfSangam = Math.round(totalBetAmountHalfSangam * 100) / 100;
 
@@ -510,8 +569,8 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
     const isCloseSettleTypeBet = (bet) => {
         const type = (bet.betType || '').toLowerCase();
         const isCloseSession = (bet.betOn || '').toString().toLowerCase() === 'close';
-        // Half Sangam is open-only; exclude from close preview
-        return type === 'jodi' || type === 'full-sangam' || (type === 'single' && isCloseSession) || (type === 'panna' && isCloseSession);
+        // Half Sangam is cross-side and settles on close declaration.
+        return type === 'jodi' || type === 'full-sangam' || type === 'half-sangam' || (type === 'single' && isCloseSession) || (type === 'panna' && isCloseSession);
     };
 
     if (!closingNumber || !/^\d{3}$/.test(closingNumber)) {
@@ -538,9 +597,9 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
     }
 
     const rates = await getRatesMap();
-    const lastDigitOpen = digitFromPatti(open3);
-    const lastDigitClose = digitFromPatti(closingNumber);
-    const close3 = closingNumber;
+    const close3 = String(closingNumber || '').trim();
+    const parsedResult = parseMarketResultParts(open3, close3);
+    const { openAnk: lastDigitOpen, closeAnk: lastDigitClose } = parsedResult;
     const pannaTypeClose = getPannaType(close3);
     const pannaRateKeyClose = pannaTypeClose || 'singlePatti';
     const pannaRateClose = getRateForKey(rates, pannaRateKeyClose);
@@ -613,6 +672,20 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
                 }
                 isWinning = true;
             }
+        } else if (type === 'half-sangam') {
+            // Cross-side Half Sangam preview:
+            // - Open Half:  Open Pana + Close Ank  (PPP-D)
+            // - Close Half: Open Ank  + Close Pana (D-PPP)
+            if (isWinningHalfSangam(num, parsedResult)) {
+                totalBetAmountOnPatti += amount;
+                playersBetOnPatti.add(bet.userId.toString());
+                if (isPending) {
+                    const payout = amount * getRateForKey(rates, 'halfSangam');
+                    totalWinAmount += payout;
+                    totalWinAmountOnPatti += payout;
+                }
+                isWinning = true;
+            }
         }
     }
 
@@ -652,7 +725,7 @@ export async function getWinningBetsForOpen(marketId, openingNumber, options = {
         createdAt: { $gte: todayIST.start, $lte: todayIST.end },
         $and: [
             { $or: [{ isScheduled: { $ne: true } }, { scheduledDate: { $exists: false } }, { scheduledDate: null }, { scheduledDate: { $lte: todayMidnight } }] },
-            { $or: [{ betOn: { $ne: 'close' } }, { betType: 'half-sangam' }] },
+            { betOn: { $ne: 'close' } },
         ],
     };
     if (hasBookieFilter) matchFilter.userId = { $in: bookieUserIds };
@@ -673,14 +746,6 @@ export async function getWinningBetsForOpen(marketId, openingNumber, options = {
             const pannaType = getPannaType(open3);
             const rateKey = pannaType || 'singlePatti';
             payout = amount * getRateForKey(rates, rateKey);
-        } else if (type === 'half-sangam') {
-            const parts = num.split('-').map((p) => (p || '').trim());
-            const first = parts[0] || '';
-            const second = parts[1] || '';
-            const isFormatA = /^[0-9]{3}$/.test(first) && /^[0-9]$/.test(second);
-            if (isFormatA && open3 != null && lastDigitOpen != null && first === open3 && second === lastDigitOpen) {
-                payout = amount * getRateForKey(rates, 'halfSangam');
-            }
         }
         if (payout > 0) {
             payout = Math.round(payout * 100) / 100;
@@ -718,9 +783,9 @@ export async function getWinningBetsForClose(marketId, closingNumber, options = 
     if (hasBookieFilter) matchFilter.userId = { $in: bookieUserIds };
     const pendingBets = await Bet.find(matchFilter).lean();
     const rates = await getRatesMap();
-    const lastDigitOpen = digitFromPatti(open3);
-    const lastDigitClose = digitFromPatti(closingNumber);
-    const close3 = closingNumber;
+    const close3 = String(closingNumber || '').trim();
+    const parsedResult = parseMarketResultParts(open3, close3);
+    const { openAnk: lastDigitOpen, closeAnk: lastDigitClose } = parsedResult;
     const pannaTypeClose = getPannaType(close3);
     const pannaRateKeyClose = pannaTypeClose || 'singlePatti';
     const winningBets = [];
@@ -733,6 +798,7 @@ export async function getWinningBetsForClose(marketId, closingNumber, options = 
         const isCloseSettleType =
             type === 'jodi' ||
             type === 'full-sangam' ||
+            type === 'half-sangam' ||
             (type === 'single' && isCloseSession) ||
             (type === 'panna' && isCloseSession);
         if (!isCloseSettleType) continue;
@@ -750,6 +816,11 @@ export async function getWinningBetsForClose(marketId, closingNumber, options = 
             const betClose3 = parts[1] || '';
             if (/^[0-9]{3}$/.test(betOpen3) && /^[0-9]{3}$/.test(betClose3) && betOpen3 === open3 && betClose3 === close3) {
                 payout = amount * getRateForKey(rates, 'fullSangam');
+            }
+        } else if (type === 'half-sangam') {
+            // Cross-side Half Sangam winner detection at close.
+            if (isWinningHalfSangam(num, parsedResult)) {
+                payout = amount * getRateForKey(rates, 'halfSangam');
             }
         }
         if (payout > 0) {

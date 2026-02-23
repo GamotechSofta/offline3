@@ -114,7 +114,6 @@ const SingleDigitBid = ({ market, title }) => {
     };
 
     const totalPoints = bids.reduce((sum, b) => sum + Number(b.points), 0);
-    const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
     const dateText = new Date().toLocaleDateString('en-GB');
     const marketTitle = market?.gameName || market?.marketName || title;
     const isRunning = market?.status === 'running'; // "CLOSED IS RUNNING"
@@ -158,39 +157,6 @@ const SingleDigitBid = ({ market, title }) => {
         </div>
     );
 
-    const dateSessionRow = (
-        <div className="grid grid-cols-2 gap-3">
-            <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <input type="text" value={todayDate} readOnly className="w-full pl-10 py-3 sm:py-2.5 min-h-[44px] bg-white border-2 border-orange-200 text-gray-800 rounded-full text-sm font-bold text-center focus:outline-none" />
-            </div>
-            <div className="relative">
-                <select
-                    value={session}
-                    onChange={(e) => setSession(e.target.value)}
-                    disabled={isRunning}
-                    className={`w-full appearance-none bg-white border-2 border-orange-200 text-gray-800 font-bold text-sm py-3 sm:py-2.5 min-h-[44px] px-4 rounded-full text-center focus:outline-none focus:border-orange-500 ${isRunning ? 'opacity-60 cursor-not-allowed bg-gray-100' : ''}`}
-                >
-                    {isRunning ? (
-                        <option value="CLOSE">CLOSE</option>
-                    ) : (
-                        <>
-                            <option value="OPEN">OPEN</option>
-                            <option value="CLOSE">CLOSE</option>
-                        </>
-                    )}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-            </div>
-        </div>
-    );
-
     const leftColumn = (
         <div className="space-y-4">
             {warning && (
@@ -199,7 +165,6 @@ const SingleDigitBid = ({ market, title }) => {
                 </div>
             )}
             {modeTabs}
-            {dateSessionRow}
             {activeTab === 'easy' ? (
                 <>
                     <div className="flex flex-col gap-3">

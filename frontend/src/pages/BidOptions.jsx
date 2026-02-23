@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { isBettingAllowed } from '../utils/marketTiming';
 
 const BidOptions = () => {
   const navigate = useNavigate();
@@ -155,8 +156,10 @@ const BidOptions = () => {
     return null; // Will redirect via useEffect
   }
 
-  // When market is "CLOSED IS RUNNING", hide options that require OPEN session.
-  const isRunning = market.status === 'running';
+  // Hide OPEN-only games once opening time has passed (close-only window).
+  const timing = isBettingAllowed(market);
+  const isCloseOnlyWindow = timing.allowed && timing.closeOnly === true;
+  const isRunning = market.status === 'running' || isCloseOnlyWindow;
   const visibleOptionsBase = isStarline
     ? options.filter((opt) => {
         const t = (opt.title || '').toString().trim();
