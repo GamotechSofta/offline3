@@ -11,32 +11,33 @@ const createAdmin = async () => {
         await connectDB();
         
         const username = process.argv[2] || 'admin';
-        const password = process.argv[3] || 'admin123';
+        const password = process.argv[3] || 'admin123456';
 
-        // Check if admin already exists
-        const existingAdmin = await Admin.findOne({ username });
-        if (existingAdmin) {
-            console.log(`Admin with username "${username}" already exists.`);
-            process.exit(0);
-        }
-
-        // Hash password manually
+        // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create admin directly in collection to bypass pre-save hook
-        await Admin.collection.insertOne({
-            username,
-            password: hashedPassword,
-            role: 'super_admin',
-            createdAt: new Date(),
-            updatedAt: new Date()
-        });
-
-        console.log(`✅ Admin created successfully!`);
+        const existingAdmin = await Admin.findOne({ username });
+        if (existingAdmin) {
+            await Admin.collection.updateOne(
+                { _id: existingAdmin._id },
+                { $set: { password: hashedPassword, role: 'super_admin', status: 'active', updatedAt: new Date() } }
+            );
+            console.log(`✅ Super admin "${username}" already existed; password updated.`);
+        } else {
+            await Admin.collection.insertOne({
+                username,
+                password: hashedPassword,
+                role: 'super_admin',
+                status: 'active',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            });
+            console.log(`✅ Super admin created successfully!`);
+        }
         console.log(`Username: ${username}`);
         console.log(`Password: ${password}`);
-        console.log(`\n⚠️  Please change the default password after first login!`);
+        if (!existingAdmin) console.log(`\n⚠️  Please change the default password after first login!`);
         
         await mongoose.connection.close();
         process.exit(0);
