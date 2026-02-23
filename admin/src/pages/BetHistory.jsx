@@ -14,6 +14,7 @@ const BetHistory = () => {
     const navigate = useNavigate();
     const [bets, setBets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [placedByFilter, setPlacedByFilter] = useState('all'); // all | player | bookie
     const [filters, setFilters] = useState({
         userId: '',
         marketId: '',
@@ -53,8 +54,14 @@ const BetHistory = () => {
     // Group bets by market and then by open/close
     const betsByMarket = useMemo(() => {
         const marketMap = new Map();
+        const includeByPlacedFilter = (bet) => {
+            if (placedByFilter === 'player') return !bet?.placedByBookie;
+            if (placedByFilter === 'bookie') return !!bet?.placedByBookie;
+            return true;
+        };
 
         bets.forEach((bet) => {
+            if (!includeByPlacedFilter(bet)) return;
             const marketId = bet.marketId?._id || bet.marketId || 'unknown';
             const marketName = bet.marketId?.marketName || 'Unknown Market';
             
@@ -94,7 +101,7 @@ const BetHistory = () => {
         return Array.from(marketMap.values()).sort((a, b) => 
             a.marketName.localeCompare(b.marketName)
         );
-    }, [bets]);
+    }, [bets, placedByFilter]);
 
     const handleLogout = () => {
         clearAdminSession();
@@ -144,6 +151,46 @@ const BetHistory = () => {
                             onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
                             className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
                         />
+                    </div>
+
+                    {/* Placed-by filter */}
+                    <div className="bg-white rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-gray-200">
+                        <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">Bet Type View</p>
+                        <div className="flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setPlacedByFilter('all')}
+                                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors ${
+                                    placedByFilter === 'all'
+                                        ? 'bg-orange-500 text-white border-orange-500'
+                                        : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                                }`}
+                            >
+                                All Bets
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPlacedByFilter('player')}
+                                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors ${
+                                    placedByFilter === 'player'
+                                        ? 'bg-orange-500 text-white border-orange-500'
+                                        : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                                }`}
+                            >
+                                Bets By Player
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPlacedByFilter('bookie')}
+                                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors ${
+                                    placedByFilter === 'bookie'
+                                        ? 'bg-orange-500 text-white border-orange-500'
+                                        : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                                }`}
+                            >
+                                Bets By Bookie
+                            </button>
+                        </div>
                     </div>
 
                     {/* Bets Grouped by Market */}

@@ -80,6 +80,11 @@ export const BID_TYPES = {
     label: 'Half Sangam (O)',
     hasSpecialMode: false,
   },
+  HALF_SANGAM_B: {
+    key: 'half-sangam',
+    label: 'Half Sangam (C)',
+    hasSpecialMode: false,
+  },
 };
 
 // Map bet type title to config
@@ -95,6 +100,7 @@ export const getBidTypeConfig = (title) => {
   if (t.includes('double pana')) return BID_TYPES.DOUBLE_PANA;
   if (t.includes('triple pana')) return BID_TYPES.TRIPLE_PANA;
   if (t.includes('full sangam')) return BID_TYPES.FULL_SANGAM;
+  if (t.includes('half sangam') && (t.includes('(b)') || t.includes('(c)'))) return BID_TYPES.HALF_SANGAM_B;
   if (t.includes('half sangam') && (t.includes('(a)') || t.includes('(o)'))) return BID_TYPES.HALF_SANGAM_A;
   return BID_TYPES.SINGLE_DIGIT;
 };

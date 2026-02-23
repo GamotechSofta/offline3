@@ -1145,30 +1145,32 @@ const MarketDetail = () => {
     // Do NOT include them in Open totals (openTotalAmount/openTotalBets remain unchanged).
     const jodiDisplay = statsClose?.jodi || { items: {}, totalAmount: 0, totalBets: 0 };
     const triplePattiDisplay = viewStats?.triplePatti || { items: {}, totalAmount: 0, totalBets: 0 };
-    // Half Sangam is open-only; use open session data
-    const halfSangamDisplay = statsOpen?.halfSangam || { items: {}, totalAmount: 0, totalBets: 0 };
+    // Half Sangam is calculated only for "Closed bets only" view.
+    // Prefer close-session aggregate; fallback to open aggregate for legacy data.
+    const halfSangamDisplay = effectiveView === 'closed'
+        ? (statsClose?.halfSangam?.totalBets ? statsClose.halfSangam : (statsOpen?.halfSangam || { items: {}, totalAmount: 0, totalBets: 0 }))
+        : { items: {}, totalAmount: 0, totalBets: 0 };
     const fullSangamDisplay = statsClose?.fullSangam || { items: {}, totalAmount: 0, totalBets: 0 };
 
-    // Open view: open-session (Single Digit, Patti) + Half Sangam (close data shown in section, so include in total so "Total Bet Amount" matches visible bets).
+    // Open view: exclude Half Sangam from totals.
     const openTotalAmount =
         (singleDigitDisplay?.totalAmount ?? 0) +
         (singlePattiTotalsForView?.totalAmount ?? 0) +
         (doublePattiTotalsForView?.totalAmount ?? 0) +
-        (triplePattiDisplay?.totalAmount ?? 0) +
-        (halfSangamDisplay?.totalAmount ?? 0);
+        (triplePattiDisplay?.totalAmount ?? 0);
     const openTotalBets =
         (singleDigitDisplay?.totalBets ?? 0) +
         (singlePattiTotalsForView?.totalBets ?? 0) +
         (doublePattiTotalsForView?.totalBets ?? 0) +
-        (triplePattiDisplay?.totalBets ?? 0) +
-        (halfSangamDisplay?.totalBets ?? 0);
-    // Closed view: close bets only; Half Sangam is open-only so not shown or counted in closed
+        (triplePattiDisplay?.totalBets ?? 0);
+    // Closed view: include Half Sangam totals.
     const closedTotalAmount =
         (singleDigitDisplay?.totalAmount ?? 0) +
         (jodiDisplay?.totalAmount ?? 0) +
         (singlePattiTotalsForView?.totalAmount ?? 0) +
         (doublePattiTotalsForView?.totalAmount ?? 0) +
         (triplePattiDisplay?.totalAmount ?? 0) +
+        (halfSangamDisplay?.totalAmount ?? 0) +
         (fullSangamDisplay?.totalAmount ?? 0);
     const closedTotalBets =
         (singleDigitDisplay?.totalBets ?? 0) +
@@ -1176,6 +1178,7 @@ const MarketDetail = () => {
         (singlePattiTotalsForView?.totalBets ?? 0) +
         (doublePattiTotalsForView?.totalBets ?? 0) +
         (triplePattiDisplay?.totalBets ?? 0) +
+        (halfSangamDisplay?.totalBets ?? 0) +
         (fullSangamDisplay?.totalBets ?? 0);
     const displayAmount = statusView === 'open' ? openTotalAmount : closedTotalAmount;
     const displayBets = statusView === 'open' ? openTotalBets : closedTotalBets;
@@ -1572,12 +1575,12 @@ const MarketDetail = () => {
                         totalBets={triplePattiDisplay.totalBets}
                     />
 
-                    {effectiveView === 'open' && (
-                    <HalfSangamSection
-                        items={halfSangamDisplay.items}
-                        totalAmount={halfSangamDisplay.totalAmount}
-                        totalBets={halfSangamDisplay.totalBets}
-                    />
+                    {effectiveView === 'closed' && (
+                        <HalfSangamSection
+                            items={halfSangamDisplay.items}
+                            totalAmount={halfSangamDisplay.totalAmount}
+                            totalBets={halfSangamDisplay.totalBets}
+                        />
                     )}
                     <FullSangamSection
                         items={fullSangamDisplay.items}

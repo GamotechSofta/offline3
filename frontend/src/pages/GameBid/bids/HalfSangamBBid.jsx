@@ -9,7 +9,7 @@ const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6
 
 // Half Sangam (C): Open Ank (1 digit) + Close Pana (3 digits)
 const HalfSangamBBid = ({ market, title }) => {
-    const [session, setSession] = useState('CLOSE');
+    const [session, setSession] = useState('OPEN');
     const [openAnk, setOpenAnk] = useState('');
     const [closePana, setClosePana] = useState('');
     const [points, setPoints] = useState('');
@@ -78,13 +78,6 @@ const HalfSangamBBid = ({ market, title }) => {
             ? 'w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]'
             : 'w-full bg-gradient-to-r from-orange-300 to-orange-400 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md opacity-50 cursor-not-allowed';
 
-    const computeOpenAnkFromPana = (pana) => {
-        const s = (pana ?? '').toString().trim();
-        if (!/^[0-9]{3}$/.test(s)) return '';
-        const sum = Number(s[0]) + Number(s[1]) + Number(s[2]);
-        return String(sum % 10);
-    };
-
     const clearAll = () => {
         setIsReviewOpen(false);
         setOpenAnk('');
@@ -136,13 +129,13 @@ const HalfSangamBBid = ({ market, title }) => {
             showWarning('Close Pana must be a valid Pana (Single / Double / Triple).');
             return;
         }
-        const derivedOpenAnk = computeOpenAnkFromPana(closePana);
-        if (!/^[0-9]$/.test(derivedOpenAnk)) {
-            showWarning('Open Ank could not be calculated. Please re-enter Close Pana.');
+        const enteredOpenAnk = (openAnk ?? '').toString().trim();
+        if (!/^[0-9]$/.test(enteredOpenAnk)) {
+            showWarning('Please enter a valid Open Ank (0-9).');
             return;
         }
 
-        const numberKey = `${derivedOpenAnk}-${closePana}`;
+        const numberKey = `${enteredOpenAnk}-${closePana}`;
         setBids((prev) => {
             const next = [...prev];
             const idx = next.findIndex((b) => String(b.number) === numberKey && String(b.type) === String(session));
@@ -187,8 +180,9 @@ const HalfSangamBBid = ({ market, title }) => {
             setSelectedDate={handleDateChange}
             session={session}
             setSession={setSession}
-            sessionOptionsOverride={['CLOSE']}
+            sessionOptionsOverride={['OPEN']}
             lockSessionSelect
+            hideSessionSelectCaret
             hideFooter
             walletBalance={walletBefore}
             contentPaddingClass="pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-6"
@@ -210,9 +204,9 @@ const HalfSangamBBid = ({ market, title }) => {
                                     type="text"
                                     inputMode="numeric"
                                     value={openAnk}
-                                    readOnly
+                                    onChange={(e) => setOpenAnk(sanitizeDigits(e.target.value, 1))}
                                     placeholder="Ank"
-                                    className="flex-1 min-w-0 bg-gray-100 border-2 border-orange-200 text-gray-600 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm opacity-80 cursor-not-allowed focus:outline-none"
+                                    className="flex-1 min-w-0 bg-white border-2 border-orange-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none"
                                 />
                             </div>
 
@@ -227,7 +221,6 @@ const HalfSangamBBid = ({ market, title }) => {
                                         const next = sanitizeDigits(e.target.value, 3);
                                         setClosePana(next);
                                         setClosePanaInvalid(!!next && next.length === 3 && !isValidAnyPana(next));
-                                        setOpenAnk(computeOpenAnkFromPana(next));
                                         if (next.length === 3 && prevLen < 3) {
                                             if (!isValidAnyPana(next)) {
                                                 showWarning('Close Pana must be a valid Single / Double / Triple Pana (3 digits).');

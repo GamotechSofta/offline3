@@ -36,20 +36,13 @@ const HalfSangamABid = ({ title, gameType, betType, embedInSingleScroll = false 
         showWarning._t = window.setTimeout(() => setWarning(''), 2200);
     };
 
-    const computeCloseAnkFromPana = (pana) => {
-        const s = (pana ?? '').toString().trim();
-        if (!/^[0-9]{3}$/.test(s)) return '';
-        const sum = Number(s[0]) + Number(s[1]) + Number(s[2]);
-        return String(sum % 10);
-    };
-
     const handleAddToCart = () => {
         const pts = Number(points);
         if (!pts || pts <= 0) { showWarning('Please enter points.'); return; }
         if (!isValidAnyPana(openPana)) { showWarning('Open Pana must be a valid Pana (Single / Double / Triple).'); return; }
-        const derivedCloseAnk = computeCloseAnkFromPana(openPana);
-        if (!/^[0-9]$/.test(derivedCloseAnk)) { showWarning('Close Ank could not be calculated. Please re-enter Open Pana.'); return; }
-        const numberKey = `${openPana}-${derivedCloseAnk}`;
+        const enteredCloseAnk = (closeAnk ?? '').toString().trim();
+        if (!/^[0-9]$/.test(enteredCloseAnk)) { showWarning('Please enter a valid Close Ank (0-9).'); return; }
+        const numberKey = `${openPana}-${enteredCloseAnk}`;
         const count = addToCart([{ number: numberKey, points: String(pts), type: session }], gameType, title, betType);
         if (count > 0) showWarning(`Added ${count} bet to cart ✓`);
         setOpenPana(''); setCloseAnk(''); setPoints('');
@@ -74,7 +67,6 @@ const HalfSangamABid = ({ title, gameType, betType, embedInSingleScroll = false 
                                     const prevLen = (openPana ?? '').toString().length;
                                     const next = sanitizeDigits(e.target.value, 3);
                                     setOpenPana(next); setOpenPanaInvalid(!!next && next.length === 3 && !isValidAnyPana(next));
-                                    setCloseAnk(computeCloseAnkFromPana(next));
                                     if (next.length === 3 && prevLen < 3 && isValidAnyPana(next)) {
                                         window.requestAnimationFrame(() => { pointsInputRef.current?.focus?.(); });
                                     }
@@ -84,8 +76,8 @@ const HalfSangamABid = ({ title, gameType, betType, embedInSingleScroll = false 
                         </div>
                         <div className="flex flex-row items-center gap-2">
                             <label className="text-gray-400 text-sm font-medium shrink-0 w-40">Close Ank:</label>
-                            <input type="text" inputMode="numeric" value={closeAnk} readOnly placeholder="Ank"
-                                className="flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm opacity-80 cursor-not-allowed focus:outline-none" />
+                            <input type="text" inputMode="numeric" value={closeAnk} onChange={(e) => setCloseAnk(sanitizeDigits(e.target.value, 1))} placeholder="Ank"
+                                className="flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none" />
                         </div>
                         <div className="flex flex-row items-center gap-2">
                             <label className="text-gray-400 text-sm font-medium shrink-0 w-40">Enter Points:</label>

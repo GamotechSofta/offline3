@@ -466,6 +466,8 @@ const PlayerDetail = () => {
     };
 
     const filteredBets = betFilter === 'all' ? bets : bets.filter((b) => b.status === betFilter);
+    const filteredUserBets = filteredBets.filter((b) => !b.placedByBookie);
+    const filteredBookieBets = filteredBets.filter((b) => b.placedByBookie);
 
     // Print bet history
     const handlePrintBets = () => {
@@ -804,41 +806,102 @@ const PlayerDetail = () => {
                             ) : filteredBets.length === 0 ? (
                                 <div className="p-8 text-center text-gray-400">No bets found.</div>
                             ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-sm min-w-[700px]">
-                                        <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session</th>
-                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payout</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-100">
-                                            {filteredBets.map((b) => (
-                                                <tr key={b._id} className="hover:bg-gray-50">
-                                                    <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
-                                                    <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
-                                                    <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
-                                                    <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
-                                                    <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
-                                                    <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
-                                                    <td className="px-3 py-2">
-                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                                            b.status === 'won' ? 'bg-green-100 text-green-700'
-                                                            : b.status === 'lost' ? 'bg-red-100 text-red-600'
-                                                            : 'bg-orange-100 text-orange-600'
-                                                        }`}>{b.status}</span>
-                                                    </td>
-                                                    <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                <div className="space-y-5">
+                                    {/* Bets placed by user */}
+                                    <div>
+                                        <div className="px-4 py-2 bg-green-50 border-b border-green-100 text-sm font-semibold text-green-700">
+                                            Bets by User ({filteredUserBets.length})
+                                        </div>
+                                        {filteredUserBets.length === 0 ? (
+                                            <div className="p-4 text-sm text-gray-400">No bets by user.</div>
+                                        ) : (
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full text-sm min-w-[700px]">
+                                                    <thead className="bg-gray-50">
+                                                        <tr>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session</th>
+                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payout</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-100">
+                                                        {filteredUserBets.map((b) => (
+                                                            <tr key={`user-${b._id}`} className="hover:bg-gray-50">
+                                                                <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
+                                                                <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
+                                                                <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
+                                                                <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
+                                                                <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
+                                                                <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
+                                                                <td className="px-3 py-2">
+                                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                                                        b.status === 'won' ? 'bg-green-100 text-green-700'
+                                                                        : b.status === 'lost' ? 'bg-red-100 text-red-600'
+                                                                        : 'bg-orange-100 text-orange-600'
+                                                                    }`}>{b.status}</span>
+                                                                </td>
+                                                                <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Bets placed by bookie */}
+                                    <div className="border-t border-gray-100">
+                                        <div className="px-4 py-2 bg-blue-50 border-b border-blue-100 text-sm font-semibold text-blue-700">
+                                            Bets by Bookie ({filteredBookieBets.length})
+                                        </div>
+                                        {filteredBookieBets.length === 0 ? (
+                                            <div className="p-4 text-sm text-gray-400">No bets by bookie.</div>
+                                        ) : (
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full text-sm min-w-[760px]">
+                                                    <thead className="bg-gray-50">
+                                                        <tr>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Bookie</th>
+                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payout</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-100">
+                                                        {filteredBookieBets.map((b) => (
+                                                            <tr key={`bookie-${b._id}`} className="hover:bg-gray-50">
+                                                                <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
+                                                                <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
+                                                                <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
+                                                                <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
+                                                                <td className="px-3 py-2 text-gray-600 text-xs">{b.placedByBookieId?.username || 'Bookie'}</td>
+                                                                <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
+                                                                <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
+                                                                <td className="px-3 py-2">
+                                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                                                        b.status === 'won' ? 'bg-green-100 text-green-700'
+                                                                        : b.status === 'lost' ? 'bg-red-100 text-red-600'
+                                                                        : 'bg-orange-100 text-orange-600'
+                                                                    }`}>{b.status}</span>
+                                                                </td>
+                                                                <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                         </>

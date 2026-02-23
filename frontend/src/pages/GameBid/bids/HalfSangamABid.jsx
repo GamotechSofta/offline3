@@ -78,13 +78,6 @@ const HalfSangamABid = ({ market, title }) => {
             ? 'w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]'
             : 'w-full bg-gradient-to-r from-orange-300 to-orange-400 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md opacity-50 cursor-not-allowed';
 
-    const computeCloseAnkFromPana = (pana) => {
-        const s = (pana ?? '').toString().trim();
-        if (!/^[0-9]{3}$/.test(s)) return '';
-        const sum = Number(s[0]) + Number(s[1]) + Number(s[2]);
-        return String(sum % 10);
-    };
-
     const clearAll = () => {
         setIsReviewOpen(false);
         setOpenPana('');
@@ -136,13 +129,13 @@ const HalfSangamABid = ({ market, title }) => {
             showWarning('Open Pana must be a valid Pana (Single / Double / Triple).');
             return;
         }
-        const derivedCloseAnk = computeCloseAnkFromPana(openPana);
-        if (!/^[0-9]$/.test(derivedCloseAnk)) {
-            showWarning('Close Ank could not be calculated. Please re-enter Open Pana.');
+        const enteredCloseAnk = (closeAnk ?? '').toString().trim();
+        if (!/^[0-9]$/.test(enteredCloseAnk)) {
+            showWarning('Please enter a valid Close Ank (0-9).');
             return;
         }
 
-        const numberKey = `${openPana}-${derivedCloseAnk}`;
+        const numberKey = `${openPana}-${enteredCloseAnk}`;
         setBids((prev) => {
             const next = [...prev];
             const idx = next.findIndex((b) => String(b.number) === numberKey && String(b.type) === String(session));
@@ -216,7 +209,6 @@ const HalfSangamABid = ({ market, title }) => {
                                         const next = sanitizeDigits(e.target.value, 3);
                                         setOpenPana(next);
                                         setOpenPanaInvalid(!!next && next.length === 3 && !isValidAnyPana(next));
-                                        setCloseAnk(computeCloseAnkFromPana(next));
                                         if (next.length === 3 && prevLen < 3) {
                                             if (!isValidAnyPana(next)) {
                                                 showWarning('Open Pana must be a valid Single / Double / Triple Pana (3 digits).');
@@ -240,9 +232,9 @@ const HalfSangamABid = ({ market, title }) => {
                                     type="text"
                                     inputMode="numeric"
                                     value={closeAnk}
-                                    readOnly
+                                    onChange={(e) => setCloseAnk(sanitizeDigits(e.target.value, 1))}
                                     placeholder="Ank"
-                                    className="flex-1 min-w-0 bg-gray-100 border-2 border-orange-200 text-gray-600 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm opacity-80 cursor-not-allowed focus:outline-none"
+                                    className="flex-1 min-w-0 bg-white border-2 border-orange-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none"
                                 />
                             </div>
 

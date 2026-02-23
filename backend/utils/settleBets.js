@@ -616,6 +616,7 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
         const isCloseSettleType =
             type === 'jodi' ||
             type === 'full-sangam' ||
+            type === 'half-sangam' ||
             (type === 'single' && isCloseSession) ||
             (type === 'panna' && isCloseSession);
         if (!isCloseSettleType) continue;
@@ -676,7 +677,8 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
             // Cross-side Half Sangam preview:
             // - Open Half:  Open Pana + Close Ank  (PPP-D)
             // - Close Half: Open Ank  + Close Pana (D-PPP)
-            if (isWinningHalfSangam(num, parsedResult)) {
+            // Close-result dependent: never evaluate while close panna is missing/placeholder.
+            if (canEvaluateHalfSangam(num, parsedResult) && isWinningHalfSangam(num, parsedResult)) {
                 totalBetAmountOnPatti += amount;
                 playersBetOnPatti.add(bet.userId.toString());
                 if (isPending) {
@@ -819,7 +821,8 @@ export async function getWinningBetsForClose(marketId, closingNumber, options = 
             }
         } else if (type === 'half-sangam') {
             // Cross-side Half Sangam winner detection at close.
-            if (isWinningHalfSangam(num, parsedResult)) {
+            // Guard by close-result availability so skipped bets remain pending until close exists.
+            if (canEvaluateHalfSangam(num, parsedResult) && isWinningHalfSangam(num, parsedResult)) {
                 payout = amount * getRateForKey(rates, 'halfSangam');
             }
         }
