@@ -12,6 +12,7 @@ export default {
     report: 'अहवाल',
     revenue: 'उत्पन्न',
     payments: 'पेमेंट',
+    records: 'रेकॉर्ड्स',
     wallet: 'वॉलेट',
     receipt: 'पावती',
     helpDesk: 'हेल्प डेस्क',

@@ -72,11 +72,11 @@ const GAME_OPTIONS = [
     },
     {
         id: 'half-sangam',
-        title: 'Half Sangam (O)',
+        title: 'Half Sangam',
         icon: (
             <img
                 src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770033165/Untitled_design_c5hag8.svg"
-                alt="Half Sangam (O)"
+                alt="Half Sangam"
                 className="w-full h-full object-contain"
             />
         ),
@@ -126,7 +126,7 @@ const GameTypes = () => {
         ? GAME_OPTIONS.filter((opt) => {
               const t = (opt.title || '').toLowerCase().trim();
               const hideWhenRunning = new Set([
-                  'jodi', 'jodi bulk', 'full sangam', 'half sangam (o)',
+                  'jodi', 'jodi bulk', 'full sangam', 'half sangam',
               ]);
               return !hideWhenRunning.has(t);
           })

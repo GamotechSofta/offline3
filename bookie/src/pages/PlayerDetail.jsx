@@ -21,7 +21,8 @@ import {
 
 const getTabs = (t) => [
     { id: 'overview', label: t('overview'), icon: FaUser },
-    { id: 'bets', label: t('betHistory'), icon: FaHistory },
+    { id: 'bets_by_user', label: 'Bets by Player', icon: FaHistory },
+    { id: 'bets_by_bookie', label: 'Bets by Bookie', icon: FaHistory },
     { id: 'wallet', label: t('fundHistory'), icon: FaExchangeAlt },
     { id: 'statement', label: t('statement'), icon: FaFileInvoiceDollar },
 ];
@@ -143,6 +144,19 @@ const PlayerDetail = () => {
     // Fetch player
     useEffect(() => { fetchPlayer(); }, [userId]);
 
+    // Backward-compatible tab migration:
+    // If UI state still has legacy "bets" (e.g. after hot reload), move to new tab.
+    useEffect(() => {
+        const validTabIds = new Set(TABS.map((tab) => tab.id));
+        if (activeTab === 'bets') {
+            setActiveTab('bets_by_user');
+            return;
+        }
+        if (!validTabIds.has(activeTab)) {
+            setActiveTab('overview');
+        }
+    }, [activeTab, TABS]);
+
     // Initialize toGive and toTake when player loads
     useEffect(() => {
         if (player) {
@@ -159,7 +173,7 @@ const PlayerDetail = () => {
     // Fetch tab data when tab/date changes
     useEffect(() => {
         if (!userId || !player) return;
-        if (activeTab === 'bets') fetchBets();
+        if (activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') fetchBets();
         if (activeTab === 'wallet') fetchWalletTx();
         if (activeTab === 'statement' && dateFrom && dateTo) fetchStatement();
     }, [activeTab, userId, player, dateFrom, dateTo]);
@@ -465,9 +479,30 @@ const PlayerDetail = () => {
         totalPayout: bets.filter((b) => b.status === 'won').reduce((s, b) => s + (b.payout || 0), 0),
     };
 
-    const filteredBets = betFilter === 'all' ? bets : bets.filter((b) => b.status === betFilter);
-    const filteredUserBets = filteredBets.filter((b) => !b.placedByBookie);
-    const filteredBookieBets = filteredBets.filter((b) => b.placedByBookie);
+    const activeBetSource =
+        activeTab === 'bets_by_user'
+            ? 'user'
+            : activeTab === 'bets_by_bookie'
+                ? 'bookie'
+                : 'all';
+
+    const sourceFilteredBets =
+        activeBetSource === 'user'
+            ? bets.filter((b) => !b.placedByBookie)
+            : activeBetSource === 'bookie'
+                ? bets.filter((b) => !!b.placedByBookie)
+                : bets;
+
+    const displayedBetStats = {
+        total: sourceFilteredBets.length,
+        won: sourceFilteredBets.filter((b) => b.status === 'won').length,
+        lost: sourceFilteredBets.filter((b) => b.status === 'lost').length,
+        pending: sourceFilteredBets.filter((b) => b.status === 'pending').length,
+        totalAmount: sourceFilteredBets.reduce((s, b) => s + (b.amount || 0), 0),
+        totalPayout: sourceFilteredBets.filter((b) => b.status === 'won').reduce((s, b) => s + (b.payout || 0), 0),
+    };
+
+    const filteredBets = betFilter === 'all' ? sourceFilteredBets : sourceFilteredBets.filter((b) => b.status === betFilter);
 
     // Print bet history
     const handlePrintBets = () => {
@@ -481,6 +516,7 @@ const PlayerDetail = () => {
                 <td>${b.marketId?.marketName || '—'}</td>
                 <td style="text-align:right">${formatCurrency(b.amount)}</td>
                 <td style="text-align:right; color:${b.status === 'won' ? '#16a34a' : '#666'}">${formatCurrency(b.payout || 0)}</td>
+                <td>${b.placedByBookie ? 'Bookie' : 'User'}</td>
                 <td><span class="status-${b.status}">${b.status}</span></td>
                 <td>${new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
             </tr>
@@ -507,15 +543,15 @@ const PlayerDetail = () => {
             <h1>Bet History - ${player?.username || ''}</h1>
             <div class="meta">Phone: ${player?.phone || '—'} &nbsp;|&nbsp; Balance: ${formatCurrency(player?.walletBalance)} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString('en-IN')}</div>
             <div class="stats">
-                <div class="stat"><div class="label">Total</div><div class="value">${betStats.total}</div></div>
-                <div class="stat"><div class="label">Won</div><div class="value" style="color:#16a34a">${betStats.won}</div></div>
-                <div class="stat"><div class="label">Lost</div><div class="value" style="color:#dc2626">${betStats.lost}</div></div>
-                <div class="stat"><div class="label">Pending</div><div class="value" style="color:#ea580c">${betStats.pending}</div></div>
-                <div class="stat"><div class="label">Bet Amount</div><div class="value">${formatCurrency(betStats.totalAmount)}</div></div>
-                <div class="stat"><div class="label">Winnings</div><div class="value" style="color:#16a34a">${formatCurrency(betStats.totalPayout)}</div></div>
+                <div class="stat"><div class="label">Total</div><div class="value">${displayedBetStats.total}</div></div>
+                <div class="stat"><div class="label">Won</div><div class="value" style="color:#16a34a">${displayedBetStats.won}</div></div>
+                <div class="stat"><div class="label">Lost</div><div class="value" style="color:#dc2626">${displayedBetStats.lost}</div></div>
+                <div class="stat"><div class="label">Pending</div><div class="value" style="color:#ea580c">${displayedBetStats.pending}</div></div>
+                <div class="stat"><div class="label">Bet Amount</div><div class="value">${formatCurrency(displayedBetStats.totalAmount)}</div></div>
+                <div class="stat"><div class="label">Winnings</div><div class="value" style="color:#16a34a">${formatCurrency(displayedBetStats.totalPayout)}</div></div>
             </div>
             <table>
-                <thead><tr><th>Number</th><th>Type</th><th>Market</th><th style="text-align:right">Amount</th><th style="text-align:right">Payout</th><th>Status</th><th>Date</th></tr></thead>
+                <thead><tr><th>Number</th><th>Type</th><th>Market</th><th style="text-align:right">Amount</th><th style="text-align:right">Payout</th><th>Placed By</th><th>Status</th><th>Date</th></tr></thead>
                 <tbody>${betRows}</tbody>
             </table>
             <script>window.onload = function() { window.print(); window.close(); }<\/script>
@@ -634,7 +670,7 @@ const PlayerDetail = () => {
                         <button onClick={() => navigate(`/games?playerId=${userId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-semibold transition-colors">
                             <FaGamepad className="w-3.5 h-3.5" /> Place Bet
                         </button>
-                        <button onClick={() => { fetchPlayer(); if (activeTab === 'bets') fetchBets(); if (activeTab === 'wallet') fetchWalletTx(); }} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs sm:text-sm font-semibold transition-colors ml-auto">
+                        <button onClick={() => { fetchPlayer(); if (activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') fetchBets(); if (activeTab === 'wallet') fetchWalletTx(); }} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs sm:text-sm font-semibold transition-colors ml-auto">
                             <FaSyncAlt className="w-3 h-3" /> Refresh
                         </button>
                     </div>
@@ -769,7 +805,7 @@ const PlayerDetail = () => {
                     )}
 
                     {/* ---- BET HISTORY ---- */}
-                    {activeTab === 'bets' && (
+                    {(activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') && (
                         <>
                             {/* Bet filter & actions bar */}
                             <div className="px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-2">
@@ -784,8 +820,8 @@ const PlayerDetail = () => {
                                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                     >
-                                        {f} {f !== 'all' && `(${bets.filter((b) => b.status === f).length})`}
-                                        {f === 'all' && `(${bets.length})`}
+                                        {f} {f !== 'all' && `(${sourceFilteredBets.filter((b) => b.status === f).length})`}
+                                        {f === 'all' && `(${sourceFilteredBets.length})`}
                                     </button>
                                 ))}
                                 <button onClick={handlePrintBets} className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition-colors">
@@ -795,10 +831,10 @@ const PlayerDetail = () => {
 
                             {/* Bet stats bar */}
                             <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-4 text-xs">
-                                <span className="text-gray-500">Total: <span className="text-gray-800 font-bold">{betStats.total}</span></span>
-                                <span className="text-gray-500">Amount: <span className="text-gray-800 font-bold">{formatCurrency(betStats.totalAmount)}</span></span>
-                                <span className="text-gray-500">Winnings: <span className="text-green-600 font-bold">{formatCurrency(betStats.totalPayout)}</span></span>
-                                <span className="text-gray-500">P/L: <span className={`font-bold ${betStats.totalPayout - betStats.totalAmount >= 0 ? 'text-green-600' : 'text-red-500'}`}>{formatCurrency(betStats.totalPayout - betStats.totalAmount)}</span></span>
+                                <span className="text-gray-500">Total: <span className="text-gray-800 font-bold">{displayedBetStats.total}</span></span>
+                                <span className="text-gray-500">Amount: <span className="text-gray-800 font-bold">{formatCurrency(displayedBetStats.totalAmount)}</span></span>
+                                <span className="text-gray-500">Winnings: <span className="text-green-600 font-bold">{formatCurrency(displayedBetStats.totalPayout)}</span></span>
+                                <span className="text-gray-500">P/L: <span className={`font-bold ${displayedBetStats.totalPayout - displayedBetStats.totalAmount >= 0 ? 'text-green-600' : 'text-red-500'}`}>{formatCurrency(displayedBetStats.totalPayout - displayedBetStats.totalAmount)}</span></span>
                             </div>
 
                             {loadingTab ? (
@@ -806,102 +842,43 @@ const PlayerDetail = () => {
                             ) : filteredBets.length === 0 ? (
                                 <div className="p-8 text-center text-gray-400">No bets found.</div>
                             ) : (
-                                <div className="space-y-5">
-                                    {/* Bets placed by user */}
-                                    <div>
-                                        <div className="px-4 py-2 bg-green-50 border-b border-green-100 text-sm font-semibold text-green-700">
-                                            Bets by User ({filteredUserBets.length})
-                                        </div>
-                                        {filteredUserBets.length === 0 ? (
-                                            <div className="p-4 text-sm text-gray-400">No bets by user.</div>
-                                        ) : (
-                                            <div className="overflow-x-auto">
-                                                <table className="w-full text-sm min-w-[700px]">
-                                                    <thead className="bg-gray-50">
-                                                        <tr>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session</th>
-                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payout</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-gray-100">
-                                                        {filteredUserBets.map((b) => (
-                                                            <tr key={`user-${b._id}`} className="hover:bg-gray-50">
-                                                                <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
-                                                                <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
-                                                                <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
-                                                                <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
-                                                                <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
-                                                                <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
-                                                                <td className="px-3 py-2">
-                                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                                                        b.status === 'won' ? 'bg-green-100 text-green-700'
-                                                                        : b.status === 'lost' ? 'bg-red-100 text-red-600'
-                                                                        : 'bg-orange-100 text-orange-600'
-                                                                    }`}>{b.status}</span>
-                                                                </td>
-                                                                <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Bets placed by bookie */}
-                                    <div className="border-t border-gray-100">
-                                        <div className="px-4 py-2 bg-blue-50 border-b border-blue-100 text-sm font-semibold text-blue-700">
-                                            Bets by Bookie ({filteredBookieBets.length})
-                                        </div>
-                                        {filteredBookieBets.length === 0 ? (
-                                            <div className="p-4 text-sm text-gray-400">No bets by bookie.</div>
-                                        ) : (
-                                            <div className="overflow-x-auto">
-                                                <table className="w-full text-sm min-w-[760px]">
-                                                    <thead className="bg-gray-50">
-                                                        <tr>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Bookie</th>
-                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                                            <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payout</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-gray-100">
-                                                        {filteredBookieBets.map((b) => (
-                                                            <tr key={`bookie-${b._id}`} className="hover:bg-gray-50">
-                                                                <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
-                                                                <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
-                                                                <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
-                                                                <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
-                                                                <td className="px-3 py-2 text-gray-600 text-xs">{b.placedByBookieId?.username || 'Bookie'}</td>
-                                                                <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
-                                                                <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
-                                                                <td className="px-3 py-2">
-                                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                                                        b.status === 'won' ? 'bg-green-100 text-green-700'
-                                                                        : b.status === 'lost' ? 'bg-red-100 text-red-600'
-                                                                        : 'bg-orange-100 text-orange-600'
-                                                                    }`}>{b.status}</span>
-                                                                </td>
-                                                                <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
-                                    </div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm min-w-[700px]">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Market</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Session</th>
+                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Payout</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Placed By</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-100">
+                                            {filteredBets.map((b) => (
+                                                <tr key={b._id} className="hover:bg-gray-50">
+                                                    <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
+                                                    <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
+                                                    <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
+                                                    <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
+                                                    <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
+                                                    <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
+                                                    <td className="px-3 py-2 text-xs text-gray-600">{b.placedByBookie ? 'Bookie' : 'User'}</td>
+                                                    <td className="px-3 py-2">
+                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                                            b.status === 'won' ? 'bg-green-100 text-green-700'
+                                                            : b.status === 'lost' ? 'bg-red-100 text-red-600'
+                                                            : 'bg-orange-100 text-orange-600'
+                                                        }`}>{b.status}</span>
+                                                    </td>
+                                                    <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                             )}
                         </>
@@ -946,42 +923,53 @@ const PlayerDetail = () => {
                                         // Non-bet transactions are shown when "All Markets" is selected
                                         return false;
                                     });
+                                const totalCredited = filteredTx
+                                    .filter((t) => t.type === 'credit')
+                                    .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+                                const totalDebited = filteredTx
+                                    .filter((t) => t.type === 'debit')
+                                    .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
 
                                 return filteredTx.length === 0 ? (
                                     <div className="p-8 text-center text-gray-400">No fund transactions{marketFilter !== 'all' ? ' for selected market' : ''}.</div>
                                 ) : (
-                                    <div className="divide-y divide-gray-100">
-                                        {filteredTx.map((t) => (
-                                            <div key={t._id} className="px-4 py-3 hover:bg-gray-50 flex flex-wrap items-center justify-between gap-3">
-                                                <div className="flex items-center gap-3 min-w-0 flex-1">
-                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${t.type === 'credit' ? 'bg-green-100' : 'bg-red-100'}`}>
-                                                        {t.type === 'credit'
-                                                            ? <FaPlusCircle className="w-4 h-4 text-green-600" />
-                                                            : <FaMinusCircle className="w-4 h-4 text-red-500" />
-                                                        }
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <p className="text-gray-800 text-sm font-medium truncate">{t.description || '—'}</p>
-                                                        <div className="flex items-center gap-2 mt-0.5">
-                                                            <p className="text-gray-400 text-xs">{new Date(t.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</p>
-                                                            {t.bet && t.bet.marketName && (
-                                                                <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-700">
-                                                                    {t.bet.marketName}
-                                                                </span>
-                                                            )}
+                                    <div>
+                                        <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-4 text-xs">
+                                            <span className="text-gray-500">Total Credited: <span className="text-green-600 font-bold">{formatCurrency(totalCredited)}</span></span>
+                                            <span className="text-gray-500">Total Debited: <span className="text-red-500 font-bold">{formatCurrency(totalDebited)}</span></span>
+                                        </div>
+                                        <div className="divide-y divide-gray-100">
+                                            {filteredTx.map((t) => (
+                                                <div key={t._id} className="px-4 py-3 hover:bg-gray-50 flex flex-wrap items-center justify-between gap-3">
+                                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${t.type === 'credit' ? 'bg-green-100' : 'bg-red-100'}`}>
+                                                            {t.type === 'credit'
+                                                                ? <FaPlusCircle className="w-4 h-4 text-green-600" />
+                                                                : <FaMinusCircle className="w-4 h-4 text-red-500" />
+                                                            }
+                                                        </div>
+                                                        <div className="min-w-0">
+                                                            <p className="text-gray-800 text-sm font-medium truncate">{t.description || '—'}</p>
+                                                            <div className="flex items-center gap-2 mt-0.5">
+                                                                <p className="text-gray-400 text-xs">{new Date(t.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</p>
+                                                                {t.bet && t.bet.marketName && (
+                                                                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-700">
+                                                                        {t.bet.marketName}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div className="text-right shrink-0">
+                                                        <p className="font-mono text-xs text-green-600">Credited: {t.type === 'credit' ? formatCurrency(t.amount) : formatCurrency(0)}</p>
+                                                        <p className="font-mono text-xs text-red-500">Debited: {t.type === 'debit' ? formatCurrency(t.amount) : formatCurrency(0)}</p>
+                                                        <span className={`mt-1 inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${t.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'}`}>
+                                                            {t.type}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div className="text-right shrink-0">
-                                                    <p className={`font-mono font-bold text-sm ${t.type === 'credit' ? 'text-green-600' : 'text-red-500'}`}>
-                                                        {t.type === 'credit' ? '+' : '-'}{formatCurrency(t.amount)}
-                                                    </p>
-                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${t.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'}`}>
-                                                        {t.type}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
                                 );
                             })()}

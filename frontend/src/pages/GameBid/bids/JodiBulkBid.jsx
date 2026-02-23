@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
@@ -8,6 +8,9 @@ const DIGITS = Array.from({ length: 10 }, (_, i) => String(i));
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
 const JodiBulkBid = ({ market, title }) => {
+    const cellRefs = useRef({});
+    const pendingFocusRef = useRef(null);
+
     const [session, setSession] = useState('OPEN');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
@@ -57,6 +60,127 @@ const JodiBulkBid = ({ market, title }) => {
     });
     const [rowBulk, setRowBulk] = useState(() => Object.fromEntries(DIGITS.map((d) => [d, ''])));
     const [colBulk, setColBulk] = useState(() => Object.fromEntries(DIGITS.map((d) => [d, ''])));
+    const [isDesktop, setIsDesktop] = useState(() => {
+        if (typeof window === 'undefined') return true;
+        return window.innerWidth >= 768;
+    });
+    const [columnStart, setColumnStart] = useState(0);
+    const MOBILE_VISIBLE_COLS = 5;
+
+    useEffect(() => {
+        const onResize = () => setIsDesktop(window.innerWidth >= 768);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    useEffect(() => {
+        // Reset view window when switching desktop/mobile
+        if (isDesktop) {
+            setColumnStart(0);
+        } else {
+            const maxStart = Math.max(0, DIGITS.length - MOBILE_VISIBLE_COLS);
+            setColumnStart((prev) => Math.max(0, Math.min(prev, maxStart)));
+        }
+    }, [isDesktop]);
+
+    const visibleDigits = isDesktop
+        ? DIGITS
+        : DIGITS.slice(columnStart, columnStart + MOBILE_VISIBLE_COLS);
+    const canSlideLeft = !isDesktop && columnStart > 0;
+    const canSlideRight = !isDesktop && columnStart + MOBILE_VISIBLE_COLS < DIGITS.length;
+
+    // Auto-apply row/column Pts after typing (no Enter or blur needed)
+    const rowApplyTimersRef = useRef({});
+    const colApplyTimersRef = useRef({});
+    const APPLY_DELAY_MS = 600;
+
+    useEffect(() => {
+        const timers = {};
+        DIGITS.forEach((r) => {
+            const val = rowBulk[r];
+            if (!val || Number(val) <= 0) return;
+            if (rowApplyTimersRef.current[r]) clearTimeout(rowApplyTimersRef.current[r]);
+            timers[r] = setTimeout(() => {
+                applyRow(r, val);
+                rowApplyTimersRef.current[r] = null;
+            }, APPLY_DELAY_MS);
+            rowApplyTimersRef.current[r] = timers[r];
+        });
+        return () => DIGITS.forEach((r) => { if (rowApplyTimersRef.current[r]) clearTimeout(rowApplyTimersRef.current[r]); });
+    }, [rowBulk]);
+
+    useEffect(() => {
+        const timers = {};
+        DIGITS.forEach((c) => {
+            const val = colBulk[c];
+            if (!val || Number(val) <= 0) return;
+            if (colApplyTimersRef.current[c]) clearTimeout(colApplyTimersRef.current[c]);
+            timers[c] = setTimeout(() => {
+                applyCol(c, val);
+                colApplyTimersRef.current[c] = null;
+            }, APPLY_DELAY_MS);
+            colApplyTimersRef.current[c] = timers[c];
+        });
+        return () => DIGITS.forEach((c) => { if (colApplyTimersRef.current[c]) clearTimeout(colApplyTimersRef.current[c]); });
+    }, [colBulk]);
+
+    // After column slide on mobile, focus the pending cell
+    useEffect(() => {
+        const p = pendingFocusRef.current;
+        if (!p) return;
+        const el = cellRefs.current[`${p.r}-${p.c}`];
+        if (el) {
+            el.focus();
+            pendingFocusRef.current = null;
+        }
+    }, [columnStart]);
+
+    const handleCellKeyDown = useCallback(
+        (e, r, c) => {
+            const key = e.key;
+            if (key !== 'ArrowLeft' && key !== 'ArrowRight' && key !== 'ArrowUp' && key !== 'ArrowDown') return;
+            const ri = DIGITS.indexOf(r);
+            const ci = DIGITS.indexOf(c);
+            if (ri === -1 || ci === -1) return;
+
+            let nextR = ri;
+            let nextC = ci;
+            if (key === 'ArrowLeft') {
+                if (ci <= 0) return;
+                nextC = ci - 1;
+            } else if (key === 'ArrowRight') {
+                if (ci >= DIGITS.length - 1) return;
+                nextC = ci + 1;
+            } else if (key === 'ArrowUp') {
+                if (ri <= 0) return;
+                nextR = ri - 1;
+            } else if (key === 'ArrowDown') {
+                if (ri >= DIGITS.length - 1) return;
+                nextR = ri + 1;
+            }
+
+            const nextRStr = DIGITS[nextR];
+            const nextCStr = DIGITS[nextC];
+
+            if (!isDesktop) {
+                const colIdx = DIGITS.indexOf(nextCStr);
+                const visibleStart = columnStart;
+                const visibleEnd = columnStart + MOBILE_VISIBLE_COLS - 1;
+                if (colIdx < visibleStart || colIdx > visibleEnd) {
+                    const newStart = Math.max(0, Math.min(colIdx, DIGITS.length - MOBILE_VISIBLE_COLS));
+                    pendingFocusRef.current = { r: nextRStr, c: nextCStr };
+                    setColumnStart(newStart);
+                    e.preventDefault();
+                    return;
+                }
+            }
+
+            e.preventDefault();
+            const el = cellRefs.current[`${nextRStr}-${nextCStr}`];
+            if (el) el.focus();
+        },
+        [isDesktop, columnStart]
+    );
 
     const walletBefore = useMemo(() => {
         try {
@@ -228,28 +352,68 @@ const JodiBulkBid = ({ market, title }) => {
                 )}
 
                 <div className="bg-white border-2 border-orange-200 rounded-2xl p-2 sm:p-3 md:p-3 overflow-hidden w-full">
-                    <div className="overflow-x-auto md:overflow-x-hidden scrollbar-hidden">
+                    <div className="flex justify-end mb-2">
+                        <button
+                            type="button"
+                            onClick={clearAll}
+                            className="px-4 py-2 rounded-lg text-sm font-semibold border-2 border-orange-300 text-orange-600 bg-white hover:bg-orange-50 active:scale-[0.98] transition-all"
+                        >
+                            Clear
+                        </button>
+                    </div>
+                    {!isDesktop && (
+                        <div className="mb-2 flex items-center justify-between gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setColumnStart((prev) => Math.max(0, prev - 1))}
+                                disabled={!canSlideLeft}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${
+                                    canSlideLeft
+                                        ? 'bg-white border-orange-300 text-orange-600'
+                                        : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                                }`}
+                            >
+                                ← Prev
+                            </button>
+                            <span className="text-[11px] text-gray-500 font-semibold">
+                                Jodi Columns {visibleDigits[0]} - {visibleDigits[visibleDigits.length - 1]}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => setColumnStart((prev) => Math.min(DIGITS.length - MOBILE_VISIBLE_COLS, prev + 1))}
+                                disabled={!canSlideRight}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${
+                                    canSlideRight
+                                        ? 'bg-white border-orange-300 text-orange-600'
+                                        : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                                }`}
+                            >
+                                Next →
+                            </button>
+                        </div>
+                    )}
+                    <div className="overflow-x-hidden scrollbar-hidden">
                         <div
                             className="grid w-full gap-[2px] sm:gap-1 md:gap-1"
                             style={{
                                 gridTemplateColumns:
-                                    'clamp(34px, 10vw, 80px) clamp(6px, 1vw, 18px) repeat(10, minmax(18px, 1fr))'
+                                    `clamp(34px, 10vw, 80px) clamp(6px, 1vw, 18px) repeat(${visibleDigits.length}, minmax(18px, 1fr))`
                             }}
                         >
                             {/* Header digits */}
                             <div className="h-6 md:h-7" />
                             <div className="h-6 md:h-7" />
-                            {DIGITS.map((c) => (
+                            {visibleDigits.map((c) => (
                                 <div
                                     key={`h-${c}`}
-                                    className="h-6 md:h-7 w-full flex items-center justify-center text-orange-500 font-bold text-[10px] md:text-sm"
+                                    className="h-6 md:h-7 w-full flex items-center justify-center text-orange-500 font-medium text-[10px] md:text-sm"
                                 >
                                     {c}
                                 </div>
                             ))}
 
                             {/* Column bulk inputs */}
-                            <div className="h-6 md:h-7 w-full flex items-center justify-center text-[9px] md:text-xs text-gray-600 font-semibold px-1">
+                            <div className="h-6 md:h-7 w-full flex items-center justify-center text-[9px] md:text-xs text-gray-600 font-normal px-1">
                                 <span className="md:hidden leading-[10px] text-center">
                                     Enter
                                     <br />
@@ -258,7 +422,7 @@ const JodiBulkBid = ({ market, title }) => {
                                 <span className="hidden md:inline">Enter Points</span>
                             </div>
                             <div className="h-6 md:h-7" />
-                            {DIGITS.map((c) => (
+                            {visibleDigits.map((c) => (
                                 <input
                                     key={`col-${c}`}
                                     type="text"
@@ -272,7 +436,7 @@ const JodiBulkBid = ({ market, title }) => {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && colBulk[c]) applyCol(c, colBulk[c]);
                                     }}
-                                    className="no-spinner w-full min-w-0 h-6 md:h-7 bg-white border-2 border-orange-200 text-gray-800 rounded text-[9px] md:text-xs text-center placeholder:text-gray-400 focus:outline-none focus:border-orange-500"
+                                    className="no-spinner w-full min-w-0 h-6 md:h-7 bg-white border-2 border-orange-200 text-gray-800 font-bold rounded text-[9px] md:text-xs text-center placeholder:text-gray-900 placeholder:opacity-500 placeholder:font-normal focus:outline-none focus:border-orange-500"
                                 />
                             ))}
 
@@ -281,7 +445,7 @@ const JodiBulkBid = ({ market, title }) => {
                                 <React.Fragment key={`row-${r}`}>
                                     {/* Row label + bulk */}
                                     <div className="flex items-center gap-1 min-w-0">
-                                        <div className="w-4 md:w-6 h-6 md:h-7 flex items-center justify-center text-orange-500 font-bold text-[10px] md:text-sm">
+                                        <div className="w-4 md:w-6 h-6 md:h-7 flex items-center justify-center text-orange-500 font-medium text-[10px] md:text-sm">
                                             {r}
                                         </div>
                                         <input
@@ -296,19 +460,22 @@ const JodiBulkBid = ({ market, title }) => {
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && rowBulk[r]) applyRow(r, rowBulk[r]);
                                             }}
-                                            className="no-spinner h-6 md:h-7 flex-1 min-w-0 bg-white border-2 border-orange-200 text-gray-800 rounded text-[9px] md:text-xs text-center placeholder:text-gray-400 focus:outline-none focus:border-orange-500"
+                                            className="no-spinner h-6 md:h-7 flex-1 min-w-0 bg-white border-2 border-orange-200 text-gray-800 font-bold rounded text-[9px] md:text-xs text-center placeholder:text-gray-600 placeholder:opacity-100 placeholder:font-normal focus:outline-none focus:border-orange-500"
                                         />
                                     </div>
                                     <div className="h-6 md:h-7" />
 
-                                    {DIGITS.map((c) => {
+                                    {visibleDigits.map((c) => {
                                         const key = `${r}${c}`;
                                         return (
                                             <div key={key} className="flex flex-col items-center justify-center">
-                                                <div className="text-[8px] md:text-[10px] leading-none text-gray-400 mb-0.5 select-none">
-                                                    {key}
+                                                <div className="text-[8px] md:text-[10px] leading-none text-gray-700 font-normal mb-0.5 select-none">
+                                                    {key[0]} {key[1]}
                                                 </div>
                                                 <input
+                                                    ref={(el) => {
+                                                        cellRefs.current[`${r}-${c}`] = el;
+                                                    }}
                                                     type="text"
                                                     inputMode="numeric"
                                                     value={cells[key]}
@@ -318,7 +485,8 @@ const JodiBulkBid = ({ market, title }) => {
                                                             [key]: sanitizePoints(e.target.value),
                                                         }))
                                                     }
-                                                    className="no-spinner h-6 md:h-7 w-full bg-white border-2 border-orange-200 text-gray-800 rounded text-[9px] md:text-xs text-center focus:outline-none focus:border-orange-500"
+                                                    onKeyDown={(e) => handleCellKeyDown(e, r, c)}
+                                                    className="no-spinner h-6 md:h-7 w-full bg-white border-2 border-orange-200 text-gray-800 font-bold rounded text-[9px] md:text-xs text-center placeholder:text-gray-600 placeholder:opacity-100 placeholder:font-normal focus:outline-none focus:border-orange-500"
                                                 />
                                             </div>
                                         );

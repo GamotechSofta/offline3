@@ -444,8 +444,16 @@ export const getBetHistory = async (req, res) => {
         if (status) query.status = status;
         if (startDate || endDate) {
             query.createdAt = {};
-            if (startDate) query.createdAt.$gte = new Date(startDate);
-            if (endDate) query.createdAt.$lte = new Date(endDate);
+            if (startDate) {
+                const start = new Date(startDate);
+                start.setHours(0, 0, 0, 0);
+                query.createdAt.$gte = start;
+            }
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                query.createdAt.$lte = end;
+            }
         }
 
         const bets = await Bet.find(query)
@@ -491,8 +499,16 @@ export const getBetsByUser = async (req, res) => {
         if (status) query.status = status;
         if (startDate || endDate) {
             query.createdAt = {};
-            if (startDate) query.createdAt.$gte = new Date(startDate);
-            if (endDate) query.createdAt.$lte = new Date(endDate);
+            if (startDate) {
+                const start = new Date(startDate);
+                start.setHours(0, 0, 0, 0);
+                query.createdAt.$gte = start;
+            }
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                query.createdAt.$lte = end;
+            }
         }
 
         const bets = await Bet.find(query)

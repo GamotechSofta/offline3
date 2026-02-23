@@ -141,22 +141,11 @@ const BidOptions = () => {
     },
     {
       id: 11,
-      title: 'Half Sangam (O)',
+      title: 'Half Sangam',
       icon: (
         <img
           src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770033165/Untitled_design_c5hag8.svg"
-          alt="Half Sangam (O)"
-          className="w-full h-full object-contain"
-        />
-      ),
-    },
-    {
-      id: 12,
-      title: 'Half Sangam (C)',
-      icon: (
-        <img
-          src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770033165/Untitled_design_c5hag8.svg"
-          alt="Half Sangam (C)"
+          alt="Half Sangam"
           className="w-full h-full object-contain"
         />
       ),
@@ -182,8 +171,7 @@ const BidOptions = () => {
           'Double Pana',
           'Double Pana Bulk',
           'Triple Pana',
-          'Half Sangam (O)',
-          'Half Sangam (C)',
+          'Half Sangam',
         ]);
         return allowed.has(t);
       })
@@ -197,10 +185,7 @@ const BidOptions = () => {
           'jodi',
           'jodi bulk',
           'full sangam',
-          'half sangam (o)',
-          'half sangam (a)',
-          'half sangam (c)',
-          'half sangam (b)',
+          'half sangam',
         ]);
         return !hideWhenRunning.has(t);
       })

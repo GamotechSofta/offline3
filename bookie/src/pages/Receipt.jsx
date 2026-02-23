@@ -75,6 +75,18 @@ const getBetTypeLabel = (type, betNumber = '') => {
     return labels[type] || type;
 };
 
+const getSessionSummary = (session) => {
+    const bets = Array.isArray(session?.bets) ? session.bets : [];
+    const wonCount = bets.filter((b) => b.status === 'won').length;
+    const lostCount = bets.filter((b) => b.status === 'lost').length;
+    const pendingCount = bets.filter((b) => b.status === 'pending').length;
+    const totalBet = bets.reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
+    const totalPayout = bets.filter((b) => b.status === 'won').reduce((sum, b) => sum + (Number(b.payout) || 0), 0);
+    const net = totalPayout - totalBet;
+    const isResultReady = pendingCount === 0 && bets.length > 0;
+    return { wonCount, lostCount, pendingCount, totalBet, totalPayout, net, isResultReady };
+};
+
 const Receipt = () => {
     const { t } = useLanguage();
     const { sessionId } = useParams();
@@ -104,6 +116,7 @@ const Receipt = () => {
     const [toGiveTakeLoading, setToGiveTakeLoading] = useState(false);
     const [toGiveTakeError, setToGiveTakeError] = useState('');
     const [toGiveTakeSuccess, setToGiveTakeSuccess] = useState('');
+    const [receiptTypeFilter, setReceiptTypeFilter] = useState('placed'); // placed | result
 
     const DATE_PRESETS = getDatePresets(t);
 
@@ -721,7 +734,7 @@ const Receipt = () => {
         })
         : players;
 
-    const filteredSessions = q
+    const searchedSessions = q
         ? sessions.filter((session) => {
             const playerName = (session.playerName || '').toLowerCase();
             const marketName = (session.marketName || '').toLowerCase();
@@ -729,6 +742,11 @@ const Receipt = () => {
             return playerName.includes(q) || marketName.includes(q) || playerPhone.includes(q);
         })
         : sessions;
+
+    const filteredSessions = searchedSessions.filter((session) => {
+        const summary = getSessionSummary(session);
+        return receiptTypeFilter === 'result' ? summary.isResultReady : true;
+    });
 
     // If sessionId is present, show receipt view
     if (sessionId && selectedSession) {
@@ -1374,6 +1392,31 @@ const Receipt = () => {
 
             {/* Sessions Table */}
             <div className="bg-white rounded-lg overflow-x-auto overflow-y-hidden border border-gray-200 min-w-0 max-w-full">
+                <div className="px-3 sm:px-4 py-2.5 border-b border-gray-100 bg-gray-50 flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Receipt Type:</span>
+                    <button
+                        type="button"
+                        onClick={() => setReceiptTypeFilter('placed')}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                            receiptTypeFilter === 'placed'
+                                ? 'bg-orange-500 text-white'
+                                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
+                        }`}
+                    >
+                        Bets Placed
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setReceiptTypeFilter('result')}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                            receiptTypeFilter === 'result'
+                                ? 'bg-orange-500 text-white'
+                                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
+                        }`}
+                    >
+                        Won/Loss Result
+                    </button>
+                </div>
                 {loading ? (
                     <div className="p-8 text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto" />
@@ -1395,8 +1438,10 @@ const Receipt = () => {
                                     <tr>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase w-8">#</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Market</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Bets</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-right text-xs font-medium text-gray-600 uppercase">Amount</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-right text-xs font-medium text-gray-600 uppercase">P/L</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Date & Time</th>
                                         <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
                                     </tr>
@@ -1404,11 +1449,27 @@ const Receipt = () => {
                                 <tbody className="divide-y divide-gray-100">
                                     {filteredSessions.map((session, index) => (
                                         <tr key={session.sessionId} className="hover:bg-gray-50">
+                                            {(() => {
+                                                const summary = getSessionSummary(session);
+                                                return (
+                                                    <>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{index + 1}</td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600 truncate max-w-[200px]">{session.marketName}</td>
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-xs">
+                                                <span className={`px-2 py-0.5 rounded-full font-semibold ${
+                                                    summary.isResultReady ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-600'
+                                                }`}>
+                                                    {summary.isResultReady ? 'Result' : 'Placed'}
+                                                </span>
+                                            </td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{session.totalBets}</td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-right font-mono font-medium text-green-600 text-xs sm:text-sm">
                                                 {formatCurrency(session.totalAmount)}
+                                            </td>
+                                            <td className={`px-2 sm:px-3 py-2 sm:py-3 text-right font-mono font-medium text-xs sm:text-sm ${
+                                                summary.isResultReady ? (summary.net >= 0 ? 'text-green-600' : 'text-red-500') : 'text-gray-400'
+                                            }`}>
+                                                {summary.isResultReady ? formatCurrency(summary.net) : '—'}
                                             </td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600 text-xs whitespace-nowrap">
                                                 {formatDateTime(session.createdAt)}
@@ -1421,9 +1482,12 @@ const Receipt = () => {
                                                     title="View receipt"
                                                 >
                                                     <FaFileInvoiceDollar className="w-3 h-3" />
-                                                    View
+                                                    {summary.isResultReady ? 'View Result' : 'View'}
                                                 </button>
                                             </td>
+                                                    </>
+                                                );
+                                            })()}
                                         </tr>
                                     ))}
                                 </tbody>

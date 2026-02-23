@@ -57,6 +57,40 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
     const [rowBulk, setRowBulk] = useState(() => Object.fromEntries(DIGITS.map((d) => [d, ''])));
     const [colBulk, setColBulk] = useState(() => Object.fromEntries(DIGITS.map((d) => [d, ''])));
     const cellRefs = useRef({});
+    const rowApplyTimersRef = useRef({});
+    const colApplyTimersRef = useRef({});
+    const APPLY_DELAY_MS = 600;
+
+    // Auto-apply row/column Pts after typing (no Enter or blur needed)
+    useEffect(() => {
+        const timers = {};
+        DIGITS.forEach((r) => {
+            const val = rowBulk[r];
+            if (!val || Number(val) <= 0) return;
+            if (rowApplyTimersRef.current[r]) clearTimeout(rowApplyTimersRef.current[r]);
+            timers[r] = setTimeout(() => {
+                applyRow(r, val);
+                rowApplyTimersRef.current[r] = null;
+            }, APPLY_DELAY_MS);
+            rowApplyTimersRef.current[r] = timers[r];
+        });
+        return () => DIGITS.forEach((r) => { if (rowApplyTimersRef.current[r]) clearTimeout(rowApplyTimersRef.current[r]); });
+    }, [rowBulk]);
+
+    useEffect(() => {
+        const timers = {};
+        DIGITS.forEach((c) => {
+            const val = colBulk[c];
+            if (!val || Number(val) <= 0) return;
+            if (colApplyTimersRef.current[c]) clearTimeout(colApplyTimersRef.current[c]);
+            timers[c] = setTimeout(() => {
+                applyCol(c, val);
+                colApplyTimersRef.current[c] = null;
+            }, APPLY_DELAY_MS);
+            colApplyTimersRef.current[c] = timers[c];
+        });
+        return () => DIGITS.forEach((c) => { if (colApplyTimersRef.current[c]) clearTimeout(colApplyTimersRef.current[c]); });
+    }, [colBulk]);
 
     const rows = useMemo(() => {
         const out = [];
@@ -148,11 +182,11 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
                 {(() => {
                     const compact = embedInSingleScroll || fitSingleScreen;
                     const rowH = compact ? 'h-[28px] min-h-[28px]' : 'h-10 min-h-10';
-                    const cellBase = 'no-spinner w-full min-w-0 bg-white text-gray-800 text-center placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:ring-offset-0 rounded-lg shadow-sm';
+                    const cellBase = 'no-spinner w-full min-w-0 bg-white text-gray-800 text-center font-bold placeholder:font-normal placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:ring-offset-0 rounded-lg shadow-sm';
                     const cellCl = compact
                         ? `${cellBase} h-[28px] min-h-[28px] text-[10px] py-1.5 px-0.5`
                         : `${cellBase} h-10 min-h-10 text-sm py-2 px-1.5`;
-                    const headerDigitCl = 'text-blue-900 font-bold';
+                    const headerDigitCl = 'text-blue-900 font-medium';
                     const labelCl = compact ? 'text-[8px] leading-none text-gray-400 select-none' : 'text-[9px] md:text-[10px] leading-none text-gray-400 mb-0.5 select-none';
                     return (
                         <div className={`overflow-hidden w-full rounded-2xl bg-gray-50/80 ${compact ? 'p-2' : 'p-4 sm:p-5'} ${(embedInSingleScroll || fitSingleScreen) ? 'shadow-none' : 'shadow-md'}`}>
@@ -216,7 +250,6 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
                                                             }}
                                                             type="text"
                                                             inputMode="numeric"
-                                                            placeholder={key}
                                                             value={cells[key]}
                                                             onChange={(e) =>
                                                                 setCells((p) => ({
@@ -246,8 +279,15 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
                     );
                 })()}
 
-                {/* Add to Cart — Safety Orange primary action */}
-                <div className={`${(embedInSingleScroll || fitSingleScreen) ? 'mt-2' : 'mt-6'}`}>
+                {/* Clear and Add to Cart */}
+                <div className={`flex flex-col gap-2 ${(embedInSingleScroll || fitSingleScreen) ? 'mt-2' : 'mt-6'}`}>
+                    <button
+                        type="button"
+                        onClick={clearLocal}
+                        className="px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-orange-300 text-orange-600 bg-white hover:bg-orange-50 active:scale-[0.98] transition-all"
+                    >
+                        Clear
+                    </button>
                     <button
                         type="button"
                         onClick={handleAddToCart}

@@ -212,8 +212,15 @@ const SinglePanaBulkBid = ({ title, gameType, betType, embedInSingleScroll = fal
                     })}
                 </div>
 
-                {/* Add to Cart Button */}
-                <div className={embedInSingleScroll ? 'mt-2' : 'mt-5 sticky bottom-3 z-10'}>
+                {/* Clear and Add to Cart */}
+                <div className={`flex flex-col gap-2 ${embedInSingleScroll ? 'mt-2' : 'mt-5 sticky bottom-3 z-10'}`}>
+                    <button
+                        type="button"
+                        onClick={clearLocal}
+                        className="px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-orange-300 text-orange-600 bg-white hover:bg-orange-50 active:scale-[0.98] transition-all"
+                    >
+                        Clear
+                    </button>
                     <button type="button" onClick={handleAddToCart} disabled={!canSubmit}
                         className={`w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[52px] rounded-lg shadow-lg transition-all active:scale-[0.98] ${!canSubmit ? 'opacity-50 cursor-not-allowed' : ''}`}>
                         Add to Cart {specialCount > 0 && `(${specialCount})`}

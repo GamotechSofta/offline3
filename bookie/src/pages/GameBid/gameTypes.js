@@ -4,7 +4,7 @@ import SinglePanaBulkBid from './bids/SinglePanaBulkBid';
 import DoublePanaBulkBid from './bids/DoublePanaBulkBid';
 import TriplePanaBid from './bids/TriplePanaBid';
 import FullSangamBid from './bids/FullSangamBid';
-import HalfSangamABid from './bids/HalfSangamABid';
+import HalfSangamBid from './bids/HalfSangamBid';
 
 export const GAME_TYPE_ORDER = [
     'single-digit',
@@ -30,5 +30,5 @@ export const BID_COMPONENTS = {
     'double-pana-bulk': { component: DoublePanaBulkBid, title: 'Double Pana Bulk', betType: 'panna' },
     'triple-pana': { component: TriplePanaBid, title: 'Triple Pana', betType: 'panna' },
     'full-sangam': { component: FullSangamBid, title: 'Full Sangam', betType: 'full-sangam' },
-    'half-sangam': { component: HalfSangamABid, title: 'Half Sangam (O)', betType: 'half-sangam' },
+    'half-sangam': { component: HalfSangamBid, title: 'Half Sangam', betType: 'half-sangam' },
 };

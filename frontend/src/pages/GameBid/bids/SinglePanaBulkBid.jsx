@@ -215,6 +215,16 @@ const SinglePanaBulkBid = ({ market, title }) => {
                     </div>
                 )}
 
+                <div className="flex justify-end mb-3">
+                    <button
+                        type="button"
+                        onClick={clearAll}
+                        className="px-4 py-2 rounded-lg text-sm font-semibold border-2 border-orange-300 text-orange-600 bg-white hover:bg-orange-50 active:scale-[0.98] transition-all"
+                    >
+                        Clear
+                    </button>
+                </div>
+
                 {/* Same visual style as Jodi Special Mode: flat grid + small cells */}
                 <div className="space-y-5 md:space-y-0 md:grid md:grid-cols-4 md:gap-x-5 md:gap-y-10 md:items-start">
                     {Array.from({ length: 10 }, (_, d) => String(d)).map((groupKey) => {

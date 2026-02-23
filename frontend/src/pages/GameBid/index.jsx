@@ -11,8 +11,7 @@ import DoublePanaBid from './bids/DoublePanaBid';
 import DoublePanaBulkBid from './bids/DoublePanaBulkBid';
 import TriplePanaBid from './bids/TriplePanaBid';
 import FullSangamBid from './bids/FullSangamBid';
-import HalfSangamABid from './bids/HalfSangamABid';
-import HalfSangamBBid from './bids/HalfSangamBBid';
+import HalfSangamBid from './bids/HalfSangamBid';
 
 const BID_COMPONENTS = {
     'single digit': SingleDigitBid,
@@ -25,13 +24,8 @@ const BID_COMPONENTS = {
     'double pana bulk': DoublePanaBulkBid,
     'triple pana': TriplePanaBid,
     'full sangam': FullSangamBid,
-    // Half Sangam variants:
-    // - O: Open Pana + Close Ank
-    // - C: Open Ank + Close Pana
-    'half sangam (a)': HalfSangamABid,
-    'half sangam (o)': HalfSangamABid,
-    'half sangam (b)': HalfSangamBBid,
-    'half sangam (c)': HalfSangamBBid,
+    // Half Sangam: single game with common UI for (O) and (C)
+    'half sangam': HalfSangamBid,
 };
 
 const GameBid = () => {

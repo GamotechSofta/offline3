@@ -14,6 +14,7 @@ import Reports from './pages/Reports';
 import Revenue from './pages/Revenue';
 import Payments from './pages/Payments';
 import Wallet from './pages/Wallet';
+import Records from './pages/Records';
 
 import HelpDesk from './pages/HelpDesk';
 import PlayerDetail from './pages/PlayerDetail';
@@ -22,7 +23,6 @@ import GameTypes from './pages/GameTypes';
 import BookieGameBid from './pages/GameBid/index';
 import Shortcuts from './pages/Shortcuts';
 import Receipt from './pages/Receipt';
-import BetsByUser from './pages/BetsByUser';
 import Settings from './pages/Settings';
 import { BetLayoutProvider } from './context/BetLayoutContext';
 
@@ -79,11 +79,11 @@ const AppRoutes = () => (
         <Route path="/markets" element={<PrivateRoute><Markets /></PrivateRoute>} />
         <Route path="/add-user" element={<PrivateRoute><AddUser /></PrivateRoute>} />
         <Route path="/bet-history" element={<PrivateRoute><BetHistory /></PrivateRoute>} />
-        <Route path="/bets-by-user" element={<PrivateRoute><BetsByUser /></PrivateRoute>} />
         <Route path="/top-winners" element={<PrivateRoute><TopWinners /></PrivateRoute>} />
         <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
         <Route path="/revenue" element={<PrivateRoute><Revenue /></PrivateRoute>} />
         <Route path="/payments" element={<PrivateRoute><Payments /></PrivateRoute>} />
+        <Route path="/records" element={<PrivateRoute><Records /></PrivateRoute>} />
         <Route path="/wallet" element={<PrivateRoute><Wallet /></PrivateRoute>} />
         <Route path="/receipt" element={<PrivateRoute><Receipt /></PrivateRoute>} />
         <Route path="/receipt/:sessionId" element={<PrivateRoute><Receipt /></PrivateRoute>} />

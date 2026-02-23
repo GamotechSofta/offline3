@@ -12,6 +12,7 @@ export default {
     report: 'Report',
     revenue: 'Revenue',
     payments: 'Payments',
+    records: 'Records',
     wallet: 'Wallet',
     receipt: 'Receipt',
     helpDesk: 'Help Desk',
