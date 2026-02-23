@@ -7,7 +7,6 @@ const CHICKEN_ROAD_BANNER = 'https://res.cloudinary.com/dzd47mpdo/image/upload/v
 const aviatorCards = [
   { title: 'Aviator', sub: 'Crash Game', image: AVIATOR_GAMES_IMAGE, cta: 'Aviator' },
   { title: 'Chicken Road', sub: 'Game', image: CHICKEN_ROAD_BANNER, cta: 'Chicken Road' },
-  { title: 'Quick Play', sub: 'Bet & Win', image: AVIATOR_GAMES_IMAGE, cta: 'Aviator' },
 ];
 
 const AviatorSection = () => {
@@ -15,51 +14,46 @@ const AviatorSection = () => {
 
   return (
     <section className="w-full bg-white min-[375px]:pt-2 pb-4 sm:pt-4 sm:pb-6 min-[375px]:px-3 sm:px-4 max-w-full overflow-x-hidden">
-      {/* Section header - matches Markets style */}
-      <div className="hidden md:flex items-center gap-4 mt-2 mb-4 w-full max-w-7xl mx-auto px-4">
-        <div className="flex-1 h-[1px] bg-gradient-to-r from-orange-200 via-orange-400 to-orange-500 min-w-[20px]" />
-        <div className="flex items-center gap-2 shrink-0">
-          <svg className="w-2.5 h-2.5 text-orange-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
-          <h2 className="text-gray-800 text-lg font-bold tracking-[0.15em] uppercase">Games</h2>
-          <svg className="w-2.5 h-2.5 text-orange-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
+      {/* Games bar - below hero, above cards */}
+      <div className="flex items-center mt-2 mb-3 min-[375px]:mb-4 w-full -mx-3 min-[375px]:-mx-3 sm:-mx-4 px-3 min-[375px]:px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-orange-50 to-amber-50 border-y border-orange-200/80">
+        <div className="flex items-center gap-2">
+          <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-orange-500 text-white shadow-sm">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <h2 className="text-gray-800 text-sm min-[375px]:text-base sm:text-lg font-bold tracking-tight">Games</h2>
         </div>
-        <div className="flex-1 h-[1px] bg-gradient-to-l from-orange-200 via-orange-400 to-orange-500 min-w-[20px]" />
-      </div>
-      <div className="flex md:hidden items-end justify-center mb-3 min-[375px]:mb-4 w-full max-w-7xl mx-auto gap-1 min-[375px]:gap-2 sm:gap-4">
-        <div className="flex-1 h-[2px] bg-orange-500 shrink min-w-0" />
-        <div className="relative shrink-0 w-[90px] min-[375px]:w-[110px] sm:w-[140px] h-[22px] min-[375px]:h-[26px] sm:h-[30px] flex items-center justify-center">
-          <h2 className="text-gray-800 text-xs min-[375px]:text-sm sm:text-base font-bold tracking-wider">GAMES</h2>
-        </div>
-        <div className="flex-1 h-[2px] bg-orange-500 shrink min-w-0" />
       </div>
 
-      {/* 3 Aviator cards - compact */}
-      <div className="grid grid-cols-3 gap-1.5 min-[375px]:gap-2 sm:gap-3 w-full max-w-2xl mx-auto px-1">
+      {/* Game cards - compact */}
+      <div className="grid grid-cols-2 gap-1 min-[375px]:gap-1.5 sm:gap-2 w-full max-w-xs sm:max-w-sm px-1">
         {aviatorCards.map((card, index) => (
           <button
             key={index}
             type="button"
             onClick={openAviator}
-            className="bg-white border border-orange-200 rounded-md overflow-hidden shadow-sm transform transition-transform duration-200 cursor-pointer hover:scale-[1.02] hover:border-orange-400 text-left"
+            className="bg-white border border-orange-200 rounded-md overflow-hidden shadow-sm transform transition-transform duration-200 cursor-pointer hover:scale-[1.02] hover:border-orange-400 text-left max-w-[140px] min-[375px]:max-w-[160px] sm:max-w-[180px] w-full"
           >
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 py-1 px-1.5 text-center">
-              <p className="text-white text-[9px] min-[375px]:text-[10px] sm:text-xs font-semibold leading-tight">
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 py-0.5 px-1 text-center">
+              <p className="text-white text-[8px] min-[375px]:text-[9px] sm:text-[10px] font-semibold leading-tight">
                 PLAY NOW
               </p>
             </div>
-            <div className="relative p-0 overflow-hidden">
+            <div className="relative p-0 overflow-hidden aspect-square">
               <img
                 src={card.image}
                 alt={card.title}
-                className="w-full aspect-[4/3] max-h-[72px] min-[375px]:max-h-[80px] sm:max-h-[88px] object-cover object-center"
+                className="w-full h-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" aria-hidden />
-              <div className="absolute bottom-0 left-0 right-0 p-1 min-[375px]:p-1.5 text-white">
-                <p className="text-white/90 text-[8px] min-[375px]:text-[9px] sm:text-[10px] truncate">{card.sub}</p>
-                <h3 className="text-white text-[9px] min-[375px]:text-[10px] sm:text-xs font-semibold truncate">
+              <div className="absolute bottom-0 left-0 right-0 p-0.5 min-[375px]:p-1 text-white">
+                <p className="text-white/90 text-[7px] min-[375px]:text-[8px] sm:text-[9px] truncate">{card.sub}</p>
+                <h3 className="text-white text-[8px] min-[375px]:text-[9px] sm:text-[10px] font-semibold truncate">
                   {card.title}
                 </h3>
-                <p className="text-orange-300 text-[10px] min-[375px]:text-xs font-bold mt-0.5">
+                <p className="text-orange-300 text-[8px] min-[375px]:text-[9px] sm:text-[10px] font-bold mt-0.5">
                   {card.cta} →
                 </p>
               </div>
