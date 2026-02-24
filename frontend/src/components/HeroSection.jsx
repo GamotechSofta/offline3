@@ -8,30 +8,34 @@ const heroImageMobile =
 const heroStyle = (url) => ({
   backgroundImage: `url(${url})`,
   backgroundSize: 'cover',
-  backgroundPosition: 'top center',
+  backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
 });
 
 const HeroSection = () => {
   return (
     <>
-      {/* Desktop: section with aspect ratio so the background has height */}
+      {/* Desktop: section with aspect ratio */}
       <section
-        className="w-full max-w-full overflow-hidden mb-6 mt-5 relative hidden md:block"
+        className="w-full max-w-full overflow-hidden mt-2 md:mt-5 mb-4 md:mb-6 relative hidden md:block rounded-b-xl"
         style={{ aspectRatio: '1920/500' }}
       >
         <div
           className="absolute inset-0 w-full h-full"
           style={heroStyle(heroImageDesktop)}
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1F2732]/80 via-transparent to-transparent pointer-events-none" />
       </section>
-      {/* Mobile: img at original aspect ratio */}
-      <section className="w-full max-w-full overflow-hidden mb-6 mt-5 md:hidden">
-        <img
-          src={heroImageMobile}
-          alt=""
-          className="w-full h-auto object-contain"
-        />
+      {/* Mobile: show full banner so no content is hidden */}
+      <section className="w-full max-w-full overflow-hidden mt-0 mb-4 md:hidden rounded-b-xl">
+        <div className="relative w-full">
+          <img
+            src={heroImageMobile}
+            alt=""
+            className="w-full h-auto object-contain object-center min-h-0"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1F2732]/60 via-transparent to-transparent pointer-events-none rounded-b-xl" />
+        </div>
       </section>
     </>
   );

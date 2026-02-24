@@ -87,101 +87,70 @@ const Section1 = () => {
 
 
   return (
-    <section className="w-full bg-[#1F2732] min-[375px]:pt-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 sm:pb-10 min-[375px]:px-3 sm:px-4 md:pb-8 max-w-full overflow-x-hidden">
-      {/* ═══ Desktop: MARKETS header ── */}
-      <div className="hidden md:flex items-center gap-4 mt-4 mb-5 w-full max-w-7xl mx-auto px-4">
-        {/* ── Left primary line ── */}
-        <div className="flex-1 h-[1px] bg-gradient-to-r from-primary-200 via-primary-400 to-primary-500 min-w-[20px]" />
-
-        {/* ── MARKETS center ── */}
+    <section className="w-full pt-6 sm:pt-8 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:pb-12 md:pb-10">
+      {/* Section header - unified for mobile and desktop */}
+      <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#333D4D] to-[#333D4D]" />
         <div className="flex items-center gap-2 shrink-0">
-          <svg className="w-2.5 h-2.5 text-primary-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
-          <h2 className="text-white text-lg font-bold tracking-[0.15em] uppercase">Markets</h2>
-          <svg className="w-2.5 h-2.5 text-primary-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#252D3A] border border-[#333D4D] text-primary-400">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" />
+            </svg>
+          </span>
+          <h2 className="text-white text-base sm:text-lg font-semibold tracking-tight uppercase">Markets</h2>
         </div>
-
-        {/* ── Right primary line ── */}
-        <div className="flex-1 h-[1px] bg-gradient-to-l from-primary-200 via-primary-400 to-primary-500 min-w-[20px]" />
-
+        <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#333D4D] to-[#333D4D]" />
       </div>
 
-      {/* ═══ Mobile: MARKETS Header only ═══ */}
-      <div className="flex md:hidden items-end justify-center mb-4 min-[375px]:mb-6 sm:mb-8 w-full max-w-7xl mx-auto gap-1 min-[375px]:gap-2 sm:gap-4">
-        <div className="flex-1 h-[2px] bg-primary-500 shrink min-w-0" />
-        <div className="relative shrink-0 w-[110px] min-[375px]:w-[140px] sm:w-[180px] h-[24px] min-[375px]:h-[28px] sm:h-[34px]">
-          <svg className="w-full h-full" viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            {/* Add small bottom "wings" so lines join like screenshot */}
-            <path d="M0 39 H26 L40 2 H200 L214 39 H240" stroke="#f97316" strokeWidth="2" />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center pt-2 sm:pt-3">
-            <h2 className="text-white text-sm min-[375px]:text-base sm:text-xl font-bold tracking-wider">MARKETS</h2>
-          </div>
-        </div>
-        <div className="flex-1 h-[2px] bg-primary-500 shrink min-w-0" />
-      </div>
       {/* Market Cards Grid */}
       {loading ? (
-        <div className="text-center py-12">
-          <p className="text-gray-300">Loading markets...</p>
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="w-10 h-10 border-2 border-[#333D4D] border-t-primary-500 rounded-full animate-spin mb-3" />
+          <p className="text-gray-400 text-sm">Loading markets...</p>
         </div>
       ) : markets.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-300">No markets available</p>
+        <div className="text-center py-16 rounded-xl bg-[#252D3A]/50 border border-[#333D4D]">
+          <p className="text-gray-400">No markets available</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 min-[375px]:gap-2 sm:gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {markets.map((market) => {
-            // open + running = clickable; closed = not clickable
             const isClickable = market.status === 'open' || market.status === 'running';
             return (
-            <div
-              key={market.id}
-              onClick={() => isClickable && navigate('/bidoptions', { state: { market } })}
-              className={`bg-[#252D3A] border-2 border-primary-200 rounded-lg overflow-hidden shadow-md transform transition-transform duration-200 ${
-                isClickable 
-                  ? 'cursor-pointer hover:scale-[1.02] hover:border-primary-400' 
-                  : 'cursor-not-allowed opacity-60'
-              }`}
-            >
-              {/* Status: ***-**-***=Open(green), 156-2*-***=Running(green), 987-45-456=Closed(red) */}
-              <div className={`${
-                market.status === 'closed' ? 'bg-red-500' : 'bg-green-500'
-              } py-1 min-[375px]:py-1.5 sm:py-2 px-1.5 min-[375px]:px-2 sm:px-3 text-center`}>
-                <p className="text-white text-[9px] min-[375px]:text-[10px] sm:text-xs md:text-sm font-semibold leading-tight">
-                  {market.status === 'open' && 'MARKET IS OPEN'}
-                  {market.status === 'running' && 'CLOSED IS RUNNING'}
-                  {market.status === 'closed' && 'MARKET CLOSED'}
-                </p>
-              </div>
+              <div
+                key={market.id}
+                onClick={() => isClickable && navigate('/bidoptions', { state: { market } })}
+                role={isClickable ? 'button' : undefined}
+                className={`rounded-xl overflow-hidden transition-all duration-200 ${
+                  isClickable
+                    ? 'bg-[#252D3A] border-2 border-green-500/70 cursor-pointer hover:border-green-400 hover:shadow-lg hover:shadow-green-500/20'
+                    : 'bg-[#252D3A] border border-[#333D4D] cursor-not-allowed opacity-70'
+                }`}
+              >
+                {/* Status bar - bold green for Open/Running, muted red for Closed */}
+                <div className={`px-3 py-2 text-center ${
+                  market.status === 'closed'
+                    ? 'bg-red-500/20 text-red-400'
+                    : 'bg-green-600 text-white'
+                }`}>
+                  <p className={`text-xs font-semibold ${market.status !== 'closed' ? 'font-bold' : ''}`}>
+                    {market.status === 'open' && 'Open'}
+                    {market.status === 'running' && 'Running'}
+                    {market.status === 'closed' && 'Closed'}
+                  </p>
+                </div>
 
-            {/* Card Content */}
-            <div className="p-1.5 min-[375px]:p-2 sm:p-3 md:p-4">
-              {/* Time with Clock Icon */}
-              <div className="flex items-center gap-0.5 sm:gap-1 mb-1 min-[375px]:mb-1.5 sm:mb-2">
-                <svg
-                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-gray-400 shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-gray-300 text-[9px] min-[375px]:text-[10px] sm:text-xs md:text-sm truncate">{market.timeRange}</p>
+                <div className="p-3 sm:p-4">
+                  <div className={`flex items-center gap-1.5 mb-2 ${isClickable ? 'text-gray-300' : 'text-gray-400'}`}>
+                    <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-xs truncate">{market.timeRange}</p>
+                  </div>
+                  <h3 className={`text-sm sm:text-base font-semibold mb-3 truncate ${isClickable ? 'text-white' : 'text-gray-400'}`}>{market.gameName}</h3>
+                  <p className={`text-lg sm:text-xl font-bold font-mono tracking-wide ${isClickable ? 'text-primary-400' : 'text-gray-500'}`}>{market.result}</p>
+                </div>
               </div>
-
-              {/* Game Name */}
-              <h3 className="text-white text-[10px] min-[375px]:text-xs sm:text-sm md:text-base lg:text-lg font-semibold mb-1 min-[375px]:mb-2 sm:mb-3 truncate">
-                {market.gameName}
-              </h3>
-
-              {/* Result */}
-              <div>
-                <p className="text-primary-500 text-base min-[375px]:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
-                  {market.result}
-                </p>
-              </div>
-            </div>
-          </div>
             );
           })}
         </div>

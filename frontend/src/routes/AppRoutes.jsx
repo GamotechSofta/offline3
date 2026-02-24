@@ -97,7 +97,7 @@ const Layout = ({ children }) => {
     return (
       <div className="min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-white w-full">
         <AppHeader />
-        <div className="pt-[calc(56px+env(safe-area-inset-top,0px))] sm:pt-[calc(52px+env(safe-area-inset-top,0px))] md:pt-[calc(56px+env(safe-area-inset-top,0px))]">
+        <div className="pt-[calc(44px+env(safe-area-inset-top,0px))] sm:pt-[calc(52px+env(safe-area-inset-top,0px))] md:pt-[calc(56px+env(safe-area-inset-top,0px))]">
           {children}
         </div>
         <BottomNavbar />
@@ -114,9 +114,10 @@ const Layout = ({ children }) => {
   const isBetsPage = location.pathname === '/bids';
   const isHistoryPage =
     location.pathname === '/bet-history' || location.pathname === '/market-result-history';
+  const isProfilePage = location.pathname === '/profile';
 
   return (
-    <div className="min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden bg-white">
+    <div className={`min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isProfilePage ? 'bg-[#1F2732]' : 'bg-white'}`}>
       <AppHeader />
       {/* Reduce mobile top-gap under fixed header */}
       {/* Desktop: ensure no overlap under fixed header */}

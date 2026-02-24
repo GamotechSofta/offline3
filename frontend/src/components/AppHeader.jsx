@@ -127,28 +127,28 @@ const AppHeader = () => {
   return (
     <>
       <div
-        className="fixed top-0 left-0 right-0 z-50 w-full bg-[#181E27] border-b-2 border-[#333D4D] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] sm:pl-[max(1.25rem,env(safe-area-inset-left))] sm:pr-[max(1.25rem,env(safe-area-inset-right))] md:pl-[max(1.5rem,env(safe-area-inset-left))] md:pr-[max(1.5rem,env(safe-area-inset-right))] py-2.5 sm:py-2 md:py-2.5 pt-[calc(0.625rem+env(safe-area-inset-top,0px))] sm:pt-[calc(0.5rem+env(safe-area-inset-top,0px))] md:pt-[calc(0.625rem+env(safe-area-inset-top,0px))]"
+        className="fixed top-0 left-0 right-0 z-50 w-full bg-[#181E27] border-b border-[#333D4D] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))] sm:pl-[max(1.25rem,env(safe-area-inset-left))] sm:pr-[max(1.25rem,env(safe-area-inset-right))] md:pl-[max(1.5rem,env(safe-area-inset-left))] md:pr-[max(1.5rem,env(safe-area-inset-right))] py-1.5 sm:py-2 md:py-2.5 pt-[calc(0.375rem+env(safe-area-inset-top,0px))] sm:pt-[calc(0.5rem+env(safe-area-inset-top,0px))] md:pt-[calc(0.625rem+env(safe-area-inset-top,0px))] pb-1.5 sm:pb-2 md:pb-2.5"
       >
         <div className="flex items-center justify-between gap-2 sm:gap-2 md:gap-3">
           {/* Hamburger Menu and Logo together on the left */}
-          <div className="flex items-center gap-2.5 sm:gap-3 md:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <button
               type="button"
               onClick={() => setIsMenuOpen(true)}
-              className="w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-[#252D3A] border-2 border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
+              className="w-9 h-9 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-lg md:rounded-xl bg-[#252D3A] border border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
               aria-label="Open menu"
             >
-            <div className="flex flex-col gap-1.5 sm:gap-1.5">
-              <div className="w-5 sm:w-5 md:w-5 h-[2.5px] bg-white rounded-full"></div>
-              <div className="w-4 sm:w-4 md:w-4 h-[2.5px] bg-white rounded-full"></div>
-              <div className="w-3.5 sm:w-3 md:w-3 h-[2.5px] bg-white rounded-full"></div>
+            <div className="flex flex-col gap-1 sm:gap-1.5">
+              <div className="w-4 sm:w-5 md:w-5 h-[2px] md:h-[2.5px] bg-white rounded-full"></div>
+              <div className="w-3.5 sm:w-4 md:w-4 h-[2px] md:h-[2.5px] bg-white rounded-full"></div>
+              <div className="w-3 sm:w-3 md:w-3 h-[2px] md:h-[2.5px] bg-white rounded-full"></div>
             </div>
             </button>
 
             {/* Home Icon */}
             <Link 
               to="/" 
-              className="w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-[#252D3A] border-2 border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
+              className="w-9 h-9 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-lg md:rounded-xl bg-[#252D3A] border border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
               title="Home"
             >
               <svg 
@@ -189,7 +189,7 @@ const AppHeader = () => {
           <button
             type="button"
             onClick={handleProfileClick}
-            className={`w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl border-2 flex items-center justify-center cursor-pointer active:scale-95 transition-all duration-200 shadow-sm ${
+            className={`w-9 h-9 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-lg md:rounded-xl border flex items-center justify-center cursor-pointer active:scale-95 transition-all duration-200 shadow-sm ${
               user ? 'bg-[#252D3A] border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400' : 'bg-[#252D3A] border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400'
             }`}
             title={user ? `${user.username} - View Profile` : 'Sign In / Sign Up'}

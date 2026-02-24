@@ -95,16 +95,15 @@ const BottomNavbar = () => {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden pt-1"
+      className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
       style={{
         paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 8px)',
         paddingLeft: 'max(0.75rem, env(safe-area-inset-left))',
         paddingRight: 'max(0.75rem, env(safe-area-inset-right))',
       }}
     >
-      {/* Backplate to match page background */}
-      <div className="absolute inset-0 bg-[#1F2732] pointer-events-none" />
-      <div className="relative bg-[#1F2732] rounded-3xl border-2 border-[#333D4D] shadow-lg flex items-end justify-around px-1 py-2 min-h-[64px]">
+      {/* Bar: distinct surface so it’s clearly visible */}
+      <div className="relative bg-[#252D3A] border-t-2 border-[#333D4D] rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.4)] flex items-end justify-around px-1 pt-2 pb-1 min-h-[64px]">
         {navItems.map((item) => {
           const active = isActive(item.path);
           const isCenter = item.isCenter;
@@ -125,14 +124,14 @@ const BottomNavbar = () => {
                 <div
                   className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 ${
                     active
-                      ? 'bg-primary ring-2 ring-primary/60 ring-offset-2 ring-offset-[#1F2732] scale-105'
+                      ? 'bg-primary ring-2 ring-primary/60 ring-offset-2 ring-offset-[#252D3A] scale-105'
                       : 'bg-primary-500/20 border-2 border-primary-400'
                   }`}
                 >
-                  {/* Icon: gray when inactive, white when active (on primary bg) */}
+                  {/* Icon: visible when inactive, white when active (on primary bg) */}
                   <div
                     className={`transition-all duration-200 ${
-                      active ? 'brightness-0 invert' : 'brightness-0 opacity-40'
+                      active ? 'brightness-0 invert' : 'brightness-0 opacity-80'
                     }`}
                   >
                     {item.icon}
@@ -140,7 +139,7 @@ const BottomNavbar = () => {
                 </div>
                 <span
                   className={`text-[10px] sm:text-xs font-bold mt-1 transition-colors duration-200 ${
-                    active ? 'text-primary' : 'text-gray-300'
+                    active ? 'text-primary' : 'text-gray-200'
                   }`}
                 >
                   {item.label}
@@ -161,10 +160,10 @@ const BottomNavbar = () => {
               }}
               className="relative flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl min-w-[56px] active:scale-95 transition-all duration-150 touch-manipulation"
             >
-              {/* Icon: gray when inactive, primary when active */}
+              {/* Icon: clearly visible when inactive, primary when active */}
               <div
                 className={`transition-all duration-200 ${
-                  active ? 'scale-110 brightness-0 opacity-60' : 'scale-100 brightness-0 opacity-40'
+                  active ? 'scale-110 brightness-0 opacity-90' : 'scale-100 brightness-0 opacity-80'
                 }`}
               >
                 {item.icon}
@@ -177,7 +176,7 @@ const BottomNavbar = () => {
               </div>
               <span
                 className={`text-[10px] sm:text-xs font-bold transition-colors duration-200 ${
-                  active ? 'text-primary' : 'text-gray-300'
+                  active ? 'text-primary' : 'text-gray-200'
                 }`}
               >
                 {item.label}
