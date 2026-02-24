@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Sidebar from './Sidebar';
+import Sidebar, { getStoredSidebarWidth, SIDEBAR_STORAGE_KEY } from './Sidebar';
 import { FaBars } from 'react-icons/fa';
 import { API_BASE_URL, getBookieAuthHeaders } from '../utils/api';
 
@@ -10,6 +10,13 @@ const Layout = ({ children, title }) => {
     const location = useLocation();
     const { bookie, logout, updateBookie } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarWidth, setSidebarWidth] = useState(getStoredSidebarWidth);
+    const handleSidebarWidthChange = useCallback((w) => {
+        setSidebarWidth(w);
+        try {
+            localStorage.setItem(SIDEBAR_STORAGE_KEY, String(w));
+        } catch (e) { /* ignore */ }
+    }, []);
     const lastProfileFetch = useRef(0);
 
     const handleLogout = () => {
@@ -102,18 +109,18 @@ const Layout = ({ children, title }) => {
     }, [navigate, sidebarOpen]);
 
     return (
-        <div className="min-h-screen bg-gray-50 text-gray-800">
+        <div className="min-h-screen bg-[#1F2732] text-gray-200">
             {/* Mobile header */}
-            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center justify-between px-4 z-40 shadow-sm">
+            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#181E27] border-b border-[#333D4D] flex items-center justify-between px-4 z-40 shadow-sm">
                 <button
                     type="button"
                     onClick={() => setSidebarOpen(true)}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-2 rounded-lg hover:bg-[#252D3A] transition-colors text-white"
                     aria-label="Open menu"
                 >
-                    <FaBars className="w-6 h-6 text-primary-500" />
+                    <FaBars className="w-6 h-6 text-primary-400" />
                 </button>
-                <h1 className="text-lg font-bold text-primary-600 truncate mx-2">
+                <h1 className="text-lg font-bold text-primary-400 truncate mx-2">
                     {title || 'Bookie Panel'}
                 </h1>
                 <div className="w-10" />
@@ -125,6 +132,8 @@ const Layout = ({ children, title }) => {
                 onLogout={handleLogout}
                 isOpen={sidebarOpen}
                 onClose={() => setSidebarOpen(false)}
+                width={sidebarWidth}
+                onWidthChange={handleSidebarWidthChange}
             />
 
             {/* Backdrop for mobile */}
@@ -136,8 +145,13 @@ const Layout = ({ children, title }) => {
                 />
             )}
 
-            {/* Main content */}
-            <main className="pt-14 lg:pt-0 lg:ml-72 min-h-screen overflow-x-hidden">
+            {/* Main content — margin matches sidebar width on desktop */}
+            <style>{`
+                @media (min-width: 1024px) {
+                    .bookie-main { margin-left: ${sidebarWidth}px; }
+                }
+            `}</style>
+            <main className="pt-14 lg:pt-0 bookie-main min-h-screen overflow-x-hidden">
                 <div
                     key={location.pathname}
                     className="p-3 sm:p-4 md:p-6 lg:p-8 lg:pl-10 min-w-0 max-w-full box-border animate-[fadeInLayout_0.2s_ease-out]"

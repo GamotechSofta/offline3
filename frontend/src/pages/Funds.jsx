@@ -128,27 +128,27 @@ const Funds = () => {
   const isAddFundMobileView = mobileView === 'add-fund';
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 md:pt-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
+    <div className="min-h-screen bg-[#1F2732] text-white pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 md:pt-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
       <div className="w-full max-w-lg md:max-w-none mx-auto md:mx-0">
         <div className="mb-4 md:grid md:grid-cols-[360px_1fr] md:gap-6 md:items-center">
           <div className="flex items-center gap-3 pt-4 md:pt-0">
             <button
               type="button"
               onClick={() => mobileView ? handleMobileBack() : navigate(-1)}
-              className="min-w-[44px] min-h-[44px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-700 hover:bg-gray-200 active:scale-95 transition touch-manipulation"
+              className="min-w-[44px] min-h-[44px] rounded-full bg-[#252D3A] border border-[#333D4D] flex items-center justify-center text-white hover:bg-primary-500/20 active:scale-95 transition touch-manipulation"
               aria-label="Back"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+            <h1 className="text-xl sm:text-2xl font-bold text-white">
               {mobileView ? items.find(i => i.key === mobileView)?.title : 'Funds'}
             </h1>
           </div>
 
           <div className="hidden md:flex items-center justify-between gap-4 px-1">
-            <div className="text-2xl font-extrabold text-gray-800">{activeItem?.title}</div>
+            <div className="text-2xl font-extrabold text-white">{activeItem?.title}</div>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ const Funds = () => {
                 <div
                   key={item.key}
                   onClick={() => handleItemClick(item.key)}
-                  className="bg-white border-2 border-primary-200 rounded-2xl p-3 flex items-center justify-between shadow-sm hover:border-primary-300 transition-colors"
+                  className="bg-[#252D3A] border-2 border-[#333D4D] rounded-2xl p-3 flex items-center justify-between shadow-sm hover:border-primary-400 transition-colors"
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
@@ -176,11 +176,11 @@ const Funds = () => {
                       {item.icon}
                     </div>
                     <div>
-                      <p className="text-sm sm:text-base font-semibold text-gray-800">{item.title}</p>
-                      <p className="text-[11px] sm:text-xs text-gray-600 leading-snug">{item.subtitle}</p>
+                      <p className="text-sm sm:text-base font-semibold text-white">{item.title}</p>
+                      <p className="text-[11px] sm:text-xs text-gray-300 leading-snug">{item.subtitle}</p>
                     </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center text-primary-500">
+                  <div className="w-8 h-8 rounded-full bg-primary-500/20 border border-primary-400 flex items-center justify-center text-primary-400">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                     </svg>
@@ -191,7 +191,7 @@ const Funds = () => {
           ) : (
             // Component view
             <div
-              className={`bg-white border-2 border-primary-200 rounded-2xl shadow-sm ${
+              className={`bg-[#252D3A] border-2 border-[#333D4D] rounded-2xl shadow-sm ${
                 isAddFundMobileView
                   ? 'p-3 max-h-[calc(100vh-220px)] overflow-y-auto scrollbar-hidden'
                   : 'p-4 max-h-[calc(100vh-140px)] overflow-y-auto scrollbar-hidden'
@@ -214,8 +214,8 @@ const Funds = () => {
                   key={item.key}
                   type="button"
                   onClick={() => setActiveKey(item.key)}
-                  className={`w-full text-left bg-white border-2 rounded-2xl p-3 md:p-5 flex items-center justify-between shadow-sm transition-colors ${
-                    active ? 'border-primary-500 bg-primary-50' : 'border-primary-200 hover:border-primary-300'
+                  className={`w-full text-left bg-[#252D3A] border-2 rounded-2xl p-3 md:p-5 flex items-center justify-between shadow-sm transition-colors ${
+                    active ? 'border-primary-500 bg-primary-500/20' : 'border-[#333D4D] hover:border-primary-400'
                   }`}
                 >
                   <div className="flex items-center gap-3 md:gap-4">
@@ -226,13 +226,13 @@ const Funds = () => {
                       {item.icon}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm md:text-base font-semibold text-gray-800 truncate">{item.title}</p>
-                      <p className="text-xs text-gray-600 truncate">{item.subtitle}</p>
+                      <p className="text-sm md:text-base font-semibold text-white truncate">{item.title}</p>
+                      <p className="text-xs text-gray-300 truncate">{item.subtitle}</p>
                     </div>
                   </div>
                   <div
                     className={`w-8 h-8 md:w-9 md:h-9 rounded-full border flex items-center justify-center ${
-                      active ? 'bg-primary-500 border-primary-500 text-white' : 'bg-gray-50 border-gray-300 text-gray-500'
+                      active ? 'bg-primary-500 border-primary-500 text-white' : 'bg-[#1F2732] border-[#333D4D] text-gray-400'
                     }`}
                   >
                     <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,7 +244,7 @@ const Funds = () => {
             })}
           </aside>
 
-          <main className="rounded-2xl bg-white border-2 border-primary-200 shadow-sm p-6">
+          <main className="rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] shadow-sm p-6">
             <div className="flex items-center justify-center gap-4 mb-6">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-md"
@@ -253,8 +253,8 @@ const Funds = () => {
                 {activeItem?.icon}
               </div>
               <div className="min-w-0 text-center">
-                <div className="text-xl font-bold text-gray-800 truncate">{activeItem?.title}</div>
-                <div className="text-sm text-gray-600">{activeItem?.subtitle}</div>
+                <div className="text-xl font-bold text-white truncate">{activeItem?.title}</div>
+                <div className="text-sm text-gray-300">{activeItem?.subtitle}</div>
               </div>
             </div>
 

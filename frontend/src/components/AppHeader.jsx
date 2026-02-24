@@ -127,7 +127,7 @@ const AppHeader = () => {
   return (
     <>
       <div
-        className="fixed top-0 left-0 right-0 z-50 w-full bg-white border-b-2 border-primary-200 pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] sm:pl-[max(1.25rem,env(safe-area-inset-left))] sm:pr-[max(1.25rem,env(safe-area-inset-right))] md:pl-[max(1.5rem,env(safe-area-inset-left))] md:pr-[max(1.5rem,env(safe-area-inset-right))] py-2.5 sm:py-2 md:py-2.5 pt-[calc(0.625rem+env(safe-area-inset-top,0px))] sm:pt-[calc(0.5rem+env(safe-area-inset-top,0px))] md:pt-[calc(0.625rem+env(safe-area-inset-top,0px))]"
+        className="fixed top-0 left-0 right-0 z-50 w-full bg-[#181E27] border-b-2 border-[#333D4D] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] sm:pl-[max(1.25rem,env(safe-area-inset-left))] sm:pr-[max(1.25rem,env(safe-area-inset-right))] md:pl-[max(1.5rem,env(safe-area-inset-left))] md:pr-[max(1.5rem,env(safe-area-inset-right))] py-2.5 sm:py-2 md:py-2.5 pt-[calc(0.625rem+env(safe-area-inset-top,0px))] sm:pt-[calc(0.5rem+env(safe-area-inset-top,0px))] md:pt-[calc(0.625rem+env(safe-area-inset-top,0px))]"
       >
         <div className="flex items-center justify-between gap-2 sm:gap-2 md:gap-3">
           {/* Hamburger Menu and Logo together on the left */}
@@ -135,24 +135,24 @@ const AppHeader = () => {
             <button
               type="button"
               onClick={() => setIsMenuOpen(true)}
-              className="w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-gray-50 border-2 border-gray-300 flex items-center justify-center cursor-pointer active:scale-95 hover:bg-gray-100 transition-all duration-200 shadow-sm"
+              className="w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-[#252D3A] border-2 border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
               aria-label="Open menu"
             >
             <div className="flex flex-col gap-1.5 sm:gap-1.5">
-              <div className="w-5 sm:w-5 md:w-5 h-[2.5px] bg-black rounded-full"></div>
-              <div className="w-4 sm:w-4 md:w-4 h-[2.5px] bg-black rounded-full"></div>
-              <div className="w-3.5 sm:w-3 md:w-3 h-[2.5px] bg-black rounded-full"></div>
+              <div className="w-5 sm:w-5 md:w-5 h-[2.5px] bg-white rounded-full"></div>
+              <div className="w-4 sm:w-4 md:w-4 h-[2.5px] bg-white rounded-full"></div>
+              <div className="w-3.5 sm:w-3 md:w-3 h-[2.5px] bg-white rounded-full"></div>
             </div>
             </button>
 
             {/* Home Icon */}
             <Link 
               to="/" 
-              className="w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-gray-50 border-2 border-gray-300 flex items-center justify-center cursor-pointer active:scale-95 hover:bg-gray-100 transition-all duration-200 shadow-sm"
+              className="w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-[#252D3A] border-2 border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
               title="Home"
             >
               <svg 
-                className="w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 text-black" 
+                className="w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 text-white" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -175,14 +175,14 @@ const AppHeader = () => {
           {/* Wallet - desktop only, responsive size */}
           <button
             onClick={() => navigate('/funds?tab=add-fund')}
-            className="hidden md:flex shrink-0 items-center gap-1.5 md:gap-2 lg:gap-2.5 rounded-lg bg-primary-50 border-2 border-primary-200 px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 hover:bg-primary-100 hover:border-primary-300 transition-colors"
+            className="hidden md:flex shrink-0 items-center gap-1.5 md:gap-2 lg:gap-2.5 rounded-lg bg-[#252D3A] border-2 border-[#333D4D] px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 hover:bg-primary-500/20 hover:border-primary-400 transition-colors"
           >
             <img
               src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769780438/Untitled_90_x_160_px_1080_x_1080_px_ychsx6.png"
               alt="Wallet"
-              className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 object-contain"
+              className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 object-contain brightness-0 invert"
             />
-            <span className="text-sm md:text-base lg:text-lg font-bold text-gray-800">₹{formattedBalance}</span>
+            <span className="text-sm md:text-base lg:text-lg font-bold text-white">₹{formattedBalance}</span>
           </button>
 
           {/* Profile Icon - improved mobile touch target */}
@@ -190,13 +190,13 @@ const AppHeader = () => {
             type="button"
             onClick={handleProfileClick}
             className={`w-10 h-10 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-xl border-2 flex items-center justify-center cursor-pointer active:scale-95 transition-all duration-200 shadow-sm ${
-              user ? 'bg-primary-50 border-primary hover:bg-primary-100 hover:border-primary' : 'bg-white border-primary-300 hover:bg-primary-50 hover:border-primary'
+              user ? 'bg-[#252D3A] border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400' : 'bg-[#252D3A] border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400'
             }`}
             title={user ? `${user.username} - View Profile` : 'Sign In / Sign Up'}
             aria-label="Profile"
           >
             <svg
-              className={`w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 ${user ? 'text-primary' : 'text-primary'}`}
+              className="w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 text-primary-400"
               fill={user ? 'currentColor' : 'none'}
               stroke={user ? 'none' : 'currentColor'}
               strokeWidth={user ? 0 : 1.5}
@@ -220,9 +220,9 @@ const AppHeader = () => {
             onClick={() => setIsMenuOpen(false)}
             aria-label="Close menu overlay"
           />
-          <aside className="relative h-full w-[86%] max-w-[360px] sm:w-[70%] sm:max-w-[380px] md:w-[420px] md:max-w-none bg-white shadow-[6px_0_24px_rgba(0,0,0,0.2)] border-r-2 border-primary-200">
+          <aside className="relative h-full w-[86%] max-w-[360px] sm:w-[70%] sm:max-w-[380px] md:w-[420px] md:max-w-none bg-[#181E27] shadow-[6px_0_24px_rgba(0,0,0,0.2)] border-r-2 border-[#333D4D]">
             {/* User Profile Section */}
-            <div className="px-5 sm:px-6 pt-6 pb-5 border-b-2 border-primary-200 bg-gradient-to-b from-primary-50 to-white">
+            <div className="px-5 sm:px-6 pt-6 pb-5 border-b-2 border-[#333D4D] bg-gradient-to-b from-primary-500/20 to-[#181E27]">
               <div className="flex items-start justify-between gap-3">
                 <button
                   type="button"
@@ -245,9 +245,9 @@ const AppHeader = () => {
                   
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="text-base sm:text-lg font-bold text-gray-800 truncate">{displayName}</div>
-                    <div className="text-xs sm:text-sm text-gray-600 mt-0.5 truncate">{displayPhone}</div>
-                    <div className="text-xs sm:text-sm text-gray-500 mt-0.5">{sinceText}</div>
+                    <div className="text-base sm:text-lg font-bold text-white truncate">{displayName}</div>
+                    <div className="text-xs sm:text-sm text-gray-300 mt-0.5 truncate">{displayPhone}</div>
+                    <div className="text-xs sm:text-sm text-gray-400 mt-0.5">{sinceText}</div>
                   </div>
                 </button>
                 
@@ -255,7 +255,7 @@ const AppHeader = () => {
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-primary-50 border-2 border-primary-200 flex items-center justify-center text-primary hover:text-primary hover:bg-primary-100 hover:border-primary-300 active:scale-95 transition-all duration-200 shrink-0"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-primary-500/20 border-2 border-primary-400 flex items-center justify-center text-primary-400 hover:text-primary-300 hover:bg-primary-500/30 hover:border-primary-400 active:scale-95 transition-all duration-200 shrink-0"
                   aria-label="Close menu"
                 >
                   <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -279,81 +279,81 @@ const AppHeader = () => {
                       navigate(item.path);
                     }
                   }}
-                  className="group w-full bg-white rounded-xl sm:rounded-2xl px-4 py-3.5 sm:py-4 flex items-center gap-4 border-2 border-primary-200 hover:border-primary hover:bg-primary-50 hover:shadow-lg active:scale-[0.98] transition-all duration-200"
+                  className="group w-full bg-[#252D3A] rounded-xl sm:rounded-2xl px-4 py-3.5 sm:py-4 flex items-center gap-4 border-2 border-[#333D4D] hover:border-primary-400 hover:bg-primary-500/20 hover:shadow-lg active:scale-[0.98] transition-all duration-200"
                 >
                   {/* Icon Container */}
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary-50 border-2 border-primary-200 flex items-center justify-center shrink-0 group-hover:border-primary group-hover:bg-primary-100 group-hover:shadow-md transition-all duration-200">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary-500/20 border-2 border-[#333D4D] flex items-center justify-center shrink-0 group-hover:border-primary-400 group-hover:bg-primary-500/30 group-hover:shadow-md transition-all duration-200">
                     {item.label === 'Top Winners' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769797561/podium_swqjij.png"
                         alt={item.label}
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Telegram Channel' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769797952/telegram_yw9hf1.png"
                         alt="Telegram"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'My Bets' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777192/auction_ofhpps.png"
                         alt="My Bets"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Bank' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777283/bank_il6uwi.png"
                         alt="Bank"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Funds' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777500/funding_zjmbzp.png"
                         alt="Funds"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Notification' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798359/notification_1_pflwit.png"
                         alt="Notification"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Game Chart' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798462/start_eotpxc.png"
                         alt="Game Chart"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Game Rate' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798548/stars_v1jfzk.png"
                         alt="Game Rate"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Time Table' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798627/schedule_frf8zc.png"
                         alt="Time Table"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Help Desk' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769777618/customer-support_du0zcj.png"
                         alt="Help Desk"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Share App' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798998/share_a6shgt.png"
                         alt="Share App"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : item.label === 'Logout' ? (
                       <img
                         src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769798997/logout_mttqvy.png"
                         alt="Logout"
-                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0"
+                        className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert"
                       />
                     ) : (
                       <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-gray-400"></div>
@@ -361,19 +361,19 @@ const AppHeader = () => {
                   </div>
                   
                   {/* Menu Text */}
-                  <span className="text-sm sm:text-base font-semibold text-gray-800 group-hover:text-primary transition-colors duration-200 flex-1 text-left">
+                  <span className="text-sm sm:text-base font-semibold text-white group-hover:text-primary-400 transition-colors duration-200 flex-1 text-left">
                     {item.label}
                   </span>
                   
                   {/* Arrow Indicator */}
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <svg className="w-5 h-5 text-gray-300 group-hover:text-primary-400 group-hover:translate-x-1 transition-all duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
               ))}
               
               {/* Version Footer */}
-              <div className="text-center text-xs text-gray-500 pt-4 pb-2">Version: 1.0.0</div>
+              <div className="text-center text-xs text-gray-400 pt-4 pb-2">Version: 1.0.0</div>
             </div>
           </aside>
         </div>

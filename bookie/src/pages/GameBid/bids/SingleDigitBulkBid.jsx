@@ -103,7 +103,7 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
         >
             <div className="px-3 py-2 w-full max-w-full overflow-x-hidden">
                 {warning && (
-                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
+                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
                         {warning}
                     </div>
                 )}
@@ -118,7 +118,7 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
                                     value={inputPoints}
                                     onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                     placeholder="Point"
-                                    className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2 min-h-[36px] px-4 text-center text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
+                                    className="no-spinner flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2 min-h-[36px] px-4 text-center text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -126,13 +126,13 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
                     <div className="w-full min-w-0 md:flex md:justify-center md:items-center pt-1 md:pt-6">
                         <div className="grid grid-cols-3 gap-2 w-full max-w-[260px] md:max-w-[200px] mx-auto">
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                                <button key={num} type="button" onClick={() => handleDigitClick(num)} className="relative aspect-square min-h-[40px] bg-gray-100 border border-gray-200 hover:border-primary-500/50 text-primary-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
+                                <button key={num} type="button" onClick={() => handleDigitClick(num)} className="relative aspect-square min-h-[40px] bg-[#1F2732] border border-[#333D4D] hover:border-primary-500/50 text-primary-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
                                     {num}
                                     {pointsByDigit[num] > 0 && <span className="absolute top-0.5 right-1 text-[10px] font-bold text-primary-500">{pointsByDigit[num]}</span>}
                                 </button>
                             ))}
                             <div className="col-span-3 flex justify-center">
-                                <button type="button" onClick={() => handleDigitClick(0)} className="relative aspect-square min-w-[40px] min-h-[40px] w-14 bg-gray-100 border border-gray-200 hover:border-primary-500/50 text-primary-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
+                                <button type="button" onClick={() => handleDigitClick(0)} className="relative aspect-square min-w-[40px] min-h-[40px] w-14 bg-[#1F2732] border border-[#333D4D] hover:border-primary-500/50 text-primary-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
                                     0
                                     {pointsByDigit[0] > 0 && <span className="absolute top-0.5 right-1 text-[10px] font-bold text-primary-500">{pointsByDigit[0]}</span>}
                                 </button>

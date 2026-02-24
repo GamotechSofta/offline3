@@ -209,11 +209,11 @@ const EasyModeBid = ({
     const modeHeader = showModeTabs ? (
         <div className="grid grid-cols-2 gap-3">
             <button type="button" onClick={() => setActiveTab('easy')}
-                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-400 border-gray-200 hover:border-primary-500/50'}`}>
+                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-400 border-[#333D4D] hover:border-primary-500/50'}`}>
                 EASY MODE
             </button>
             <button type="button" onClick={() => setActiveTab('special')}
-                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'special' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-400 border-gray-200 hover:border-primary-500/50'}`}>
+                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'special' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-400 border-[#333D4D] hover:border-primary-500/50'}`}>
                 SPECIAL MODE
             </button>
         </div>
@@ -243,7 +243,7 @@ const EasyModeBid = ({
             <div className="px-3 sm:px-4 py-4 sm:py-2 md:max-w-7xl md:mx-auto">
                 {showModeTabs && <div className="mb-4">{modeHeader}</div>}
                 {warning && (
-                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
+                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
                         {warning}
                     </div>
                 )}
@@ -255,7 +255,7 @@ const EasyModeBid = ({
                                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 xl:grid-rows-10 xl:grid-flow-col xl:gap-2">
                                     {jodiNumbers.map((num, idx) => (
                                         <div key={num} className="flex items-center gap-1.5">
-                                            <div className="w-10 h-9 bg-gray-100 border border-gray-200 text-primary-500 flex items-center justify-center rounded-l-md font-bold text-xs shrink-0">
+                                            <div className="w-10 h-9 bg-[#1F2732] border border-[#333D4D] text-primary-500 flex items-center justify-center rounded-l-md font-bold text-xs shrink-0">
                                                 <span className="inline-flex items-center gap-1"><span>{num[0]}</span><span>{num[1]}</span></span>
                                             </div>
                                             <input
@@ -269,7 +269,7 @@ const EasyModeBid = ({
                                                     if (e.key === 'ArrowRight' && idx < jodiNumbers.length - 1) { e.preventDefault(); jodiPtsRefs.current[idx + 1]?.focus?.(); }
                                                     else if (e.key === 'ArrowLeft' && idx > 0) { e.preventDefault(); jodiPtsRefs.current[idx - 1]?.focus?.(); }
                                                 }}
-                                                className="w-full h-9 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-2 text-xs font-semibold"
+                                                className="w-full h-9 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-2 text-xs font-semibold"
                                             />
                                         </div>
                                     ))}
@@ -285,17 +285,17 @@ const EasyModeBid = ({
                                 <div className="flex flex-col gap-3 mb-4">
                                     <div className="flex flex-row items-center gap-2">
                                         <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
-                                        <div className="flex-1 min-w-0 bg-gray-100 border border-gray-200 rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-gray-800">{session}</div>
+                                        <div className="flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-white">{session}</div>
                                     </div>
                                     <div className="flex flex-row items-center gap-2">
                                         <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                         <input ref={pointsInputRef} type="text" inputMode="numeric" value={inputPoints}
                                             onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                            placeholder="Point" className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                            placeholder="Point" className="no-spinner flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                                     </div>
                                 </div>
                                 <div className="flex gap-4 mb-4">
-                                    <div className="flex-1 bg-gray-100 border border-gray-200 rounded-xl p-2">
+                                    <div className="flex-1 bg-[#1F2732] border border-[#333D4D] rounded-xl p-2">
                                         <h3 className="text-sm font-bold text-primary-500 mb-3 text-center">Select Sum</h3>
                                         <div className="grid grid-cols-5 sm:grid-cols-5 gap-1.5 sm:gap-2 md:gap-3">
                                             {[0,1,2,3,4,5,6,7,8,9].map((num) => {
@@ -304,7 +304,7 @@ const EasyModeBid = ({
                                                 return (
                                                     <button key={num} type="button" disabled={!hasPoints}
                                                         onClick={(e) => { if (!hasPoints) return; e.preventDefault(); e.stopPropagation(); handleKeypadClick(num); }}
-                                                        className={`relative aspect-square min-h-[40px] sm:min-h-[44px] text-gray-800 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-90 shadow-lg select-none bg-gray-100 border-2 border-gray-200 ${hasPoints ? 'cursor-pointer hover:border-primary-500/60' : 'cursor-not-allowed opacity-50'}`}
+                                                        className={`relative aspect-square min-h-[40px] sm:min-h-[44px] text-white rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-90 shadow-lg select-none bg-[#1F2732] border-2 border-[#333D4D] ${hasPoints ? 'cursor-pointer hover:border-primary-500/60' : 'cursor-not-allowed opacity-50'}`}
                                                         style={{ touchAction: 'manipulation' }}>
                                                         {num}
                                                         {totalPointsForSum > 0 && (
@@ -336,8 +336,8 @@ const EasyModeBid = ({
                                 )}
                             </>
                         ) : (
-                            <div className="bg-gray-100 border border-gray-200 rounded-2xl p-4 text-center text-gray-600">
-                                <div className="text-gray-800 font-semibold mb-1">Special Mode</div>
+                            <div className="bg-[#1F2732] border border-[#333D4D] rounded-2xl p-4 text-center text-gray-300">
+                                <div className="text-white font-semibold mb-1">Special Mode</div>
                                 <div className="text-sm text-gray-400">This bet type uses Easy Mode only.</div>
                             </div>
                         )}
@@ -347,20 +347,20 @@ const EasyModeBid = ({
                         <div className="flex flex-col gap-3 mb-4">
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
-                                <div className="flex-1 min-w-0 bg-gray-100 border border-gray-200 rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-gray-800">{session}</div>
+                                <div className="flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-white">{session}</div>
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">{label}:</label>
                                 <input type={maxLength === 1 || maxLength === 2 ? 'text' : 'number'} inputMode="numeric" value={inputNumber}
                                     onChange={handleNumberInputChange} placeholder={labelKey} maxLength={maxLength}
-                                    className={`flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
+                                    className={`flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
                                         isNumberInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-primary-500 focus:border-primary-500'}`} />
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                 <input ref={pointsInputRef} type="text" inputMode="numeric" value={inputPoints}
                                     onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                    placeholder="Point" className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                    placeholder="Point" className="no-spinner flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                             </div>
                         </div>
                         <button type="button" onClick={handleAddToCart} className={addToCartBtnClass}>

@@ -59,11 +59,11 @@ const WalletSection = () => {
   const formattedBalance = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0, minimumFractionDigits: 0 }).format(displayBalance);
 
   return (
-    <section className="w-full bg-white py-2 sm:py-4 px-2 min-[375px]:px-4 sm:px-6 max-w-full overflow-x-hidden">
+    <section className="w-full bg-[#1F2732] py-2 sm:py-4 px-2 min-[375px]:px-4 sm:px-6 max-w-full overflow-x-hidden">
       {/* Available Points Balance Card */}
       <div className="relative w-full max-w-lg mx-auto mb-6 sm:mb-12">
         {/* Main Card - Premium Design */}
-        <div className="relative bg-white rounded-xl min-[375px]:rounded-2xl sm:rounded-3xl px-2 min-[375px]:px-3 pt-2 pb-0 min-[375px]:pt-2.5 sm:px-6 sm:pt-5 sm:pb-0 md:px-7 md:pt-6 md:pb-0 shadow-lg border-2 border-primary-200 z-10 overflow-visible max-w-full">
+        <div className="relative bg-[#252D3A] rounded-xl min-[375px]:rounded-2xl sm:rounded-3xl px-2 min-[375px]:px-3 pt-2 pb-0 min-[375px]:pt-2.5 sm:px-6 sm:pt-5 sm:pb-0 md:px-7 md:pt-6 md:pb-0 shadow-lg border-2 border-[#333D4D] z-10 overflow-visible max-w-full">
           {/* Subtle background glow */}
           <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-primary-100 via-primary-50 to-transparent rounded-t-2xl sm:rounded-t-3xl"></div>
           

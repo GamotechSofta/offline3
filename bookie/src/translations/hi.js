@@ -169,6 +169,7 @@ export default {
     date: 'तारीख',
     noBetsFound: 'कोई बेट नहीं मिला',
     player: 'खिलाड़ी',
+    bookie: 'Bookie',
     market: 'बाजार',
     enterPlayerId: 'खिलाड़ी आईडी दर्ज करें',
     enterMarketId: 'बाजार आईडी दर्ज करें',

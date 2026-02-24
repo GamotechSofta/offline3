@@ -209,8 +209,8 @@ const Bank = () => {
   const hasPagination = computed.length > PAGE_SIZE;
 
   return (
-    <div className={`min-h-screen bg-black text-white ${hasPagination ? 'pb-[calc(100px+env(safe-area-inset-bottom,0px))] md:pb-10' : 'pb-[calc(6rem+env(safe-area-inset-bottom,0px))] md:pb-24'}`}>
-      <div className="bg-black px-4 pt-4 pb-3">
+    <div className={`min-h-screen bg-[#1F2732] text-white ${hasPagination ? 'pb-[calc(100px+env(safe-area-inset-bottom,0px))] md:pb-10' : 'pb-[calc(6rem+env(safe-area-inset-bottom,0px))] md:pb-24'}`}>
+      <div className="bg-[#1F2732] px-4 pt-4 pb-3">
         <div className="flex items-center gap-3">
           <button
             type="button"

@@ -474,7 +474,7 @@ const Bids = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
+    <div className="min-h-screen bg-[#1F2732] text-white pl-3 pr-3 sm:pl-4 sm:pr-4 pt-0 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
       <style>{`
         .hide-scrollbar {
           scrollbar-width: none; /* Firefox */
@@ -491,7 +491,7 @@ const Bids = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={handleBack}
-              className="w-10 h-10 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-700 hover:bg-gray-200 active:scale-95 transition"
+              className="w-10 h-10 rounded-full bg-[#252D3A] border border-gray-600 flex items-center justify-center text-white hover:bg-gray-600 active:scale-95 transition"
               aria-label="Back"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -502,7 +502,7 @@ const Bids = () => {
           </div>
 
           <div className="hidden md:flex items-center justify-between gap-4 px-1">
-            <div className="text-2xl font-extrabold text-gray-900">{rightPanelTitle}</div>
+            <div className="text-2xl font-extrabold text-white">{rightPanelTitle}</div>
             {isGameResultsPanel ? (
               <div className="w-[320px]">
                 <ResultDatePicker
@@ -510,14 +510,14 @@ const Bids = () => {
                   onChange={setResultsDate}
                   maxDate={new Date()}
                   label="Select Date"
-                  buttonClassName="px-4 py-2 rounded-full bg-white border border-primary-200 text-gray-800 font-bold text-sm shadow-sm hover:border-primary-400 transition-colors"
+                  buttonClassName="px-4 py-2 rounded-full bg-[#252D3A] border border-primary-200 text-white font-bold text-sm shadow-sm hover:border-primary-400 transition-colors"
                 />
               </div>
             ) : isAnyHistoryPanel ? (
               <button
                 type="button"
                 onClick={() => setIsDesktopFilterOpen(true)}
-                className="px-4 py-2 rounded-full bg-white border border-primary-200 text-primary-600 font-bold text-sm shadow-sm hover:border-primary-400 transition-colors"
+                className="px-4 py-2 rounded-full bg-[#252D3A] border border-primary-200 text-primary-400 font-bold text-sm shadow-sm hover:border-primary-400 transition-colors"
                 aria-label="Filter By"
                 title="Filter By"
               >
@@ -533,11 +533,11 @@ const Bids = () => {
             <div
               key={item.title}
               onClick={() => handleMobileItemClick(item)}
-              className="bg-white border border-primary-200 rounded-2xl p-4 flex items-center justify-between shadow-md"
+              className="bg-[#252D3A] border border-gray-700 rounded-2xl p-4 flex items-center justify-between shadow-md"
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-black shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
+                  className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
                   style={{ backgroundColor: item.color }}
                 >
                   {item.iconUrl ? (
@@ -550,11 +550,11 @@ const Bids = () => {
                   )}
                 </div>
                 <div>
-                  <p className="text-base sm:text-lg font-semibold text-gray-900">{item.title}</p>
-                  <p className="text-xs sm:text-sm text-gray-600">{item.subtitle}</p>
+                  <p className="text-base sm:text-lg font-semibold text-white">{item.title}</p>
+                  <p className="text-xs sm:text-sm text-gray-300">{item.subtitle}</p>
                 </div>
               </div>
-              <div className="w-9 h-9 rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center text-gray-600">
+              <div className="w-9 h-9 rounded-full bg-primary-500/20 border border-primary-400 flex items-center justify-center text-gray-300">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -573,13 +573,13 @@ const Bids = () => {
                   key={item.title}
                   type="button"
                   onClick={() => handleDesktopItemClick(item)}
-                  className={`w-full text-left bg-white border rounded-2xl p-4 md:p-5 flex items-center justify-between shadow-md transition-colors ${
-                    active ? 'border-primary-400 bg-primary-50' : 'border-primary-200 hover:border-primary-300'
+                  className={`w-full text-left bg-[#252D3A] border rounded-2xl p-4 md:p-5 flex items-center justify-between shadow-md transition-colors ${
+                    active ? 'border-primary-400 bg-primary-500/20' : 'border-gray-700 hover:border-primary-300'
                   }`}
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-black shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
                       style={{ backgroundColor: item.color }}
                     >
                       {item.iconUrl ? (
@@ -592,12 +592,12 @@ const Bids = () => {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-base font-semibold text-gray-900 truncate">{item.title}</p>
-                      <p className="text-xs text-gray-600 truncate">{item.subtitle}</p>
+                      <p className="text-base font-semibold text-white truncate">{item.title}</p>
+                      <p className="text-xs text-gray-300 truncate">{item.subtitle}</p>
                     </div>
                   </div>
                   <div className={`w-9 h-9 rounded-full border flex items-center justify-center ${
-                    active ? 'bg-primary-100 border-primary-400 text-primary-600' : 'bg-primary-50 border-primary-200 text-gray-600'
+                    active ? 'bg-primary-500/30 border-primary-400 text-primary-400' : 'bg-primary-500/20 border-primary-200 text-gray-300'
                   }`}>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -612,13 +612,13 @@ const Bids = () => {
             className={
               (isAnyHistoryPanel || isGameResultsPanel)
                 ? 'bg-transparent border-0 shadow-none p-0'
-                : 'rounded-2xl bg-white border border-primary-200 shadow-md p-6'
+                : 'rounded-2xl bg-[#252D3A] border border-gray-700 shadow-md p-6'
             }
           >
             {(isAnyHistoryPanel || isGameResultsPanel) ? null : (
               <div className="flex items-center justify-center gap-4">
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-black shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
+                  className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-[0_10px_20px_rgba(0,0,0,0.35)]"
                   style={{ backgroundColor: activeItem?.color || '#f3b61b' }}
                 >
                   {activeItem?.iconUrl ? (
@@ -631,8 +631,8 @@ const Bids = () => {
                   )}
                 </div>
                 <div className="min-w-0 text-center">
-                  <div className="text-xl font-bold text-gray-900 truncate">{activeItem?.title}</div>
-                  <div className="text-sm text-gray-600">{activeItem?.subtitle}</div>
+                  <div className="text-xl font-bold text-white truncate">{activeItem?.title}</div>
+                  <div className="text-sm text-gray-300">{activeItem?.subtitle}</div>
                 </div>
               </div>
             )}
@@ -641,11 +641,11 @@ const Bids = () => {
               <div className={isAnyHistoryPanel ? 'mt-0' : 'mt-6'}>
                 <div className="max-h-[calc(100vh-220px)] overflow-y-auto hide-scrollbar">
                   {desktopBetHistory.uid && filteredDesktopRows.length === 0 ? (
-                    <div className="rounded-xl border border-primary-200 bg-primary-50 p-4 text-gray-600 text-sm">
+                    <div className="rounded-xl border border-primary-200 bg-primary-500/20 p-4 text-gray-300 text-sm">
                       No bets found.
                     </div>
                   ) : !desktopBetHistory.uid ? (
-                    <div className="rounded-xl border border-primary-200 bg-primary-50 p-4 text-gray-600 text-sm">
+                    <div className="rounded-xl border border-primary-200 bg-primary-500/20 p-4 text-gray-300 text-sm">
                       Please login to see your bet history.
                     </div>
                   ) : (
@@ -655,14 +655,14 @@ const Bids = () => {
                         return (
                           <div
                             key={`${x.id}-${r?.id ?? idx}`}
-                            className="rounded-2xl overflow-hidden border border-primary-200 bg-white"
+                            className="rounded-2xl overflow-hidden border border-primary-200 bg-[#252D3A]"
                           >
-                            <div className="bg-primary-50 px-4 py-3 flex items-center justify-between border-b border-primary-200">
+                            <div className="bg-primary-500/20 px-4 py-3 flex items-center justify-between border-b border-primary-200">
                               <div className="text-primary-600 font-extrabold tracking-wide truncate">
                                 {market.toUpperCase()}
                               </div>
                               {session ? (
-                                <div className="text-xs font-bold text-primary-600 border border-primary-300 rounded-full px-3 py-1 bg-white">
+                                <div className="text-xs font-bold text-primary-400 border border-primary-300 rounded-full px-3 py-1 bg-[#1F2732]">
                                   {session}
                                 </div>
                               ) : null}
@@ -674,7 +674,7 @@ const Bids = () => {
                                 <div>{(x?.labelKey || 'Bet').toString()}</div>
                                 <div>Points</div>
                               </div>
-                              <div className="mt-3 grid grid-cols-3 text-center text-gray-800 text-sm">
+                              <div className="mt-3 grid grid-cols-3 text-center text-white text-sm">
                                 <div className="font-semibold">{gameType}</div>
                                 <div className="font-extrabold">{betValue}</div>
                                 <div className="font-extrabold">{points}</div>
@@ -682,7 +682,7 @@ const Bids = () => {
                             </div>
 
                             <div className="h-px bg-primary-200" />
-                            <div className="px-4 py-3 text-center text-gray-600 text-sm">
+                            <div className="px-4 py-3 text-center text-gray-300 text-sm">
                               Transaction: <span className="font-semibold">{formatTxnTime(x?.createdAt)}</span>
                             </div>
 
@@ -711,7 +711,7 @@ const Bids = () => {
               <div className="mt-3">
                 <div className="max-h-[calc(100vh-260px)] overflow-y-auto hide-scrollbar">
                   {resultsRows.length === 0 ? (
-                    <div className="rounded-2xl border border-primary-200 bg-white p-6 text-center text-gray-600">
+                    <div className="rounded-2xl border border-primary-200 bg-[#252D3A] p-6 text-center text-gray-300">
                       No markets found.
                     </div>
                   ) : (
@@ -719,9 +719,9 @@ const Bids = () => {
                       {resultsRows.map((r) => (
                         <div
                           key={r.id}
-                          className="rounded-2xl bg-white border border-primary-200 px-5 py-4 shadow-md flex items-center justify-between gap-4"
+                          className="rounded-2xl bg-[#252D3A] border border-gray-700 px-5 py-4 shadow-md flex items-center justify-between gap-4"
                         >
-                          <div className="font-extrabold tracking-wide text-gray-900 truncate">{r.name.toUpperCase()}</div>
+                          <div className="font-extrabold tracking-wide text-white truncate">{r.name.toUpperCase()}</div>
                           <div className="font-extrabold tracking-wide text-primary-600 shrink-0">{r.result}</div>
                         </div>
                       ))}
@@ -730,7 +730,7 @@ const Bids = () => {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 text-gray-600 text-sm">
+              <div className="mt-6 text-gray-300 text-sm">
                 Select an item from the left menu. We will add the actual pages/content here next.
               </div>
             )}
@@ -748,12 +748,12 @@ const Bids = () => {
             onClick={() => setIsDesktopFilterOpen(false)}
           />
 
-          <div className="relative w-full max-w-md rounded-[28px] overflow-hidden shadow-xl border border-primary-200 bg-white">
+          <div className="relative w-full max-w-md rounded-[28px] overflow-hidden shadow-xl border border-gray-700 bg-[#1F2732]">
             <div className="bg-primary-500 text-white text-center py-4 text-2xl font-extrabold border-b border-primary-300">
               Filter Type
             </div>
 
-            <div className="bg-white text-gray-800">
+            <div className="bg-[#1F2732] text-white">
               <div className="px-5 py-4 max-h-[70vh] overflow-y-auto">
                 <div className="text-lg font-bold text-primary-600 mb-3">By Game Type</div>
                 <div className="flex items-center justify-around gap-6 pb-4">
@@ -809,7 +809,7 @@ const Bids = () => {
                         checked={draftMarkets.includes(name.key)}
                         onChange={() => toggleDraft(draftMarkets, name.key, setDraftMarkets)}
                       />
-                      <span className="text-sm sm:text-base font-semibold tracking-wide text-gray-800">
+                      <span className="text-sm sm:text-base font-semibold tracking-wide text-white">
                         {name.label.toUpperCase()}
                       </span>
                     </label>
@@ -822,7 +822,7 @@ const Bids = () => {
                   <button
                     type="button"
                     onClick={() => setIsDesktopFilterOpen(false)}
-                    className="rounded-full bg-gray-100 border border-gray-300 text-gray-800 font-bold py-4 text-base sm:text-lg shadow-md active:scale-[0.99] hover:border-primary-400 transition-colors"
+                    className="rounded-full bg-[#252D3A] border border-gray-600 text-white font-bold py-4 text-base sm:text-lg shadow-md active:scale-[0.99] hover:border-primary-400 transition-colors"
                   >
                     Cancel
                   </button>

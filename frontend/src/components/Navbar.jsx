@@ -44,26 +44,26 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white w-full px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between shadow-md border-b border-primary-100">
+    <nav className="bg-[#1F2732] w-full px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between shadow-md border-b border-[#333D4D]">
       {/* Left side - Hamburger menu, Home icon and Logo */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Hamburger Menu Icon */}
-        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors">
           <div className="flex flex-col gap-1 sm:gap-1.5">
-            <div className="w-2.5 sm:w-3 h-0.5 bg-black"></div>
-            <div className="w-3 sm:w-4 h-0.5 bg-black"></div>
-            <div className="w-2.5 sm:w-3 h-0.5 bg-black"></div>
+            <div className="w-2.5 sm:w-3 h-0.5 bg-white"></div>
+            <div className="w-3 sm:w-4 h-0.5 bg-white"></div>
+            <div className="w-2.5 sm:w-3 h-0.5 bg-white"></div>
           </div>
         </div>
         
         {/* Home Icon */}
         <Link 
           to="/" 
-          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
+          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-600 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors"
           title="Home"
         >
           <svg 
-            className="w-5 h-5 sm:w-6 sm:h-6 text-black" 
+            className="w-5 h-5 sm:w-6 sm:h-6 text-white" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -104,11 +104,11 @@ const Navbar = () => {
             {/* Profile Icon - Clickable to profile or logout */}
             <div 
               onClick={handleLogout}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-primary-500 bg-primary-50 flex items-center justify-center cursor-pointer hover:bg-primary-100 transition-colors"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-primary-500 bg-primary-500/20 flex items-center justify-center cursor-pointer hover:bg-primary-500/30 transition-colors"
               title="Logout"
             >
               <svg 
-                className="w-5 h-5 sm:w-6 sm:h-6 text-primary-500" 
+                className="w-5 h-5 sm:w-6 sm:h-6 text-primary-400" 
                 fill="currentColor" 
                 viewBox="0 0 20 20"
               >
@@ -121,19 +121,20 @@ const Navbar = () => {
             </div>
             
             {/* Username - Hidden on very small screens */}
-            <span className="text-gray-800 font-medium text-sm sm:text-base md:text-lg hidden sm:inline">
+            <span className="text-white font-medium text-sm sm:text-base md:text-lg hidden sm:inline">
               {user.username}
             </span>
           </>
         ) : (
           /* Sign In/Sign Up Icon */
           <div 
+          
             onClick={() => navigate('/login')}
-            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-primary-500 bg-primary-50 flex items-center justify-center cursor-pointer hover:bg-primary-100 transition-colors"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-primary-500 bg-primary-500/20 flex items-center justify-center cursor-pointer hover:bg-primary-500/30 transition-colors"
             title="Sign In / Sign Up"
           >
             <svg 
-              className="w-5 h-5 sm:w-6 sm:h-6 text-primary-500" 
+              className="w-5 h-5 sm:w-6 sm:h-6 text-primary-400" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"

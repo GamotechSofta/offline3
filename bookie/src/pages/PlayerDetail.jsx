@@ -563,9 +563,9 @@ const PlayerDetail = () => {
         return (
             <Layout title={t('playerDetail')}>
                 <div className="animate-pulse space-y-4">
-                    <div className="h-8 w-48 bg-gray-200 rounded" />
-                    <div className="h-24 bg-gray-200 rounded-xl" />
-                    <div className="h-10 w-full bg-gray-200 rounded" />
+                    <div className="h-8 w-48 bg-[#333D4D] rounded" />
+                    <div className="h-24 bg-[#333D4D] rounded-xl" />
+                    <div className="h-10 w-full bg-[#333D4D] rounded" />
                 </div>
             </Layout>
         );
@@ -592,13 +592,13 @@ const PlayerDetail = () => {
                     <Link to="/my-users" className="text-gray-400 hover:text-primary-500 text-sm inline-flex items-center gap-1 mb-1">
                         <FaArrowLeft className="w-3 h-3" /> My Players
                     </Link>
-                    <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white">
                         {player.username} <span className="text-gray-400 font-normal text-base">({player.phone || player.email || '—'})</span>
                     </h1>
                 </div>
 
                 {/* ========== PLAYER INFO CARD + QUICK ACTIONS ========== */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden">
                     <div className="p-4 sm:p-5">
                         <div className="flex flex-wrap items-start justify-between gap-4">
                             {/* Player details */}
@@ -606,15 +606,15 @@ const PlayerDetail = () => {
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 text-sm">
                                     <div>
                                         <p className="text-gray-400 text-xs uppercase tracking-wider">Name</p>
-                                        <p className="text-gray-800 font-medium">{player.username}</p>
+                                        <p className="text-white font-medium">{player.username}</p>
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs uppercase tracking-wider">Phone</p>
-                                        <p className="text-gray-800">{player.phone || '—'}</p>
+                                        <p className="text-white">{player.phone || '—'}</p>
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs uppercase tracking-wider">Email</p>
-                                        <p className="text-gray-800 truncate">{player.email || '—'}</p>
+                                        <p className="text-white truncate">{player.email || '—'}</p>
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs uppercase tracking-wider">Status</p>
@@ -624,11 +624,11 @@ const PlayerDetail = () => {
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs uppercase tracking-wider">Source</p>
-                                        <p className="text-gray-800 capitalize">{player.source === 'bookie' ? 'Bookie' : 'Super Admin'}</p>
+                                        <p className="text-white capitalize">{player.source === 'bookie' ? 'Bookie' : 'Super Admin'}</p>
                                     </div>
                                     <div>
                                         <p className="text-gray-400 text-xs uppercase tracking-wider">Joined</p>
-                                        <p className="text-gray-600 text-xs">{player.createdAt ? new Date(player.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</p>
+                                        <p className="text-gray-300 text-xs">{player.createdAt ? new Date(player.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -654,23 +654,23 @@ const PlayerDetail = () => {
                     </div>
 
                     {/* Quick action buttons */}
-                    <div className="border-t border-gray-100 px-4 sm:px-5 py-3 flex flex-wrap gap-2">
-                        <button onClick={() => openFundModal('add')} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm font-semibold transition-colors">
+                    <div className="border-t border-[#333D4D] px-4 sm:px-5 py-3 flex flex-wrap gap-2">
+                        <button onClick={() => openFundModal('add')} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#333D4D] hover:border-[#333D4D] text-xs sm:text-sm font-medium transition-colors">
                             <FaPlusCircle className="w-3.5 h-3.5" /> Add Funds
                         </button>
-                        <button onClick={() => openFundModal('withdraw')} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold transition-colors">
+                        <button onClick={() => openFundModal('withdraw')} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#333D4D] hover:border-[#333D4D] text-xs sm:text-sm font-medium transition-colors">
                             <FaMinusCircle className="w-3.5 h-3.5" /> Withdraw
                         </button>
-                        <button onClick={openToGiveTakeModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-xs sm:text-sm font-semibold transition-colors">
+                        <button onClick={openToGiveTakeModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#333D4D] hover:border-[#333D4D] text-xs sm:text-sm font-medium transition-colors">
                             <FaExchangeAlt className="w-3.5 h-3.5" /> To Give/Take
                         </button>
-                        <button onClick={openPasswordModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-xs sm:text-sm font-semibold transition-colors">
+                        <button onClick={openPasswordModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#333D4D] hover:border-[#333D4D] text-xs sm:text-sm font-medium transition-colors">
                             Set Password
                         </button>
-                        <button onClick={() => navigate(`/games?playerId=${userId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs sm:text-sm font-semibold transition-colors">
+                        <button onClick={() => navigate(`/games?playerId=${userId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#252D3A] border border-primary-500/50 text-gray-300 hover:bg-primary-500/10 hover:border-primary-400 text-xs sm:text-sm font-medium transition-colors">
                             <FaGamepad className="w-3.5 h-3.5" /> Place Bet
                         </button>
-                        <button onClick={() => { fetchPlayer(); if (activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') fetchBets(); if (activeTab === 'wallet') fetchWalletTx(); }} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs sm:text-sm font-semibold transition-colors ml-auto">
+                        <button onClick={() => { fetchPlayer(); if (activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') fetchBets(); if (activeTab === 'wallet') fetchWalletTx(); }} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] hover:bg-[#333D4D] text-gray-300 text-xs sm:text-sm font-medium transition-colors ml-auto">
                             <FaSyncAlt className="w-3 h-3" /> Refresh
                         </button>
                     </div>
@@ -683,33 +683,33 @@ const PlayerDetail = () => {
                         <button
                             type="button"
                             onClick={() => setCalendarOpen((o) => !o)}
-                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-700 hover:border-primary-300 transition-colors"
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] text-sm text-gray-300 hover:border-primary-300 transition-colors"
                         >
                             <FaCalendarAlt className="w-3.5 h-3.5 text-primary-500" />
                             {dateFrom && dateTo ? formatDateRange(dateFrom, dateTo) : 'Select Date'}
                         </button>
                         {calendarOpen && (
-                            <div className="absolute left-0 top-full mt-2 py-3 rounded-xl bg-white border border-gray-200 shadow-xl z-50 flex flex-col sm:flex-row gap-4 max-w-[100vw]">
+                            <div className="absolute left-0 top-full mt-2 py-3 rounded-xl bg-[#252D3A] border border-[#333D4D] shadow-xl z-50 flex flex-col sm:flex-row gap-4 max-w-[100vw]">
                                 <div className="min-w-0 sm:min-w-[200px] py-1">
                                     {DATE_PRESETS.map((p) => (
                                         <button key={p.id} type="button" onClick={() => handlePresetSelect(p.id)}
-                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 flex items-center gap-2"
+                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-primary-50 flex items-center gap-2"
                                         >
                                             {datePreset === p.id ? <span className="text-primary-500">●</span> : <span className="w-2" />}
                                             {p.label}
                                         </button>
                                     ))}
                                 </div>
-                                <div className="border-t sm:border-t-0 sm:border-l border-gray-200 pt-3 sm:pt-0 sm:pl-4 pr-4 min-w-0 sm:min-w-[200px]">
+                                <div className="border-t sm:border-t-0 sm:border-l border-[#333D4D] pt-3 sm:pt-0 sm:pl-4 pr-4 min-w-0 sm:min-w-[200px]">
                                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Custom Range</div>
                                     <div className="space-y-2">
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">From</label>
-                                            <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-800" />
+                                            <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">To</label>
-                                            <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-800" />
+                                            <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-white" />
                                         </div>
                                         <button type="button" onClick={handleDateApply} className="w-full py-2 rounded-lg bg-primary-500 text-white font-semibold text-sm">
                                             Apply
@@ -722,7 +722,7 @@ const PlayerDetail = () => {
                 </div>
 
                 {/* ========== TABS ========== */}
-                <div className="flex gap-1 border-b border-gray-200 overflow-x-auto scrollbar-thin">
+                <div className="flex gap-1 border-b border-[#333D4D] overflow-x-auto scrollbar-thin">
                     {TABS.map((tab) => {
                         const Icon = tab.icon;
                         return (
@@ -732,7 +732,7 @@ const PlayerDetail = () => {
                                 className={`flex items-center gap-1.5 px-4 py-2.5 font-semibold text-sm whitespace-nowrap border-b-2 transition-colors ${
                                     activeTab === tab.id
                                         ? 'border-primary-500 text-primary-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                        : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-primary-400'
                                 }`}
                             >
                                 <Icon className="w-3.5 h-3.5" />
@@ -743,61 +743,61 @@ const PlayerDetail = () => {
                 </div>
 
                 {/* ========== TAB CONTENT ========== */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden min-h-[200px]">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden min-h-[200px]">
 
                     {/* ---- OVERVIEW ---- */}
                     {activeTab === 'overview' && (
                         <div className="p-4 sm:p-6 space-y-6">
                             {/* Profile Info */}
                             <div>
-                                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
                                     <FaUser className="w-3.5 h-3.5 text-primary-500" /> Profile Details
                                 </h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-sm">
-                                    <div><p className="text-gray-400 text-xs uppercase">Username</p><p className="text-gray-800 font-mono">{player.username}</p></div>
-                                    <div><p className="text-gray-400 text-xs uppercase">Email</p><p className="text-gray-800 truncate">{player.email || '—'}</p></div>
-                                    <div><p className="text-gray-400 text-xs uppercase">Phone</p><p className="text-gray-800">{player.phone || '—'}</p></div>
-                                    <div><p className="text-gray-400 text-xs uppercase">Role</p><p className="text-gray-800 capitalize">{player.role || 'Player'}</p></div>
+                                    <div><p className="text-gray-400 text-xs uppercase">Username</p><p className="text-white font-mono">{player.username}</p></div>
+                                    <div><p className="text-gray-400 text-xs uppercase">Email</p><p className="text-white truncate">{player.email || '—'}</p></div>
+                                    <div><p className="text-gray-400 text-xs uppercase">Phone</p><p className="text-white">{player.phone || '—'}</p></div>
+                                    <div><p className="text-gray-400 text-xs uppercase">Role</p><p className="text-white capitalize">{player.role || 'Player'}</p></div>
                                     <div><p className="text-gray-400 text-xs uppercase">Balance</p><p className="text-green-600 font-mono font-bold">{formatCurrency(player.walletBalance ?? 0)}</p></div>
                                     <div><p className="text-gray-400 text-xs uppercase">To Give</p><p className="text-blue-600 font-mono font-bold">{formatCurrency(player.toGive ?? 0)}</p></div>
                                     <div><p className="text-gray-400 text-xs uppercase">To Take</p><p className="text-red-600 font-mono font-bold">{formatCurrency(player.toTake ?? 0)}</p></div>
                                     <div><p className="text-gray-400 text-xs uppercase">Account</p><p className={player.isActive !== false ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'}>{player.isActive !== false ? 'Active' : 'Suspended'}</p></div>
-                                    <div><p className="text-gray-400 text-xs uppercase">Created</p><p className="text-gray-600 text-xs">{player.createdAt ? new Date(player.createdAt).toLocaleString('en-IN') : '—'}</p></div>
+                                    <div><p className="text-gray-400 text-xs uppercase">Created</p><p className="text-gray-300 text-xs">{player.createdAt ? new Date(player.createdAt).toLocaleString('en-IN') : '—'}</p></div>
                                     <div><p className="text-gray-400 text-xs uppercase">Player ID</p><p className="text-gray-500 font-mono text-xs truncate" title={player._id}>{player._id}</p></div>
-                                    {player.lastLoginIp && <div><p className="text-gray-400 text-xs uppercase">Last IP</p><p className="text-gray-600 font-mono text-xs">{player.lastLoginIp === '::1' ? 'localhost' : player.lastLoginIp}</p></div>}
-                                    {player.lastLoginDeviceId && <div className="col-span-2"><p className="text-gray-400 text-xs uppercase">Device ID</p><p className="text-gray-600 font-mono text-xs truncate">{player.lastLoginDeviceId}</p></div>}
+                                    {player.lastLoginIp && <div><p className="text-gray-400 text-xs uppercase">Last IP</p><p className="text-gray-300 font-mono text-xs">{player.lastLoginIp === '::1' ? 'localhost' : player.lastLoginIp}</p></div>}
+                                    {player.lastLoginDeviceId && <div className="col-span-2"><p className="text-gray-400 text-xs uppercase">Device ID</p><p className="text-gray-300 font-mono text-xs truncate">{player.lastLoginDeviceId}</p></div>}
                                 </div>
                             </div>
 
                             {/* Quick bet stats overview */}
                             <div>
-                                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
                                     <FaHistory className="w-3.5 h-3.5 text-primary-500" /> Quick Stats
                                 </h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-100">
+                                    <div className="bg-[#252D3A] rounded-lg p-3 text-center border border-[#333D4D]">
                                         <p className="text-gray-400 text-[10px] uppercase">Total Bets</p>
-                                        <p className="text-gray-800 font-bold text-lg">{betStats.total}</p>
+                                        <p className="text-white font-bold text-lg">{betStats.total}</p>
                                     </div>
-                                    <div className="bg-green-50 rounded-lg p-3 text-center border border-green-100">
-                                        <p className="text-green-600 text-[10px] uppercase">Won</p>
-                                        <p className="text-green-700 font-bold text-lg">{betStats.won}</p>
+                                    <div className="bg-[#252D3A] rounded-lg p-3 text-center border border-[#333D4D]">
+                                        <p className="text-gray-400 text-[10px] uppercase">Won</p>
+                                        <p className="text-green-400 font-bold text-lg">{betStats.won}</p>
                                     </div>
-                                    <div className="bg-red-50 rounded-lg p-3 text-center border border-red-100">
-                                        <p className="text-red-500 text-[10px] uppercase">Lost</p>
-                                        <p className="text-red-600 font-bold text-lg">{betStats.lost}</p>
+                                    <div className="bg-[#252D3A] rounded-lg p-3 text-center border border-[#333D4D]">
+                                        <p className="text-gray-400 text-[10px] uppercase">Lost</p>
+                                        <p className="text-red-400 font-bold text-lg">{betStats.lost}</p>
                                     </div>
-                                    <div className="bg-primary-50 rounded-lg p-3 text-center border border-primary-100">
-                                        <p className="text-primary-500 text-[10px] uppercase">Pending</p>
-                                        <p className="text-primary-600 font-bold text-lg">{betStats.pending}</p>
+                                    <div className="bg-[#252D3A] rounded-lg p-3 text-center border border-[#333D4D]">
+                                        <p className="text-gray-400 text-[10px] uppercase">Pending</p>
+                                        <p className="text-primary-400 font-bold text-lg">{betStats.pending}</p>
                                     </div>
-                                    <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-100">
+                                    <div className="bg-[#252D3A] rounded-lg p-3 text-center border border-[#333D4D]">
                                         <p className="text-gray-400 text-[10px] uppercase">Bet Amount</p>
-                                        <p className="text-gray-800 font-bold text-sm">{formatCurrency(betStats.totalAmount)}</p>
+                                        <p className="text-white font-bold text-sm">{formatCurrency(betStats.totalAmount)}</p>
                                     </div>
-                                    <div className="bg-green-50 rounded-lg p-3 text-center border border-green-100">
-                                        <p className="text-green-600 text-[10px] uppercase">Winnings</p>
-                                        <p className="text-green-700 font-bold text-sm">{formatCurrency(betStats.totalPayout)}</p>
+                                    <div className="bg-[#252D3A] rounded-lg p-3 text-center border border-[#333D4D]">
+                                        <p className="text-gray-400 text-[10px] uppercase">Winnings</p>
+                                        <p className="text-green-400 font-bold text-sm">{formatCurrency(betStats.totalPayout)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -808,7 +808,7 @@ const PlayerDetail = () => {
                     {(activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') && (
                         <>
                             {/* Bet filter & actions bar */}
-                            <div className="px-4 py-3 border-b border-gray-100 flex flex-wrap items-center gap-2">
+                            <div className="px-4 py-3 border-b border-[#333D4D] flex flex-wrap items-center gap-2">
                                 <FaFilter className="w-3 h-3 text-gray-400" />
                                 {['all', 'pending', 'won', 'lost'].map((f) => (
                                     <button
@@ -817,22 +817,22 @@ const PlayerDetail = () => {
                                         className={`px-3 py-1 rounded-full text-xs font-semibold capitalize transition-colors ${
                                             betFilter === f
                                                 ? 'bg-primary-500 text-white'
-                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                : 'bg-[#1F2732] text-gray-300 hover:bg-primary-500/20'
                                         }`}
                                     >
                                         {f} {f !== 'all' && `(${sourceFilteredBets.filter((b) => b.status === f).length})`}
                                         {f === 'all' && `(${sourceFilteredBets.length})`}
                                     </button>
                                 ))}
-                                <button onClick={handlePrintBets} className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition-colors">
+                                <button onClick={handlePrintBets} className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1F2732] hover:bg-primary-500/20 text-gray-300 text-xs font-semibold transition-colors">
                                     <FaPrint className="w-3 h-3" /> Print
                                 </button>
                             </div>
 
                             {/* Bet stats bar */}
-                            <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-4 text-xs">
-                                <span className="text-gray-500">Total: <span className="text-gray-800 font-bold">{displayedBetStats.total}</span></span>
-                                <span className="text-gray-500">Amount: <span className="text-gray-800 font-bold">{formatCurrency(displayedBetStats.totalAmount)}</span></span>
+                            <div className="px-4 py-2 bg-[#1F2732] border-b border-[#333D4D] flex flex-wrap gap-4 text-xs">
+                                <span className="text-gray-500">Total: <span className="text-white font-bold">{displayedBetStats.total}</span></span>
+                                <span className="text-gray-500">Amount: <span className="text-white font-bold">{formatCurrency(displayedBetStats.totalAmount)}</span></span>
                                 <span className="text-gray-500">Winnings: <span className="text-green-600 font-bold">{formatCurrency(displayedBetStats.totalPayout)}</span></span>
                                 <span className="text-gray-500">P/L: <span className={`font-bold ${displayedBetStats.totalPayout - displayedBetStats.totalAmount >= 0 ? 'text-green-600' : 'text-red-500'}`}>{formatCurrency(displayedBetStats.totalPayout - displayedBetStats.totalAmount)}</span></span>
                             </div>
@@ -844,7 +844,7 @@ const PlayerDetail = () => {
                             ) : (
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm min-w-[700px]">
-                                        <thead className="bg-gray-50">
+                                        <thead className="bg-[#1F2732]">
                                             <tr>
                                                 <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Number</th>
                                                 <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
@@ -859,14 +859,14 @@ const PlayerDetail = () => {
                                         </thead>
                                         <tbody className="divide-y divide-gray-100">
                                             {filteredBets.map((b) => (
-                                                <tr key={b._id} className="hover:bg-gray-50">
+                                                <tr key={b._id} className="hover:bg-[#1F2732]">
                                                     <td className="px-3 py-2 font-mono font-bold text-primary-600">{b.betNumber || '—'}</td>
-                                                    <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
-                                                    <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
+                                                    <td className="px-3 py-2 text-gray-300 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
+                                                    <td className="px-3 py-2 text-gray-300 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
                                                     <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
-                                                    <td className="px-3 py-2 text-right font-mono text-gray-800">{formatCurrency(b.amount)}</td>
+                                                    <td className="px-3 py-2 text-right font-mono text-white">{formatCurrency(b.amount)}</td>
                                                     <td className="px-3 py-2 text-right font-mono text-green-600">{b.status === 'won' ? formatCurrency(b.payout) : '—'}</td>
-                                                    <td className="px-3 py-2 text-xs text-gray-600">{b.placedByBookie ? 'Bookie' : 'User'}</td>
+                                                    <td className="px-3 py-2 text-xs text-gray-300">{b.placedByBookie ? 'Bookie' : 'User'}</td>
                                                     <td className="px-3 py-2">
                                                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                                                             b.status === 'won' ? 'bg-green-100 text-green-700'
@@ -889,14 +889,14 @@ const PlayerDetail = () => {
                         <>
                             {/* Market Filter */}
                             <div className="mb-4 flex items-center gap-3">
-                                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                                     <FaFilter className="w-4 h-4" />
                                     Filter by Market:
                                 </label>
                                 <select
                                     value={marketFilter}
                                     onChange={(e) => setMarketFilter(e.target.value)}
-                                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                                    className="px-3 py-2 border border-[#333D4D] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                 >
                                     <option value="all">All Markets</option>
                                     {markets.map((m) => (
@@ -934,13 +934,13 @@ const PlayerDetail = () => {
                                     <div className="p-8 text-center text-gray-400">No fund transactions{marketFilter !== 'all' ? ' for selected market' : ''}.</div>
                                 ) : (
                                     <div>
-                                        <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex flex-wrap gap-4 text-xs">
+                                        <div className="px-4 py-2 bg-[#1F2732] border-b border-[#333D4D] flex flex-wrap gap-4 text-xs">
                                             <span className="text-gray-500">Total Credited: <span className="text-green-600 font-bold">{formatCurrency(totalCredited)}</span></span>
                                             <span className="text-gray-500">Total Debited: <span className="text-red-500 font-bold">{formatCurrency(totalDebited)}</span></span>
                                         </div>
                                         <div className="divide-y divide-gray-100">
                                             {filteredTx.map((t) => (
-                                                <div key={t._id} className="px-4 py-3 hover:bg-gray-50 flex flex-wrap items-center justify-between gap-3">
+                                                <div key={t._id} className="px-4 py-3 hover:bg-[#1F2732] flex flex-wrap items-center justify-between gap-3">
                                                     <div className="flex items-center gap-3 min-w-0 flex-1">
                                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${t.type === 'credit' ? 'bg-green-100' : 'bg-red-100'}`}>
                                                             {t.type === 'credit'
@@ -949,7 +949,7 @@ const PlayerDetail = () => {
                                                             }
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="text-gray-800 text-sm font-medium truncate">{t.description || '—'}</p>
+                                                            <p className="text-white text-sm font-medium truncate">{t.description || '—'}</p>
                                                             <div className="flex items-center gap-2 mt-0.5">
                                                                 <p className="text-gray-400 text-xs">{new Date(t.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</p>
                                                                 {t.bet && t.bet.marketName && (
@@ -984,7 +984,7 @@ const PlayerDetail = () => {
                             ) : statementData.length === 0 ? (
                                 <div className="p-8 text-center text-gray-400">No transactions in this period.</div>
                             ) : (
-                                <div id="statement-slip" className="bg-white p-6 max-w-2xl mx-auto print:p-8 print:max-w-none">
+                                <div id="statement-slip" className="bg-[#252D3A] p-6 max-w-2xl mx-auto print:p-8 print:max-w-none">
                                     {/* Print button */}
                                     <div className="mb-4 print:hidden flex justify-end">
                                         <button
@@ -998,54 +998,54 @@ const PlayerDetail = () => {
 
                                     {/* Statement Slip */}
                                     {statementData.map((summary, i) => (
-                                        <div key={i} className="border-2 border-gray-300 rounded-lg p-6 print:border-gray-800 print:rounded-none">
+                                        <div key={i} className="border-2 border-[#333D4D] rounded-lg p-6 print:border-gray-800 print:rounded-none">
                                             {/* Header */}
-                                            <div className="text-center mb-6 pb-4 border-b-2 border-gray-300 print:border-gray-800">
-                                                <h2 className="text-2xl font-bold text-gray-800 mb-2">ACCOUNT STATEMENT</h2>
-                                                <p className="text-sm text-gray-600">
+                                            <div className="text-center mb-6 pb-4 border-b-2 border-[#333D4D] print:border-gray-800">
+                                                <h2 className="text-2xl font-bold text-white mb-2">ACCOUNT STATEMENT</h2>
+                                                <p className="text-sm text-gray-300">
                                                     {summary.period.from && summary.period.to && formatDateRange(summary.period.from, summary.period.to)}
                                                 </p>
                                             </div>
 
                                             {/* Player Info */}
                                             {summary.player && (
-                                                <div className="mb-6 pb-4 border-b border-gray-200">
+                                                <div className="mb-6 pb-4 border-b border-[#333D4D]">
                                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                                         <div>
                                                             <p className="text-gray-500 mb-1">Player Name</p>
-                                                            <p className="font-semibold text-gray-800">{summary.player.name}</p>
+                                                            <p className="font-semibold text-white">{summary.player.name}</p>
                                                         </div>
                                                         <div>
                                                             <p className="text-gray-500 mb-1">Phone</p>
-                                                            <p className="font-semibold text-gray-800">{summary.player.phone || '—'}</p>
+                                                            <p className="font-semibold text-white">{summary.player.phone || '—'}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             )}
 
                                             {/* Bet Summary */}
-                                            <div className="mb-6 pb-4 border-b border-gray-200">
-                                                <h3 className="text-lg font-bold text-gray-800 mb-3">BET SUMMARY</h3>
+                                            <div className="mb-6 pb-4 border-b border-[#333D4D]">
+                                                <h3 className="text-lg font-bold text-white mb-3">BET SUMMARY</h3>
                                                 <div className="space-y-2 text-sm">
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Bets Placed</span>
-                                                        <span className="font-mono font-semibold text-gray-800">{summary.bets.count} bets</span>
+                                                        <span className="text-gray-300">Total Bets Placed</span>
+                                                        <span className="font-mono font-semibold text-white">{summary.bets.count} bets</span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Bet Amount</span>
+                                                        <span className="text-gray-300">Total Bet Amount</span>
                                                         <span className="font-mono font-semibold text-red-600">{formatCurrency(summary.bets.totalAmount)}</span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Win Amount</span>
+                                                        <span className="text-gray-300">Total Win Amount</span>
                                                         <span className="font-mono font-semibold text-green-600">{formatCurrency(summary.bets.totalWin)}</span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Loss Amount</span>
+                                                        <span className="text-gray-300">Total Loss Amount</span>
                                                         <span className="font-mono font-semibold text-red-600">{formatCurrency(summary.bets.totalLoss)}</span>
                                                     </div>
                                                     {summary.bets.totalPending > 0 && (
                                                         <div className="flex justify-between">
-                                                            <span className="text-gray-600">Pending Bets</span>
+                                                            <span className="text-gray-300">Pending Bets</span>
                                                             <span className="font-mono font-semibold text-primary-600">{formatCurrency(summary.bets.totalPending)}</span>
                                                         </div>
                                                     )}
@@ -1053,26 +1053,26 @@ const PlayerDetail = () => {
                                             </div>
 
                                             {/* Wallet Summary */}
-                                            <div className="mb-6 pb-4 border-b border-gray-200">
-                                                <h3 className="text-lg font-bold text-gray-800 mb-3">WALLET TRANSACTIONS</h3>
+                                            <div className="mb-6 pb-4 border-b border-[#333D4D]">
+                                                <h3 className="text-lg font-bold text-white mb-3">WALLET TRANSACTIONS</h3>
                                                 <div className="space-y-2 text-sm">
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Deposits</span>
+                                                        <span className="text-gray-300">Total Deposits</span>
                                                         <span className="font-mono font-semibold text-green-600">{formatCurrency(summary.wallet.deposits)}</span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Withdrawals</span>
+                                                        <span className="text-gray-300">Total Withdrawals</span>
                                                         <span className="font-mono font-semibold text-red-600">{formatCurrency(summary.wallet.withdrawals)}</span>
                                                     </div>
                                                     {summary.wallet.otherCredits > 0 && (
                                                         <div className="flex justify-between">
-                                                            <span className="text-gray-600">Other Credits</span>
+                                                            <span className="text-gray-300">Other Credits</span>
                                                             <span className="font-mono font-semibold text-green-600">{formatCurrency(summary.wallet.otherCredits)}</span>
                                                         </div>
                                                     )}
                                                     {summary.wallet.otherDebits > 0 && (
                                                         <div className="flex justify-between">
-                                                            <span className="text-gray-600">Other Debits</span>
+                                                            <span className="text-gray-300">Other Debits</span>
                                                             <span className="font-mono font-semibold text-red-600">{formatCurrency(summary.wallet.otherDebits)}</span>
                                                         </div>
                                                     )}
@@ -1080,19 +1080,19 @@ const PlayerDetail = () => {
                                             </div>
 
                                             {/* Totals */}
-                                            <div className="mb-6 pb-4 border-b-2 border-gray-300 print:border-gray-800">
-                                                <h3 className="text-lg font-bold text-gray-800 mb-3">TOTALS</h3>
+                                            <div className="mb-6 pb-4 border-b-2 border-[#333D4D] print:border-gray-800">
+                                                <h3 className="text-lg font-bold text-white mb-3">TOTALS</h3>
                                                 <div className="space-y-2 text-sm">
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Credits</span>
+                                                        <span className="text-gray-300">Total Credits</span>
                                                         <span className="font-mono font-semibold text-green-600">{formatCurrency(summary.totals.totalCredits)}</span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Total Debits</span>
+                                                        <span className="text-gray-300">Total Debits</span>
                                                         <span className="font-mono font-semibold text-red-600">{formatCurrency(summary.totals.totalDebits)}</span>
                                                     </div>
-                                                    <div className="flex justify-between pt-2 border-t border-gray-200">
-                                                        <span className="text-gray-800 font-bold">Net Amount</span>
+                                                    <div className="flex justify-between pt-2 border-t border-[#333D4D]">
+                                                        <span className="text-white font-bold">Net Amount</span>
                                                         <span className={`font-mono font-bold text-lg ${summary.totals.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                                             {formatCurrency(summary.totals.netAmount)}
                                                         </span>
@@ -1102,35 +1102,35 @@ const PlayerDetail = () => {
 
                                             {/* Current Status */}
                                             <div className="space-y-3">
-                                                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                                    <span className="text-gray-700 font-semibold">Current Wallet Balance</span>
-                                                    <span className="font-mono font-bold text-xl text-gray-800">{formatCurrency(summary.currentBalance)}</span>
+                                                <div className="flex justify-between items-center p-3 bg-[#1F2732] rounded-lg">
+                                                    <span className="text-gray-300 font-semibold">Current Wallet Balance</span>
+                                                    <span className="font-mono font-bold text-xl text-white">{formatCurrency(summary.currentBalance)}</span>
                                                 </div>
                                                 
                                                 {/* To Give & To Take Section - Editable */}
-                                                <div className="border-t-2 border-gray-300 pt-4 mt-4 print:border-gray-800">
+                                                <div className="border-t-2 border-[#333D4D] pt-4 mt-4 print:border-gray-800">
                                                     <div className="flex items-center justify-between mb-3">
-                                                        <h3 className="text-lg font-bold text-gray-800 print:text-base">TO GIVE / TO TAKE</h3>
+                                                        <h3 className="text-lg font-bold text-white print:text-base">TO GIVE / TO TAKE</h3>
                                                         <button
                                                             onClick={() => {
                                                                 setToGiveValue((player?.toGive ?? 0).toString());
                                                                 setToTakeValue((player?.toTake ?? 0).toString());
                                                                 setToGiveTakeModalOpen(true);
                                                             }}
-                                                            className="print:hidden text-primary-600 hover:text-primary-700 text-sm font-medium underline flex items-center gap-1"
+                                                            className="print:hidden text-primary-400 hover:text-primary-300 text-sm font-medium underline flex items-center gap-1"
                                                         >
                                                             <FaExchangeAlt className="w-3 h-3" /> Edit
                                                         </button>
                                                     </div>
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 print:bg-transparent print:border print:border-blue-300">
-                                                            <p className="text-gray-600 text-sm mb-1">To Give</p>
-                                                            <p className="font-mono font-bold text-2xl text-blue-600 print:text-lg">{formatCurrency(player?.toGive ?? 0)}</p>
+                                                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D] print:bg-transparent print:border print:border-blue-300">
+                                                            <p className="text-gray-400 text-sm mb-1">To Give</p>
+                                                            <p className="font-mono font-bold text-2xl text-primary-400 print:text-lg print:text-blue-600">{formatCurrency(player?.toGive ?? 0)}</p>
                                                             <p className="text-xs text-gray-500 mt-1 print:hidden">Money to give to player</p>
                                                         </div>
-                                                        <div className="bg-red-50 rounded-lg p-4 border border-red-200 print:bg-transparent print:border print:border-red-300">
-                                                            <p className="text-gray-600 text-sm mb-1">To Take</p>
-                                                            <p className="font-mono font-bold text-2xl text-red-600 print:text-lg">{formatCurrency(player?.toTake ?? 0)}</p>
+                                                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D] print:bg-transparent print:border print:border-red-300">
+                                                            <p className="text-gray-400 text-sm mb-1">To Take</p>
+                                                            <p className="font-mono font-bold text-2xl text-red-400 print:text-lg print:text-red-600">{formatCurrency(player?.toTake ?? 0)}</p>
                                                             <p className="text-xs text-gray-500 mt-1 print:hidden">Money to take from player</p>
                                                         </div>
                                                     </div>
@@ -1138,7 +1138,7 @@ const PlayerDetail = () => {
                                             </div>
 
                                             {/* Footer */}
-                                            <div className="mt-6 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
+                                            <div className="mt-6 pt-4 border-t border-[#333D4D] text-center text-xs text-gray-500">
                                                 <p>Generated on {new Date().toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' })}</p>
                                                 <p className="mt-1">This is a computer-generated statement</p>
                                             </div>
@@ -1153,18 +1153,18 @@ const PlayerDetail = () => {
                 {/* ========== FUND MODAL ========== */}
                 {fundModalOpen && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
-                        <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-sm">
-                            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                                <h3 className="text-base font-bold text-gray-800 capitalize">
+                        <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-sm">
+                            <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
+                                <h3 className="text-base font-bold text-white capitalize">
                                     {fundModalType === 'add' && '💰 Add Funds'}
                                     {fundModalType === 'withdraw' && '💸 Withdraw Funds'}
                                     {fundModalType === 'set' && '⚙️ Set Balance'}
                                 </h3>
-                                <button type="button" onClick={() => setFundModalOpen(false)} className="text-gray-400 hover:text-gray-600 text-lg font-bold">×</button>
+                                <button type="button" onClick={() => setFundModalOpen(false)} className="text-gray-400 hover:text-gray-300 text-lg font-bold">×</button>
                             </div>
                             <div className="p-4 space-y-4">
                                 {/* Current balance */}
-                                <div className="bg-gray-50 rounded-lg px-3 py-2 text-center">
+                                <div className="bg-[#1F2732] rounded-lg px-3 py-2 text-center">
                                     <p className="text-gray-400 text-xs uppercase">Current Balance</p>
                                     <p className="text-green-600 font-mono font-bold text-xl">{formatCurrency(player.walletBalance ?? 0)}</p>
                                 </div>
@@ -1175,7 +1175,7 @@ const PlayerDetail = () => {
                                 {!fundSuccess && (
                                     <>
                                         <div>
-                                            <label className="block text-gray-600 text-sm font-medium mb-1.5">
+                                            <label className="block text-gray-300 text-sm font-medium mb-1.5">
                                                 {fundModalType === 'set' ? 'New Balance Amount' : 'Amount'}
                                             </label>
                                             <div className="relative">
@@ -1186,7 +1186,7 @@ const PlayerDetail = () => {
                                                     placeholder="0"
                                                     value={fundAmount}
                                                     onChange={(e) => setFundAmount(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
-                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                                     autoFocus
                                                 />
                                             </div>
@@ -1230,10 +1230,10 @@ const PlayerDetail = () => {
                 {/* ========== PASSWORD MODAL ========== */}
                 {passwordModalOpen && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
-                        <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-sm">
-                            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                                <h3 className="text-base font-bold text-gray-800">Set Player Password</h3>
-                                <button type="button" onClick={() => setPasswordModalOpen(false)} className="text-gray-400 hover:text-gray-600 text-lg font-bold">×</button>
+                        <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-sm">
+                            <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
+                                <h3 className="text-base font-bold text-white">Set Player Password</h3>
+                                <button type="button" onClick={() => setPasswordModalOpen(false)} className="text-gray-400 hover:text-gray-300 text-lg font-bold">×</button>
                             </div>
                             <div className="p-4 space-y-4">
                                 {passwordError && <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-3 py-2">{passwordError}</div>}
@@ -1242,12 +1242,12 @@ const PlayerDetail = () => {
                                 {!passwordSuccess && (
                                     <>
                                         <div>
-                                            <label className="block text-gray-600 text-sm font-medium mb-1.5">New Password</label>
+                                            <label className="block text-gray-300 text-sm font-medium mb-1.5">New Password</label>
                                             <input
                                                 type="password"
                                                 value={newPassword}
                                                 onChange={(e) => setNewPassword(e.target.value)}
-                                                className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                                className="w-full px-4 py-3 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                                 placeholder="Minimum 6 characters"
                                                 autoFocus
                                             />
@@ -1280,10 +1280,10 @@ const PlayerDetail = () => {
                 {/* ========== TO GIVE / TO TAKE MODAL ========== */}
                 {toGiveTakeModalOpen && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
-                        <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-sm">
-                            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                                <h3 className="text-base font-bold text-gray-800">💰 To Give / To Take</h3>
-                                <button type="button" onClick={() => setToGiveTakeModalOpen(false)} className="text-gray-400 hover:text-gray-600 text-lg font-bold">×</button>
+                        <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-sm">
+                            <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
+                                <h3 className="text-base font-bold text-white">💰 To Give / To Take</h3>
+                                <button type="button" onClick={() => setToGiveTakeModalOpen(false)} className="text-gray-400 hover:text-gray-300 text-lg font-bold">×</button>
                             </div>
                             <div className="p-4 space-y-4">
                                 {toGiveTakeError && <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-3 py-2">{toGiveTakeError}</div>}
@@ -1292,7 +1292,7 @@ const PlayerDetail = () => {
                                 {!toGiveTakeSuccess && (
                                     <>
                                         <div>
-                                            <label className="block text-gray-600 text-sm font-medium mb-1.5">To Give (Money to give to player)</label>
+                                            <label className="block text-gray-300 text-sm font-medium mb-1.5">To Give (Money to give to player)</label>
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
                                                 <input
@@ -1301,13 +1301,13 @@ const PlayerDetail = () => {
                                                     placeholder="0"
                                                     value={toGiveValue}
                                                     onChange={(e) => setToGiveValue(e.target.value.replace(/[^0-9.]/g, '').slice(0, 12))}
-                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                     autoFocus
                                                 />
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="block text-gray-600 text-sm font-medium mb-1.5">To Take (Money to take from player)</label>
+                                            <label className="block text-gray-300 text-sm font-medium mb-1.5">To Take (Money to take from player)</label>
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
                                                 <input
@@ -1316,7 +1316,7 @@ const PlayerDetail = () => {
                                                     placeholder="0"
                                                     value={toTakeValue}
                                                     onChange={(e) => setToTakeValue(e.target.value.replace(/[^0-9.]/g, '').slice(0, 12))}
-                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                                 />
                                             </div>
                                         </div>

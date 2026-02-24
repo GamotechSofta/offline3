@@ -69,7 +69,7 @@ const AddUser = () => {
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">{t('addNewPlayer')}</h1>
 
                 {error && (
-                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+                    <div className="mb-4 p-4 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400">
                         {error}
                     </div>
                 )}
@@ -80,10 +80,10 @@ const AddUser = () => {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="bg-white rounded-lg p-4 sm:p-6 max-w-2xl border border-gray-200">
+                <form onSubmit={handleSubmit} className="bg-[#252D3A] rounded-lg p-4 sm:p-6 max-w-2xl border-2 border-[#333D4D]">
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-gray-600 text-sm font-medium mb-2">
+                            <label className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('username')} *
                             </label>
                             <input
@@ -91,13 +91,13 @@ const AddUser = () => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-gray-600 text-sm font-medium mb-2">
+                            <label className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('phone')} *
                             </label>
                             <input
@@ -108,7 +108,7 @@ const AddUser = () => {
                                     const value = e.target.value.replace(/\D/g, '').slice(0, 10);
                                     setFormData({ ...formData, phone: value });
                                 }}
-                                className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                className="w-full px-4 py-2 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                 placeholder="10-digit phone number"
                                 required
                                 maxLength="10"
@@ -117,7 +117,7 @@ const AddUser = () => {
                         </div>
 
                         <div>
-                            <label className="block text-gray-600 text-sm font-medium mb-2">
+                            <label className="block text-gray-300 text-sm font-medium mb-2">
                                 {t('password')} *
                             </label>
                             <div className="relative">
@@ -126,7 +126,7 @@ const AddUser = () => {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 pr-10 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                    className="w-full px-4 py-2 pr-10 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                     placeholder={t('enterPassword')}
                                     required
                                     minLength="6"
@@ -134,7 +134,7 @@ const AddUser = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 focus:outline-none"
                                     aria-label={showPassword ? t('hidePassword') : t('showPassword')}
                                 >
                                     {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />}
@@ -146,7 +146,7 @@ const AddUser = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-gray-800 font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 shadow-lg shadow-primary-500/20"
+                            className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 shadow-lg shadow-primary-500/20"
                         >
                             {loading ? t('loading') : t('createPlayer')}
                         </button>

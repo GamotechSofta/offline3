@@ -113,9 +113,9 @@ const BetsByUser = () => {
             case 'pending':
                 return 'bg-primary-100 text-primary-800 border-primary-200';
             case 'cancelled':
-                return 'bg-gray-100 text-gray-800 border-gray-200';
+                return 'bg-[#1F2732] text-white border-[#333D4D]';
             default:
-                return 'bg-gray-100 text-gray-800 border-gray-200';
+                return 'bg-[#1F2732] text-white border-[#333D4D]';
         }
     };
 
@@ -157,16 +157,16 @@ const BetsByUser = () => {
                 <div className="space-y-6">
                     {/* Header */}
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                             {t('betsByUser')}
                         </h1>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-300 text-sm">
                             {t('betsByUserDescription')}
                         </p>
                     </div>
 
                     {/* Search */}
-                    <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D] shadow-sm">
                         <div className="relative">
                             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                             <input
@@ -174,49 +174,49 @@ const BetsByUser = () => {
                                 placeholder={t('searchPlayers')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-2.5 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                             />
                         </div>
                     </div>
 
                     {/* Players List */}
                     {loading ? (
-                        <div className="bg-white rounded-lg p-12 border border-gray-200 shadow-sm">
+                        <div className="bg-[#252D3A] rounded-lg p-12 border border-[#333D4D] shadow-sm">
                             <p className="text-gray-400 text-center">{t('loading')}</p>
                         </div>
                     ) : filteredPlayers.length === 0 ? (
-                        <div className="bg-white rounded-lg p-12 border border-gray-200 shadow-sm">
+                        <div className="bg-[#252D3A] rounded-lg p-12 border border-[#333D4D] shadow-sm">
                             <p className="text-gray-400 text-center">
                                 {searchQuery ? t('noPlayersFound') : t('noPlayers')}
                             </p>
                         </div>
                     ) : (
-                        <div className="bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                        <div className="bg-[#252D3A] rounded-lg overflow-hidden border border-[#333D4D] shadow-sm">
                             <div className="overflow-x-auto">
                                 <table className="w-full">
-                                    <thead className="bg-gray-50 border-b border-gray-200">
+                                    <thead className="bg-[#1F2732] border-b border-[#333D4D]">
                                         <tr>
-                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                 {t('srNo')}
                                             </th>
-                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                 {t('player')}
                                             </th>
-                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                 {t('phone')}
                                             </th>
-                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                 {t('email')}
                                             </th>
-                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                                 {t('actions')}
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-[#252D3A] divide-y divide-gray-200">
                                         {filteredPlayers.map((player, index) => (
-                                            <tr key={player._id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <tr key={player._id} className="hover:bg-[#252D3A] transition-colors">
+                                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                     {index + 1}
                                                 </td>
                                                 <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
@@ -227,10 +227,10 @@ const BetsByUser = () => {
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                     {player.phone || '—'}
                                                 </td>
-                                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                     {player.email || '—'}
                                                 </td>
                                                 <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
@@ -261,26 +261,26 @@ const BetsByUser = () => {
                 <div className="flex items-center gap-4">
                     <button
                         onClick={handleBackToPlayers}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[#1F2732] rounded-lg transition-colors"
                         title={t('back')}
                     >
-                        <FaArrowLeft className="w-5 h-5 text-gray-600" />
+                        <FaArrowLeft className="w-5 h-5 text-gray-300" />
                     </button>
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                             {t('betsByUser')} - {selectedPlayerName}
                         </h1>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-300 text-sm">
                             {t('betsByUserDescription')}
                         </p>
                     </div>
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200 shadow-sm">
+                <div className="bg-[#252D3A] rounded-lg p-4 sm:p-6 border border-[#333D4D] shadow-sm">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-xs font-medium text-gray-300 mb-1">
                                 {t('marketId')}
                             </label>
                             <input
@@ -288,17 +288,17 @@ const BetsByUser = () => {
                                 placeholder={t('enterMarketId')}
                                 value={filters.marketId}
                                 onChange={(e) => setFilters({ ...filters, marketId: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                                className="w-full px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-xs font-medium text-gray-300 mb-1">
                                 {t('status')}
                             </label>
                             <select
                                 value={filters.status}
                                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                                className="w-full px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
                             >
                                 <option value="">{t('allStatus')}</option>
                                 <option value="pending">{t('pending')}</option>
@@ -308,32 +308,32 @@ const BetsByUser = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-xs font-medium text-gray-300 mb-1">
                                 {t('startDate')}
                             </label>
                             <input
                                 type="date"
                                 value={filters.startDate}
                                 onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                                className="w-full px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-xs font-medium text-gray-300 mb-1">
                                 {t('endDate')}
                             </label>
                             <input
                                 type="date"
                                 value={filters.endDate}
                                 onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                                className="w-full px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
                             />
                         </div>
                     </div>
                     <div className="mt-4">
                         <button
                             onClick={() => setFilters({ marketId: '', status: '', startDate: '', endDate: '' })}
-                            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+                            className="px-4 py-2 bg-[#1F2732] hover:bg-primary-500/20 text-gray-300 rounded-lg transition-colors text-sm font-medium"
                         >
                             {t('clearFilters')}
                         </button>
@@ -343,15 +343,15 @@ const BetsByUser = () => {
                 {/* Stats Summary */}
                 {!betsLoading && bets.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D] shadow-sm">
                             <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                                 {t('totalBets')}
                             </p>
-                            <p className="text-2xl font-bold text-gray-800">
+                            <p className="text-2xl font-bold text-white">
                                 {bets.length}
                             </p>
                         </div>
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D] shadow-sm">
                             <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                                 {t('totalAmount')}
                             </p>
@@ -359,7 +359,7 @@ const BetsByUser = () => {
                                 {formatCurrency(bets.reduce((sum, bet) => sum + (bet.amount || 0), 0))}
                             </p>
                         </div>
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D] shadow-sm">
                             <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                                 {t('pendingBets')}
                             </p>
@@ -372,46 +372,46 @@ const BetsByUser = () => {
 
                 {/* Bets Table */}
                 {betsLoading ? (
-                    <div className="bg-white rounded-lg p-12 border border-gray-200 shadow-sm">
+                    <div className="bg-[#252D3A] rounded-lg p-12 border border-[#333D4D] shadow-sm">
                         <p className="text-gray-400 text-center">{t('loading')}</p>
                     </div>
                 ) : bets.length === 0 ? (
-                    <div className="bg-white rounded-lg p-12 border border-gray-200 shadow-sm">
+                    <div className="bg-[#252D3A] rounded-lg p-12 border border-[#333D4D] shadow-sm">
                         <p className="text-gray-400 text-center">{t('noBetsFound')}</p>
                     </div>
                 ) : (
-                    <div className="bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                    <div className="bg-[#252D3A] rounded-lg overflow-hidden border border-[#333D4D] shadow-sm">
                         <div className="overflow-x-auto">
                             <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-200">
+                                <thead className="bg-[#1F2732] border-b border-[#333D4D]">
                                     <tr>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('dateTime')}
                                         </th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('market')}
                                         </th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('betType')}
                                         </th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('betNumber')}
                                         </th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('amount')}
                                         </th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('status')}
                                         </th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {t('payout')}
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-[#252D3A] divide-y divide-gray-200">
                                     {bets.map((bet) => (
-                                        <tr key={bet._id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        <tr key={bet._id} className="hover:bg-[#252D3A] transition-colors">
+                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {new Date(bet.createdAt).toLocaleString('en-IN', {
                                                     day: '2-digit',
                                                     month: 'short',
@@ -420,10 +420,10 @@ const BetsByUser = () => {
                                                     minute: '2-digit',
                                                 })}
                                             </td>
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {bet.marketId?.marketName || bet.marketId?.gameName || '—'}
                                             </td>
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {getBetTypeLabel(bet.betType, bet.betNumber)}
                                             </td>
                                             <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">

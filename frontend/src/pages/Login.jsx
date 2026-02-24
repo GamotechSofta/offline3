@@ -122,11 +122,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-primary-50 to-white text-gray-800 relative overflow-hidden">
+    <div className="min-h-screen bg-[#1F2732] text-white relative overflow-hidden">
       {/* Desktop: Two Column Layout */}
       <div className="hidden md:flex h-screen overflow-hidden">
         {/* Left Side - Image (Fixed, Not Scrollable, Fits Screen) */}
-        <div className="w-1/2 h-screen fixed left-0 top-0 overflow-hidden bg-gradient-to-br from-primary-50 via-white to-primary-50">
+        <div className="w-1/2 h-screen fixed left-0 top-0 overflow-hidden bg-gradient-to-br from-primary-500/20 via-[#1F2732] to-primary-500/20">
           <img
             src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770101961/Black_and_Gold_Classy_Casino_Night_Party_Instagram_Post_1080_x_1080_px_d1n00g.png"
             alt="Login banner"
@@ -143,7 +143,7 @@ const Login = () => {
                 <h1 className="text-2xl lg:text-3xl mb-1.5 font-bold bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">
                   Welcome Back
                 </h1>
-                <p className="text-gray-600 text-sm lg:text-base">
+                <p className="text-gray-300 text-sm lg:text-base">
                   Sign in to continue
                 </p>
               </div>
@@ -163,7 +163,7 @@ const Login = () => {
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <div>
-                    <label className="block text-gray-700 text-xs font-medium mb-1.5">
+                    <label className="block text-gray-300 text-xs font-medium mb-1.5">
                       Phone Number <span className="text-primary-500">*</span>
                     </label>
                     <div className="relative">
@@ -178,7 +178,7 @@ const Login = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         maxLength="10"
-                        className="w-full bg-white border-2 border-primary-200 rounded-lg px-3 pl-10 py-2.5 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                        className="w-full bg-[#252D3A] border-2 border-primary-200 rounded-lg px-3 pl-10 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
                         placeholder="10-digit phone number"
                         required
                       />
@@ -186,7 +186,7 @@ const Login = () => {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 text-xs font-medium mb-1.5">
+                    <label className="block text-gray-300 text-xs font-medium mb-1.5">
                       Password <span className="text-primary-500">*</span>
                     </label>
                     <div className="relative">
@@ -200,7 +200,7 @@ const Login = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full bg-white border-2 border-primary-200 rounded-lg px-3 pl-10 pr-10 py-2.5 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                        className="w-full bg-[#252D3A] border-2 border-primary-200 rounded-lg px-3 pl-10 pr-10 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
                         placeholder="Enter your password"
                         required
                       />

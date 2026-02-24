@@ -72,13 +72,13 @@ const TopWinners = () => {
   }, [rows]);
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 px-3 sm:px-6 md:px-8 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
+    <div className="min-h-screen bg-[#1F2732] text-white px-3 sm:px-6 md:px-8 pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
       <div className="w-full max-w-2xl mx-auto">
         <div className="flex items-center gap-3 pt-4 pb-3">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="min-w-[44px] min-h-[44px] rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center text-gray-800 hover:bg-primary-100 active:scale-95 transition touch-manipulation"
+            className="min-w-[44px] min-h-[44px] rounded-full bg-primary-500/20 border border-primary-200 flex items-center justify-center text-white hover:bg-primary-500/30 active:scale-95 transition touch-manipulation"
             aria-label="Back"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +99,7 @@ const TopWinners = () => {
                 className={`h-9 px-4 rounded-full border text-sm font-semibold transition-colors ${
                   active
                     ? 'bg-primary-500 text-white border-primary-500'
-                    : 'bg-white text-gray-700 border-primary-200 hover:border-primary-300 hover:bg-primary-50'
+                    : 'bg-[#252D3A] text-gray-300 border-primary-200 hover:border-primary-300 hover:bg-primary-500/20'
                 }`}
               >
                 {t.label}
@@ -121,7 +121,7 @@ const TopWinners = () => {
             ))}
           </div>
         ) : normalized.length === 0 ? (
-          <div className="bg-primary-50 border border-primary-200 rounded-2xl p-6 text-center text-gray-600 text-sm">
+          <div className="bg-primary-500/20 border border-primary-200 rounded-2xl p-6 text-center text-gray-300 text-sm">
             No winners found.
           </div>
         ) : (
@@ -129,10 +129,10 @@ const TopWinners = () => {
             {normalized.map((r) => (
               <div
                 key={`${r.rank}-${r.username}`}
-                className="bg-white border border-primary-200 rounded-2xl p-4 shadow-md hover:shadow-lg transition-shadow flex items-center gap-3"
+                className="bg-[#252D3A] border border-gray-700 rounded-2xl p-4 shadow-md hover:shadow-lg transition-shadow flex items-center gap-3"
               >
                 <div
-                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${medalBg(r.rank)} text-black flex items-center justify-center font-extrabold shadow-[0_10px_20px_rgba(0,0,0,0.35)] shrink-0`}
+                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${medalBg(r.rank)} text-white flex items-center justify-center font-extrabold shadow-[0_10px_20px_rgba(0,0,0,0.35)] shrink-0`}
                   aria-label={`Rank ${r.rank}`}
                 >
                   {r.rank}
@@ -140,7 +140,7 @@ const TopWinners = () => {
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="text-gray-800 font-bold truncate">{r.username}</div>
+                    <div className="text-white font-bold truncate">{r.username}</div>
                     <div className="text-primary-600 font-extrabold shrink-0">₹ {INR(r.totalWinnings)}</div>
                   </div>
                   <div className="mt-1 flex items-center gap-3 text-xs text-gray-600">

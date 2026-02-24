@@ -75,11 +75,11 @@ const SingleDigitBid = ({ title, gameType, betType, embedInSingleScroll = false 
         >
             <div className="px-3 sm:px-4 py-4 sm:py-2 md:max-w-3xl md:mx-auto md:items-start">
                 <div className="space-y-4">
-                    {warning && <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">{warning}</div>}
+                    {warning && <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">{warning}</div>}
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
                         {DIGITS.map((num) => (
                             <div key={num} className="flex items-center gap-2">
-                                <div className="w-10 h-10 bg-gray-100 border border-gray-200 text-primary-500 flex items-center justify-center rounded-l-md font-bold text-sm shrink-0">{num}</div>
+                                <div className="w-10 h-10 bg-[#1F2732] border border-[#333D4D] text-primary-500 flex items-center justify-center rounded-l-md font-bold text-sm shrink-0">{num}</div>
                                 <input
                                     ref={(el) => { inputRefs.current[num] = el; }}
                                     type="number"
@@ -88,7 +88,7 @@ const SingleDigitBid = ({ title, gameType, betType, embedInSingleScroll = false 
                                     value={digitInputs[num]}
                                     onChange={(e) => setDigitInputs((p) => ({ ...p, [num]: e.target.value }))}
                                     onKeyDown={(e) => handlePtsKeyDown(num, e)}
-                                    className="w-full h-10 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-3 text-sm font-semibold"
+                                    className="w-full h-10 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-3 text-sm font-semibold"
                                 />
                             </div>
                         ))}

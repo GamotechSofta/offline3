@@ -174,7 +174,7 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
         >
             <div className={`w-full font-['Inter',sans-serif] ${embedInSingleScroll ? 'px-0 py-0' : fitSingleScreen ? 'px-2 sm:px-3 py-2' : 'px-3 sm:px-5 py-3'}`}>
                 {warning && (
-                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white text-gray-800 rounded-xl px-4 py-3 text-sm font-medium shadow-lg max-w-[calc(100%-2rem)] backdrop-blur-sm">
+                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] text-white rounded-xl px-4 py-3 text-sm font-medium shadow-lg max-w-[calc(100%-2rem)] backdrop-blur-sm">
                         {warning}
                     </div>
                 )}
@@ -182,14 +182,14 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
                 {(() => {
                     const compact = embedInSingleScroll || fitSingleScreen;
                     const rowH = compact ? 'h-[28px] min-h-[28px]' : 'h-10 min-h-10';
-                    const cellBase = 'no-spinner w-full min-w-0 bg-white text-gray-800 text-center font-bold placeholder:font-normal placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:ring-offset-0 rounded-lg shadow-sm';
+                    const cellBase = 'no-spinner w-full min-w-0 bg-[#252D3A] text-white text-center font-bold placeholder:font-normal placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:ring-offset-0 rounded-lg shadow-sm';
                     const cellCl = compact
                         ? `${cellBase} h-[28px] min-h-[28px] text-[10px] py-1.5 px-0.5`
                         : `${cellBase} h-10 min-h-10 text-sm py-2 px-1.5`;
                     const headerDigitCl = 'text-blue-900 font-medium';
                     const labelCl = compact ? 'text-[8px] leading-none text-gray-400 select-none' : 'text-[9px] md:text-[10px] leading-none text-gray-400 mb-0.5 select-none';
                     return (
-                        <div className={`overflow-hidden w-full rounded-2xl bg-gray-50/80 ${compact ? 'p-2' : 'p-4 sm:p-5'} ${(embedInSingleScroll || fitSingleScreen) ? 'shadow-none' : 'shadow-md'}`}>
+                        <div className={`overflow-hidden w-full rounded-2xl bg-[#1F2732] ${compact ? 'p-2' : 'p-4 sm:p-5'} ${(embedInSingleScroll || fitSingleScreen) ? 'shadow-none' : 'shadow-md'}`}>
                             <div className="overflow-x-auto overflow-y-hidden scrollbar-hidden">
                                 <div
                                     className={`grid w-full min-w-0 ${compact ? 'gap-1' : 'gap-2'}`}
@@ -285,7 +285,7 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
                     <button
                         type="button"
                         onClick={clearLocal}
-                        className="px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-white hover:bg-primary-50 active:scale-[0.98] transition-all"
+                        className="px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-50 active:scale-[0.98] transition-all"
                     >
                         Clear
                     </button>
@@ -296,7 +296,7 @@ const JodiBulkBid = ({ title, gameType, betType, embedInSingleScroll = false, fi
                         className={`w-full font-bold rounded-xl transition-all ${(embedInSingleScroll || fitSingleScreen) ? 'text-sm py-2.5 min-h-[44px]' : 'text-base py-4 min-h-[56px]'} shadow-md ${
                             canSubmit
                                 ? 'bg-[#FF6600] text-white hover:bg-[#E55C00] active:scale-[0.98] shadow-primary-500/25'
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
+                                : 'bg-[#333D4D] text-gray-500 cursor-not-allowed shadow-none'
                         }`}
                     >
                         Add to Cart

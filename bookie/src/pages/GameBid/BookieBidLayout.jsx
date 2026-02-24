@@ -82,26 +82,26 @@ const BookieBidLayout = ({
     }, [isToday, isRunning, session, setSession, sessionOptionsOverride]);
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans w-full max-w-full overflow-x-hidden">
+        <div className="min-h-screen bg-[#1F2732] font-sans w-full max-w-full overflow-x-hidden">
             {!noHeader && (
-            <div className="bg-gray-100 border-b border-gray-200 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 px-3">
+            <div className="bg-[#181E27] border-b border-[#333D4D] py-2 flex items-center justify-between gap-2 sticky top-0 z-10 px-3">
                 <button
                     onClick={() => {
                         const query = selectedPlayerId ? `?playerId=${selectedPlayerId}` : '';
                         navigate(`/games/${marketId}${query}`);
                     }}
-                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-gray-100 hover:bg-white/20 text-gray-800 rounded-full active:scale-95 transition-colors"
+                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-[#252D3A] hover:bg-primary-500/20 text-white rounded-full active:scale-95 transition-colors border border-[#333D4D]"
                     aria-label="Back"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </button>
-                <h1 className="text-xs sm:text-base md:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-gray-800 min-w-0">
+                <h1 className="text-xs sm:text-base md:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-white min-w-0">
                     {market?.gameName ? `${market.gameName} - ${title}` : title}
                 </h1>
                 <div className="bg-primary-500 text-white px-2 sm:px-3 py-1 rounded-full flex items-center gap-1.5 text-[11px] sm:text-sm font-bold shadow-md shrink-0">
-                    <div className="w-5 h-5 bg-white rounded flex items-center justify-center text-primary-500 text-xs font-bold">₹</div>
+                    <div className="w-5 h-5 bg-[#252D3A] rounded flex items-center justify-center text-primary-400 text-xs font-bold">₹</div>
                     {wallet.toFixed(1)}
                 </div>
             </div>
@@ -131,7 +131,7 @@ const BookieBidLayout = ({
                             }}
                             onKeyDown={(e) => e.preventDefault()}
                             onPaste={(e) => e.preventDefault()}
-                            className="w-full pl-9 sm:pl-10 pr-3 py-2.5 min-h-[44px] h-[44px] bg-gray-100 border border-gray-200 text-gray-800 rounded-full text-xs sm:text-sm font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate"
+                            className="w-full pl-9 sm:pl-10 pr-3 py-2.5 min-h-[44px] h-[44px] bg-[#252D3A] border-2 border-[#333D4D] text-white rounded-full text-xs sm:text-sm font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate"
                             style={{ colorScheme: 'light' }}
                         />
                     </div>
@@ -154,7 +154,7 @@ const BookieBidLayout = ({
                         }}
                         className={`shrink-0 px-2 sm:px-3 py-2.5 min-h-[44px] h-[44px] font-bold text-xs sm:text-sm rounded-full transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-1.5 min-w-[44px] ${
                             isScheduled
-                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-gray-800'
+                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
                                 : 'bg-gradient-to-r from-primary-500 to-primary-600 text-white'
                         }`}
                     >
@@ -175,7 +175,7 @@ const BookieBidLayout = ({
                             value={session}
                             onChange={(e) => setSession(e.target.value)}
                             disabled={lockSessionSelect || (isToday && isRunning)}
-                            className={`w-full appearance-none bg-gray-100 border border-gray-200 text-gray-800 font-bold text-xs sm:text-sm py-2.5 min-h-[44px] h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-primary-500 ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-80 cursor-not-allowed' : ''}`}
+                            className={`w-full appearance-none bg-[#252D3A] border-2 border-[#333D4D] text-white font-bold text-xs sm:text-sm py-2.5 min-h-[44px] h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-primary-500 ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-80 cursor-not-allowed' : ''}`}
                         >
                             {sessionOptions.map((opt) => (
                                 <option key={opt} value={opt}>{opt}</option>
@@ -205,20 +205,20 @@ const BookieBidLayout = ({
 
             {/* Footer */}
             {!noFooter && !hideFooter && (
-                <div className="fixed bottom-0 left-0 right-0 lg:left-56 z-10 py-3 px-3 bg-white/95 backdrop-blur-sm border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+                <div className="fixed bottom-0 left-0 right-0 lg:left-56 z-10 py-3 px-3 bg-[#181E27]/95 backdrop-blur-sm border-t border-[#333D4D] shadow-[0_-2px_10px_rgba(0,0,0,0.2)]">
                     <div className="flex justify-center">
                         <div className={`w-full max-w-sm md:max-w-md rounded-2xl flex flex-col sm:flex-row items-center gap-4 sm:gap-6 ${
-                            showFooterStats ? 'bg-gray-100/95 border border-gray-200 shadow-xl px-4 py-4' : 'bg-transparent p-0'
+                            showFooterStats ? 'bg-[#252D3A] border-2 border-[#333D4D] shadow-xl px-4 py-4' : 'bg-transparent p-0'
                         }`}>
                             {showFooterStats && (
                                 <div className="flex items-center gap-6 sm:gap-8 shrink-0">
                                     <div className="text-center">
                                         <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Bets</div>
-                                        <div className="text-base sm:text-lg font-bold text-primary-500">{bidsCount}</div>
+                                        <div className="text-base sm:text-lg font-bold text-primary-400">{bidsCount}</div>
                                     </div>
                                     <div className="text-center">
                                         <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Points</div>
-                                        <div className="text-base sm:text-lg font-bold text-primary-500">{totalPoints}</div>
+                                        <div className="text-base sm:text-lg font-bold text-primary-400">{totalPoints}</div>
                                     </div>
                                 </div>
                             )}

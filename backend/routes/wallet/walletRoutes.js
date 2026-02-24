@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllWallets, getTransactions, getMyTransactions, adjustBalance, setBalance, getBalance } from '../../controllers/walletController.js';
+import { getAllWallets, getTransactions, getBookieTransactions, getMyTransactions, adjustBalance, setBalance, getBalance } from '../../controllers/walletController.js';
 import { verifyAdmin } from '../../middleware/adminAuth.js';
 
 const router = express.Router();
@@ -7,6 +7,7 @@ const router = express.Router();
 // Admin: list wallets, transactions, adjust (credit/debit), set balance
 router.get('/all', verifyAdmin, getAllWallets);
 router.get('/transactions', verifyAdmin, getTransactions);
+router.get('/bookie-transactions', verifyAdmin, getBookieTransactions);
 router.post('/adjust', verifyAdmin, adjustBalance);
 router.put('/set-balance', verifyAdmin, setBalance);
 

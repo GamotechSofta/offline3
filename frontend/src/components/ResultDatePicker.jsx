@@ -163,25 +163,25 @@ export default function ResultDatePicker({
             </div>
 
             {/* Calendar */}
-            <div className="bg-white text-black px-5 py-4">
+            <div className="bg-[#1F2732] text-white px-5 py-4">
               <div className="flex items-center justify-between mb-4">
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"
+                  className="w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center text-white"
                   aria-label="Previous month"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <div className="text-lg font-semibold text-gray-700">{monthLabel(viewYear, viewMonth)}</div>
+                <div className="text-lg font-semibold text-white">{monthLabel(viewYear, viewMonth)}</div>
                 <button
                   type="button"
                   onClick={handleNext}
                   disabled={!canGoNext}
                   className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    canGoNext ? 'hover:bg-black/5' : 'opacity-30 cursor-not-allowed'
+                    canGoNext ? 'hover:bg-white/10 text-white' : 'opacity-30 cursor-not-allowed text-white'
                   }`}
                   aria-label="Next month"
                 >
@@ -191,7 +191,7 @@ export default function ResultDatePicker({
                 </button>
               </div>
 
-              <div className="grid grid-cols-7 text-center text-xs text-gray-500 font-semibold mb-2">
+              <div className="grid grid-cols-7 text-center text-xs text-gray-400 font-semibold mb-2">
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => (
                   <div key={d} className="py-1">
                     {d}
@@ -215,7 +215,7 @@ export default function ResultDatePicker({
                           ? 'bg-[#0b2b55] text-white'
                           : disabled
                             ? 'text-gray-300 cursor-not-allowed'
-                            : 'text-gray-700 hover:bg-black/5'
+                            : 'text-white hover:bg-white/10'
                       }`}
                       aria-label={`Day ${d.getDate()}`}
                     >
@@ -227,11 +227,11 @@ export default function ResultDatePicker({
             </div>
 
             {/* Actions */}
-            <div className="bg-white px-5 py-4 flex items-center justify-end gap-6">
+            <div className="bg-[#1F2732] px-5 py-4 flex items-center justify-end gap-6 border-t border-gray-700">
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="text-[#0b2b55] font-semibold tracking-wide"
+                className="text-primary-400 font-semibold tracking-wide"
               >
                 CANCEL
               </button>

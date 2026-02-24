@@ -105,14 +105,14 @@ const Records = () => {
         <Layout title="Bets History">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Bets History</h1>
 
-            <div className="bg-white rounded-lg p-4 mb-4 sm:mb-6 border border-gray-200">
+            <div className="bg-[#252D3A] rounded-lg p-4 mb-4 sm:mb-6 border border-[#333D4D]">
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">Bets By:</span>
                     <button
                         type="button"
                         onClick={() => setBetByFilter('all')}
                         className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                            betByFilter === 'all' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                            betByFilter === 'all' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-300 border-[#333D4D]'
                         }`}
                     >
                         All
@@ -121,7 +121,7 @@ const Records = () => {
                         type="button"
                         onClick={() => setBetByFilter('player')}
                         className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                            betByFilter === 'player' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                            betByFilter === 'player' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-300 border-[#333D4D]'
                         }`}
                     >
                         Bets by Player
@@ -130,7 +130,7 @@ const Records = () => {
                         type="button"
                         onClick={() => setBetByFilter('bookie')}
                         className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                            betByFilter === 'bookie' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                            betByFilter === 'bookie' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-300 border-[#333D4D]'
                         }`}
                     >
                         Bets by Bookie
@@ -139,7 +139,7 @@ const Records = () => {
                         type="button"
                         onClick={() => setBetByFilter('market')}
                         className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                            betByFilter === 'market' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                            betByFilter === 'market' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-300 border-[#333D4D]'
                         }`}
                     >
                         Bets by Market
@@ -151,7 +151,7 @@ const Records = () => {
                         <select
                             value={selectedMarketName}
                             onChange={(e) => setSelectedMarketName(e.target.value)}
-                            className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-50 border border-gray-200 text-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-400 min-w-[180px]"
+                            className="px-3 py-2 rounded-lg text-sm font-medium bg-[#1F2732] border border-[#333D4D] text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-400 min-w-[180px]"
                         >
                             <option value="">All markets</option>
                             {uniqueMarketNames.map((name) => (
@@ -167,38 +167,38 @@ const Records = () => {
             {loading ? (
                 <p className="text-gray-400 py-12 text-center">Loading records...</p>
             ) : filteredRecords.length === 0 ? (
-                <div className="bg-white rounded-lg p-8 text-center border border-gray-200">
+                <div className="bg-[#252D3A] rounded-lg p-8 text-center border border-[#333D4D]">
                     <p className="text-gray-500">No records found.</p>
                 </div>
             ) : (
-                <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+                <div className="bg-[#252D3A] rounded-lg overflow-hidden border border-[#333D4D]">
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gray-100">
+                            <thead className="bg-[#1F2732]">
                                 <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Player</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Details</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Market</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Source</th>
-                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase">Credit</th>
-                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase">Debit</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Date</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Details</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Market</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Source</th>
+                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase">Credit</th>
+                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase">Debit</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Date</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {filteredRecords.map((r) => (
-                                    <tr key={r.id} className="hover:bg-gray-50">
+                                    <tr key={r.id} className="hover:bg-[#252D3A]">
                                         <td className="px-4 py-3 text-sm">
                                             <span className={`px-2 py-1 rounded text-xs font-semibold ${r.recordType === 'bet' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
                                                 {r.recordType.toUpperCase()}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-gray-800">{r.playerName}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-700">{r.description || '—'}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-700">{r.marketName || '—'}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600">{r.source || '—'}</td>
+                                        <td className="px-4 py-3 text-sm text-white">{r.playerName}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-300">{r.description || '—'}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-300">{r.marketName || '—'}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-300">{r.source || '—'}</td>
                                         <td className="px-4 py-3 text-sm text-right font-semibold text-green-600">
                                             {r.flow === 'credit' ? formatCurrency(r.amount) : '—'}
                                         </td>
@@ -216,7 +216,7 @@ const Records = () => {
                                                 {String(r.status || 'pending').toUpperCase()}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-gray-600">
+                                        <td className="px-4 py-3 text-sm text-gray-300">
                                             {new Date(r.createdAt).toLocaleString('en-IN')}
                                         </td>
                                     </tr>

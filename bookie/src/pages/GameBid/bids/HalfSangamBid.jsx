@@ -42,7 +42,7 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
 
     const handleDelete = (id) => setBids((prev) => prev.filter((b) => b.id !== id));
 
-    const inputCl = 'flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500';
+    const inputCl = 'flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500';
     const labelCl = 'text-gray-400 text-sm font-medium shrink-0 w-40';
 
     return (
@@ -66,7 +66,7 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
         >
             <div className="px-3 sm:px-4 py-4 md:max-w-4xl md:mx-auto">
                 {warning && (
-                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
+                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
                         {warning}
                     </div>
                 )}
@@ -102,7 +102,7 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
                             className={`w-full font-bold py-3.5 min-h-[48px] rounded-lg shadow-md transition-all active:scale-[0.98] ${
                                 bids.length
                                     ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700'
-                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-[#333D4D] text-gray-500 cursor-not-allowed'
                             }`}
                         >
                             Add to Cart
@@ -123,7 +123,7 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
                                         key={b.id}
                                         className="grid grid-cols-[1.4fr_0.7fr_0.6fr] gap-2 text-center items-center py-2.5 px-3 bg-primary-50 rounded-lg border border-primary-200 text-sm"
                                     >
-                                        <div className="font-bold text-gray-800 truncate">{b.number}</div>
+                                        <div className="font-bold text-white truncate">{b.number}</div>
                                         <div className="font-bold text-primary-500 truncate">{b.points}</div>
                                         <div className="flex justify-center">
                                             <button type="button" onClick={() => handleDelete(b.id)} className="p-2 text-red-500 hover:text-red-600 active:scale-95" aria-label="Delete">

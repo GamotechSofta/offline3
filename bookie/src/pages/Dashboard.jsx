@@ -86,17 +86,17 @@ const formatRangeLabel = (from, to, t) => {
 
 /** Section card wrapper */
 const SectionCard = ({ title, description, icon: Icon, children, linkTo, linkLabel, t }) => (
-    <div className="bg-white rounded-xl p-5 sm:p-6 border border-gray-200 hover:border-gray-200/80 transition-all">
+    <div className="bg-[#252D3A] rounded-xl p-5 sm:p-6 border-2 border-[#333D4D] hover:border-primary-500/50 transition-all">
         <div className="flex items-start justify-between mb-4">
             <div>
-                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                    {Icon && <Icon className="w-5 h-5 text-primary-500" />}
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    {Icon && <Icon className="w-5 h-5 text-primary-400" />}
                     {title}
                 </h3>
-                {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
+                {description && <p className="text-xs text-gray-400 mt-1">{description}</p>}
             </div>
             {linkTo && (
-                <Link to={linkTo} className="text-xs font-medium text-primary-500 hover:text-primary-600 flex items-center gap-1">
+                <Link to={linkTo} className="text-xs font-medium text-primary-400 hover:text-primary-300 flex items-center gap-1">
                     {linkLabel || t('view')} <FaArrowRight className="w-3 h-3" />
                 </Link>
             )}
@@ -106,22 +106,22 @@ const SectionCard = ({ title, description, icon: Icon, children, linkTo, linkLab
 );
 
 /** Stat row */
-const StatRow = ({ label, value, subValue, colorClass = 'text-gray-800' }) => (
-    <div className="flex justify-between items-center py-2.5 border-b border-gray-200 last:border-0">
-        <span className="text-sm text-gray-500">{label}</span>
+const StatRow = ({ label, value, subValue, colorClass = 'text-white' }) => (
+    <div className="flex justify-between items-center py-2.5 border-b border-[#333D4D] last:border-0">
+        <span className="text-sm text-gray-400">{label}</span>
         <div className="text-right">
             <span className={`font-semibold font-mono ${colorClass}`}>{value}</span>
-            {subValue && <span className="text-xs text-gray-500 ml-2">{subValue}</span>}
+            {subValue && <span className="text-xs text-gray-400 ml-2">{subValue}</span>}
         </div>
     </div>
 );
 
 /** Skeleton placeholder */
 const SkeletonCard = () => (
-    <div className="bg-white rounded-xl p-5 border border-gray-200 animate-pulse">
-        <div className="h-3 w-24 bg-gray-100 rounded mb-3" />
-        <div className="h-7 w-32 bg-gray-100 rounded mb-2" />
-        <div className="h-3 w-40 bg-gray-100 rounded" />
+    <div className="bg-[#252D3A] rounded-xl p-5 border-2 border-[#333D4D] animate-pulse">
+        <div className="h-3 w-24 bg-[#333D4D] rounded mb-3" />
+        <div className="h-7 w-32 bg-[#333D4D] rounded mb-2" />
+        <div className="h-3 w-40 bg-[#333D4D] rounded" />
     </div>
 );
 
@@ -277,7 +277,7 @@ const Dashboard = () => {
         return (
             <Layout title={t('dashboard')}>
                 <div className="mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{t('dashboardOverview')}</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('dashboardOverview')}</h1>
                     <p className="text-gray-400 text-sm mt-2">{t('loading')}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -316,7 +316,7 @@ const Dashboard = () => {
             <div className="mb-6">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
                             <span className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center">
                                 <FaChartLine className="w-5 h-5 text-primary-500" />
                             </span>
@@ -328,7 +328,7 @@ const Dashboard = () => {
                         type="button"
                         onClick={handleRefresh}
                         disabled={refreshing}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 transition-all disabled:opacity-60 text-sm font-medium"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#252D3A] hover:bg-primary-500/20 border-2 border-[#333D4D] hover:border-primary-400 text-gray-300 hover:text-primary-400 transition-all disabled:opacity-60 text-sm font-medium"
                     >
                         <FaSyncAlt className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                         {t('refresh')}
@@ -336,7 +336,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Date Filter */}
-                <div className="bg-white rounded-xl p-4 border border-gray-200">
+                <div className="bg-[#252D3A] rounded-xl p-4 border-2 border-[#333D4D]">
                     <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">{t('dateRange')}</p>
                     <div className="flex flex-wrap items-center gap-2">
                         {PRESETS.map((p) => {
@@ -346,7 +346,7 @@ const Dashboard = () => {
                                     key={p.id}
                                     type="button"
                                     onClick={() => handlePresetSelect(p.id)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isActive ? 'bg-primary-500 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'}`}
+                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isActive ? 'bg-primary-500 text-white' : 'bg-[#252D3A] border-2 border-[#333D4D] text-gray-300 hover:bg-[#333D4D]'}`}
                                 >
                                     {p.label}
                                 </button>
@@ -356,19 +356,19 @@ const Dashboard = () => {
                         <button
                             type="button"
                             onClick={handleCustomToggle}
-                            className={`px-4 py-2 rounded-lg text-sm font-semibold ${customMode ? 'bg-primary-500 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'}`}
+                            className={`px-4 py-2 rounded-lg text-sm font-semibold ${customMode ? 'bg-primary-500 text-white' : 'bg-[#252D3A] border-2 border-[#333D4D] text-gray-300 hover:bg-[#333D4D]'}`}
                         >
                             {t('custom')}
                         </button>
                         {customOpen && (
-                            <div className="flex flex-wrap items-end gap-3 w-full mt-3 p-3 rounded-lg bg-white border border-gray-200">
+                            <div className="flex flex-wrap items-end gap-3 w-full mt-3 p-3 rounded-lg bg-[#1F2732] border-2 border-[#333D4D]">
                                 <div>
                                     <label className="block text-xs text-gray-400 mb-1">{t('from')}</label>
-                                    <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" />
+                                    <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="px-3 py-2 rounded-lg bg-[#252D3A] border-2 border-[#333D4D] text-sm text-white" />
                                 </div>
                                 <div>
                                     <label className="block text-xs text-gray-400 mb-1">{t('to')}</label>
-                                    <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" />
+                                    <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="px-3 py-2 rounded-lg bg-[#252D3A] border-2 border-[#333D4D] text-sm text-white" />
                                 </div>
                                 <button type="button" onClick={handleCustomApply} className="px-4 py-2 rounded-lg bg-primary-500 text-white font-semibold text-sm">
                                     {t('apply')}
@@ -381,7 +381,7 @@ const Dashboard = () => {
 
             {/* Action Required */}
             {hasActionRequired && (
-                <div className="mb-6 p-4 rounded-xl bg-primary-500/10 border border-primary-200">
+                <div className="mb-6 p-4 rounded-xl bg-primary-500/10 border border-primary-500/50">
                     <h3 className="text-sm font-semibold text-primary-500 flex items-center gap-2 mb-3">
                         <FaExclamationTriangle className="w-4 h-4" />
                         {t('actionRequired')}
@@ -402,21 +402,21 @@ const Dashboard = () => {
             )}
 
             {/* Market-wise Reports - full width, user-friendly */}
-            <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6">
+            <div className="bg-[#252D3A] rounded-xl border-2 border-[#333D4D] p-5 sm:p-6 mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                             <FaChartBar className="w-5 h-5 text-primary-500" />
                             {t('marketWiseReports')}
                         </h3>
                         <p className="text-sm text-gray-500 mt-0.5">{t('marketWiseReportsDescription')}</p>
                     </div>
                     <div className="w-full sm:w-72 shrink-0">
-                        <label className="block text-xs font-medium text-gray-600 mb-1">{t('selectMarket')}</label>
+                        <label className="block text-xs font-medium text-gray-400 mb-1">{t('selectMarket')}</label>
                         <select
                             value={selectedMarketId}
                             onChange={(e) => setSelectedMarketId(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-shadow"
+                            className="w-full px-4 py-2.5 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-shadow"
                         >
                             <option value="">{t('chooseMarket')}</option>
                             {markets.map((m) => (
@@ -431,53 +431,53 @@ const Dashboard = () => {
                     </div>
                 </div>
                 {marketReportLoading ? (
-                    <div className="flex items-center justify-center gap-3 py-12 rounded-lg bg-gray-50 border border-gray-100">
+                    <div className="flex items-center justify-center gap-3 py-12 rounded-lg bg-[#1F2732] border-2 border-[#333D4D]">
                         <FaSyncAlt className="w-6 h-6 text-primary-500 animate-spin" />
                         <span className="text-gray-500">{t('loadingReport')}</span>
                     </div>
                 ) : selectedMarketId && marketReport ? (
                     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4">
-                        <div className="bg-green-50 rounded-lg p-4 border border-green-100">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('totalRevenue')}</p>
-                            <p className="text-lg font-bold text-green-600 mt-0.5 font-mono">{formatCurrency(marketReport.totalRevenue)}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('totalRevenue')}</p>
+                            <p className="text-lg font-bold text-green-400 mt-0.5 font-mono">{formatCurrency(marketReport.totalRevenue)}</p>
                         </div>
-                        <div className="bg-red-50 rounded-lg p-4 border border-red-100">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('totalPayouts')}</p>
-                            <p className="text-lg font-bold text-red-600 mt-0.5 font-mono">{formatCurrency(marketReport.totalPayouts)}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('totalPayouts')}</p>
+                            <p className="text-lg font-bold text-red-400 mt-0.5 font-mono">{formatCurrency(marketReport.totalPayouts)}</p>
                         </div>
-                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('netProfit')}</p>
-                            <p className="text-lg font-bold text-blue-600 mt-0.5 font-mono">{formatCurrency(marketReport.netProfit)}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('netProfit')}</p>
+                            <p className="text-lg font-bold text-primary-400 mt-0.5 font-mono">{formatCurrency(marketReport.netProfit)}</p>
                         </div>
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('totalBets')}</p>
-                            <p className="text-lg font-bold text-gray-800 mt-0.5 font-mono">{marketReport.totalBets ?? 0}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('totalBets')}</p>
+                            <p className="text-lg font-bold text-white mt-0.5 font-mono">{marketReport.totalBets ?? 0}</p>
                         </div>
-                        <div className="bg-green-50/70 rounded-lg p-4 border border-green-100">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('winningBets')}</p>
-                            <p className="text-lg font-bold text-green-600 mt-0.5 font-mono">{marketReport.winningBets ?? 0}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('winningBets')}</p>
+                            <p className="text-lg font-bold text-green-400 mt-0.5 font-mono">{marketReport.winningBets ?? 0}</p>
                         </div>
-                        <div className="bg-red-50/70 rounded-lg p-4 border border-red-100">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('losingBets')}</p>
-                            <p className="text-lg font-bold text-red-600 mt-0.5 font-mono">{marketReport.losingBets ?? 0}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('losingBets')}</p>
+                            <p className="text-lg font-bold text-red-400 mt-0.5 font-mono">{marketReport.losingBets ?? 0}</p>
                         </div>
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('activePlayers')}</p>
-                            <p className="text-lg font-bold text-gray-800 mt-0.5 font-mono">{marketReport.activeUsers ?? 0}</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('activePlayers')}</p>
+                            <p className="text-lg font-bold text-white mt-0.5 font-mono">{marketReport.activeUsers ?? 0}</p>
                         </div>
-                        <div className="bg-primary-50 rounded-lg p-4 border border-primary-100">
-                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('winRate')}</p>
-                            <p className="text-lg font-bold text-primary-600 mt-0.5 font-mono">{marketReport.winRate ?? 0}%</p>
+                        <div className="bg-[#252D3A] rounded-lg p-4 border border-[#333D4D]">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t('winRate')}</p>
+                            <p className="text-lg font-bold text-primary-400 mt-0.5 font-mono">{marketReport.winRate ?? 0}%</p>
                         </div>
                     </div>
                 ) : selectedMarketId ? (
-                    <div className="flex flex-col items-center justify-center py-12 rounded-lg bg-gray-50 border border-gray-100 text-center">
+                    <div className="flex flex-col items-center justify-center py-12 rounded-lg bg-[#1F2732] border-2 border-[#333D4D] text-center">
                         <FaChartBar className="w-12 h-12 text-gray-300 mb-3" />
                         <p className="text-gray-500 font-medium">{t('noDataForMarket')}</p>
                         <p className="text-sm text-gray-400 mt-1">{t('tryAnotherMarket')}</p>
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center py-12 rounded-lg bg-gray-50/50 border border-dashed border-gray-200 text-center">
+                    <div className="flex flex-col items-center justify-center py-12 rounded-lg bg-[#1F2732]/80 border-2 border-dashed border-[#333D4D] text-center">
                         <FaChartBar className="w-12 h-12 text-gray-300 mb-3" />
                         <p className="text-gray-500 font-medium">{t('selectMarketAbove')}</p>
                         <p className="text-sm text-gray-400 mt-1">{t('youWillSeeRevenue')}</p>
@@ -487,29 +487,29 @@ const Dashboard = () => {
 
             {/* Primary KPIs - Related Financial Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-green-50 to-transparent rounded-xl p-5 border border-green-200">
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalBetAmount')}</p>
-                    <p className="text-2xl font-bold text-green-600 font-mono">{formatCurrency(stats?.revenue?.total || 0)}</p>
+                <div className="bg-[#252D3A] rounded-xl p-5 border border-[#333D4D]">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('totalBetAmount')}</p>
+                    <p className="text-2xl font-bold text-green-400 font-mono">{formatCurrency(stats?.revenue?.total || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('totalBetAmountDescription')}</p>
                 </div>
-                <div className="bg-gradient-to-br from-red-50 to-transparent rounded-xl p-5 border border-red-200">
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('toReceived')}</p>
-                    <p className="text-2xl font-bold text-red-600 font-mono">{formatCurrency(stats?.toTake || 0)}</p>
+                <div className="bg-[#252D3A] rounded-xl p-5 border border-[#333D4D]">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('toReceived')}</p>
+                    <p className="text-2xl font-bold text-red-400 font-mono">{formatCurrency(stats?.toTake || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('moneyToTakeFromPlayers')}</p>
                 </div>
-                <div className="bg-gradient-to-br from-blue-50 to-transparent rounded-xl p-5 border border-blue-200">
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('toGive')}</p>
-                    <p className="text-2xl font-bold text-blue-600 font-mono">{formatCurrency(stats?.toGive || 0)}</p>
+                <div className="bg-[#252D3A] rounded-xl p-5 border border-[#333D4D]">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('toGive')}</p>
+                    <p className="text-2xl font-bold text-primary-400 font-mono">{formatCurrency(stats?.toGive || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('moneyToGiveToPlayers')}</p>
                 </div>
-                <div className="bg-gradient-to-br from-primary-50 to-transparent rounded-xl p-5 border border-primary-200">
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('pending')}</p>
-                    <p className="text-2xl font-bold text-primary-600 font-mono">{formatCurrency(stats?.pending || 0)}</p>
+                <div className="bg-[#252D3A] rounded-xl p-5 border border-[#333D4D]">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('pending')}</p>
+                    <p className="text-2xl font-bold text-primary-400 font-mono">{formatCurrency(stats?.pending || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('pendingBetsAmount')}</p>
                 </div>
-                <div className="bg-gradient-to-br from-purple-50 to-transparent rounded-xl p-5 border border-purple-200">
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalProfit')}</p>
-                    <p className="text-2xl font-bold text-purple-600 font-mono">{formatCurrency(stats?.totalProfit || 0)}</p>
+                <div className="bg-[#252D3A] rounded-xl p-5 border border-[#333D4D]">
+                    <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('totalProfit')}</p>
+                    <p className="text-2xl font-bold text-purple-400 font-mono">{formatCurrency(stats?.totalProfit || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('totalProfitDescription')}</p>
                 </div>
             </div>
@@ -576,22 +576,22 @@ const Dashboard = () => {
             </div>
 
             {/* Revenue Summary */}
-            <div className="bg-white rounded-xl p-5 border border-gray-200 mb-6">
-                <h3 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="bg-[#252D3A] rounded-xl p-5 border-2 border-[#333D4D] mb-6">
+                <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
                     <FaMoneyBillWave className="w-4 h-4 text-primary-500" />
                     {t('revenueSummary')}
                 </h3>
                 <p className="text-xs text-gray-500 mb-4">{t('totalRevenueInRange')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="bg-[#1F2732] rounded-lg p-4 border-2 border-[#333D4D]">
                         <p className="text-gray-500 text-sm mb-1">{t('totalRevenue')}</p>
                         <p className="text-xl font-bold text-green-600 font-mono">{formatCurrency(stats?.revenue?.total)}</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="bg-[#1F2732] rounded-lg p-4 border-2 border-[#333D4D]">
                         <p className="text-gray-500 text-sm mb-1">{t('totalPayouts')}</p>
                         <p className="text-xl font-bold text-red-500 font-mono">{formatCurrency(stats?.revenue?.payouts)}</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="bg-[#1F2732] rounded-lg p-4 border-2 border-[#333D4D]">
                         <p className="text-gray-500 text-sm mb-1">{t('netProfit')}</p>
                         <p className="text-xl font-bold text-blue-600 font-mono">{formatCurrency(stats?.revenue?.netProfit)}</p>
                     </div>
@@ -599,23 +599,23 @@ const Dashboard = () => {
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white rounded-xl p-5 border border-gray-200">
-                <h3 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="bg-[#252D3A] rounded-xl p-5 border-2 border-[#333D4D]">
+                <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
                     <FaClipboardList className="w-4 h-4 text-primary-500" />
                     {t('quickLinks')}
                 </h3>
                 <p className="text-xs text-gray-500 mb-4">{t('navigateToSections')}</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    <Link to="/my-users" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
+                    <Link to="/my-users" className="px-4 py-3 rounded-lg bg-[#252D3A] hover:bg-primary-500/20 border-2 border-[#333D4D] hover:border-primary-400 text-gray-300 hover:text-primary-400 text-sm font-medium transition-all text-center">
                         {t('myPlayers')}
                     </Link>
-                    <Link to="/add-user" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
+                    <Link to="/add-user" className="px-4 py-3 rounded-lg bg-[#252D3A] hover:bg-primary-500/20 border-2 border-[#333D4D] hover:border-primary-400 text-gray-300 hover:text-primary-400 text-sm font-medium transition-all text-center">
                         {t('addPlayer')}
                     </Link>
-                    <Link to="/bet-history" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
+                    <Link to="/bet-history" className="px-4 py-3 rounded-lg bg-[#252D3A] hover:bg-primary-500/20 border-2 border-[#333D4D] hover:border-primary-400 text-gray-300 hover:text-primary-400 text-sm font-medium transition-all text-center">
                         {t('betHistory')}
                     </Link>
-                    <Link to="/reports" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
+                    <Link to="/reports" className="px-4 py-3 rounded-lg bg-[#252D3A] hover:bg-primary-500/20 border-2 border-[#333D4D] hover:border-primary-400 text-gray-300 hover:text-primary-400 text-sm font-medium transition-all text-center">
                         {t('report')}
                     </Link>
                 </div>

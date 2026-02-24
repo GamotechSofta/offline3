@@ -13,9 +13,9 @@ const AviatorSection = () => {
   const openAviator = () => window.open(AVIATOR_BASE_URL, '_blank', 'noopener,noreferrer');
 
   return (
-    <section className="w-full bg-white min-[375px]:pt-2 pb-4 sm:pt-4 sm:pb-6 min-[375px]:px-3 sm:px-4 max-w-full overflow-x-hidden">
+    <section className="w-full bg-[#1F2732] min-[375px]:pt-2 pb-4 sm:pt-4 sm:pb-6 min-[375px]:px-3 sm:px-4 max-w-full overflow-x-hidden">
       {/* Games bar - below hero, above cards */}
-      <div className="flex items-center mt-2 mb-3 min-[375px]:mb-4 w-full -mx-3 min-[375px]:-mx-3 sm:-mx-4 px-3 min-[375px]:px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-primary-50 to-amber-50 border-y border-primary-200/80">
+      <div className="flex items-center mt-2 mb-3 min-[375px]:mb-4 w-full -mx-3 min-[375px]:-mx-3 sm:-mx-4 px-3 min-[375px]:px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-primary-500/20 to-primary-600/20 border-y border-[#333D4D]">
         <div className="flex items-center gap-2">
           <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-primary-500 text-white shadow-sm">
             <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -23,7 +23,7 @@ const AviatorSection = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </span>
-          <h2 className="text-gray-800 text-sm min-[375px]:text-base sm:text-lg font-bold tracking-tight">Games</h2>
+          <h2 className="text-white text-sm min-[375px]:text-base sm:text-lg font-bold tracking-tight">Games</h2>
         </div>
       </div>
 
@@ -34,7 +34,7 @@ const AviatorSection = () => {
             key={index}
             type="button"
             onClick={openAviator}
-            className="bg-white border border-primary-200 rounded-md overflow-hidden shadow-sm transform transition-transform duration-200 cursor-pointer hover:scale-[1.02] hover:border-primary-400 text-left max-w-[140px] min-[375px]:max-w-[160px] sm:max-w-[180px] w-full"
+            className="bg-[#252D3A] border border-[#333D4D] rounded-md overflow-hidden shadow-sm transform transition-transform duration-200 cursor-pointer hover:scale-[1.02] hover:border-primary-400 text-left max-w-[140px] min-[375px]:max-w-[160px] sm:max-w-[180px] w-full"
           >
             <div className="bg-gradient-to-r from-primary-500 to-amber-500 py-0.5 px-1 text-center">
               <p className="text-white text-[8px] min-[375px]:text-[9px] sm:text-[10px] font-semibold leading-tight">

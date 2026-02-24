@@ -80,11 +80,11 @@ const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }
     const modeTabs = (
         <div className="grid grid-cols-2 gap-3">
             <button type="button" onClick={() => setActiveTab('easy')}
-                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-400 border-gray-200 hover:border-primary-500/50'}`}>
+                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-400 border-[#333D4D] hover:border-primary-500/50'}`}>
                 EASY MODE
             </button>
             <button type="button" onClick={() => setActiveTab('special')}
-                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'special' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-400 border-gray-200 hover:border-primary-500/50'}`}>
+                className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'special' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-400 border-[#333D4D] hover:border-primary-500/50'}`}>
                 SPECIAL MODE
             </button>
         </div>
@@ -99,7 +99,7 @@ const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }
             <div className="px-3 sm:px-4 py-4 sm:py-2 md:max-w-3xl md:mx-auto md:items-start">
                 <div className="space-y-4">
                     {warning && (
-                        <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
+                        <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
                             {warning}
                         </div>
                     )}
@@ -109,18 +109,18 @@ const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }
                             <div className="flex flex-col gap-3">
                                 <div className="flex flex-row items-center gap-2">
                                     <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
-                                    <div className="flex-1 min-w-0 bg-gray-100 border border-gray-200 rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-gray-800">{session}</div>
+                                    <div className="flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-white">{session}</div>
                                 </div>
                                 <div className="flex flex-row items-center gap-2">
                                     <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Pana:</label>
                                     <input type="text" inputMode="numeric" value={inputNumber} onChange={handleNumberInputChange} placeholder="Pana" maxLength={3}
-                                        className={`flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${isPanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-primary-500 focus:border-primary-500'}`} />
+                                        className={`flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${isPanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-primary-500 focus:border-primary-500'}`} />
                                 </div>
                                 <div className="flex flex-row items-center gap-2">
                                     <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                     <input ref={pointsInputRef} type="text" inputMode="numeric" value={inputPoints}
                                         onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                        placeholder="Point" className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                        placeholder="Point" className="no-spinner flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                                 </div>
                             </div>
                             <button type="button" onClick={handleAddToCart} className={addToCartBtnClass}>
@@ -132,7 +132,7 @@ const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
                                 {tripleNumbers.map((num, idx) => (
                                     <div key={num} className="flex items-center gap-2">
-                                        <div className="w-12 h-10 bg-gray-100 border border-gray-200 text-primary-500 flex items-center justify-center rounded-l-md font-bold text-sm shrink-0">{num}</div>
+                                        <div className="w-12 h-10 bg-[#1F2732] border border-[#333D4D] text-primary-500 flex items-center justify-center rounded-l-md font-bold text-sm shrink-0">{num}</div>
                                         <input
                                             ref={(el) => { specialInputRefs.current[idx] = el; }}
                                             type="text"
@@ -144,7 +144,7 @@ const TriplePanaBid = ({ title, gameType, betType, embedInSingleScroll = false }
                                                 if (e.key === 'ArrowRight' && idx < tripleNumbers.length - 1) { e.preventDefault(); specialInputRefs.current[idx + 1]?.focus?.(); }
                                                 else if (e.key === 'ArrowLeft' && idx > 0) { e.preventDefault(); specialInputRefs.current[idx - 1]?.focus?.(); }
                                             }}
-                                            className="w-full h-10 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-3 text-sm font-semibold"
+                                            className="w-full h-10 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-3 text-sm font-semibold"
                                         />
                                     </div>
                                 ))}

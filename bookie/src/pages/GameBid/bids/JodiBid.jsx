@@ -163,7 +163,7 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
         >
             <div className="px-2 sm:px-4 py-2 w-full">
                 {warning && (
-                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
+                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
                         {warning}
                     </div>
                 )}
@@ -171,11 +171,11 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
                 {/* Mode Tabs */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                     <button type="button" onClick={() => setActiveTab('easy')}
-                        className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-400 border-gray-200 hover:border-primary-500/50'}`}>
+                        className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'easy' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-400 border-[#333D4D] hover:border-primary-500/50'}`}>
                         EASY MODE
                     </button>
                     <button type="button" onClick={() => setActiveTab('bulk')}
-                        className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'bulk' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-400 border-gray-200 hover:border-primary-500/50'}`}>
+                        className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border active:scale-[0.98] transition-colors ${activeTab === 'bulk' ? 'bg-primary-500 text-white border-primary-500' : 'bg-[#1F2732] text-gray-400 border-[#333D4D] hover:border-primary-500/50'}`}>
                         BULK MODE
                     </button>
                 </div>
@@ -186,19 +186,19 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
                         <div className="flex flex-col gap-3 mb-4">
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
-                                <div className="flex-1 min-w-0 bg-gray-100 border border-gray-200 rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-gray-800">{session}</div>
+                                <div className="flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-white">{session}</div>
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Jodi:</label>
                                 <input type="text" inputMode="numeric" value={inputNumber}
                                     onChange={handleNumberInputChange} placeholder="Jodi" maxLength={2}
-                                    className="flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                    className="flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-gray-400 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                 <input ref={pointsInputRef} type="text" inputMode="numeric" value={inputPoints}
                                     onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                    placeholder="Point" className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                    placeholder="Point" className="no-spinner flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                             </div>
                         </div>
                         <button type="button" onClick={handleEasyAddToCart} className={addToCartBtnClass(true)}>
@@ -208,7 +208,7 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
                 ) : (
                     /* ── Bulk Mode (matrix) — compact single-screen layout ── */
                     <div className="flex flex-col w-full" style={{ maxHeight: 'calc(100vh - 200px)' }}>
-                        <div className="bg-gray-100 border border-gray-200 rounded-2xl p-1.5 sm:p-2 overflow-hidden w-full flex-1 min-h-0">
+                        <div className="bg-[#1F2732] border border-[#333D4D] rounded-2xl p-1.5 sm:p-2 overflow-hidden w-full flex-1 min-h-0">
                             <div className="overflow-x-auto md:overflow-x-hidden scrollbar-hidden h-full">
                                 <div
                                     className="grid w-full gap-[1px] sm:gap-[2px]"
@@ -241,7 +241,7 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
                                             onChange={(e) => setColBulk((p) => ({ ...p, [c]: sanitizePoints(e.target.value) }))}
                                             onBlur={() => { if (colBulk[c]) applyCol(c, colBulk[c]); }}
                                             onKeyDown={(e) => { if (e.key === 'Enter' && colBulk[c]) applyCol(c, colBulk[c]); }}
-                                            className="no-spinner w-full min-w-0 h-5 bg-gray-100 border border-gray-200 text-gray-800 rounded text-[8px] md:text-[10px] text-center placeholder:text-gray-600 focus:outline-none focus:border-primary-500"
+                                            className="no-spinner w-full min-w-0 h-5 bg-[#1F2732] border border-[#333D4D] text-white rounded text-[8px] md:text-[10px] text-center placeholder:text-gray-300 focus:outline-none focus:border-primary-500"
                                         />
                                     ))}
 
@@ -260,7 +260,7 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
                                                     onChange={(e) => setRowBulk((p) => ({ ...p, [r]: sanitizePoints(e.target.value) }))}
                                                     onBlur={() => { if (rowBulk[r]) applyRow(r, rowBulk[r]); }}
                                                     onKeyDown={(e) => { if (e.key === 'Enter' && rowBulk[r]) applyRow(r, rowBulk[r]); }}
-                                                    className="no-spinner h-5 flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 rounded text-[8px] md:text-[10px] text-center placeholder:text-gray-600 focus:outline-none focus:border-primary-500"
+                                                    className="no-spinner h-5 flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white rounded text-[8px] md:text-[10px] text-center placeholder:text-gray-300 focus:outline-none focus:border-primary-500"
                                                 />
                                             </div>
                                             <div className="h-5" />
@@ -283,8 +283,8 @@ const JodiBid = ({ title, gameType, betType, embedInSingleScroll = false }) => {
                                                         }
                                                         className={`no-spinner h-5 w-full rounded text-[8px] md:text-[10px] text-center focus:outline-none focus:border-primary-500 ${
                                                             hasValue
-                                                                ? 'bg-primary-500/15 border border-primary-500/40 text-gray-800 font-semibold'
-                                                                : 'bg-gray-100 border border-gray-200 text-gray-800 placeholder:text-gray-600'
+                                                                ? 'bg-primary-500/15 border border-primary-500/40 text-white font-semibold'
+                                                                : 'bg-[#1F2732] border border-[#333D4D] text-white placeholder:text-gray-300'
                                                         }`}
                                                     />
                                                 );

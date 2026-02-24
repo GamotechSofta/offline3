@@ -381,7 +381,7 @@ const Reports = () => {
                 {/* Header with Refresh */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
                             <span className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center">
                                 <FaMoneyBillWave className="w-5 h-5 text-primary-500" />
                             </span>
@@ -393,7 +393,7 @@ const Reports = () => {
                         type="button"
                         onClick={() => fetchCustomerBalance(true)}
                         disabled={refreshing || loading}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 transition-all disabled:opacity-60 text-sm font-medium"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1F2732] hover:bg-primary-500/20 border border-[#333D4D] hover:border-primary-400 text-gray-300 hover:text-primary-500 transition-all disabled:opacity-60 text-sm font-medium"
                     >
                         <FaSyncAlt className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                         {t('refresh')}
@@ -403,43 +403,43 @@ const Reports = () => {
                 {/* Summary Cards */}
                 {!loading && filteredCustomers.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                        <div className="bg-gradient-to-br from-blue-50 to-transparent rounded-xl p-4 border border-blue-200">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalCustomers')}</p>
-                            <p className="text-xl sm:text-2xl font-bold text-gray-800 font-mono">{filteredCustomers.length}</p>
+                        <div className="bg-[#252D3A] rounded-xl p-4 border border-[#333D4D]">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('totalCustomers')}</p>
+                            <p className="text-xl sm:text-2xl font-bold text-white font-mono">{filteredCustomers.length}</p>
                                     </div>
-                        <div className="bg-gradient-to-br from-red-50 to-transparent rounded-xl p-4 border border-red-200">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                <FaArrowDown className="w-3 h-3" />
+                        <div className="bg-[#252D3A] rounded-xl p-4 border border-[#333D4D]">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <FaArrowDown className="w-3 h-3 text-red-400" />
                                 {t('yene')} ({t('total')})
                             </p>
-                            <p className="text-xl sm:text-2xl font-bold text-red-600 font-mono">{formatCurrency(totalYene)}</p>
+                            <p className="text-xl sm:text-2xl font-bold text-red-400 font-mono">{formatCurrency(totalYene)}</p>
                                 </div>
-                        <div className="bg-gradient-to-br from-blue-50 to-transparent rounded-xl p-4 border border-blue-200">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                <FaArrowUp className="w-3 h-3" />
+                        <div className="bg-[#252D3A] rounded-xl p-4 border border-[#333D4D]">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <FaArrowUp className="w-3 h-3 text-primary-400" />
                                 {t('dene')} ({t('total')})
                             </p>
-                            <p className="text-xl sm:text-2xl font-bold text-blue-600 font-mono">{formatCurrency(totalDene)}</p>
+                            <p className="text-xl sm:text-2xl font-bold text-primary-400 font-mono">{formatCurrency(totalDene)}</p>
                             </div>
-                        <div className="bg-gradient-to-br from-green-50 to-transparent rounded-xl p-4 border border-green-200">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('aad')} ({t('total')})</p>
-                            <p className={`text-xl sm:text-2xl font-bold font-mono ${totalAad >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <div className="bg-[#252D3A] rounded-xl p-4 border border-[#333D4D]">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('aad')} ({t('total')})</p>
+                            <p className={`text-xl sm:text-2xl font-bold font-mono ${totalAad >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                 {formatCurrency(totalAad)}
                             </p>
                                     </div>
-                        <div className="bg-gradient-to-br from-purple-50 to-transparent rounded-xl p-4 border border-purple-200 col-span-2 lg:col-span-1">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('balanceStatus')}</p>
+                        <div className="bg-[#252D3A] rounded-xl p-4 border border-[#333D4D] col-span-2 lg:col-span-1">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">{t('balanceStatus')}</p>
                             <div className="flex items-center gap-2 mt-1">
-                                <span className="text-green-600 font-semibold text-sm">+{positiveBalance}</span>
+                                <span className="text-green-400 font-semibold text-sm">+{positiveBalance}</span>
                                 <span className="text-gray-400">/</span>
-                                <span className="text-red-600 font-semibold text-sm">-{negativeBalance}</span>
+                                <span className="text-red-400 font-semibold text-sm">-{negativeBalance}</span>
                                     </div>
                                 </div>
                             </div>
                 )}
 
                 {/* Search and Filters */}
-                <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 space-y-4">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-4 sm:p-6 space-y-4">
                     {/* Search Bar */}
                     <div className="relative">
                         <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -448,13 +448,13 @@ const Reports = () => {
                             placeholder={t('searchByNameOrSrNo')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base"
+                            className="w-full pl-11 pr-4 py-3 bg-[#1F2732] border border-[#333D4D] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base"
                         />
                         {searchQuery && (
                             <button
                                 type="button"
                                 onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 text-sm"
                             >
                                 ✕
                             </button>
@@ -462,12 +462,12 @@ const Reports = () => {
                         </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-gray-200">
+                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-[#333D4D]">
                         <button
                             type="button"
                             onClick={handleExportCSV}
                             disabled={filteredCustomers.length === 0}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors text-sm shadow-sm hover:shadow-md"
+                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-500 hover:bg-primary-600 disabled:bg-[#333D4D] disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors text-sm shadow-sm hover:shadow-md"
                         >
                             <FaFileCsv className="w-4 h-4" />
                             {t('exportCustomerBalanceCSV')}
@@ -476,7 +476,7 @@ const Reports = () => {
                                     type="button"
                                     onClick={handlePrint}
                             disabled={filteredCustomers.length === 0}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors text-sm shadow-sm hover:shadow-md print:hidden"
+                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#252D3A] hover:bg-[#333D4D] border border-[#333D4D] disabled:bg-[#333D4D] disabled:cursor-not-allowed text-gray-300 rounded-xl font-medium transition-colors text-sm shadow-sm hover:shadow-md print:hidden"
                                 >
                             <FaPrint className="w-4 h-4" />
                             {t('print')}
@@ -486,45 +486,45 @@ const Reports = () => {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-red-500/20 border-l-4 border-red-500 rounded-lg p-4 flex items-start gap-3">
                         <div className="flex-shrink-0">
-                            <FaTimes className="w-5 h-5 text-red-500" />
+                            <FaTimes className="w-5 h-5 text-red-400" />
                         </div>
                         <div className="flex-1">
-                            <p className="text-red-800 font-medium">{t('error')}</p>
-                            <p className="text-red-600 text-sm mt-1">{error}</p>
+                            <p className="text-red-400 font-medium">{t('error')}</p>
+                            <p className="text-red-400/90 text-sm mt-1">{error}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Success Message */}
                 {updateSuccess && (
-                    <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-green-500/20 border-l-4 border-green-500 rounded-lg p-4 flex items-start gap-3">
                         <div className="flex-shrink-0">
-                            <FaCheck className="w-5 h-5 text-green-500" />
+                            <FaCheck className="w-5 h-5 text-green-400" />
                         </div>
                         <div className="flex-1">
-                            <p className="text-green-800 font-medium">{t('success')}</p>
-                            <p className="text-green-600 text-sm mt-1">{updateSuccess}</p>
+                            <p className="text-green-400 font-medium">{t('success')}</p>
+                            <p className="text-green-400/90 text-sm mt-1">{updateSuccess}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Update Error Message */}
                 {updateError && (
-                    <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-red-500/20 border-l-4 border-red-500 rounded-lg p-4 flex items-start gap-3">
                         <div className="flex-shrink-0">
-                            <FaTimes className="w-5 h-5 text-red-500" />
+                            <FaTimes className="w-5 h-5 text-red-400" />
                                         </div>
                         <div className="flex-1">
-                            <p className="text-red-800 font-medium">{t('error')}</p>
-                            <p className="text-red-600 text-sm mt-1">{updateError}</p>
+                            <p className="text-red-400 font-medium">{t('error')}</p>
+                            <p className="text-red-400/90 text-sm mt-1">{updateError}</p>
                                         </div>
                                     </div>
                 )}
 
                 {/* Table */}
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden shadow-sm">
                     {loading ? (
                         <div className="p-12 text-center">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto" />
@@ -541,27 +541,27 @@ const Reports = () => {
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full">
-                                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200 sticky top-0 z-10">
+                                <thead className="bg-[#1F2732] border-b-2 border-[#333D4D] sticky top-0 z-10">
                                     <tr>
-                                        <th className="px-4 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">{t('srNo')}</th>
-                                        <th className="px-4 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[150px]">{t('name')}</th>
-                                        <th className="px-4 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[120px]">{t('yene')}</th>
-                                        <th className="px-4 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[120px]">{t('dene')}</th>
-                                        <th className="px-4 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider min-w-[130px]">{t('aad')}</th>
-                                        <th className="px-4 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider w-24">{t('actions')}</th>
+                                        <th className="px-4 py-4 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">{t('srNo')}</th>
+                                        <th className="px-4 py-4 text-left text-xs font-bold text-gray-300 uppercase tracking-wider min-w-[150px]">{t('name')}</th>
+                                        <th className="px-4 py-4 text-right text-xs font-bold text-gray-300 uppercase tracking-wider min-w-[120px]">{t('yene')}</th>
+                                        <th className="px-4 py-4 text-right text-xs font-bold text-gray-300 uppercase tracking-wider min-w-[120px]">{t('dene')}</th>
+                                        <th className="px-4 py-4 text-right text-xs font-bold text-gray-300 uppercase tracking-wider min-w-[130px]">{t('aad')}</th>
+                                        <th className="px-4 py-4 text-center text-xs font-bold text-gray-300 uppercase tracking-wider w-24">{t('actions')}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100">
+                                <tbody className="divide-y divide-[#333D4D]">
                                     {filteredCustomers.map((customer) => {
                                         const isEditing = editingId === customer.userId;
                                         return (
                                             <tr 
                                                 key={customer.userId} 
-                                                className={`hover:bg-primary-50/50 transition-colors ${isEditing ? 'bg-primary-50' : ''}`}
+                                                className={`hover:bg-primary-500/10 transition-colors ${isEditing ? 'bg-primary-500/10' : ''}`}
                                             >
-                                                <td className="px-4 py-4 text-sm font-medium text-gray-600">{customer.srNo}</td>
+                                                <td className="px-4 py-4 text-sm font-medium text-gray-300">{customer.srNo}</td>
                                                 <td className="px-4 py-4">
-                                                    <div className="font-semibold text-gray-800">{customer.name}</div>
+                                                    <div className="font-semibold text-white">{customer.name}</div>
                                                     {customer.phone && (
                                                         <div className="text-xs text-gray-500 mt-0.5">{customer.phone}</div>
                                                     )}
@@ -575,14 +575,14 @@ const Reports = () => {
                                                                 step="0.01"
                                                                 value={editValues.yene}
                                                                 onChange={(e) => setEditValues({ ...editValues, yene: e.target.value })}
-                                                                className="w-28 px-3 py-2 border-2 border-primary-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-mono"
+                                                                className="w-28 px-3 py-2 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-mono"
                                                                 disabled={updating}
                                                                 autoFocus
                                                             />
                                                         </div>
                                                     ) : (
                                                         <div className="text-right">
-                                                            <span className="font-mono font-semibold text-red-600 text-base">
+                                                            <span className="font-mono font-semibold text-red-400 text-base">
                                                                 {formatCurrency(customer.yene)}
                                                             </span>
                                                         </div>
@@ -597,15 +597,15 @@ const Reports = () => {
                                                                 step="0.01"
                                                                 value={editValues.dene}
                                                                 onChange={(e) => setEditValues({ ...editValues, dene: e.target.value })}
-                                                                className="w-28 px-3 py-2 border-2 border-primary-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-mono"
+                                                                className="w-28 px-3 py-2 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-mono"
                                                                 disabled={updating}
                                                             />
                                                         </div>
                                                     ) : (
                                                         <div className="text-right">
-                                                            <span className="font-mono font-semibold text-blue-600 text-base">
-                                                                {formatCurrency(customer.dene)}
-                                                            </span>
+<span className="font-mono font-semibold text-primary-400 text-base">
+                                                            {formatCurrency(customer.dene)}
+                                                        </span>
                                                         </div>
                                                     )}
                                                 </td>
@@ -613,8 +613,8 @@ const Reports = () => {
                                                     <div className="text-right">
                                                         <span className={`font-mono font-bold text-base ${
                                                             customer.aad >= 0 
-                                                                ? 'text-green-600' 
-                                                                : 'text-red-600'
+                                                                ? 'text-green-400' 
+                                                                : 'text-red-400'
                                                         }`}>
                                                             {formatCurrency(customer.aad)}
                                                         </span>
@@ -662,7 +662,7 @@ const Reports = () => {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => handleEdit(customer)}
-                                                                className="p-2 text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg transition-all shadow-sm hover:shadow-md"
+                                                                className="p-2 text-primary-400 hover:text-white hover:bg-primary-500 rounded-lg transition-all shadow-sm hover:shadow-md"
                                                                 title={t('edit')}
                                                             >
                                                                 <FaEdit className="w-4 h-4" />
@@ -670,7 +670,7 @@ const Reports = () => {
                         <button
                             type="button"
                                                                 onClick={() => handlePrintUser(customer)}
-                                                                className="p-2 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-all shadow-sm hover:shadow-md"
+                                                                className="p-2 text-primary-400 hover:text-white hover:bg-primary-500 rounded-lg transition-all shadow-sm hover:shadow-md"
                                                                 title={t('printUserReport')}
                         >
                                                                 <FaPrint className="w-4 h-4" />
@@ -689,11 +689,11 @@ const Reports = () => {
 
                 {/* Summary Footer */}
                 {!loading && filteredCustomers.length > 0 && (
-                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-4 text-sm">
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-4 text-sm">
                         <div className="flex flex-wrap items-center justify-between gap-4">
-                            <div className="text-gray-600">
+                            <div className="text-gray-300">
                                 <span className="font-medium">{t('showingDataFor')}:</span>{' '}
-                                <span className="font-bold text-gray-800">{filteredCustomers.length}</span>{' '}
+                                <span className="font-bold text-white">{filteredCustomers.length}</span>{' '}
                                 {filteredCustomers.length === 1 ? t('customer') : t('customers')}
                                 {searchQuery && filteredCustomers.length !== customers.length && (
                                     <span className="text-gray-500"> ({t('filteredFrom')} {customers.length})</span>

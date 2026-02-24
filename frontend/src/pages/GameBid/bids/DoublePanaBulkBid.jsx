@@ -294,7 +294,7 @@ const DoublePanaBulkBid = ({ market, title }) => {
                                             if (e.key === 'Enter' && groupBulk[groupKey]) applyGroup(groupBulk[groupKey]);
                                         }}
                                         placeholder="All pts"
-                                        className="no-spinner w-[86px] sm:w-[96px] md:w-[72px] lg:w-[80px] h-9 bg-white border-2 border-primary-200 text-gray-800 placeholder-gray-400 rounded focus:outline-none focus:border-primary-500 px-2 text-xs md:text-[11px] font-semibold text-center"
+                                        className="no-spinner w-[86px] sm:w-[96px] md:w-[72px] lg:w-[80px] h-9 bg-[#252D3A] border-2 border-[#333D4D] text-white placeholder-gray-400 rounded focus:outline-none focus:border-primary-500 px-2 text-xs md:text-[11px] font-semibold text-center"
                                     />
                                     <button
                                         type="button"
@@ -302,7 +302,7 @@ const DoublePanaBulkBid = ({ market, title }) => {
                                         disabled={!groupBulk[groupKey]}
                                         className={`h-9 px-3 rounded-md font-bold text-xs border-2 transition-colors ${
                                             groupBulk[groupKey]
-                                                ? 'bg-white border-primary-400 text-primary-500 hover:border-primary-500 hover:bg-primary-50'
+                                                ? 'bg-[#252D3A] border-primary-400 text-primary-500 hover:border-primary-500 hover:bg-primary-50'
                                                 : 'bg-gray-100 border-primary-200 text-gray-400 cursor-not-allowed'
                                         }`}
                                         title="Apply points to all numbers in this group"
@@ -329,7 +329,7 @@ const DoublePanaBulkBid = ({ market, title }) => {
                                                         [num]: sanitizePoints(e.target.value),
                                                     }))
                                                 }
-                                                className="no-spinner w-full md:w-[64px] lg:w-[72px] h-9 bg-white border-2 border-primary-200 text-gray-800 placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-2 text-xs md:text-[11px] font-semibold text-center"
+                                                className="no-spinner w-full md:w-[64px] lg:w-[72px] h-9 bg-[#252D3A] border-2 border-[#333D4D] text-white placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-2 text-xs md:text-[11px] font-semibold text-center"
                                             />
                                         </div>
                                     ))}

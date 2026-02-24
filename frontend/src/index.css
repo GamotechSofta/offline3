@@ -1,18 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #25d366;
-  --color-primary-hover: #1eb855;
-  --color-primary-50: #e8f8ee;
-  --color-primary-100: #d1f1dd;
-  --color-primary-200: #a3e3bb;
-  --color-primary-300: #75d599;
-  --color-primary-400: #47c777;
-  --color-primary-500: #25d366;
-  --color-primary-600: #1eb855;
-  --color-primary-700: #189345;
-  --color-dark: #1d1f1f;
-  --color-dark-elevated: #252728;
+  /* Blue primary (like reference image) */
+  --color-primary: #2196F3;
+  --color-primary-hover: #1976D2;
+  --color-primary-50: #e3f2fd;
+  --color-primary-100: #bbdefb;
+  --color-primary-200: #90caf9;
+  --color-primary-300: #64b5f6;
+  --color-primary-400: #42a5f5;
+  --color-primary-500: #2196F3;
+  --color-primary-600: #1976D2;
+  --color-primary-700: #1565C0;
+  /* Dark blue-gray backgrounds */
+  --color-dark: #1F2732;
+  --color-dark-elevated: #252D3A;
+  --color-dark-sidebar: #181E27;
+  --color-border-subtle: #333D4D;
 }
 
 @keyframes scroll {
@@ -92,17 +96,17 @@ input[type="number"] {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: #1F2732;
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #25d366;
+  background: #2196F3;
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #1eb855;
+  background: #1976D2;
 }
 
 /* Hide native date input calendar icon */
@@ -117,11 +121,11 @@ input[type="date"]::-webkit-clear-button {
   -webkit-appearance: none;
 }
 
-/* Mobile-first responsive base - dark theme */
+/* Mobile-first responsive base - dark blue-gray theme */
 html {
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
-  background: #1d1f1f;
+  background: #1F2732;
   height: 100%;
 }
 
@@ -130,13 +134,13 @@ body {
   min-height: 100dvh;
   min-height: -webkit-fill-available;
   padding-bottom: env(safe-area-inset-bottom, 0);
-  background: #1d1f1f;
+  background: #1F2732;
   position: relative;
-  color: #e5e7eb;
+  color: #ffffff;
 }
 
 #root {
-  background: #1d1f1f;
+  background: #1F2732;
   min-height: 100%;
   min-height: -webkit-fill-available;
 }

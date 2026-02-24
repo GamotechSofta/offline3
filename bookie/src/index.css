@@ -1,21 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #25d366;
-  --color-primary-50: #e8f8ee;
-  --color-primary-100: #d1f1dd;
-  --color-primary-200: #a3e3bb;
-  --color-primary-300: #75d599;
-  --color-primary-400: #47c777;
-  --color-primary-500: #25d366;
-  --color-primary-600: #1eb855;
-  --color-primary-700: #189345;
-  --color-dark: #1d1f1f;
+  /* Match frontend: blue primary */
+  --color-primary: #2196F3;
+  --color-primary-50: #e3f2fd;
+  --color-primary-100: #bbdefb;
+  --color-primary-200: #90caf9;
+  --color-primary-300: #64b5f6;
+  --color-primary-400: #42a5f5;
+  --color-primary-500: #2196F3;
+  --color-primary-600: #1976D2;
+  --color-primary-700: #1565C0;
+  --color-dark: #1F2732;
+  --color-dark-elevated: #252D3A;
+  --color-dark-sidebar: #181E27;
+  --color-border-subtle: #333D4D;
 }
 
-/* Base - dark theme */
-body {
-  background: #1d1f1f;
+/* Base - dark theme (match frontend) */
+html, body, #root {
+  background: #1F2732;
   color: #e5e7eb;
 }
 
@@ -31,13 +35,13 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* Match theme - button glow */
+/* Match theme - button glow (blue) */
 .glow-primary {
-  box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.15);
+  box-shadow: 0 10px 15px -3px rgba(33, 150, 243, 0.2);
 }
 
 .glow-primary:hover {
-  box-shadow: 0 20px 25px -5px rgba(37, 211, 102, 0.25);
+  box-shadow: 0 20px 25px -5px rgba(33, 150, 243, 0.3);
 }
 
 .glow-red {
@@ -86,11 +90,11 @@ input[type="number"] {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
+  background: #333D4D;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.22);
+  background: #2196F3;
 }
 
 /* Print styles for statement */
@@ -150,6 +154,8 @@ input[type="number"] {
     padding: 0 !important;
     page-break-inside: avoid;
     page-break-after: avoid;
+    background: white !important;
+    color: #111 !important;
   }
   
   #bet-receipt > div,

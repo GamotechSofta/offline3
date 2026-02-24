@@ -75,7 +75,7 @@ const MarketResultHistory = () => {
   }, [results]);
 
   return (
-    <div className="min-h-screen bg-black text-white px-3 sm:px-4 pt-3 pb-28">
+    <div className="min-h-screen bg-[#1F2732] text-white px-3 sm:px-4 pt-3 pb-28">
       <div className="w-full max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-4">
           <button

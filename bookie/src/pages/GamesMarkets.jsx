@@ -86,9 +86,9 @@ const GamesMarkets = () => {
 
     return (
         <Layout title="Games">
-            <div className="min-w-0 max-w-full" style={{ backgroundColor: 'rgb(248, 249, 250)' }}>
+            <div className="min-w-0 max-w-full bg-[#1F2732]">
                 <div className="mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 text-gray-800">
+                    <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 text-white">
                         <FaDice className="text-primary-500" />
                         Games
                     </h1>
@@ -96,17 +96,17 @@ const GamesMarkets = () => {
                 </div>
 
                 {error && (
-                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">{error}</div>
+                    <div className="mb-4 p-4 bg-red-500/20 border border-red-500 rounded-lg text-red-400 text-sm">{error}</div>
                 )}
 
                 {loading ? (
                     <div className="flex items-center justify-center py-16">
-                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-primary-500"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#333D4D] border-t-primary-500"></div>
                     </div>
                 ) : availableMarkets.length === 0 ? (
                     <div className="text-center py-12">
                         <FaClock className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                        <p className="text-gray-600">No markets available</p>
+                        <p className="text-gray-300">No markets available</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -125,7 +125,7 @@ const GamesMarkets = () => {
                                     type="button"
                                     onClick={() => isClickable && handleMarketClick(market._id)}
                                     disabled={!isClickable}
-                                    className={`text-left w-full bg-white rounded-xl border border-black p-3 transition-all ${
+                                    className={`text-left w-full bg-[#252D3A] rounded-xl border border-[#333D4D] p-3 transition-all ${
                                         isClickable
                                             ? 'hover:shadow-lg cursor-pointer'
                                             : 'opacity-70 cursor-not-allowed'
@@ -134,7 +134,7 @@ const GamesMarkets = () => {
                                     {/* Clear market status: open for bets vs closed */}
                                     <div className="flex justify-center mb-1.5">
                                         {isClosed ? (
-                                            <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold bg-gray-200 text-gray-600">
+                                            <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[#333D4D] text-gray-300">
                                                 Closed
                                             </span>
                                         ) : (
@@ -147,11 +147,11 @@ const GamesMarkets = () => {
                                         {/* Left: Open — bets until opening time; after that open is closed for bets */}
                                         <div className="flex flex-col items-start shrink-0 w-[72px] sm:w-[80px]">
                                             <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                                                isClosed ? 'bg-gray-100 text-gray-400' : openActive ? 'bg-green-500 text-white' : 'bg-green-100 text-green-600'
+                                                isClosed ? 'bg-[#333D4D] text-gray-400' : openActive ? 'bg-green-500 text-white' : 'bg-green-500/20 text-green-400'
                                             }`}>
                                                 open
                                             </span>
-                                            <span className="text-xs text-black mt-0.5 font-normal">
+                                            <span className="text-xs text-gray-300 mt-0.5 font-normal">
                                                 {formatTimeLabel(market.startingTime)}
                                             </span>
                                             <span className="text-[9px] text-gray-500 mt-0.5 max-w-[72px] leading-tight">
@@ -160,12 +160,12 @@ const GamesMarkets = () => {
                                         </div>
                                         {/* Center: market name (full, one line) + which session + rule summary */}
                                         <div className="flex-1 flex flex-col items-center justify-center min-w-0 px-1 sm:px-2 overflow-hidden">
-                                            <h3 title={getMarketDisplayName(market, language)} className="text-sm sm:text-base font-bold text-black w-full min-w-0 overflow-x-auto overflow-y-hidden scrollbar-hidden text-center leading-tight">
+                                            <h3 title={getMarketDisplayName(market, language)} className="text-sm sm:text-base font-bold text-white w-full min-w-0 overflow-x-auto overflow-y-hidden scrollbar-hidden text-center leading-tight">
                                                 <span className="whitespace-nowrap inline-block">{getMarketDisplayName(market, language)}</span>
                                             </h3>
                                             {!isClosed ? (
                                                 <>
-                                                    <p className="text-[10px] font-medium text-primary-600 mt-0.5">
+                                                    <p className="text-[10px] font-medium text-primary-400 mt-0.5">
                                                         Bets on: {openActive ? 'Open' : 'Close'}
                                                     </p>
                                                     <p className="text-[9px] text-gray-500 mt-0.5 text-center leading-tight">
@@ -173,18 +173,18 @@ const GamesMarkets = () => {
                                                     </p>
                                                 </>
                                             ) : null}
-                                            <p className="text-xs text-black font-mono font-normal tracking-wide mt-0.5">
+                                            <p className="text-xs text-gray-300 font-mono font-normal tracking-wide mt-0.5">
                                                 {resultDisplay}
                                             </p>
                                         </div>
                                         {/* Right: Close — bets until closing time; after that market is closed */}
                                         <div className="flex flex-col items-end shrink-0 w-[72px] sm:w-[80px]">
                                             <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                                                isClosed ? 'bg-gray-100 text-gray-400' : closeActive ? 'bg-red-500 text-white' : 'bg-red-100 text-red-600'
+                                                isClosed ? 'bg-[#333D4D] text-gray-400' : closeActive ? 'bg-red-500 text-white' : 'bg-red-500/20 text-red-400'
                                             }`}>
                                                 close
                                             </span>
-                                            <span className="text-xs text-black mt-0.5 font-normal">
+                                            <span className="text-xs text-gray-300 mt-0.5 font-normal">
                                                 {formatTimeLabel(market.closingTime)}
                                             </span>
                                             <span className="text-[9px] text-gray-500 mt-0.5 text-right max-w-[72px] leading-tight">

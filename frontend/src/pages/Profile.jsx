@@ -243,40 +243,40 @@ const Profile = () => {
   /* ── Reusable blocks (rendered in both mobile & desktop layouts) ── */
 
   const heroCard = (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-50 via-white to-primary-50 border-2 border-primary-200 shadow-xl">
-      <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-primary-100/50 blur-2xl" />
-      <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-primary-100/50 blur-2xl" />
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500/20 via-[#252D3A] to-primary-500/20 border-2 border-[#333D4D] shadow-xl">
+      <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-primary-500/20 blur-2xl" />
+      <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-primary-500/20 blur-2xl" />
       <div className="relative p-5 md:p-6">
         <div className="flex items-center gap-4 mb-5">
           <div className="relative">
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white text-2xl md:text-3xl font-bold shadow-lg shadow-primary-500/30">
               {avatarInitial}
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full bg-green-500 border-2 border-white" />
+            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full bg-green-500 border-2 border-[#252D3A]" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-gray-800 font-bold text-lg md:text-xl truncate leading-tight">
+            <h3 className="text-white font-bold text-lg md:text-xl truncate leading-tight">
               {form.username || 'User'}
             </h3>
-            <p className="text-gray-600 text-sm truncate mt-0.5">
+            <p className="text-gray-300 text-sm truncate mt-0.5">
               {form.email || form.phone || 'No contact info'}
             </p>
             <div className="flex items-center gap-1.5 mt-1.5">
-              <div className="px-2 py-0.5 rounded-full bg-green-100 border border-green-300">
-                <span className="text-green-600 text-[10px] font-semibold uppercase tracking-wider">Active</span>
+              <div className="px-2 py-0.5 rounded-full bg-green-500/20 border border-green-400">
+                <span className="text-green-400 text-[10px] font-semibold uppercase tracking-wider">Active</span>
               </div>
             </div>
           </div>
         </div>
-        <div className="rounded-2xl bg-white border-2 border-primary-200 p-4 shadow-sm">
+        <div className="rounded-2xl bg-[#1F2732] border-2 border-[#333D4D] p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 text-xs font-medium uppercase tracking-wider mb-1">Wallet Balance</p>
-              <p className="text-primary-500 text-2xl md:text-3xl font-extrabold tracking-tight">
+              <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Wallet Balance</p>
+              <p className="text-primary-400 text-2xl md:text-3xl font-extrabold tracking-tight">
                 ₹{walletValue !== null ? walletValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-primary-50 border-2 border-primary-200 flex items-center justify-center text-primary-500">
+            <div className="w-12 h-12 rounded-2xl bg-primary-500/20 border-2 border-primary-400 flex items-center justify-center text-primary-400">
               <IconWallet />
             </div>
           </div>
@@ -292,12 +292,12 @@ const Profile = () => {
           key={action.label}
           type="button"
           onClick={() => navigate(action.path)}
-          className="flex flex-col items-center gap-2 py-3 px-1 rounded-2xl bg-white border-2 border-primary-200 hover:border-primary-300 active:scale-95 transition-all md:py-4 md:hover:bg-primary-50 shadow-sm"
+          className="flex flex-col items-center gap-2 py-3 px-1 rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] hover:border-primary-400 active:scale-95 transition-all md:py-4 md:hover:bg-primary-500/20 shadow-sm"
         >
           <div className={`w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center text-white shadow-lg`}>
             {action.icon}
           </div>
-          <span className="text-gray-700 text-[11px] md:text-xs font-medium leading-tight text-center">{action.label}</span>
+          <span className="text-white text-[11px] md:text-xs font-medium leading-tight text-center">{action.label}</span>
         </button>
       ))}
     </div>
@@ -310,7 +310,7 @@ const Profile = () => {
         label === 'User ID' ? userId : infoFields.find(f => f.label === label)?.value,
         label
       )}
-      className="p-1.5 rounded-lg hover:bg-primary-100 text-gray-500 hover:text-primary-600 transition-colors"
+      className="p-1.5 rounded-lg hover:bg-primary-500/20 text-gray-400 hover:text-primary-400 transition-colors"
       title={`Copy ${label}`}
     >
       {copiedField === label ? (
@@ -324,32 +324,32 @@ const Profile = () => {
   );
 
   const accountInfoBlock = (
-    <div className="rounded-3xl bg-white border-2 border-primary-200 overflow-hidden shadow-sm">
+    <div className="rounded-3xl bg-[#252D3A] border-2 border-[#333D4D] overflow-hidden shadow-sm">
       <div className="px-5 pt-5 pb-3">
-        <h3 className="text-gray-800 font-semibold text-sm uppercase tracking-wider">Account Information</h3>
+        <h3 className="text-white font-semibold text-sm uppercase tracking-wider">Account Information</h3>
       </div>
       <div className="px-4 pb-2">
         {/* User ID */}
-        <div className="group flex items-center gap-3.5 px-3 py-3.5 rounded-2xl hover:bg-primary-50 transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-600 shrink-0">
+        <div className="group flex items-center gap-3.5 px-3 py-3.5 rounded-2xl hover:bg-primary-500/10 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-[#1F2732] flex items-center justify-center text-gray-400 shrink-0">
             <IconId />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">User ID</p>
-            <p className="text-gray-800 text-sm font-mono truncate mt-0.5">{userId}</p>
+            <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">User ID</p>
+            <p className="text-white text-sm font-mono truncate mt-0.5">{userId}</p>
           </div>
           {renderCopyBtn('User ID')}
         </div>
 
         {/* Info fields */}
         {infoFields.map((field) => (
-          <div key={field.label} className="group flex items-center gap-3.5 px-3 py-3.5 rounded-2xl hover:bg-primary-50 transition-colors">
-            <div className={`w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0 ${field.color}`}>
+          <div key={field.label} className="group flex items-center gap-3.5 px-3 py-3.5 rounded-2xl hover:bg-primary-500/10 transition-colors">
+            <div className={`w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center shrink-0 ${field.color}`}>
               {field.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">{field.label}</p>
-              <p className={`text-gray-800 text-sm font-medium truncate mt-0.5 ${field.capitalize ? 'capitalize' : ''}`}>
+              <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">{field.label}</p>
+              <p className={`text-white text-sm font-medium truncate mt-0.5 ${field.capitalize ? 'capitalize' : ''}`}>
                 {field.value}
               </p>
             </div>
@@ -360,12 +360,12 @@ const Profile = () => {
         {/* Member Since */}
         {memberSince && (
           <div className="flex items-center gap-3.5 px-3 py-3.5 rounded-2xl">
-            <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-500 shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center text-primary-400 shrink-0">
               <IconCalendar />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">Member Since</p>
-              <p className="text-gray-800 text-sm font-medium mt-0.5">{memberSince}</p>
+              <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">Member Since</p>
+              <p className="text-white text-sm font-medium mt-0.5">{memberSince}</p>
             </div>
           </div>
         )}
@@ -377,7 +377,7 @@ const Profile = () => {
     <button
       type="button"
       onClick={handleLogout}
-      className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-red-50 border-2 border-red-200 text-red-600 font-semibold hover:bg-red-100 hover:border-red-300 active:scale-[0.98] transition-all"
+      className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-red-500/20 border-2 border-red-400/50 text-red-400 font-semibold hover:bg-red-500/30 hover:border-red-400 active:scale-[0.98] transition-all"
     >
       <IconLogout />
       <span>Sign Out</span>
@@ -385,28 +385,28 @@ const Profile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] md:pb-8">
+    <div className="min-h-screen bg-[#1F2732] text-white pb-[calc(6rem+env(safe-area-inset-bottom,0px))] md:pb-8">
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-[fadeSlideDown_0.3s_ease] px-4 w-full max-w-sm">
-          <div className="rounded-2xl border-2 border-primary-300 bg-white backdrop-blur-xl px-4 py-3 text-sm text-primary-600 text-center shadow-2xl">
+          <div className="rounded-2xl border-2 border-primary-400 bg-[#252D3A] backdrop-blur-xl px-4 py-3 text-sm text-primary-400 text-center shadow-2xl">
             {toast}
           </div>
         </div>
       )}
 
       {/* ── Header Bar ── */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-primary-200 shadow-sm">
+      <div className="sticky top-0 z-40 bg-[#1F2732]/95 backdrop-blur-xl border-b border-[#333D4D] shadow-sm">
         <div className="flex items-center gap-3 px-4 py-3 max-w-lg md:max-w-6xl mx-auto">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center hover:bg-gray-200 active:scale-95 transition-all text-gray-700"
+            className="w-9 h-9 rounded-full bg-[#252D3A] border border-[#333D4D] flex items-center justify-center hover:bg-primary-500/20 active:scale-95 transition-all text-white"
             aria-label="Back"
           >
             <IconBack />
           </button>
-          <h2 className="text-base md:text-lg font-semibold tracking-wide flex-1 text-gray-800">My Profile</h2>
+          <h2 className="text-base md:text-lg font-semibold tracking-wide flex-1 text-white">My Profile</h2>
         </div>
       </div>
 
@@ -433,35 +433,35 @@ const Profile = () => {
           {/* ── Right Content ── */}
           <div className="space-y-5">
             {/* Account Info — expanded for desktop */}
-            <div className="rounded-3xl bg-white border-2 border-primary-200 overflow-hidden shadow-sm">
-              <div className="px-6 pt-6 pb-4 border-b border-primary-200">
-                <h3 className="text-gray-800 font-semibold text-base uppercase tracking-wider">Account Information</h3>
-                <p className="text-gray-600 text-sm mt-1">Your personal details and account data</p>
+            <div className="rounded-3xl bg-[#252D3A] border-2 border-[#333D4D] overflow-hidden shadow-sm">
+              <div className="px-6 pt-6 pb-4 border-b border-[#333D4D]">
+                <h3 className="text-white font-semibold text-base uppercase tracking-wider">Account Information</h3>
+                <p className="text-gray-400 text-sm mt-1">Your personal details and account data</p>
               </div>
 
               {/* 2-col grid for info fields on desktop */}
               <div className="p-5 grid grid-cols-2 gap-4">
                 {/* User ID - full width */}
-                <div className="col-span-2 group flex items-center gap-4 px-4 py-4 rounded-2xl bg-primary-50 border-2 border-primary-200 hover:border-primary-300 transition-colors">
-                  <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-gray-600 shrink-0">
+                <div className="col-span-2 group flex items-center gap-4 px-4 py-4 rounded-2xl bg-primary-500/10 border-2 border-[#333D4D] hover:border-primary-400 transition-colors">
+                  <div className="w-11 h-11 rounded-xl bg-[#1F2732] flex items-center justify-center text-gray-400 shrink-0">
                     <IconId />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">User ID</p>
-                    <p className="text-gray-800 text-sm font-mono truncate mt-0.5">{userId}</p>
+                    <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">User ID</p>
+                    <p className="text-white text-sm font-mono truncate mt-0.5">{userId}</p>
                   </div>
                   {renderCopyBtn('User ID')}
                 </div>
 
                 {/* Info fields as cards */}
                 {infoFields.map((field) => (
-                  <div key={field.label} className="group flex items-center gap-4 px-4 py-4 rounded-2xl bg-primary-50 border-2 border-primary-200 hover:border-primary-300 transition-colors">
-                    <div className={`w-11 h-11 rounded-xl bg-white flex items-center justify-center shrink-0 ${field.color}`}>
+                  <div key={field.label} className="group flex items-center gap-4 px-4 py-4 rounded-2xl bg-primary-500/10 border-2 border-[#333D4D] hover:border-primary-400 transition-colors">
+                    <div className={`w-11 h-11 rounded-xl bg-primary-500/20 flex items-center justify-center shrink-0 ${field.color}`}>
                       {field.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">{field.label}</p>
-                      <p className={`text-gray-800 text-sm font-medium truncate mt-0.5 ${field.capitalize ? 'capitalize' : ''}`}>
+                      <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">{field.label}</p>
+                      <p className={`text-white text-sm font-medium truncate mt-0.5 ${field.capitalize ? 'capitalize' : ''}`}>
                         {field.value}
                       </p>
                     </div>
@@ -470,13 +470,13 @@ const Profile = () => {
                 ))}
 
                 {/* Wallet balance card */}
-                <div className="group flex items-center gap-4 px-4 py-4 rounded-2xl bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-200 hover:border-primary-300 transition-colors">
-                  <div className="w-11 h-11 rounded-xl bg-primary-100 flex items-center justify-center text-primary-500 shrink-0">
+                <div className="group flex items-center gap-4 px-4 py-4 rounded-2xl bg-gradient-to-r from-primary-500/10 to-primary-500/20 border-2 border-[#333D4D] hover:border-primary-400 transition-colors">
+                  <div className="w-11 h-11 rounded-xl bg-primary-500/20 flex items-center justify-center text-primary-400 shrink-0">
                     <IconWallet />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">Account Balance</p>
-                    <p className="text-primary-500 text-base font-bold mt-0.5">
+                    <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">Account Balance</p>
+                    <p className="text-primary-400 text-base font-bold mt-0.5">
                       ₹{walletValue !== null ? walletValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
                     </p>
                   </div>
@@ -484,13 +484,13 @@ const Profile = () => {
 
                 {/* Member Since card */}
                 {memberSince && (
-                  <div className="group flex items-center gap-4 px-4 py-4 rounded-2xl bg-primary-50 border-2 border-primary-200 hover:border-primary-300 transition-colors">
-                    <div className="w-11 h-11 rounded-xl bg-primary-50 flex items-center justify-center text-primary-500 shrink-0">
+                  <div className="group flex items-center gap-4 px-4 py-4 rounded-2xl bg-primary-500/10 border-2 border-[#333D4D] hover:border-primary-400 transition-colors">
+                    <div className="w-11 h-11 rounded-xl bg-primary-500/20 flex items-center justify-center text-primary-400 shrink-0">
                       <IconCalendar />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-gray-600 text-[10px] font-medium uppercase tracking-wider">Member Since</p>
-                      <p className="text-gray-800 text-sm font-medium mt-0.5">{memberSince}</p>
+                      <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">Member Since</p>
+                      <p className="text-white text-sm font-medium mt-0.5">{memberSince}</p>
                     </div>
                   </div>
                 )}
@@ -499,28 +499,28 @@ const Profile = () => {
 
             {/* Quick Stats Bar */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="rounded-2xl bg-white border-2 border-primary-200 p-5 text-center hover:border-primary-300 transition-colors shadow-sm">
-                <p className="text-gray-600 text-[10px] font-semibold uppercase tracking-wider mb-2">Account Status</p>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 border border-green-300">
+              <div className="rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] p-5 text-center hover:border-primary-400 transition-colors shadow-sm">
+                <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-2">Account Status</p>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/20 border border-green-400">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-green-600 text-xs font-bold">Active</span>
+                  <span className="text-green-400 text-xs font-bold">Active</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/passbook')}
-                className="rounded-2xl bg-white border-2 border-primary-200 p-5 text-center hover:border-primary-300 transition-colors active:scale-[0.98] shadow-sm"
+                className="rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] p-5 text-center hover:border-primary-400 transition-colors active:scale-[0.98] shadow-sm"
               >
-                <p className="text-gray-600 text-[10px] font-semibold uppercase tracking-wider mb-2">Passbook</p>
-                <p className="text-gray-800 text-sm font-bold">View Transactions</p>
+                <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-2">Passbook</p>
+                <p className="text-white text-sm font-bold">View Transactions</p>
               </button>
               <button
                 type="button"
                 onClick={() => navigate('/bet-history')}
-                className="rounded-2xl bg-white border-2 border-primary-200 p-5 text-center hover:border-primary-300 transition-colors active:scale-[0.98] shadow-sm"
+                className="rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] p-5 text-center hover:border-primary-400 transition-colors active:scale-[0.98] shadow-sm"
               >
-                <p className="text-gray-600 text-[10px] font-semibold uppercase tracking-wider mb-2">Bet History</p>
-                <p className="text-gray-800 text-sm font-bold">View All Bets</p>
+                <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-2">Bet History</p>
+                <p className="text-white text-sm font-bold">View All Bets</p>
               </button>
             </div>
           </div>

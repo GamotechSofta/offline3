@@ -102,9 +102,9 @@ const BottomNavbar = () => {
         paddingRight: 'max(0.75rem, env(safe-area-inset-right))',
       }}
     >
-      {/* Backplate to prevent white background showing behind navbar */}
-      <div className="absolute inset-0 bg-white pointer-events-none" />
-      <div className="relative bg-white rounded-3xl border-2 border-primary-200 shadow-lg flex items-end justify-around px-1 py-2 min-h-[64px]">
+      {/* Backplate to match page background */}
+      <div className="absolute inset-0 bg-[#1F2732] pointer-events-none" />
+      <div className="relative bg-[#1F2732] rounded-3xl border-2 border-[#333D4D] shadow-lg flex items-end justify-around px-1 py-2 min-h-[64px]">
         {navItems.map((item) => {
           const active = isActive(item.path);
           const isCenter = item.isCenter;
@@ -125,8 +125,8 @@ const BottomNavbar = () => {
                 <div
                   className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 ${
                     active
-                      ? 'bg-primary ring-2 ring-primary/60 ring-offset-2 ring-offset-[#1d1f1f] scale-105'
-                      : 'bg-primary-50 border-2 border-primary-200'
+                      ? 'bg-primary ring-2 ring-primary/60 ring-offset-2 ring-offset-[#1F2732] scale-105'
+                      : 'bg-primary-500/20 border-2 border-primary-400'
                   }`}
                 >
                   {/* Icon: gray when inactive, white when active (on primary bg) */}
@@ -140,7 +140,7 @@ const BottomNavbar = () => {
                 </div>
                 <span
                   className={`text-[10px] sm:text-xs font-bold mt-1 transition-colors duration-200 ${
-                    active ? 'text-primary' : 'text-gray-600'
+                    active ? 'text-primary' : 'text-gray-300'
                   }`}
                 >
                   {item.label}
@@ -177,7 +177,7 @@ const BottomNavbar = () => {
               </div>
               <span
                 className={`text-[10px] sm:text-xs font-bold transition-colors duration-200 ${
-                  active ? 'text-primary' : 'text-gray-600'
+                  active ? 'text-primary' : 'text-gray-300'
                 }`}
               >
                 {item.label}

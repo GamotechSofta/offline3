@@ -873,13 +873,13 @@ const Receipt = () => {
                         >
                             <FaArrowLeft className="w-3 h-3" /> {t('receipts')}
                         </button>
-                        <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+                        <h1 className="text-xl sm:text-2xl font-bold text-white">
                             {t('receipt')}
                         </h1>
                     </div>
 
                     {/* Receipt Content */}
-                    <div id="bet-receipt" className="bg-white rounded-xl border border-gray-200 overflow-hidden print:border-2 print:border-gray-800 print:rounded-none print:m-0 print:p-0">
+                    <div id="bet-receipt" className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden print:border-2 print:border-gray-800 print:rounded-none print:m-0 print:p-0">
                         <div className="p-6 max-w-3xl mx-auto print:p-0 print:max-w-none receipt-container print:m-0">
                             {/* Print button */}
                             <div className="mb-4 print:hidden flex justify-end">
@@ -893,42 +893,42 @@ const Receipt = () => {
                             </div>
 
                             {/* Receipt Header */}
-                            <div className="border-2 border-gray-300 rounded-lg p-3 print:border-gray-800 print:rounded-none print:p-2">
+                            <div className="border-2 border-[#333D4D] rounded-lg p-3 print:border-gray-800 print:rounded-none print:p-2">
                                 {/* Title */}
-                                <div className="text-center mb-2 pb-1.5 border-b-2 border-gray-300 print:border-gray-800">
-                                    <h2 className="text-lg font-bold text-gray-800 print:text-base">BET RECEIPT</h2>
+                                <div className="text-center mb-2 pb-1.5 border-b-2 border-[#333D4D] print:border-gray-800">
+                                    <h2 className="text-lg font-bold text-white print:text-base">BET RECEIPT</h2>
                                 </div>
 
                                 {/* Header Info - Single Row Compact */}
-                                <div className="mb-1.5 pb-1.5 border-b border-gray-200 text-[10px] print:text-[8px]">
+                                <div className="mb-1.5 pb-1.5 border-b border-[#333D4D] text-[10px] print:text-[8px]">
                                     <div className="flex flex-wrap justify-between gap-x-3 gap-y-0.5">
-                                        <span><span className="text-gray-500">Date:</span> <span className="font-semibold text-gray-800">{formatDate(selectedSession.createdAt)}</span></span>
-                                        <span><span className="text-gray-500">Market:</span> <span className="font-semibold text-gray-800">{selectedSession.marketName}</span></span>
-                                        <span><span className="text-gray-500">Time:</span> <span className="font-semibold text-gray-800">{formatDateTime(selectedSession.createdAt)}</span></span>
+                                        <span><span className="text-gray-500">Date:</span> <span className="font-semibold text-white">{formatDate(selectedSession.createdAt)}</span></span>
+                                        <span><span className="text-gray-500">Market:</span> <span className="font-semibold text-white">{selectedSession.marketName}</span></span>
+                                        <span><span className="text-gray-500">Time:</span> <span className="font-semibold text-white">{formatDateTime(selectedSession.createdAt)}</span></span>
                                     </div>
                                 </div>
 
                                 {/* Player Info - Single Row Compact */}
-                                <div className="mb-1.5 pb-1.5 border-b border-gray-200 text-[10px] print:text-[8px]">
+                                <div className="mb-1.5 pb-1.5 border-b border-[#333D4D] text-[10px] print:text-[8px]">
                                     <div className="flex flex-wrap justify-between gap-x-3">
-                                        <span><span className="text-gray-500">Player:</span> <span className="font-semibold text-gray-800">{selectedSession.playerName}</span></span>
-                                        <span><span className="text-gray-500">Phone:</span> <span className="font-semibold text-gray-800">{selectedSession.playerPhone || '—'}</span></span>
+                                        <span><span className="text-gray-500">Player:</span> <span className="font-semibold text-white">{selectedSession.playerName}</span></span>
+                                        <span><span className="text-gray-500">Phone:</span> <span className="font-semibold text-white">{selectedSession.playerPhone || '—'}</span></span>
                                     </div>
                                 </div>
 
                                 {/* Market Results - Compact */}
                                 {(marketDetails?.openingNumber || marketDetails?.closingNumber) && (
-                                    <div className="mb-1.5 pb-1.5 border-b border-gray-200 text-[10px] print:text-[8px]">
+                                    <div className="mb-1.5 pb-1.5 border-b border-[#333D4D] text-[10px] print:text-[8px]">
                                         <div className="flex flex-wrap justify-between gap-x-3">
                                             <span>
                                                 <span className="text-gray-500">Open:</span> 
-                                                <span className="font-mono font-bold text-gray-800 ml-1">
+                                                <span className="font-mono font-bold text-white ml-1">
                                                     {marketDetails.openingNumber || '—'}
                                                 </span>
                                             </span>
                                             <span>
                                                 <span className="text-gray-500">Close:</span> 
-                                                <span className="font-mono font-bold text-gray-800 ml-1">
+                                                <span className="font-mono font-bold text-white ml-1">
                                                     {marketDetails.closingNumber || '—'}
                                                 </span>
                                             </span>
@@ -946,18 +946,18 @@ const Receipt = () => {
 
                                 {/* Bets Table - Two Column Layout */}
                                 <div className="mb-1.5">
-                                    <h3 className="text-xs font-bold text-gray-800 mb-0.5 print:text-[9px]">BET DETAILS</h3>
+                                    <h3 className="text-xs font-bold text-white mb-0.5 print:text-[9px]">BET DETAILS</h3>
                                     <div className="grid grid-cols-2 gap-2 print:gap-1.5">
                                         {/* Left Column */}
                                         <div className="overflow-x-auto">
                                             <table className="w-full text-[10px] border-collapse receipt-table print:text-[8px]">
                                                 <thead>
-                                                    <tr className="bg-gray-100 border-b border-gray-300">
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">#</th>
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">Type</th>
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">Number</th>
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">Sess</th>
-                                                        <th className="px-1 py-0.5 text-right font-semibold text-gray-700">Amount</th>
+                                                    <tr className="bg-[#252D3A] border-b border-[#333D4D]">
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">#</th>
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">Type</th>
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">Number</th>
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">Sess</th>
+                                                        <th className="px-1 py-0.5 text-right font-semibold text-gray-300">Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -965,11 +965,11 @@ const Receipt = () => {
                                                         const actualIndex = idx * 2;
                                                         return (
                                                             <tr key={bet._id} className="border-b border-gray-100">
-                                                                <td className="px-1 py-0.5 text-gray-600">{actualIndex + 1}</td>
-                                                                <td className="px-1 py-0.5 text-gray-800 capitalize">{getBetTypeLabel(bet.betType, bet.betNumber)}</td>
-                                                                <td className="px-1 py-0.5 text-gray-800 font-mono font-semibold">{bet.betNumber || '—'}</td>
-                                                                <td className="px-1 py-0.5 text-gray-600 uppercase text-[9px]">{bet.betOn || 'open'}</td>
-                                                                <td className="px-1 py-0.5 text-right font-mono font-semibold text-gray-800">{formatCurrency(bet.amount)}</td>
+                                                                <td className="px-1 py-0.5 text-gray-300">{actualIndex + 1}</td>
+                                                                <td className="px-1 py-0.5 text-white capitalize">{getBetTypeLabel(bet.betType, bet.betNumber)}</td>
+                                                                <td className="px-1 py-0.5 text-white font-mono font-semibold">{bet.betNumber || '—'}</td>
+                                                                <td className="px-1 py-0.5 text-gray-300 uppercase text-[9px]">{bet.betOn || 'open'}</td>
+                                                                <td className="px-1 py-0.5 text-right font-mono font-semibold text-white">{formatCurrency(bet.amount)}</td>
                                                             </tr>
                                                         );
                                                     })}
@@ -980,12 +980,12 @@ const Receipt = () => {
                                         <div className="overflow-x-auto">
                                             <table className="w-full text-[10px] border-collapse receipt-table print:text-[8px]">
                                                 <thead>
-                                                    <tr className="bg-gray-100 border-b border-gray-300">
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">#</th>
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">Type</th>
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">Number</th>
-                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-700">Sess</th>
-                                                        <th className="px-1 py-0.5 text-right font-semibold text-gray-700">Amount</th>
+                                                    <tr className="bg-[#252D3A] border-b border-[#333D4D]">
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">#</th>
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">Type</th>
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">Number</th>
+                                                        <th className="px-1 py-0.5 text-left font-semibold text-gray-300">Sess</th>
+                                                        <th className="px-1 py-0.5 text-right font-semibold text-gray-300">Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -993,11 +993,11 @@ const Receipt = () => {
                                                         const actualIndex = idx * 2 + 1;
                                                         return (
                                                             <tr key={bet._id} className="border-b border-gray-100">
-                                                                <td className="px-1 py-0.5 text-gray-600">{actualIndex + 1}</td>
-                                                                <td className="px-1 py-0.5 text-gray-800 capitalize">{getBetTypeLabel(bet.betType, bet.betNumber)}</td>
-                                                                <td className="px-1 py-0.5 text-gray-800 font-mono font-semibold">{bet.betNumber || '—'}</td>
-                                                                <td className="px-1 py-0.5 text-gray-600 uppercase text-[9px]">{bet.betOn || 'open'}</td>
-                                                                <td className="px-1 py-0.5 text-right font-mono font-semibold text-gray-800">{formatCurrency(bet.amount)}</td>
+                                                                <td className="px-1 py-0.5 text-gray-300">{actualIndex + 1}</td>
+                                                                <td className="px-1 py-0.5 text-white capitalize">{getBetTypeLabel(bet.betType, bet.betNumber)}</td>
+                                                                <td className="px-1 py-0.5 text-white font-mono font-semibold">{bet.betNumber || '—'}</td>
+                                                                <td className="px-1 py-0.5 text-gray-300 uppercase text-[9px]">{bet.betOn || 'open'}</td>
+                                                                <td className="px-1 py-0.5 text-right font-mono font-semibold text-white">{formatCurrency(bet.amount)}</td>
                                                             </tr>
                                                         );
                                                     })}
@@ -1006,28 +1006,28 @@ const Receipt = () => {
                                         </div>
                                     </div>
                                     {/* Total Row - Full Width */}
-                                    <div className="mt-1 pt-0.5 border-t border-gray-300 bg-gray-50">
+                                    <div className="mt-1 pt-0.5 border-t border-[#333D4D] bg-[#252D3A]">
                                         <div className="flex justify-end text-[10px] print:text-[9px]">
-                                            <span className="font-bold text-gray-700 mr-2">Total:</span>
-                                            <span className="font-mono font-bold text-gray-800">{formatCurrency(totalAmount)}</span>
+                                            <span className="font-bold text-gray-300 mr-2">Total:</span>
+                                            <span className="font-mono font-bold text-white">{formatCurrency(totalAmount)}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Calculations Section - Compact Grid */}
-                                <div className="mb-1.5 pt-1.5 border-t border-gray-300">
-                                    <h3 className="text-xs font-bold text-gray-800 mb-1 print:text-[9px]">CALCULATIONS</h3>
+                                <div className="mb-1.5 pt-1.5 border-t border-[#333D4D]">
+                                    <h3 className="text-xs font-bold text-white mb-1 print:text-[9px]">CALCULATIONS</h3>
                                     
                                     {/* Total Bet Amount */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px]">
-                                        <span className="text-gray-600">Total Bet Amount:</span>
-                                        <span className="font-mono font-semibold text-gray-800">{formatCurrency(totalAmount)}</span>
+                                        <span className="text-gray-300">Total Bet Amount:</span>
+                                        <span className="font-mono font-semibold text-white">{formatCurrency(totalAmount)}</span>
                                     </div>
 
                                     {/* Commission Row - Inline */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px]">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-gray-600">Commission:</span>
+                                            <span className="text-gray-300">Commission:</span>
                                             <input
                                                 type="number"
                                                 value={commissionPercent}
@@ -1043,7 +1043,7 @@ const Receipt = () => {
                                                     }
                                                 }}
                                                 placeholder="0"
-                                                className="w-16 px-1.5 py-0.5 border border-gray-300 rounded text-gray-800 font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0"
+                                                className="w-16 px-1.5 py-0.5 border border-[#333D4D] rounded text-white font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0"
                                                 min="0"
                                                 max="100"
                                                 step="0.01"
@@ -1055,14 +1055,14 @@ const Receipt = () => {
 
                                     {/* Remaining to Pay */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px] bg-blue-50 print:bg-transparent">
-                                        <span className="text-gray-700 font-medium">Remaining to Pay:</span>
+                                        <span className="text-gray-300 font-medium">Remaining to Pay:</span>
                                         <span className="font-mono font-semibold text-blue-600">{formatCurrency(remainingToPay)}</span>
                                     </div>
 
                                     {/* Paid Row - Inline */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px]">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-gray-600">Paid:</span>
+                                            <span className="text-gray-300">Paid:</span>
                                             <input
                                                 type="number"
                                                 value={paid}
@@ -1078,7 +1078,7 @@ const Receipt = () => {
                                                     }
                                                 }}
                                                 placeholder="0"
-                                                className="w-20 px-1.5 py-0.5 border border-gray-300 rounded text-gray-800 font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0"
+                                                className="w-20 px-1.5 py-0.5 border border-[#333D4D] rounded text-white font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0"
                                                 min="0"
                                                 step="0.01"
                                             />
@@ -1089,7 +1089,7 @@ const Receipt = () => {
                                     {/* Cutting Row - Inline */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px]">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-gray-600">Cutting:</span>
+                                            <span className="text-gray-300">Cutting:</span>
                                             <input
                                                 type="number"
                                                 value={cutting}
@@ -1105,7 +1105,7 @@ const Receipt = () => {
                                                     }
                                                 }}
                                                 placeholder="0"
-                                                className="w-20 px-1.5 py-0.5 border border-gray-300 rounded text-gray-800 font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0"
+                                                className="w-20 px-1.5 py-0.5 border border-[#333D4D] rounded text-white font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0"
                                                 min="0"
                                                 step="0.01"
                                             />
@@ -1116,7 +1116,7 @@ const Receipt = () => {
                                     {/* To Give Row - Inline */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px]">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-gray-600">To Give:</span>
+                                            <span className="text-gray-300">To Give:</span>
                                             <input
                                                 type="text"
                                                 inputMode="numeric"
@@ -1127,7 +1127,7 @@ const Receipt = () => {
                                                     setToGiveTakeError('');
                                                     setToGiveTakeSuccess('');
                                                 }}
-                                                className="w-20 px-1.5 py-0.5 border border-blue-300 rounded text-gray-800 font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                className="w-20 px-1.5 py-0.5 border border-blue-300 rounded text-white font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                 placeholder="0"
                                             />
                                             <button
@@ -1146,7 +1146,7 @@ const Receipt = () => {
                                     {/* To Take Row - Inline */}
                                     <div className="flex justify-between items-center py-0.5 text-[10px] print:text-[9px]">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-gray-600">To Take:</span>
+                                            <span className="text-gray-300">To Take:</span>
                                             <input
                                                 type="text"
                                                 inputMode="numeric"
@@ -1157,7 +1157,7 @@ const Receipt = () => {
                                                     setToGiveTakeError('');
                                                     setToGiveTakeSuccess('');
                                                 }}
-                                                className="w-20 px-1.5 py-0.5 border border-red-300 rounded text-gray-800 font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0 focus:outline-none focus:ring-1 focus:ring-red-500"
+                                                className="w-20 px-1.5 py-0.5 border border-red-300 rounded text-white font-semibold text-[10px] print:border-0 print:bg-transparent print:w-auto print:px-0 focus:outline-none focus:ring-1 focus:ring-red-500"
                                                 placeholder="0"
                                             />
                                         </div>
@@ -1166,13 +1166,13 @@ const Receipt = () => {
 
                                     {/* Final Total - Highlighted */}
                                     <div className="mt-1 pt-1 border-t-2 border-primary-400 flex justify-between items-center py-1 bg-primary-50 print:bg-transparent">
-                                        <span className="text-gray-800 font-bold text-xs print:text-[10px]">FINAL TOTAL:</span>
+                                        <span className="text-white font-bold text-xs print:text-[10px]">FINAL TOTAL:</span>
                                         <span className="font-mono font-bold text-base text-primary-600 print:text-sm">{formatCurrency(finalTotal)}</span>
                                     </div>
                                 </div>
 
                                 {/* Footer - Ultra Compact */}
-                                <div className="mt-1 pt-1 border-t border-gray-200 text-center text-[8px] text-gray-500 print:text-[7px]">
+                                <div className="mt-1 pt-1 border-t border-[#333D4D] text-center text-[8px] text-gray-500 print:text-[7px]">
                                     <p>Generated: {new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })} | Computer Generated Receipt</p>
                                 </div>
                             </div>
@@ -1204,13 +1204,13 @@ const Receipt = () => {
                             placeholder={t('searchPlayers')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className={`w-full pl-10 py-2.5 bg-gray-100/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
+                            className={`w-full pl-10 py-2.5 bg-[#1F2732] border border-[#333D4D] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
                         />
                         {searchQuery && (
                             <button
                                 type="button"
                                 onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-800 text-sm"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-sm"
                             >
                                 ✕
                             </button>
@@ -1226,7 +1226,7 @@ const Receipt = () => {
                 )}
 
                 {/* Players Table */}
-                <div className="bg-white rounded-lg overflow-x-auto overflow-y-hidden border border-gray-200 min-w-0 max-w-full">
+                <div className="bg-[#252D3A] rounded-lg overflow-x-auto overflow-y-hidden border border-[#333D4D] min-w-0 max-w-full">
                     {loading ? (
                         <div className="p-8 text-center">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto" />
@@ -1244,24 +1244,24 @@ const Receipt = () => {
                         <div>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm min-w-[600px]">
-                                    <thead className="bg-gray-100">
+                                    <thead className="bg-[#252D3A]">
                                         <tr>
-                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase w-8">#</th>
-                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Player</th>
-                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Phone</th>
-                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Email</th>
-                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
+                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase w-8">#</th>
+                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
+                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Phone</th>
+                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Email</th>
+                                            <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
                                         {filteredPlayers.map((player, index) => (
-                                            <tr key={player._id} className="hover:bg-gray-50">
-                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{index + 1}</td>
+                                            <tr key={player._id} className="hover:bg-[#252D3A]">
+                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300">{index + 1}</td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3 font-medium">
                                                     <span className="text-primary-500 truncate block max-w-[200px]">{player.username}</span>
                                                 </td>
-                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{player.phone || '—'}</td>
-                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600 truncate max-w-[200px]">{player.email || '—'}</td>
+                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300">{player.phone || '—'}</td>
+                                                <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300 truncate max-w-[200px]">{player.email || '—'}</td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3">
                                                     <button
                                                         type="button"
@@ -1322,33 +1322,33 @@ const Receipt = () => {
                     <button
                         type="button"
                         onClick={() => setCalendarOpen((o) => !o)}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-700 hover:border-primary-300 transition-colors"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#252D3A] border border-[#333D4D] text-sm text-gray-300 hover:border-primary-400 transition-colors"
                     >
                         <FaCalendarAlt className="w-3.5 h-3.5 text-primary-500" />
                         {dateFrom && dateTo ? `${dateFrom} to ${dateTo}` : 'Select Date'}
                     </button>
                     {calendarOpen && (
-                        <div className="absolute left-0 top-full mt-2 py-3 rounded-xl bg-white border border-gray-200 shadow-xl z-50 flex flex-col sm:flex-row gap-4 max-w-[100vw]">
+                        <div className="absolute left-0 top-full mt-2 py-3 rounded-xl bg-[#252D3A] border border-[#333D4D] shadow-xl z-50 flex flex-col sm:flex-row gap-4 max-w-[100vw]">
                             <div className="min-w-0 sm:min-w-[200px] py-1">
                                 {DATE_PRESETS.map((p) => (
                                     <button key={p.id} type="button" onClick={() => handlePresetSelect(p.id)}
-                                        className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 flex items-center gap-2"
+                                        className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-primary-500/20 flex items-center gap-2"
                                     >
                                         {datePreset === p.id ? <span className="text-primary-500">●</span> : <span className="w-2" />}
                                         {p.label}
                                     </button>
                                 ))}
                             </div>
-                            <div className="border-t sm:border-t-0 sm:border-l border-gray-200 pt-3 sm:pt-0 sm:pl-4 pr-4 min-w-0 sm:min-w-[200px]">
+                            <div className="border-t sm:border-t-0 sm:border-l border-[#333D4D] pt-3 sm:pt-0 sm:pl-4 pr-4 min-w-0 sm:min-w-[200px]">
                                 <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Custom Range</div>
                                 <div className="space-y-2">
                                     <div>
                                         <label className="block text-xs text-gray-500 mb-1">From</label>
-                                        <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-800" />
+                                        <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-white" />
                                     </div>
                                     <div>
                                         <label className="block text-xs text-gray-500 mb-1">To</label>
-                                        <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-800" />
+                                        <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-white" />
                                     </div>
                                     <button type="button" onClick={handleDateApply} className="w-full py-2 rounded-lg bg-primary-500 text-white font-semibold text-sm">
                                         Apply
@@ -1369,13 +1369,13 @@ const Receipt = () => {
                         placeholder="Search by market name..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`w-full pl-10 py-2.5 bg-gray-100/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
+                        className={`w-full pl-10 py-2.5 bg-[#1F2732] border border-[#333D4D] rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
                     />
                     {searchQuery && (
                         <button
                             type="button"
                             onClick={() => setSearchQuery('')}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-800 text-sm"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-sm"
                         >
                             ✕
                         </button>
@@ -1391,8 +1391,8 @@ const Receipt = () => {
             )}
 
             {/* Sessions Table */}
-            <div className="bg-white rounded-lg overflow-x-auto overflow-y-hidden border border-gray-200 min-w-0 max-w-full">
-                <div className="px-3 sm:px-4 py-2.5 border-b border-gray-100 bg-gray-50 flex flex-wrap items-center gap-2">
+            <div className="bg-[#252D3A] rounded-lg overflow-x-auto overflow-y-hidden border border-[#333D4D] min-w-0 max-w-full">
+                <div className="px-3 sm:px-4 py-2.5 border-b border-[#333D4D] bg-[#1F2732] flex flex-wrap items-center gap-2">
                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Receipt Type:</span>
                     <button
                         type="button"
@@ -1400,7 +1400,7 @@ const Receipt = () => {
                         className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
                             receiptTypeFilter === 'placed'
                                 ? 'bg-primary-500 text-white'
-                                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
+                                : 'bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#252D3A]'
                         }`}
                     >
                         Bets Placed
@@ -1411,7 +1411,7 @@ const Receipt = () => {
                         className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
                             receiptTypeFilter === 'result'
                                 ? 'bg-primary-500 text-white'
-                                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
+                                : 'bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#252D3A]'
                         }`}
                     >
                         Won/Loss Result
@@ -1434,27 +1434,27 @@ const Receipt = () => {
                     <div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm min-w-[600px]">
-                                <thead className="bg-gray-100">
+                                <thead className="bg-[#252D3A]">
                                     <tr>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase w-8">#</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Market</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Bets</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-right text-xs font-medium text-gray-600 uppercase">Amount</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-right text-xs font-medium text-gray-600 uppercase">P/L</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Date & Time</th>
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase w-8">#</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Market</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Bets</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-right text-xs font-medium text-gray-300 uppercase">Amount</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-right text-xs font-medium text-gray-300 uppercase">P/L</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Date & Time</th>
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
                                     {filteredSessions.map((session, index) => (
-                                        <tr key={session.sessionId} className="hover:bg-gray-50">
+                                        <tr key={session.sessionId} className="hover:bg-[#252D3A]">
                                             {(() => {
                                                 const summary = getSessionSummary(session);
                                                 return (
                                                     <>
-                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{index + 1}</td>
-                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600 truncate max-w-[200px]">{session.marketName}</td>
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300">{index + 1}</td>
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300 truncate max-w-[200px]">{session.marketName}</td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-xs">
                                                 <span className={`px-2 py-0.5 rounded-full font-semibold ${
                                                     summary.isResultReady ? 'bg-green-100 text-green-700' : 'bg-primary-100 text-primary-600'
@@ -1462,7 +1462,7 @@ const Receipt = () => {
                                                     {summary.isResultReady ? 'Result' : 'Placed'}
                                                 </span>
                                             </td>
-                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{session.totalBets}</td>
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300">{session.totalBets}</td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3 text-right font-mono font-medium text-green-600 text-xs sm:text-sm">
                                                 {formatCurrency(session.totalAmount)}
                                             </td>
@@ -1471,7 +1471,7 @@ const Receipt = () => {
                                             }`}>
                                                 {summary.isResultReady ? formatCurrency(summary.net) : '—'}
                                             </td>
-                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600 text-xs whitespace-nowrap">
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-300 text-xs whitespace-nowrap">
                                                 {formatDateTime(session.createdAt)}
                                             </td>
                                             <td className="px-2 sm:px-3 py-2 sm:py-3">

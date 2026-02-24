@@ -137,25 +137,25 @@ const Passbook = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white pb-[calc(6rem+env(safe-area-inset-bottom,0px))] md:pb-4">
+    <div className="min-h-screen bg-[#1F2732] pb-[calc(6rem+env(safe-area-inset-bottom,0px))] md:pb-4">
 
       {/* ── Sticky Header ── */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-primary-200 shadow-sm">
+      <div className="sticky top-0 z-40 bg-[#1F2732]/95 backdrop-blur-xl border-b border-gray-700 shadow-sm">
         <div className="flex items-center gap-3 px-4 py-3 max-w-7xl mx-auto">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center hover:bg-primary-100 active:scale-95 transition-all text-gray-700"
+            className="w-9 h-9 rounded-full bg-primary-500/20 border border-primary-200 flex items-center justify-center hover:bg-primary-500/30 active:scale-95 transition-all text-white"
             aria-label="Back"
           >
             <IconBack />
           </button>
-          <h2 className="text-base md:text-lg font-semibold tracking-wide flex-1 text-gray-800">Passbook</h2>
+          <h2 className="text-base md:text-lg font-semibold tracking-wide flex-1 text-white">Passbook</h2>
           <button
             type="button"
             onClick={() => fetchData(true)}
             disabled={refreshing}
-            className={`w-9 h-9 rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center hover:bg-primary-100 active:scale-95 transition-all text-gray-700 ${refreshing ? 'animate-spin' : ''}`}
+            className={`w-9 h-9 rounded-full bg-primary-500/20 border border-primary-200 flex items-center justify-center hover:bg-primary-500/30 active:scale-95 transition-all text-white ${refreshing ? 'animate-spin' : ''}`}
             aria-label="Refresh"
           >
             <IconRefresh />
@@ -166,14 +166,14 @@ const Passbook = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 space-y-4 md:space-y-6">
 
         {/* ── Balance Card ── */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-50 via-white to-primary-50 border-2 border-primary-200 shadow-xl">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500/10 via-[#252D3A] to-primary-500/10 border-2 border-primary-200 shadow-xl">
           <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-primary-100/50 blur-2xl" />
           <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-primary-100/50 blur-2xl" />
           
           <div className="relative p-5 md:p-6">
             <div className="flex items-center justify-between mb-4 md:mb-5">
               <div>
-                <p className="text-gray-600 text-xs md:text-sm font-medium uppercase tracking-wider mb-1">Current Balance</p>
+                <p className="text-gray-300 text-xs md:text-sm font-medium uppercase tracking-wider mb-1">Current Balance</p>
                 <p className="text-primary-500 text-3xl md:text-4xl font-extrabold tracking-tight">
                   ₹{balance !== null ? formatAmount(balance) : '---'}
                 </p>
@@ -223,12 +223,12 @@ const Passbook = () => {
                 className={`flex items-center gap-1.5 px-4 md:px-5 py-2.5 md:py-3 rounded-2xl text-sm md:text-base font-semibold whitespace-nowrap transition-all active:scale-95 ${
                   active
                     ? 'bg-primary-100 border-2 border-primary-300 text-primary-600 shadow-sm'
-                    : 'bg-white border-2 border-primary-200 text-gray-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50'
+                    : 'bg-[#252D3A] border-2 border-primary-200 text-gray-300 hover:text-primary-400 hover:border-primary-300 hover:bg-primary-500/20'
                 }`}
               >
                 {f.label}
                 <span className={`text-xs md:text-sm px-1.5 md:px-2 py-0.5 md:py-1 rounded-full ${
-                  active ? 'bg-primary-200 text-primary-700' : 'bg-gray-100 text-gray-500'
+                  active ? 'bg-primary-500/40 text-primary-300' : 'bg-[#1F2732] text-gray-400'
                 }`}>
                   {f.count}
                 </span>
@@ -238,9 +238,9 @@ const Passbook = () => {
         </div>
 
         {/* ── Transaction History ── */}
-        <div className="rounded-3xl bg-white border-2 border-primary-200 overflow-hidden shadow-sm">
+        <div className="rounded-3xl bg-[#252D3A] border-2 border-gray-700 overflow-hidden shadow-sm">
           <div className="px-5 md:px-6 pt-5 md:pt-6 pb-2 md:pb-3">
-            <h3 className="text-gray-800 font-semibold text-sm md:text-base uppercase tracking-wider">Transaction History</h3>
+            <h3 className="text-white font-semibold text-sm md:text-base uppercase tracking-wider">Transaction History</h3>
           </div>
 
           {loading ? (
@@ -251,8 +251,8 @@ const Passbook = () => {
             /* Empty state */
             <div className="flex flex-col items-center justify-center py-12 md:py-16 px-4">
               <IconEmpty />
-              <p className="text-gray-600 font-semibold mt-4 text-sm md:text-base">No transactions found</p>
-              <p className="text-gray-500 text-xs md:text-sm mt-1 text-center">
+              <p className="text-gray-300 font-semibold mt-4 text-sm md:text-base">No transactions found</p>
+              <p className="text-gray-400 text-xs md:text-sm mt-1 text-center">
                 {filter === 'all'
                   ? 'Your transaction history will appear here'
                   : `No ${filter === 'credit' ? 'credit' : 'withdrawal'} transactions yet`}
@@ -263,8 +263,8 @@ const Passbook = () => {
               {grouped.map(([date, txs]) => (
                 <div key={date}>
                   {/* Date Header */}
-                  <div className="px-5 md:px-6 py-2 md:py-3 mt-1 bg-primary-50/50">
-                    <p className="text-gray-600 text-[10px] md:text-xs font-semibold uppercase tracking-widest">{date}</p>
+                  <div className="px-5 md:px-6 py-2 md:py-3 mt-1 bg-primary-500/10">
+                    <p className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase tracking-widest">{date}</p>
                   </div>
 
                   {/* Transactions */}
@@ -273,7 +273,7 @@ const Passbook = () => {
                     return (
                       <div
                         key={tx._id || idx}
-                        className="flex items-center gap-3.5 md:gap-4 px-4 md:px-6 py-3.5 md:py-4 mx-2 md:mx-4 rounded-2xl hover:bg-primary-50 transition-colors border-b border-gray-100 last:border-b-0"
+                        className="flex items-center gap-3.5 md:gap-4 px-4 md:px-6 py-3.5 md:py-4 mx-2 md:mx-4 rounded-2xl hover:bg-primary-500/10 transition-colors border-b border-gray-700 last:border-b-0"
                       >
                         {/* Icon */}
                         <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0 ${
@@ -286,10 +286,10 @@ const Passbook = () => {
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
-                          <p className="text-gray-800 text-sm md:text-base font-medium truncate">
+                          <p className="text-white text-sm md:text-base font-medium truncate">
                             {tx.description || (isCredit ? 'Amount Credited' : 'Amount Withdrawn')}
                           </p>
-                          <p className="text-gray-500 text-xs md:text-sm mt-0.5">{formatTime(tx.createdAt)}</p>
+                          <p className="text-gray-400 text-xs md:text-sm mt-0.5">{formatTime(tx.createdAt)}</p>
                         </div>
 
                         {/* Amount */}

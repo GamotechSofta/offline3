@@ -144,26 +144,26 @@ const BidLayout = ({
     }, [location.pathname]);
 
     return (
-        <div className="min-h-screen min-h-ios-screen bg-white font-sans w-full max-w-full overflow-x-hidden">
+        <div className="min-h-screen min-h-ios-screen bg-[#1F2732] font-sans w-full max-w-full overflow-x-hidden">
             {/* Header - White/Orange theme - iOS safe area padding */}
             <div
-                className="bg-white border-b-2 border-primary-200 py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4 shadow-sm"
+                className="bg-[#1F2732] border-b-2 border-[#333D4D] py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4 shadow-sm"
                 style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
             >
                 <button
                     onClick={() => market ? navigate('/bidoptions', { state: { market } }) : navigate(-1)}
-                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-primary-50 border-2 border-primary-200 hover:bg-primary-100 hover:border-primary-300 text-primary-500 rounded-full active:scale-95 transition-colors touch-manipulation"
+                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-[#252D3A] border-2 border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400 text-white rounded-full active:scale-95 transition-colors touch-manipulation"
                     aria-label="Back"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </button>
-                <h1 className="text-xs sm:text-base md:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-gray-800 min-w-0">
+                <h1 className="text-xs sm:text-base md:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-white min-w-0">
                     {market?.gameName ? `${market.gameName} - ${title}` : title}
                 </h1>
                 <div className="bg-primary-500 text-white px-2 sm:px-3 py-1 rounded-full flex items-center gap-1.5 text-[11px] sm:text-sm font-bold shadow-md shrink-0">
-                    <div className="w-5 h-5 bg-white rounded flex items-center justify-center text-primary-500 text-xs font-bold">₹</div>
+                    <div className="w-5 h-5 bg-[#1F2732] rounded flex items-center justify-center text-primary-400 text-xs font-bold border border-[#333D4D]">₹</div>
                     {wallet.toFixed(1)}
                 </div>
             </div>
@@ -185,7 +185,7 @@ const BidLayout = ({
                     {/* Date Input Button */}
                     <div className="relative flex-1 min-w-0 shrink overflow-hidden">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
@@ -212,7 +212,7 @@ const BidLayout = ({
                                 e.preventDefault();
                                 return false;
                             }}
-                            className={`w-full pl-9 sm:pl-10 pr-3 py-2.5 min-h-[44px] h-[44px] bg-white border-2 border-primary-200 text-gray-800 rounded-full text-xs sm:text-sm font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate ${dateSessionControlClassName}`}
+                            className={`w-full pl-9 sm:pl-10 pr-3 py-2.5 min-h-[44px] h-[44px] bg-[#252D3A] border-2 border-primary-200 text-white rounded-full text-xs sm:text-sm font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate ${dateSessionControlClassName}`}
                             style={{
                                 colorScheme: 'light',
                             }}
@@ -264,7 +264,7 @@ const BidLayout = ({
                             value={session}
                             onChange={(e) => setSession(e.target.value)}
                             disabled={lockSessionSelect || (isToday && isRunning)}
-                            className={`w-full appearance-none bg-white border-2 border-primary-200 text-gray-800 font-bold text-xs sm:text-sm py-2.5 min-h-[44px] h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-primary-500 ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-60 cursor-not-allowed bg-gray-100' : ''} ${dateSessionControlClassName}`}
+                            className={`w-full appearance-none bg-[#252D3A] border-2 border-primary-200 text-white font-bold text-xs sm:text-sm py-2.5 min-h-[44px] h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-primary-500 ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-60 cursor-not-allowed' : ''} ${dateSessionControlClassName}`}
                         >
                             {sessionOptions.map((opt) => (
                                 <option key={opt} value={opt}>
@@ -273,7 +273,7 @@ const BidLayout = ({
                             ))}
                         </select>
                         {!hideSessionSelectCaret && (
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
@@ -309,18 +309,18 @@ const BidLayout = ({
                     <div
                         className={`w-full max-w-sm md:max-w-md rounded-2xl flex flex-col sm:flex-row items-center gap-4 sm:gap-6 ${
                             showFooterStats
-                                ? 'bg-white backdrop-blur-sm border-2 border-primary-200 shadow-xl px-4 py-4'
+                                ? 'bg-[#252D3A] backdrop-blur-sm border-2 border-[#333D4D] shadow-xl px-4 py-4'
                                 : 'bg-transparent border-0 shadow-none p-0'
                         }`}
                     >
                         {showFooterStats && (
                             <div className="flex items-center gap-6 sm:gap-8 shrink-0">
                                 <div className="text-center">
-                                    <div className="text-[10px] sm:text-xs text-gray-600 uppercase tracking-wider">Bets</div>
+                                    <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Bets</div>
                                     <div className="text-base sm:text-lg font-bold text-primary-500">{bidsCount}</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-[10px] sm:text-xs text-gray-600 uppercase tracking-wider">Points</div>
+                                    <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider">Points</div>
                                     <div className="text-base sm:text-lg font-bold text-primary-500">{totalPoints}</div>
                                 </div>
                             </div>

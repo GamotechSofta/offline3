@@ -8,11 +8,11 @@ import { FaShoppingCart, FaList, FaCheck } from 'react-icons/fa';
 const cardBase =
     'flex items-start gap-4 p-4 sm:p-5 rounded-2xl border-2 cursor-pointer select-none outline-none ' +
     'transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out ' +
-    'hover:border-primary-300 hover:bg-primary-50/50 active:scale-[0.995] ' +
+    'hover:border-primary-400 hover:bg-primary-500/20 active:scale-[0.995] ' +
     'focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2';
 
-const cardSelected = 'border-primary-500 bg-primary-50 shadow-sm shadow-primary-500/10';
-const cardUnselected = 'border-gray-200 bg-white';
+const cardSelected = 'border-primary-500 bg-primary-500/20 shadow-sm shadow-primary-500/10';
+const cardUnselected = 'border-[#333D4D] bg-[#252D3A]';
 
 const LayoutOption = ({ id, value, layout, setLayout, icon: Icon, title, description }) => {
     const isSelected = layout === value;
@@ -27,18 +27,18 @@ const LayoutOption = ({ id, value, layout, setLayout, icon: Icon, title, descrip
         >
             <div
                 className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 pointer-events-none ${
-                    isSelected ? 'border-primary-500 bg-primary-500' : 'border-gray-300 bg-white'
+                    isSelected ? 'border-primary-500 bg-primary-500' : 'border-[#333D4D] bg-[#252D3A]'
                 }`}
                 aria-hidden
             >
                 {isSelected && <FaCheck className="h-2.5 w-2.5 text-white" />}
             </div>
             <div className="min-w-0 flex-1 pointer-events-none">
-                <div className="flex items-center gap-2 font-semibold text-gray-800">
+                <div className="flex items-center gap-2 font-semibold text-white">
                     <Icon className={`h-5 w-5 shrink-0 ${isSelected ? 'text-primary-500' : 'text-gray-400'}`} />
                     {title}
                 </div>
-                <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{description}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-gray-400">{description}</p>
             </div>
         </button>
     );
@@ -51,9 +51,9 @@ const Settings = () => {
     return (
         <Layout title={t('settings')}>
             <div className="max-w-2xl animate-[settingsFadeIn_0.25s_ease-out]">
-                <section className="rounded-2xl bg-white/80 p-4 sm:p-6 shadow-sm border border-gray-100">
-                    <h2 className="text-base font-bold text-gray-800 sm:text-lg">Bet screen layout</h2>
-                    <p className="mt-1 text-sm text-gray-500 sm:mt-1.5">
+                <section className="rounded-2xl bg-[#252D3A] p-4 sm:p-6 shadow-sm border-2 border-[#333D4D]">
+                    <h2 className="text-base font-bold text-white sm:text-lg">Bet screen layout</h2>
+                    <p className="mt-1 text-sm text-gray-400 sm:mt-1.5">
                         Choose how the betting screen looks when you place bets for a market.
                     </p>
                     <div className="relative z-10 mt-5 space-y-3 sm:mt-6 sm:space-y-4">

@@ -55,7 +55,7 @@ const HalfSangamABid = ({ title, gameType, betType, embedInSingleScroll = false 
             <div className="px-3 sm:px-4 py-4 md:max-w-3xl md:mx-auto">
                 <div className="space-y-4">
                     {warning && (
-                        <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
+                        <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border border-green-200 text-green-600 rounded-lg px-3 py-2.5 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md backdrop-blur-sm">
                             {warning}
                         </div>
                     )}
@@ -72,18 +72,18 @@ const HalfSangamABid = ({ title, gameType, betType, embedInSingleScroll = false 
                                     }
                                 }}
                                 placeholder="Pana"
-                                className={`flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${openPanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-primary-500 focus:border-primary-500'}`} />
+                                className={`flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${openPanaInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-primary-500 focus:border-primary-500'}`} />
                         </div>
                         <div className="flex flex-row items-center gap-2">
                             <label className="text-gray-400 text-sm font-medium shrink-0 w-40">Close Ank:</label>
                             <input type="text" inputMode="numeric" value={closeAnk} onChange={(e) => setCloseAnk(sanitizeDigits(e.target.value, 1))} placeholder="Ank"
-                                className="flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                className="flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                         </div>
                         <div className="flex flex-row items-center gap-2">
                             <label className="text-gray-400 text-sm font-medium shrink-0 w-40">Enter Points:</label>
                             <input ref={pointsInputRef} type="text" inputMode="numeric" value={points}
                                 onChange={(e) => setPoints(sanitizePoints(e.target.value))}
-                                placeholder="Point" className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
+                                placeholder="Point" className="no-spinner flex-1 min-w-0 bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none" />
                         </div>
                     </div>
                     <button type="button" onClick={handleAddToCart}

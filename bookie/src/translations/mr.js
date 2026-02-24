@@ -169,6 +169,7 @@ export default {
     date: 'तारीख',
     noBetsFound: 'बेट सापडले नाहीत',
     player: 'खेळाडू',
+    bookie: 'Bookie',
     market: 'बाजार',
     enterPlayerId: 'खेळाडू आयडी प्रविष्ट करा',
     enterMarketId: 'बाजार आयडी प्रविष्ट करा',

@@ -98,14 +98,14 @@ const SingleScrollGameBid = () => {
     const dateText = new Date().toLocaleDateString('en-GB');
 
     return (
-        <div className="flex flex-col h-screen bg-gray-100 font-sans text-gray-800 w-full max-w-full overflow-hidden antialiased">
+        <div className="flex flex-col h-screen bg-[#1F2732] font-sans text-white w-full max-w-full overflow-hidden antialiased">
             {/* Sticky top bar: header + date row (non-scrollable) */}
-            <header className="shrink-0 sticky top-0 z-20 bg-white border-b border-gray-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+            <header className="shrink-0 sticky top-0 z-20 bg-[#252D3A] border-b border-[#333D4D]/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
                 <div className="flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3">
                     <button
                         type="button"
                         onClick={() => navigate(playerId ? `/games?playerId=${playerId}` : '/games')}
-                        className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+                        className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-xl bg-[#1F2732] hover:bg-primary-500/20 text-gray-300 transition-colors active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
                         aria-label="Back to markets"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -116,11 +116,11 @@ const SingleScrollGameBid = () => {
                         {marketDisplayName ? `${marketDisplayName} — All Games` : 'All Games'}
                     </h1>
                     <div className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-xs sm:text-sm font-bold shadow-sm">
-                        <span className="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-white font-bold">₹</span>
+                        <span className="w-5 h-5 rounded-md bg-[#252D3A]/20 flex items-center justify-center text-white font-bold">₹</span>
                         <span className="tabular-nums">{Number(walletBalance ?? 0).toFixed(1)}</span>
                     </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 px-3 sm:px-4 py-2 bg-gray-50/80 border-t border-gray-100">
+                <div className="flex flex-wrap items-center gap-2 px-3 sm:px-4 py-2 bg-[#1F2732] border-t border-[#333D4D]">
                     <div className="relative flex-1 min-w-[130px] max-w-[220px] sm:max-w-none">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 text-gray-400">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -134,14 +134,14 @@ const SingleScrollGameBid = () => {
                             min={minDate}
                             max="2099-12-31"
                             onChange={(e) => { const v = e.target.value; if (v >= minDate) setCurrentDate(v); }}
-                            className="w-full h-10 pl-9 pr-3 rounded-lg bg-white border border-gray-200 text-gray-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 cursor-pointer transition-shadow"
+                            className="w-full h-10 pl-9 pr-3 rounded-lg bg-[#252D3A] border border-[#333D4D] text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 cursor-pointer transition-shadow"
                             style={{ colorScheme: 'light' }}
                         />
                     </div>
                     <button
                         type="button"
                         onClick={() => { try { dateInputRef.current?.showPicker?.(); } catch { dateInputRef.current?.focus?.(); } }}
-                        className="flex items-center justify-center gap-1.5 h-10 px-4 rounded-lg font-semibold text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
+                        className="flex items-center justify-center gap-1.5 h-10 px-4 rounded-lg font-semibold text-sm bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-[#252D3A] hover:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
                     >
                         <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -198,7 +198,7 @@ const SingleScrollGameBid = () => {
                         className={`min-w-[120px] font-bold py-3 px-5 rounded-xl text-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                             cartCount > 0 && selectedPlayer
                                 ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md hover:from-primary-600 hover:to-primary-700 focus-visible:ring-primary-500 active:scale-[0.98]'
-                                : 'bg-gray-200 text-gray-400 cursor-not-allowed focus-visible:ring-gray-400'
+                                : 'bg-[#333D4D] text-gray-500 cursor-not-allowed focus-visible:ring-gray-400'
                         }`}
                     >
                         Submit bet

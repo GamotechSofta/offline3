@@ -169,6 +169,7 @@ export default {
     date: 'Date',
     noBetsFound: 'No bets found',
     player: 'Player',
+    bookie: 'Bookie',
     market: 'Market',
     enterPlayerId: 'Enter Player ID',
     enterMarketId: 'Enter Market ID',

@@ -125,7 +125,7 @@ const GamesSidebar = ({
             <aside
                 style={{ width: `${width}px` }}
                 className={`
-                    fixed left-0 top-0 h-screen bg-white border-r border-gray-200 z-40
+                    fixed left-0 top-0 h-screen bg-[#181E27] border-r border-[#333D4D] z-40
                     overflow-hidden flex flex-col shadow-sm
                     transform transition-transform duration-200 ease-in-out
                     lg:translate-x-0
@@ -142,12 +142,12 @@ const GamesSidebar = ({
                     `}
                 >
                     <div className={`w-[3px] h-12 rounded-full transition-colors ${
-                        isDragging ? 'bg-primary-500' : 'bg-gray-200 group-hover:bg-primary-400'
+                        isDragging ? 'bg-primary-500' : 'bg-[#333D4D] group-hover:bg-primary-400'
                     }`} />
                 </div>
 
                 {/* Header */}
-                <div className="p-3 border-b border-gray-200 shrink-0">
+                <div className="p-3 border-b border-[#333D4D] shrink-0">
                     <div className="flex items-center justify-between mb-2">
                         <button
                             type="button"
@@ -160,14 +160,14 @@ const GamesSidebar = ({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-400"
+                            className="lg:hidden p-1.5 rounded-lg hover:bg-[#252D3A] text-gray-400"
                             aria-label="Close"
                         >
                             <FaTimes className="w-4 h-4" />
                         </button>
                     </div>
                     {marketName && (
-                        <h3 className="text-sm font-bold text-gray-800 truncate">{marketName}</h3>
+                        <h3 className="text-sm font-bold text-white truncate">{marketName}</h3>
                     )}
                 </div>
 
@@ -183,8 +183,8 @@ const GamesSidebar = ({
                             onClick={() => handleGameClick(game.id)}
                             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all ${
                                 activeGameType === game.id
-                                    ? 'bg-primary-50 text-primary-600 font-semibold border border-primary-200'
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 border border-transparent'
+                                    ? 'bg-primary-500/20 text-primary-400 font-semibold border border-primary-400/50'
+                                    : 'text-gray-300 hover:bg-[#252D3A] hover:text-white border border-transparent'
                             }`}
                         >
                             <span

@@ -101,15 +101,15 @@ const Payments = () => {
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">
                 {canManagePayments ? t('payments') : t('paymentsViewOnly')}
             </h1>
-            <div className="bg-white rounded-lg p-4 mb-4 sm:mb-6 flex flex-wrap gap-3 items-center border border-gray-200">
-                <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800">
+            <div className="bg-[#252D3A] rounded-lg p-4 mb-4 sm:mb-6 flex flex-wrap gap-3 items-center border border-[#333D4D]">
+                <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white">
                     <option value="">{t('allStatus')}</option>
                     <option value="pending">{t('pending')}</option>
                     <option value="approved">{t('approved')}</option>
                     <option value="rejected">{t('rejected')}</option>
                     <option value="completed">{t('completed')}</option>
                 </select>
-                <select value={filters.type} onChange={(e) => setFilters({ ...filters, type: e.target.value })} className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800">
+                <select value={filters.type} onChange={(e) => setFilters({ ...filters, type: e.target.value })} className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white">
                     <option value="">{t('allTypes')}</option>
                     <option value="deposit">{t('deposit')}</option>
                     <option value="withdrawal">{t('withdrawal')}</option>
@@ -118,20 +118,20 @@ const Payments = () => {
             {loading ? (
                 <p className="text-gray-400 py-12 text-center">{t('loading')}</p>
             ) : (
-                <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+                <div className="bg-[#252D3A] rounded-lg overflow-hidden border border-[#333D4D]">
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gray-100">
+                            <thead className="bg-[#1F2732]">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">ID</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('player')}</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('type')}</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('amount')}</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('method')}</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('status')}</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Screenshot</th>
-                                    {canManagePayments && <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>}
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">{t('date')}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">{t('player')}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">{t('type')}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">{t('amount')}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">{t('method')}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">{t('status')}</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Screenshot</th>
+                                    {canManagePayments && <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>}
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">{t('date')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -139,7 +139,7 @@ const Payments = () => {
                                     <tr><td colSpan={canManagePayments ? 9 : 8} className="px-6 py-4 text-center text-gray-400">{t('noPaymentsFound')}</td></tr>
                                 ) : (
                                     payments.map((p) => (
-                                        <tr key={p._id} className="hover:bg-gray-50">
+                                        <tr key={p._id} className="hover:bg-[#252D3A]">
                                             <td className="px-6 py-4 text-sm">{p._id?.slice(-8)}</td>
                                             <td className="px-6 py-4 text-sm">{p.userId?.username || p.userId}</td>
                                             <td className="px-6 py-4 text-sm"><span className={`px-2 py-1 rounded text-xs text-white ${p.type === 'deposit' ? 'bg-green-600' : 'bg-blue-600'}`}>{p.type}</span></td>
@@ -201,7 +201,7 @@ const Payments = () => {
             {/* Screenshot Modal */}
             {selectedScreenshot && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4" onClick={() => setSelectedScreenshot(null)}>
-                    <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                    <div className="relative max-w-4xl max-h-[90vh] bg-[#252D3A] rounded-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
                         <button
                             onClick={() => setSelectedScreenshot(null)}
                             className="absolute top-4 right-4 z-10 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
@@ -223,12 +223,12 @@ const Payments = () => {
             {/* Action Modal */}
             {actionModal.show && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4" onClick={() => !processing && setActionModal({ show: false, payment: null, action: '' })}>
-                    <div className="relative bg-white rounded-lg p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                    <div className="relative bg-[#252D3A] rounded-lg p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
                         <h2 className="text-xl font-bold mb-4">
                             {actionModal.action === 'approve' ? 'Approve Payment' : 'Reject Payment'}
                         </h2>
                         <div className="mb-4">
-                            <p className="text-sm text-gray-600 mb-2">
+                            <p className="text-sm text-gray-300 mb-2">
                                 <strong>Player:</strong> {actionModal.payment?.userId?.username || 'N/A'}<br />
                                 <strong>Type:</strong> {actionModal.payment?.type}<br />
                                 <strong>Amount:</strong> ₹{actionModal.payment?.amount?.toLocaleString('en-IN')}
@@ -237,14 +237,14 @@ const Payments = () => {
                         {/* Show screenshot for deposits */}
                         {actionModal.payment?.type === 'deposit' && actionModal.payment?.screenshotUrl && (
                             <div className="mb-4">
-                                <p className="text-gray-600 text-sm mb-2 font-medium">Payment Screenshot:</p>
+                                <p className="text-gray-300 text-sm mb-2 font-medium">Payment Screenshot:</p>
                                 <div className="relative">
                                     <img
                                         src={actionModal.payment.screenshotUrl.startsWith('http') 
                                             ? actionModal.payment.screenshotUrl 
                                             : `${API_BASE_URL}${actionModal.payment.screenshotUrl}`}
                                         alt="Payment proof"
-                                        className="w-full max-h-48 object-contain rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                                        className="w-full max-h-48 object-contain rounded-lg border border-[#333D4D] cursor-pointer hover:opacity-90 transition-opacity"
                                         onClick={() => {
                                             const screenshotUrl = actionModal.payment.screenshotUrl.startsWith('http') 
                                                 ? actionModal.payment.screenshotUrl 
@@ -259,11 +259,11 @@ const Payments = () => {
                             </div>
                         )}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Remarks (Optional)</label>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Remarks (Optional)</label>
                             <textarea
                                 value={adminRemarks}
                                 onChange={(e) => setAdminRemarks(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-3 py-2 bg-[#1F2732] border-2 border-[#333D4D] rounded-lg text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                 rows="3"
                                 placeholder="Add remarks..."
                             />
@@ -286,7 +286,7 @@ const Payments = () => {
                                     setAdminRemarks('');
                                 }}
                                 disabled={processing}
-                                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors disabled:opacity-50"
+                                className="px-4 py-2 bg-[#252D3A] hover:bg-primary-500/20 border border-[#333D4D] rounded-lg font-medium transition-colors disabled:opacity-50"
                             >
                                 Cancel
                             </button>

@@ -109,7 +109,7 @@ const GameBidInner = ({ marketId, gameType, playerId, betType, title, BidCompone
     }, [availableGameTypes, gameType, marketId, navigate, playerId]);
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[#252D3A]">
             {/* Dynamic CSS custom properties for sidebar & cart widths on desktop */}
             <style>{`
                 @media (min-width: 1024px) {
@@ -192,7 +192,7 @@ const BookieGameBid = () => {
 
     if (!entry) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center text-gray-800">
+            <div className="min-h-screen bg-[#252D3A] flex items-center justify-center text-white">
                 <div className="text-center">
                     <p className="text-lg font-bold text-red-500 mb-2">Unknown Game Type</p>
                     <p className="text-gray-400 text-sm mb-4">The game type "{gameType}" is not recognized.</p>

@@ -133,18 +133,18 @@ const GameTypes = () => {
         : GAME_OPTIONS;
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[#252D3A]">
             {/* Main content */}
             <div>
-                <div className="min-h-screen bg-white flex flex-col items-center">
+                <div className="min-h-screen bg-[#252D3A] flex flex-col items-center">
                     {/* Header */}
-                    <div className="w-full flex items-center px-3 sm:px-4 pt-4 sm:pt-5 pb-3 sm:pb-4 bg-white border-b border-gray-200 relative">
+                    <div className="w-full flex items-center px-3 sm:px-4 pt-4 sm:pt-5 pb-3 sm:pb-4 bg-[#252D3A] border-b border-[#333D4D] relative">
                         <button
                             onClick={() => {
                                 const query = playerId ? `?playerId=${playerId}` : '';
                                 navigate(`/games${query}`);
                             }}
-                            className="absolute left-3 sm:left-4 flex items-center justify-center min-w-[44px] min-h-[44px] -ml-1 text-gray-400 hover:text-gray-800 active:scale-95 touch-manipulation"
+                            className="absolute left-3 sm:left-4 flex items-center justify-center min-w-[44px] min-h-[44px] -ml-1 text-gray-400 hover:text-white active:scale-95 touch-manipulation"
                             aria-label="Back"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -153,10 +153,10 @@ const GameTypes = () => {
                         </button>
                         <div className="w-full text-center pr-12 pl-12 min-w-0">
                             {loading ? (
-                                <h1 className="text-gray-800 font-bold text-base sm:text-lg tracking-wider uppercase">Loading...</h1>
+                                <h1 className="text-white font-bold text-base sm:text-lg tracking-wider uppercase">Loading...</h1>
                             ) : market ? (
                                 <>
-                                    <h1 className="text-gray-800 font-bold text-base sm:text-lg tracking-wider uppercase inline-block border-b-2 border-primary-500 pb-1 px-2 py-1 truncate max-w-full">
+                                    <h1 className="text-white font-bold text-base sm:text-lg tracking-wider uppercase inline-block border-b-2 border-primary-500 pb-1 px-2 py-1 truncate max-w-full">
                                         {market ? getMarketDisplayName(market, language) : 'SELECT GAME'}
                                     </h1>
                                     <div className="mt-1 flex items-center justify-center gap-3 text-xs text-gray-400">
@@ -165,7 +165,7 @@ const GameTypes = () => {
                                     </div>
                                 </>
                             ) : (
-                                <h1 className="text-gray-800 font-bold text-base sm:text-lg tracking-wider uppercase">Market Not Found</h1>
+                                <h1 className="text-white font-bold text-base sm:text-lg tracking-wider uppercase">Market Not Found</h1>
                             )}
                         </div>
                     </div>
@@ -192,7 +192,7 @@ const GameTypes = () => {
                                 <div
                                     key={option.id}
                                     onClick={() => handleGameClick(option)}
-                                    className="relative rounded-2xl bg-white border-2 border-gray-100 p-3.5 sm:p-4 flex flex-col items-center justify-center gap-2 sm:gap-2.5 hover:border-primary-400 hover:shadow-lg hover:shadow-primary-500/15 active:scale-[0.97] transition-all cursor-pointer group touch-manipulation min-h-[104px] sm:min-h-[120px] md:min-h-[132px] shadow-sm"
+                                    className="relative rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] p-3.5 sm:p-4 flex flex-col items-center justify-center gap-2 sm:gap-2.5 hover:border-primary-400 hover:shadow-lg hover:shadow-primary-500/15 active:scale-[0.97] transition-all cursor-pointer group touch-manipulation min-h-[104px] sm:min-h-[120px] md:min-h-[132px] shadow-sm"
                                 >
                                     {/* Icon Container */}
                                     <div className="flex items-center justify-center w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] md:w-[96px] md:h-[96px] group-hover:scale-[1.05] transition-transform duration-300">
@@ -200,7 +200,7 @@ const GameTypes = () => {
                                     </div>
 
                                     {/* Title */}
-                                    <span className="text-gray-700 group-hover:text-primary-600 text-[10px] sm:text-[11px] md:text-sm font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase text-center line-clamp-2 leading-tight transition-colors">
+                                    <span className="text-gray-300 group-hover:text-primary-400 text-[10px] sm:text-[11px] md:text-sm font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase text-center line-clamp-2 leading-tight transition-colors">
                                         {option.title}
                                     </span>
                                 </div>

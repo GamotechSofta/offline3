@@ -149,7 +149,7 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
             <aside
                 style={{ width: `${width}px` }}
                 className={`
-                    fixed top-0 right-0 h-screen bg-white border-l border-gray-200 z-40
+                    fixed top-0 right-0 h-screen bg-[#252D3A] border-l border-[#333D4D] z-40
                     overflow-hidden flex flex-col
                     transform transition-transform duration-200 ease-in-out
                     xl:translate-x-0
@@ -167,15 +167,15 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
                 >
                     {/* Visual indicator line */}
                     <div className={`w-[3px] h-12 rounded-full transition-colors ${
-                        isDragging ? 'bg-primary-500' : 'bg-gray-200 group-hover:bg-primary-400'
+                        isDragging ? 'bg-primary-500' : 'bg-[#333D4D] group-hover:bg-primary-400'
                     }`} />
                 </div>
 
                 {/* Cart Header */}
-                <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 shrink-0 bg-white">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-[#333D4D] shrink-0 bg-[#252D3A]">
                     <div className="flex items-center gap-2">
                         <FaShoppingCart className="w-4 h-4 text-primary-500" />
-                        <h3 className="text-gray-800 font-bold text-sm">
+                        <h3 className="text-white font-bold text-sm">
                             Bet Cart ({cartCount})
                         </h3>
                     </div>
@@ -193,7 +193,7 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="xl:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-400"
+                            className="xl:hidden p-1.5 rounded-lg hover:bg-[#1F2732] text-gray-400"
                             aria-label="Close cart"
                         >
                             <FaTimes className="w-4 h-4" />
@@ -203,10 +203,10 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
 
                 {/* Summary Stats */}
                 {cartCount > 0 && (
-                    <div className="px-4 py-2.5 border-b border-gray-200 bg-gray-50 shrink-0">
+                    <div className="px-4 py-2.5 border-b border-[#333D4D] bg-[#1F2732] shrink-0">
                         <div className="flex items-center justify-between">
                             <div className="text-xs text-gray-400">
-                                Total Bets: <span className="text-gray-800 font-bold">{cartCount}</span>
+                                Total Bets: <span className="text-white font-bold">{cartCount}</span>
                             </div>
                             <div className="text-xs text-gray-400">
                                 Total: <span className="text-primary-500 font-bold">₹{cartTotal.toLocaleString('en-IN')}</span>
@@ -221,12 +221,12 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
                         <div className="text-center py-12 text-gray-500">
                             <FaShoppingCart className="w-10 h-10 mx-auto mb-3 opacity-20" />
                             <p className="text-sm font-medium">Your cart is empty</p>
-                            <p className="text-xs mt-1 text-gray-600">Add bets from game types on the left</p>
+                            <p className="text-xs mt-1 text-gray-300">Add bets from game types on the left</p>
                         </div>
                     ) : (
                         Object.entries(groupedItems).map(([label, items]) => (
-                            <div key={label} className="bg-gray-100 rounded-xl border border-gray-200 overflow-hidden">
-                                <div className="px-3 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                            <div key={label} className="bg-[#1F2732] rounded-xl border border-[#333D4D] overflow-hidden">
+                                <div className="px-3 py-2 bg-[#1F2732] border-b border-[#333D4D] flex items-center justify-between">
                                     <div>
                                         <span className="text-primary-500 font-semibold text-[10px] uppercase tracking-wide">
                                             {label}
@@ -239,10 +239,10 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
                                         ₹{items.reduce((s, i) => s + i.points, 0).toLocaleString('en-IN')}
                                     </span>
                                 </div>
-                                <div className="divide-y divide-gray-100">
+                                <div className="divide-y divide-[#333D4D]">
                                     {items.map((item) => (
                                         <div key={item.id} className="flex items-center gap-2 px-3 py-1.5 text-xs">
-                                            <span className="text-gray-800 font-bold min-w-[40px]">{item.number}</span>
+                                            <span className="text-white font-bold min-w-[40px]">{item.number}</span>
                                             <span className="text-primary-500 font-bold">₹{item.points}</span>
                                             <span className="text-gray-500 uppercase text-[10px]">{item.session}</span>
                                             <button
@@ -262,10 +262,10 @@ const CartPanel = ({ isOpen, onClose, width, onWidthChange }) => {
 
                 {/* Cart Footer — Place Bet button */}
                 {cartCount > 0 && (
-                    <div className="px-3 py-3 border-t border-gray-200 bg-white shrink-0 space-y-2">
+                    <div className="px-3 py-3 border-t border-[#333D4D] bg-[#252D3A] shrink-0 space-y-2">
                         <div className="flex items-center justify-between text-xs px-1">
                             <span className="text-gray-400">
-                                Your Balance: <span className="text-gray-800 font-bold">₹{Number(bookieBalance || 0).toLocaleString('en-IN')}</span>
+                                Your Balance: <span className="text-white font-bold">₹{Number(bookieBalance || 0).toLocaleString('en-IN')}</span>
                             </span>
                             <span className={`font-bold ${(bookieBalance - cartTotal) < 0 ? 'text-red-500' : 'text-green-600'}`}>
                                 After: ₹{(bookieBalance - cartTotal).toLocaleString('en-IN')}

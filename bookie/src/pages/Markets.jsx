@@ -107,8 +107,8 @@ const Markets = () => {
     return (
         <Layout title={t('markets')}>
             <>
-                <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">{t('marketsTitle')}</h1>
-                {error && <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">{error}</div>}
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">{t('marketsTitle')}</h1>
+                {error && <div className="mb-4 p-4 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400">{error}</div>}
                 {loading ? (
                     <p className="text-gray-400 py-12 text-center">{t('loading')}</p>
                 ) : (
@@ -116,14 +116,14 @@ const Markets = () => {
                         {markets.map((market) => {
                             const { status, color } = getMarketStatus(market);
                             return (
-                                <div key={market._id} className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
-                                    <div className={`${color} text-gray-800 text-xs font-semibold px-3 py-1 rounded-full inline-block mb-4`}>
+                                <div key={market._id} className="bg-[#252D3A] rounded-lg border-2 border-[#333D4D] p-4 sm:p-6">
+                                    <div className={`${color} text-white text-xs font-semibold px-3 py-1 rounded-full inline-block mb-4`}>
                                         {status === 'open' && 'OPEN'}
                                         {status === 'running' && 'CLOSED IS RUNNING'}
                                         {status === 'closed' && 'CLOSED'}
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-800 mb-2">{getMarketDisplayName(market, language)}</h3>
-                                    <div className="space-y-2 text-sm text-gray-600">
+                                    <h3 className="text-xl font-bold text-white mb-2">{getMarketDisplayName(market, language)}</h3>
+                                    <div className="space-y-2 text-sm text-gray-300">
                                         <p><span className="font-semibold">Opening:</span> {market.startingTime}</p>
                                         <p><span className="font-semibold">Closing:</span> {market.closingTime}</p>
                                         <p><span className="font-semibold">Result:</span> <span className="text-primary-500 font-mono">{market.displayResult || '***-**-***'}</span></p>

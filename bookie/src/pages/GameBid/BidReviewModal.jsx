@@ -205,7 +205,7 @@ const BidReviewModal = ({
       <div className="relative w-full max-w-md sm:max-w-lg">
         {stage === 'success' && receiptData ? (
           /* ============ SUCCESS RECEIPT ============ */
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 max-h-[min(92svh,780px)] sm:max-h-[calc(100vh-48px)] flex flex-col">
+          <div className="bg-[#252D3A] rounded-2xl shadow-xl overflow-hidden border border-[#333D4D] max-h-[min(92svh,780px)] sm:max-h-[calc(100vh-48px)] flex flex-col">
             <style>{`
               @keyframes successPop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
               @keyframes successDraw { to { stroke-dashoffset: 0; } }
@@ -215,7 +215,7 @@ const BidReviewModal = ({
 
             {/* Success header */}
             <div className="bg-green-500 text-white px-4 py-3 flex items-center justify-center gap-3 shrink-0">
-              <div className="success-pop w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+              <div className="success-pop w-8 h-8 rounded-full bg-[#252D3A]/20 flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
                   <path className="success-check-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
@@ -285,7 +285,7 @@ const BidReviewModal = ({
               <div className="p-4 space-y-4">
                 {/* Market & date info */}
                 <div className="text-center">
-                  <p className="text-gray-800 font-bold text-sm">{formatDateTitle(receiptData.marketTitle, receiptData.dateText)}</p>
+                  <p className="text-white font-bold text-sm">{formatDateTitle(receiptData.marketTitle, receiptData.dateText)}</p>
                   <p className="text-gray-400 text-xs mt-0.5">{receiptData.timestamp}</p>
                 </div>
 
@@ -293,16 +293,16 @@ const BidReviewModal = ({
                 {receiptData.showGameType && receiptData.grouped ? (
                   <div className="space-y-3">
                     {Object.entries(receiptData.grouped).map(([label, items]) => (
-                      <div key={label} className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                        <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 flex items-center justify-between">
+                      <div key={label} className="bg-[#1F2732] rounded-xl border-2 border-[#333D4D] overflow-hidden">
+                        <div className="px-3 py-2 bg-[#252D3A] border-b border-[#333D4D] flex items-center justify-between">
                           <span className="text-primary-600 font-semibold text-[10px] uppercase tracking-wide">{label} <span className="text-gray-400">({items.length})</span></span>
                           <span className="text-primary-600 text-[11px] font-bold">₹{items.reduce((s, r) => s + Number(r.points || 0), 0).toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="grid grid-cols-2 divide-x divide-[#333D4D]">
                           {items.map((r) => (
-                            <div key={r.id} className="px-2 py-1.5 border-b border-gray-100 last:border-b-0">
+                            <div key={r.id} className="px-2 py-1.5 border-b border-[#333D4D] last:border-b-0">
                               <div className="flex items-center justify-between gap-2 text-xs">
-                                <span className="text-gray-800 font-bold flex-1 truncate">{renderBetNumber(r.number)}</span>
+                                <span className="text-white font-bold flex-1 truncate">{renderBetNumber(r.number)}</span>
                                 <span className="text-primary-500 font-bold shrink-0">₹{r.points}</span>
                                 <span className="text-gray-500 uppercase text-[10px] shrink-0">{r.type}</span>
                               </div>
@@ -313,9 +313,9 @@ const BidReviewModal = ({
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="px-3 py-2 bg-gray-100 border-b border-gray-200">
-                      <div className="grid grid-cols-2 divide-x divide-gray-300">
+                  <div className="bg-[#1F2732] rounded-xl border-2 border-[#333D4D] overflow-hidden">
+                    <div className="px-3 py-2 bg-[#252D3A] border-b border-[#333D4D]">
+                      <div className="grid grid-cols-2 divide-x divide-[#333D4D]">
                         <div className="text-center text-[10px] font-semibold text-primary-600 uppercase">
                           <div className="grid grid-cols-3 gap-1">
                             <span>{receiptData.labelKey}</span>
@@ -332,11 +332,11 @@ const BidReviewModal = ({
                         </div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 divide-x divide-gray-200">
+                    <div className="grid grid-cols-2 divide-x divide-[#333D4D]">
                       {receiptData.rows.map((r) => (
-                        <div key={r.id} className="px-2 py-1.5 border-b border-gray-100 last:border-b-0">
+                        <div key={r.id} className="px-2 py-1.5 border-b border-[#333D4D] last:border-b-0">
                           <div className="flex items-center justify-between gap-2 text-xs">
-                            <span className="text-gray-800 font-bold flex-1 truncate">{renderBetNumber(r.number)}</span>
+                            <span className="text-white font-bold flex-1 truncate">{renderBetNumber(r.number)}</span>
                             <span className="text-primary-500 font-bold shrink-0">₹{r.points}</span>
                             <span className="text-gray-500 uppercase text-[10px] shrink-0">{r.type}</span>
                           </div>
@@ -347,19 +347,19 @@ const BidReviewModal = ({
                 )}
 
                 {/* Summary stats */}
-                <div className="rounded-xl border border-gray-200 overflow-hidden">
-                  <div className="grid grid-cols-2 divide-x divide-gray-200">
-                    <div className="p-3 text-center border-b border-gray-200">
+                <div className="rounded-xl border border-[#333D4D] overflow-hidden">
+                  <div className="grid grid-cols-2 divide-x divide-[#333D4D]">
+                    <div className="p-3 text-center border-b border-[#333D4D]">
                       <p className="text-gray-400 text-[10px] uppercase">Total Bets</p>
-                      <p className="text-gray-800 font-bold text-lg">{receiptData.totalBids}</p>
+                      <p className="text-white font-bold text-lg">{receiptData.totalBids}</p>
                     </div>
-                    <div className="p-3 text-center border-b border-gray-200">
+                    <div className="p-3 text-center border-b border-[#333D4D]">
                       <p className="text-gray-400 text-[10px] uppercase">Total Amount</p>
                       <p className="text-primary-600 font-bold text-lg">₹{receiptData.totalAmount.toLocaleString('en-IN')}</p>
                     </div>
                     <div className="p-3 text-center">
                       <p className="text-gray-400 text-[10px] uppercase">Balance Before</p>
-                      <p className="text-gray-800 font-bold">{formatMoney(receiptData.walletBefore)}</p>
+                      <p className="text-white font-bold">{formatMoney(receiptData.walletBefore)}</p>
                     </div>
                     <div className="p-3 text-center">
                       <p className="text-gray-400 text-[10px] uppercase">Balance After</p>
@@ -371,11 +371,11 @@ const BidReviewModal = ({
             </div>
 
             {/* Action buttons */}
-            <div className="px-4 py-3 border-t border-gray-200 bg-white shrink-0 flex gap-3">
+            <div className="px-4 py-3 border-t border-[#333D4D] bg-[#252D3A] shrink-0 flex gap-3">
               <button
                 type="button"
                 onClick={handlePrint}
-                className="flex-1 flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition-colors border border-gray-200"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#252D3A] hover:bg-primary-500/20 text-white font-bold py-3 rounded-xl transition-colors border border-[#333D4D]"
               >
                 <FaPrint className="w-4 h-4" />
                 Print Receipt
@@ -391,8 +391,8 @@ const BidReviewModal = ({
           </div>
         ) : (
           /* ============ REVIEW STAGE ============ */
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 max-h-[min(90svh,720px)] sm:max-h-[calc(100vh-48px)] flex flex-col">
-            <div className="bg-primary-500 text-white px-3 sm:px-4 py-2.5 text-center text-sm sm:text-lg font-semibold shrink-0 border-b border-gray-200">
+          <div className="bg-[#252D3A] rounded-2xl shadow-xl overflow-hidden border border-[#333D4D] max-h-[min(90svh,720px)] sm:max-h-[calc(100vh-48px)] flex flex-col">
+            <div className="bg-primary-500 text-white px-3 sm:px-4 py-2.5 text-center text-sm sm:text-lg font-semibold shrink-0 border-b border-[#333D4D]">
               {formatDateTitle(marketTitle, dateText)}
             </div>
 
@@ -420,11 +420,11 @@ const BidReviewModal = ({
                         </div>
                         <div className="space-y-1.5">
                           {gameRows.map((r) => (
-                            <div key={r.id} className="bg-gray-50 rounded-lg px-3 py-2 border border-gray-200">
-                              <div className="grid grid-cols-3 text-center text-gray-800 text-[12px] sm:text-sm">
+                            <div key={r.id} className="bg-[#1F2732] rounded-lg px-3 py-2 border border-[#333D4D]">
+                              <div className="grid grid-cols-3 text-center text-white text-[12px] sm:text-sm">
                                 <div className="font-bold truncate">{renderBetNumber(r.number)}</div>
                                 <div className="font-bold text-primary-500 truncate">{r.points}</div>
-                                <div className="font-medium text-gray-600 uppercase truncate">{r.type}</div>
+                                <div className="font-medium text-gray-300 uppercase truncate">{r.type}</div>
                               </div>
                             </div>
                           ))}
@@ -442,11 +442,11 @@ const BidReviewModal = ({
                     </div>
                     <div className="mt-2.5 sm:mt-3 space-y-2 sm:space-y-3">
                       {rows.map((r) => (
-                        <div key={r.id} className="bg-gray-50 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200">
-                          <div className="grid grid-cols-3 text-center text-gray-800 font-semibold text-[12px] sm:text-base">
+                        <div key={r.id} className="bg-[#1F2732] rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-[#333D4D]">
+                          <div className="grid grid-cols-3 text-center text-white font-semibold text-[12px] sm:text-base">
                             <div className="truncate">{renderBetNumber(r.number)}</div>
                             <div className="truncate text-primary-500">{r.points}</div>
-                            <div className="truncate font-medium text-gray-600 uppercase">{r.type}</div>
+                            <div className="truncate font-medium text-gray-300 uppercase">{r.type}</div>
                           </div>
                         </div>
                       ))}
@@ -456,23 +456,23 @@ const BidReviewModal = ({
               </div>
 
               <div className="px-3 sm:px-4 pt-3 sm:pt-4 shrink-0">
-                <div className="rounded-2xl overflow-hidden border border-gray-200">
+                <div className="rounded-2xl overflow-hidden border border-[#333D4D]">
                   <div className="grid grid-cols-2">
-                    <div className="p-3 sm:p-4 text-center border-r border-b border-gray-200">
+                    <div className="p-3 sm:p-4 text-center border-r border-b border-[#333D4D]">
                       <div className="text-gray-400 text-[11px] sm:text-sm">Total Bets</div>
-                      <div className="text-gray-800 font-bold text-base sm:text-lg leading-tight">{totalBids}</div>
+                      <div className="text-white font-bold text-base sm:text-lg leading-tight">{totalBids}</div>
                     </div>
-                    <div className="p-3 sm:p-4 text-center border-b border-gray-200">
+                    <div className="p-3 sm:p-4 text-center border-b border-[#333D4D]">
                       <div className="text-gray-400 text-[11px] sm:text-sm">Total Bet Amount</div>
-                      <div className="text-gray-800 font-bold text-base sm:text-lg text-primary-500 leading-tight">{amount}</div>
+                      <div className="text-white font-bold text-base sm:text-lg text-primary-500 leading-tight">{amount}</div>
                     </div>
-                    <div className="p-3 sm:p-4 text-center border-r border-gray-200">
+                    <div className="p-3 sm:p-4 text-center border-r border-[#333D4D]">
                       <div className="text-gray-400 text-[11px] sm:text-sm">Your Balance Before</div>
-                      <div className="text-gray-800 font-bold text-base sm:text-lg leading-tight">{formatMoney(before)}</div>
+                      <div className="text-white font-bold text-base sm:text-lg leading-tight">{formatMoney(before)}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center">
                       <div className="text-gray-400 text-[11px] sm:text-sm">Your Balance After</div>
-                      <div className={`font-bold text-base sm:text-lg leading-tight ${after < 0 ? 'text-red-500' : 'text-gray-800'}`}>{formatMoney(after)}</div>
+                      <div className={`font-bold text-base sm:text-lg leading-tight ${after < 0 ? 'text-red-500' : 'text-white'}`}>{formatMoney(after)}</div>
                     </div>
                   </div>
                 </div>
@@ -495,12 +495,12 @@ const BidReviewModal = ({
               </div>
             </div>
 
-            <div className="px-3 sm:px-4 py-3 sm:py-4 grid grid-cols-2 gap-3 sm:gap-4 bg-white shrink-0 border-t border-gray-200">
+            <div className="px-3 sm:px-4 py-3 sm:py-4 grid grid-cols-2 gap-3 sm:gap-4 bg-[#252D3A] shrink-0 border-t border-[#333D4D]">
               <button
                 type="button"
                 onClick={handleClose}
                 disabled={submitting}
-                className="bg-gray-100 border border-gray-200 text-gray-800 font-bold py-3 rounded-xl sm:rounded-2xl shadow-md active:scale-[0.99] transition-transform hover:border-primary-300 disabled:opacity-50"
+                className="bg-[#252D3A] border border-[#333D4D] text-white font-bold py-3 rounded-xl sm:rounded-2xl shadow-md active:scale-[0.99] transition-transform hover:border-primary-400 disabled:opacity-50"
               >
                 Cancel
               </button>

@@ -391,7 +391,7 @@ const EasyModeBid = ({
                     className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border-2 active:scale-[0.98] transition-colors ${
                         activeTab === 'easy'
                             ? 'bg-primary-500 text-white border-primary-500'
-                            : 'bg-white text-gray-600 border-primary-200 hover:border-primary-400'
+                            : 'bg-[#252D3A] text-gray-300 border-[#333D4D] hover:border-primary-400'
                     }`}
                 >
                     EASY MODE
@@ -402,7 +402,7 @@ const EasyModeBid = ({
                     className={`min-h-[44px] py-3 rounded-lg font-bold text-sm shadow-sm border-2 active:scale-[0.98] transition-colors ${
                         activeTab === 'special'
                             ? 'bg-primary-500 text-white border-primary-500'
-                            : 'bg-white text-gray-600 border-primary-200 hover:border-primary-400'
+                            : 'bg-[#252D3A] text-gray-300 border-[#333D4D] hover:border-primary-400'
                     }`}
                 >
                     SPECIAL MODE
@@ -426,7 +426,7 @@ const EasyModeBid = ({
                         key={bid.id}
                         className="grid grid-cols-4 gap-1 sm:gap-2 text-center items-center py-2.5 px-2 bg-primary-50 rounded-lg border-2 border-primary-200 text-sm"
                     >
-                        <div className="font-bold text-gray-800">
+                        <div className="font-bold text-white">
                             {maxLength === 2 && typeof bid.number === 'string' && bid.number.length === 2 ? (
                                 <span className="inline-flex items-center gap-2 justify-center">
                                     <span>{bid.number[0]}</span>
@@ -437,7 +437,7 @@ const EasyModeBid = ({
                             )}
                         </div>
                         <div className="font-bold text-primary-500">{bid.points}</div>
-                        <div className="text-sm text-gray-600">{bid.type}</div>
+                        <div className="text-sm text-gray-300">{bid.type}</div>
                         <div className="flex justify-center">
                             <button
                                 type="button"
@@ -540,7 +540,7 @@ const EasyModeBid = ({
             <div className="px-3 sm:px-4 py-4 sm:py-2 md:max-w-7xl md:mx-auto">
                 {showModeTabs && !desktopSplit && <div className="mb-4">{modeHeader}</div>}
                 {warning && (
-                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white border-2 border-primary-300 text-primary-600 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md">
+                    <div className="fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#252D3A] border-2 border-primary-400 text-primary-400 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium shadow-xl max-w-[calc(100%-2rem)] sm:max-w-md">
                         {warning}
                     </div>
                 )}
@@ -570,7 +570,7 @@ const EasyModeBid = ({
                                                         [num]: e.target.value.replace(/\D/g, '').slice(0, 6),
                                                     }))
                                                 }
-                                                className="w-full h-9 bg-white border-2 border-primary-200 text-gray-800 placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-2 text-xs font-semibold"
+                                                className="w-full h-9 bg-[#252D3A] border-2 border-[#333D4D] text-white placeholder-gray-400 rounded-r-md focus:outline-none focus:border-primary-500 px-2 text-xs font-semibold"
                                             />
                                         </div>
                                     ))}
@@ -603,13 +603,13 @@ const EasyModeBid = ({
 
                                         <div className="flex flex-col gap-3 mb-4">
                                             <div className="flex flex-row items-center gap-2">
-                                                <label className="text-gray-700 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
-                                                <div className="flex-1 min-w-0 bg-white border-2 border-primary-200 rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-gray-800">
+                                                <label className="text-gray-300 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
+                                                <div className="flex-1 min-w-0 bg-[#252D3A] border-2 border-[#333D4D] rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-white">
                                                     {session}
                                                 </div>
                                             </div>
                                             <div className="flex flex-row items-center gap-2">
-                                                <label className="text-gray-700 text-sm font-medium shrink-0 w-32">Enter Points:</label>
+                                                <label className="text-gray-300 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                                 <input
                                                     ref={pointsInputRef}
                                                     type="text"
@@ -617,14 +617,14 @@ const EasyModeBid = ({
                                                     value={inputPoints}
                                                     onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                                     placeholder="Point"
-                                                    className="no-spinner flex-1 min-w-0 bg-white border-2 border-primary-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
+                                                    className="no-spinner flex-1 min-w-0 bg-[#252D3A] border-2 border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
                                                 />
                                             </div>
                                         </div>
 
                                         {/* Select Sum Keypad with Submit Button */}
                                         <div className="flex gap-4 mb-4">
-                                            <div className="flex-1 bg-white border-2 border-primary-200 rounded-xl p-2">
+                                            <div className="flex-1 bg-[#252D3A] border-2 border-[#333D4D] rounded-xl p-2">
                                                 <h3 className="text-sm font-bold text-primary-500 mb-3 text-center">Select Sum</h3>
                                                 <div className="grid grid-cols-5 sm:grid-cols-5 gap-1.5 sm:gap-2 md:gap-3">
                                                     {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
@@ -647,7 +647,7 @@ const EasyModeBid = ({
                                                                     e.stopPropagation();
                                                                     handleKeypadClick(num);
                                                                 }}
-                                                                className={`relative aspect-square min-h-[40px] sm:min-h-[44px] md:min-h-[48px] text-gray-800 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base flex items-center justify-center transition-all active:scale-90 shadow-lg select-none bg-white border-2 border-primary-200 ${
+                                                                className={`relative aspect-square min-h-[40px] sm:min-h-[44px] md:min-h-[48px] text-white rounded-lg sm:rounded-xl font-bold text-sm sm:text-base flex items-center justify-center transition-all active:scale-90 shadow-lg select-none bg-[#252D3A] border-2 border-[#333D4D] ${
                                                                     hasPoints 
                                                                         ? 'cursor-pointer hover:border-primary-400 hover:bg-primary-50 active:bg-primary-100' 
                                                                         : 'cursor-not-allowed opacity-50'
@@ -704,9 +704,9 @@ const EasyModeBid = ({
                                 </div>
                             </>
                         ) : (
-                            <div className="bg-white border-2 border-primary-200 rounded-2xl p-4 text-center text-gray-600">
-                                <div className="text-gray-800 font-semibold mb-1">Special Mode</div>
-                                <div className="text-sm text-gray-600">This bet type uses Easy Mode only.</div>
+                            <div className="bg-[#252D3A] border-2 border-[#333D4D] rounded-2xl p-4 text-center text-gray-300">
+                                <div className="text-white font-semibold mb-1">Special Mode</div>
+                                <div className="text-sm text-gray-300">This bet type uses Easy Mode only.</div>
                             </div>
                         )}
 
@@ -746,13 +746,13 @@ const EasyModeBid = ({
 
                 <div className="flex flex-col gap-3 mb-4">
                     <div className="flex flex-row items-center gap-2">
-                        <label className="text-gray-700 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
-                                        <div className="flex-1 min-w-0 bg-white border-2 border-primary-200 rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-gray-800">
+                        <label className="text-gray-300 text-sm font-medium shrink-0 w-32">Select Game Type:</label>
+                                        <div className="flex-1 min-w-0 bg-[#252D3A] border-2 border-[#333D4D] rounded-full py-2.5 min-h-[40px] px-4 flex items-center justify-center text-sm font-bold text-white">
                                             {session}
                                         </div>
                     </div>
                     <div className="flex flex-row items-center gap-2">
-                        <label className="text-gray-700 text-sm font-medium shrink-0 w-32">{label}:</label>
+                        <label className="text-gray-300 text-sm font-medium shrink-0 w-32">{label}:</label>
                         <input
                                             type={maxLength === 1 || maxLength === 2 ? 'text' : 'number'}
                             inputMode="numeric"
@@ -760,13 +760,13 @@ const EasyModeBid = ({
                             onChange={handleNumberInputChange}
                             placeholder={labelKey}
                             maxLength={maxLength}
-                            className={`flex-1 min-w-0 bg-white border-2 border-primary-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
+                            className={`flex-1 min-w-0 bg-[#252D3A] border-2 border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none ${
                                 isNumberInvalid ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'focus:ring-primary-500 focus:border-primary-500'
                             }`}
                         />
                     </div>
                     <div className="flex flex-row items-center gap-2">
-                        <label className="text-gray-700 text-sm font-medium shrink-0 w-32">Enter Points:</label>
+                        <label className="text-gray-300 text-sm font-medium shrink-0 w-32">Enter Points:</label>
                                         <input
                                             ref={pointsInputRef}
                                             type="text"
@@ -774,7 +774,7 @@ const EasyModeBid = ({
                                             value={inputPoints}
                                             onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                             placeholder="Point"
-                                            className="no-spinner flex-1 min-w-0 bg-white border-2 border-primary-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
+                                            className="no-spinner flex-1 min-w-0 bg-[#252D3A] border-2 border-[#333D4D] text-white placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
                                         />
                     </div>
                 </div>

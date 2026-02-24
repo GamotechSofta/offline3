@@ -2,6 +2,7 @@ import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import User from '../models/user/user.js';
 import Bet from '../models/bet/bet.js';
 import Admin from '../models/admin/admin.js';
+import ActivityLog from '../models/activityLog/activityLog.js';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
 import { logActivity, getClientIp } from '../utils/activityLogger.js';
 
@@ -17,6 +18,68 @@ export const getAllWallets = async (req, res) => {
             .sort({ balance: -1 });
 
         res.status(200).json({ success: true, data: wallets });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Bookie: get own balance movements (credit/debit from bookie's perspective).
+ * Derived from activity log wallet_adjust and wallet_set_balance for this bookie.
+ */
+export const getBookieTransactions = async (req, res) => {
+    try {
+        if (req.admin?.role !== 'bookie') {
+            return res.status(200).json({ success: true, data: [] });
+        }
+        const bookieUsername = req.admin.username;
+        const logs = await ActivityLog.find({
+            action: { $in: ['wallet_adjust', 'wallet_set_balance'] },
+            performedByType: 'bookie',
+            performedBy: bookieUsername,
+        })
+            .sort({ createdAt: -1 })
+            .limit(500)
+            .lean();
+
+        const userIds = [...new Set(logs.map((l) => l.meta?.userId).filter(Boolean))];
+        const users = await User.find({ _id: { $in: userIds } }).select('username').lean();
+        const userMap = new Map((users || []).map((u) => [String(u._id), u.username || '']));
+
+        const data = logs.map((log) => {
+            const meta = log.meta || {};
+            let absAmount = 0;
+            let type = 'credit';
+            let description = log.details || '';
+
+            if (log.action === 'wallet_adjust') {
+                absAmount = Math.abs(Number(meta.amount) || 0);
+                type = meta.type === 'credit' ? 'debit' : 'credit'; // player credit = bookie debit; player debit = bookie credit
+                description = description || `Player wallet ${meta.type}: ₹${absAmount}`;
+            } else if (log.action === 'wallet_set_balance') {
+                const prev = Number(meta.previousBalance) || 0;
+                const newBal = Number(meta.balance) || 0;
+                const diff = newBal - prev;
+                absAmount = Math.abs(diff);
+                type = diff >= 0 ? 'debit' : 'credit';
+                description = description || `Set balance to ₹${newBal} (was ₹${prev})`;
+            }
+
+            const userId = meta.userId ? String(meta.userId) : log.targetId || '';
+            const playerName = userId ? (userMap.get(userId) || userId) : '';
+
+            return {
+                _id: log._id,
+                type,
+                amount: absAmount,
+                description,
+                createdAt: log.createdAt,
+                playerName,
+                userId: userId || undefined,
+            };
+        });
+
+        res.status(200).json({ success: true, data });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
