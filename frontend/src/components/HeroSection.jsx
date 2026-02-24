@@ -17,7 +17,7 @@ const HeroSection = () => {
     <>
       {/* Desktop: section with aspect ratio */}
       <section
-        className="w-full max-w-full overflow-hidden mt-2 md:mt-5 mb-4 md:mb-6 relative hidden md:block rounded-b-xl"
+        className="w-full max-w-full overflow-hidden mt-0 md:mt-1 mb-3 md:mb-4 relative hidden md:block rounded-b-xl"
         style={{ aspectRatio: '1920/500' }}
       >
         <div
@@ -27,7 +27,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#1F2732]/80 via-transparent to-transparent pointer-events-none" />
       </section>
       {/* Mobile: show full banner so no content is hidden */}
-      <section className="w-full max-w-full overflow-hidden mt-0 mb-4 md:hidden rounded-b-xl">
+      <section className="w-full max-w-full overflow-hidden mt-0 mb-3 md:hidden rounded-b-xl">
         <div className="relative w-full">
           <img
             src={heroImageMobile}

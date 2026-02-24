@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
 import { getBalance, updateUserBalance } from '../api/bets';
 
 const AppHeader = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(null);
@@ -66,6 +68,25 @@ const AppHeader = () => {
     };
 
     fetchAndUpdateBalance();
+
+    // Fetch bookie name for navbar if user exists but bookieName not in storage (e.g. logged in before we added it)
+    const fetchBookieNameIfMissing = async () => {
+      try {
+        const userData = localStorage.getItem('user');
+        if (!userData) return;
+        const u = JSON.parse(userData);
+        const userId = u?.id || u?._id;
+        if (!userId || (u.bookieName !== undefined && u.bookieName !== null)) return;
+        const res = await fetch(`${API_BASE_URL}/users/my-profile?userId=${encodeURIComponent(userId)}`);
+        const json = await res.json();
+        if (json.success && json.data?.bookieName != null) {
+          const updated = { ...u, bookieName: json.data.bookieName };
+          localStorage.setItem('user', JSON.stringify(updated));
+          setUser(updated);
+        }
+      } catch (_) {}
+    };
+    fetchBookieNameIfMissing();
 
     // Listen for storage changes (when user logs in/out in another tab)
     window.addEventListener('storage', checkUser);
@@ -145,29 +166,35 @@ const AppHeader = () => {
             </div>
             </button>
 
-            {/* Home Icon */}
-            <Link 
-              to="/" 
-              className="w-9 h-9 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-lg md:rounded-xl bg-[#252D3A] border border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
-              title="Home"
-            >
-              <svg 
-                className="w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 text-white" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
+            {/* Home Icon - hide when already on home */}
+            {location.pathname !== '/' && (
+              <Link 
+                to="/" 
+                className="w-9 h-9 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 rounded-lg md:rounded-xl bg-[#252D3A] border border-[#333D4D] flex items-center justify-center cursor-pointer active:scale-95 hover:bg-primary-500/20 transition-all duration-200 shadow-sm"
+                title="Home"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
-                />
-              </svg>
-            </Link>
+                <svg 
+                  className="w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth="2" 
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                  />
+                </svg>
+              </Link>
+            )}
 
-            {/* Logo - aligned next to hamburger */}
-            
+            {/* Bookie name - show when player was created by a bookie */}
+            {user?.bookieName && (
+              <span className="text-xs sm:text-sm text-gray-300 truncate max-w-[100px] sm:max-w-[160px] md:max-w-[200px] ml-0.5" title={`Created by ${user.bookieName}`}>
+                Via {user.bookieName}
+              </span>
+            )}
           </div>
 
         {/* Right side buttons - Wallet, Profile */}

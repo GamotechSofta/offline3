@@ -17,20 +17,23 @@ const AviatorSection = () => {
   };
 
   return (
-    <section className="w-full pt-1 pb-4 sm:pt-4 sm:pb-8">
-      {/* Section header - compact on mobile */}
-      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-5">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#333D4D] to-[#333D4D]" />
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <span className="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-[#252D3A] border border-[#333D4D] text-primary-400">
-            <svg className="h-3.5 w-3.5 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <section className="w-full pt-0 pb-4 sm:pt-1 sm:pb-8">
+      {/* Section header - bold, left-aligned, with tagline */}
+      <div className="mb-3 sm:mb-5">
+        <div className="inline-flex items-center gap-2 sm:gap-2.5">
+          <span className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </span>
-          <h2 className="text-white text-sm sm:text-lg font-semibold tracking-tight">Games</h2>
+          <div>
+            <h2 className="text-base sm:text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Play & Win
+            </h2>
+            <p className="text-gray-400 text-xs sm:text-sm mt-0.5 font-medium">Instant games — tap to play</p>
+          </div>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#333D4D] to-[#333D4D]" />
       </div>
 
       {/* Mobile: 3 cards in one row, horizontal carousel. Desktop: grid */}

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, userLogin, userSignup, userHeartbeat, getUsers, getSingleUser, togglePlayerStatus, deletePlayer, clearLoginDevices, updatePlayerToGiveToTake, updatePlayerPassword } from '../../controllers/userController.js';
+import { createUser, userLogin, userSignup, userHeartbeat, getMyProfile, getUsers, getSingleUser, togglePlayerStatus, deletePlayer, clearLoginDevices, updatePlayerToGiveToTake, updatePlayerPassword } from '../../controllers/userController.js';
 import { verifyAdmin, verifySuperAdmin } from '../../middleware/adminAuth.js';
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/login', userLogin);
 router.post('/signup', userSignup);
 router.post('/heartbeat', userHeartbeat);
+router.get('/my-profile', getMyProfile);
 
 // Admin/Bookie routes
 router.get('/', verifyAdmin, getUsers);

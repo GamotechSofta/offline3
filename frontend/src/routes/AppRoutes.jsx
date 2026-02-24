@@ -92,12 +92,12 @@ const Layout = ({ children }) => {
     return <>{children}</>;
   }
 
-  // Same header (logoipsum, Download App, bell) for all pages - mobile-style
+  // Same header (logoipsum, Download App, bell) for all pages - mobile-style; dark theme to match home content
   if (isHomePage) {
     return (
-      <div className="min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-white w-full">
+      <div className="min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 bg-[#1F2732] w-full">
         <AppHeader />
-        <div className="pt-[calc(44px+env(safe-area-inset-top,0px))] sm:pt-[calc(52px+env(safe-area-inset-top,0px))] md:pt-[calc(56px+env(safe-area-inset-top,0px))]">
+        <div className="pt-[calc(40px+env(safe-area-inset-top,0px))] sm:pt-[calc(48px+env(safe-area-inset-top,0px))] md:pt-[calc(52px+env(safe-area-inset-top,0px))]">
           {children}
         </div>
         <BottomNavbar />
@@ -115,9 +115,13 @@ const Layout = ({ children }) => {
   const isHistoryPage =
     location.pathname === '/bet-history' || location.pathname === '/market-result-history';
   const isProfilePage = location.pathname === '/profile';
+  const isFundsPage = location.pathname === '/funds';
+  const isPassbookPage = location.pathname === '/passbook';
+  const isBankPage = location.pathname === '/bank';
+  const isDarkLayout = isProfilePage || isFundsPage || isBetsPage || isHistoryPage || isPassbookPage || isBankPage;
 
   return (
-    <div className={`min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isProfilePage ? 'bg-[#1F2732]' : 'bg-white'}`}>
+    <div className={`min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'}`}>
       <AppHeader />
       {/* Reduce mobile top-gap under fixed header */}
       {/* Desktop: ensure no overlap under fixed header */}

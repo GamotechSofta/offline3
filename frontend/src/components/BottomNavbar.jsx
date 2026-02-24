@@ -128,12 +128,8 @@ const BottomNavbar = () => {
                       : 'bg-primary-500/20 border-2 border-primary-400'
                   }`}
                 >
-                  {/* Icon: visible when inactive, white when active (on primary bg) */}
-                  <div
-                    className={`transition-all duration-200 ${
-                      active ? 'brightness-0 invert' : 'brightness-0 opacity-80'
-                    }`}
-                  >
+                  {/* Icon: white for both states (invert), active stands out via circle bg */}
+                  <div className="transition-all duration-200 brightness-0 invert">
                     {item.icon}
                   </div>
                 </div>
@@ -160,11 +156,9 @@ const BottomNavbar = () => {
               }}
               className="relative flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl min-w-[56px] active:scale-95 transition-all duration-150 touch-manipulation"
             >
-              {/* Icon: clearly visible when inactive, primary when active */}
+              {/* Icon: white for all items (invert) */}
               <div
-                className={`transition-all duration-200 ${
-                  active ? 'scale-110 brightness-0 opacity-90' : 'scale-100 brightness-0 opacity-80'
-                }`}
+                className={`transition-all duration-200 brightness-0 invert ${active ? 'scale-110 opacity-100' : 'scale-100 opacity-90'}`}
               >
                 {item.icon}
               </div>

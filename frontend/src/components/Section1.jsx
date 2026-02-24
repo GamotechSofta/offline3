@@ -124,16 +124,16 @@ const Section1 = () => {
                 className={`rounded-xl overflow-hidden transition-all duration-200 ${
                   isClickable
                     ? 'bg-[#252D3A] border-2 border-green-500/70 cursor-pointer hover:border-green-400 hover:shadow-lg hover:shadow-green-500/20'
-                    : 'bg-[#252D3A] border border-[#333D4D] cursor-not-allowed opacity-70'
+                    : 'bg-[#1E2630] border border-[#333D4D] cursor-not-allowed'
                 }`}
               >
-                {/* Status bar - bold green for Open/Running, muted red for Closed */}
+                {/* Status bar - bold green for Open/Running, dark red for Closed */}
                 <div className={`px-3 py-2 text-center ${
                   market.status === 'closed'
-                    ? 'bg-red-500/20 text-red-400'
+                    ? 'bg-red-900/95 text-red-200'
                     : 'bg-green-600 text-white'
                 }`}>
-                  <p className={`text-xs font-semibold ${market.status !== 'closed' ? 'font-bold' : ''}`}>
+                  <p className={`text-xs font-semibold ${market.status !== 'closed' ? 'font-bold' : 'font-bold'}`}>
                     {market.status === 'open' && 'Open'}
                     {market.status === 'running' && 'Running'}
                     {market.status === 'closed' && 'Closed'}
@@ -141,14 +141,14 @@ const Section1 = () => {
                 </div>
 
                 <div className="p-3 sm:p-4">
-                  <div className={`flex items-center gap-1.5 mb-2 ${isClickable ? 'text-gray-300' : 'text-gray-400'}`}>
+                  <div className={`flex items-center gap-1.5 mb-2 ${isClickable ? 'text-gray-300' : 'text-gray-500'}`}>
                     <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <p className="text-xs truncate">{market.timeRange}</p>
                   </div>
-                  <h3 className={`text-sm sm:text-base font-semibold mb-3 truncate ${isClickable ? 'text-white' : 'text-gray-400'}`}>{market.gameName}</h3>
-                  <p className={`text-lg sm:text-xl font-bold font-mono tracking-wide ${isClickable ? 'text-primary-400' : 'text-gray-500'}`}>{market.result}</p>
+                  <h3 className={`text-sm sm:text-base font-semibold mb-3 truncate ${isClickable ? 'text-white' : 'text-gray-500'}`}>{market.gameName}</h3>
+                  <p className={`text-lg sm:text-xl font-bold font-mono tracking-wide ${isClickable ? 'text-primary-400' : 'text-gray-600'}`}>{market.result}</p>
                 </div>
               </div>
             );

@@ -118,8 +118,9 @@ export const userLogin = async (req, res) => {
         };
         if (user.referredBy) {
             data.referredBy = user.referredBy;
-            const bookie = await Admin.findById(user.referredBy).select('uiTheme').lean();
+            const bookie = await Admin.findById(user.referredBy).select('uiTheme username').lean();
             data.bookieTheme = bookie?.uiTheme || { themeId: 'default' };
+            data.bookieName = bookie?.username || null;
         }
 
         res.status(200).json({
@@ -127,6 +128,28 @@ export const userLogin = async (req, res) => {
             message: 'Login successful',
             data,
         });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/** Get current player's profile snippet (e.g. bookieName) for navbar. Called with userId from localStorage. */
+export const getMyProfile = async (req, res) => {
+    try {
+        const userId = req.query.userId || req.body?.userId;
+        if (!userId) {
+            return res.status(400).json({ success: false, message: 'userId is required' });
+        }
+        const user = await User.findById(userId).select('referredBy').lean();
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        const data = { bookieName: null };
+        if (user.referredBy) {
+            const bookie = await Admin.findById(user.referredBy).select('username').lean();
+            data.bookieName = bookie?.username || null;
+        }
+        res.status(200).json({ success: true, data });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -264,8 +287,9 @@ export const userSignup = async (req, res) => {
         };
         if (referredBy) {
             signupData.referredBy = referredBy;
-            const bookie = await Admin.findById(referredBy).select('uiTheme').lean();
+            const bookie = await Admin.findById(referredBy).select('uiTheme username').lean();
             signupData.bookieTheme = bookie?.uiTheme || { themeId: 'default' };
+            signupData.bookieName = bookie?.username || null;
         }
         res.status(201).json({
             success: true,
