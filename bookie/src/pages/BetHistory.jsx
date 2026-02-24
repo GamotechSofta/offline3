@@ -104,7 +104,7 @@ const BetHistory = () => {
                                         <td className="px-6 py-4 text-sm">{getBetTypeLabel(bet.betType, t, bet.betNumber)}</td>
                                         <td className="px-6 py-4 text-sm">₹{bet.amount}</td>
                                         <td className="px-6 py-4 text-sm">
-                                            <span className={`px-2 py-1 rounded text-xs ${bet.status === 'won' ? 'bg-green-600' : bet.status === 'lost' ? 'bg-red-600' : bet.status === 'pending' ? 'bg-orange-600' : 'bg-gray-200'}`}>{bet.status}</span>
+                                            <span className={`px-2 py-1 rounded text-xs ${bet.status === 'won' ? 'bg-green-600' : bet.status === 'lost' ? 'bg-red-600' : bet.status === 'pending' ? 'bg-primary-600' : 'bg-gray-200'}`}>{bet.status}</span>
                                         </td>
                                         <td className="px-6 py-4 text-sm">{new Date(bet.createdAt).toLocaleString()}</td>
                                     </tr>

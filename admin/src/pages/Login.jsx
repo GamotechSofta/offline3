@@ -64,16 +64,16 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-100/60 rounded-full blur-3xl animate-pulse-soft"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-100/60 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-100/60 rounded-full blur-3xl animate-pulse-soft"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary-100/60 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
             </div>
 
             <div className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-md border border-gray-200 animate-slideUp">
                 {/* Logo/Icon */}
-                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center glow-orange">
+                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center glow-primary">
                     <svg className="w-8 h-8 text-gray-800" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
@@ -94,11 +94,11 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="relative group">
-                        <label className="block text-sm font-medium text-gray-500 mb-2 group-focus-within:text-orange-500 transition-colors">
+                        <label className="block text-sm font-medium text-gray-500 mb-2 group-focus-within:text-primary-500 transition-colors">
                             Username
                         </label>
                         <div className="relative">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-orange-500 transition-colors">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                 </svg>
@@ -108,7 +108,7 @@ const Login = () => {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 
-                                         focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 
+                                         focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 
                                          transition-all duration-200 hover:border-gray-400"
                                 placeholder="Enter your username"
                                 autoComplete="username"
@@ -119,11 +119,11 @@ const Login = () => {
                     </div>
 
                     <div className="relative group">
-                        <label className="block text-sm font-medium text-gray-500 mb-2 group-focus-within:text-orange-500 transition-colors">
+                        <label className="block text-sm font-medium text-gray-500 mb-2 group-focus-within:text-primary-500 transition-colors">
                             Password
                         </label>
                         <div className="relative">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-orange-500 transition-colors">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                 </svg>
@@ -133,7 +133,7 @@ const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full pl-11 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 
-                                         focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 
+                                         focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 
                                          transition-all duration-200 hover:border-gray-400"
                                 placeholder="Enter your password"
                                 autoComplete="current-password"
@@ -157,9 +157,9 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 
+                        className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 
                                  text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 
-                                 glow-orange hover:-translate-y-0.5
+                                 glow-primary hover:-translate-y-0.5
                                  disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
                                  flex items-center justify-center gap-2"
                     >

@@ -38,13 +38,13 @@ const StatCard = ({
             textColor: 'text-purple-600',
         },
         yellow: {
-            bg: 'from-orange-50 to-transparent',
-            border: 'border-orange-200',
-            iconBg: 'bg-orange-50',
-            iconBorder: 'border-orange-200',
-            iconText: 'text-orange-600',
-            shadow: 'shadow-orange-100',
-            textColor: 'text-orange-600',
+            bg: 'from-primary-50 to-transparent',
+            border: 'border-primary-200',
+            iconBg: 'bg-primary-50',
+            iconBorder: 'border-primary-200',
+            iconText: 'text-primary-600',
+            shadow: 'shadow-primary-100',
+            textColor: 'text-primary-600',
         },
     };
 

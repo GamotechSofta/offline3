@@ -74,7 +74,7 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         >
             {/* Logo + Close (mobile) */}
             <div className="p-4 sm:p-6 border-b border-gray-200 shrink-0 flex items-center justify-between">
-                <h2 className="text-lg sm:text-xl font-bold text-orange-500">Super Admin</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-primary-500">Super Admin</h2>
                 <button
                     type="button"
                     onClick={onClose}
@@ -92,8 +92,8 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
                         key={item.path}
                         onClick={() => handleNav(item.path)}
                         className={`w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-200 text-sm sm:text-base ${isActive(item.path)
-                            ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg shadow-orange-500/20'
-                            : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:-translate-y-0.5'
+                            ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold shadow-lg shadow-primary-500/20'
+                            : 'text-gray-600 hover:bg-primary-50 hover:text-primary-600 hover:-translate-y-0.5'
                             }`}
                     >
                         <item.icon className="w-5 h-5 sm:text-xl shrink-0" />

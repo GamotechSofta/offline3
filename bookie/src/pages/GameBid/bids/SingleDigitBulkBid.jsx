@@ -118,7 +118,7 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
                                     value={inputPoints}
                                     onChange={(e) => setInputPoints(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                     placeholder="Point"
-                                    className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2 min-h-[36px] px-4 text-center text-xs focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none"
+                                    className="no-spinner flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2 min-h-[36px] px-4 text-center text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500 focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -126,15 +126,15 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
                     <div className="w-full min-w-0 md:flex md:justify-center md:items-center pt-1 md:pt-6">
                         <div className="grid grid-cols-3 gap-2 w-full max-w-[260px] md:max-w-[200px] mx-auto">
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                                <button key={num} type="button" onClick={() => handleDigitClick(num)} className="relative aspect-square min-h-[40px] bg-gray-100 border border-gray-200 hover:border-orange-500/50 text-orange-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
+                                <button key={num} type="button" onClick={() => handleDigitClick(num)} className="relative aspect-square min-h-[40px] bg-gray-100 border border-gray-200 hover:border-primary-500/50 text-primary-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
                                     {num}
-                                    {pointsByDigit[num] > 0 && <span className="absolute top-0.5 right-1 text-[10px] font-bold text-orange-500">{pointsByDigit[num]}</span>}
+                                    {pointsByDigit[num] > 0 && <span className="absolute top-0.5 right-1 text-[10px] font-bold text-primary-500">{pointsByDigit[num]}</span>}
                                 </button>
                             ))}
                             <div className="col-span-3 flex justify-center">
-                                <button type="button" onClick={() => handleDigitClick(0)} className="relative aspect-square min-w-[40px] min-h-[40px] w-14 bg-gray-100 border border-gray-200 hover:border-orange-500/50 text-orange-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
+                                <button type="button" onClick={() => handleDigitClick(0)} className="relative aspect-square min-w-[40px] min-h-[40px] w-14 bg-gray-100 border border-gray-200 hover:border-primary-500/50 text-primary-500 rounded-lg font-bold text-sm flex items-center justify-center transition-all active:scale-95 shadow-md">
                                     0
-                                    {pointsByDigit[0] > 0 && <span className="absolute top-0.5 right-1 text-[10px] font-bold text-orange-500">{pointsByDigit[0]}</span>}
+                                    {pointsByDigit[0] > 0 && <span className="absolute top-0.5 right-1 text-[10px] font-bold text-primary-500">{pointsByDigit[0]}</span>}
                                 </button>
                             </div>
                         </div>
@@ -145,7 +145,7 @@ const SingleDigitBulkBid = ({ title, gameType, betType, embedInSingleScroll = fa
                 {bulkBidsCount > 0 && (
                     <div className={`px-1 ${embedInSingleScroll ? 'mt-2' : 'mt-4'}`}>
                         <button type="button" onClick={handleAddToCart}
-                            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]">
+                            className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-3.5 min-h-[48px] rounded-lg shadow-md hover:from-primary-600 hover:to-primary-700 transition-all active:scale-[0.98]">
                             Add {rows.length} bet(s) to Cart
                         </button>
                     </div>

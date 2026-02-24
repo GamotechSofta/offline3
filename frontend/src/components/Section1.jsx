@@ -90,24 +90,24 @@ const Section1 = () => {
     <section className="w-full bg-white min-[375px]:pt-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 sm:pb-10 min-[375px]:px-3 sm:px-4 md:pb-8 max-w-full overflow-x-hidden">
       {/* ═══ Desktop: MARKETS header ── */}
       <div className="hidden md:flex items-center gap-4 mt-4 mb-5 w-full max-w-7xl mx-auto px-4">
-        {/* ── Left orange line ── */}
-        <div className="flex-1 h-[1px] bg-gradient-to-r from-orange-200 via-orange-400 to-orange-500 min-w-[20px]" />
+        {/* ── Left primary line ── */}
+        <div className="flex-1 h-[1px] bg-gradient-to-r from-primary-200 via-primary-400 to-primary-500 min-w-[20px]" />
 
         {/* ── MARKETS center ── */}
         <div className="flex items-center gap-2 shrink-0">
-          <svg className="w-2.5 h-2.5 text-orange-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
+          <svg className="w-2.5 h-2.5 text-primary-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
           <h2 className="text-gray-800 text-lg font-bold tracking-[0.15em] uppercase">Markets</h2>
-          <svg className="w-2.5 h-2.5 text-orange-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
+          <svg className="w-2.5 h-2.5 text-primary-400" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 4.2L12 6l-4.2 1.8L6 12l-1.8-4.2L0 6l4.2-1.8z"/></svg>
         </div>
 
-        {/* ── Right orange line ── */}
-        <div className="flex-1 h-[1px] bg-gradient-to-l from-orange-200 via-orange-400 to-orange-500 min-w-[20px]" />
+        {/* ── Right primary line ── */}
+        <div className="flex-1 h-[1px] bg-gradient-to-l from-primary-200 via-primary-400 to-primary-500 min-w-[20px]" />
 
       </div>
 
       {/* ═══ Mobile: MARKETS Header only ═══ */}
       <div className="flex md:hidden items-end justify-center mb-4 min-[375px]:mb-6 sm:mb-8 w-full max-w-7xl mx-auto gap-1 min-[375px]:gap-2 sm:gap-4">
-        <div className="flex-1 h-[2px] bg-orange-500 shrink min-w-0" />
+        <div className="flex-1 h-[2px] bg-primary-500 shrink min-w-0" />
         <div className="relative shrink-0 w-[110px] min-[375px]:w-[140px] sm:w-[180px] h-[24px] min-[375px]:h-[28px] sm:h-[34px]">
           <svg className="w-full h-full" viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             {/* Add small bottom "wings" so lines join like screenshot */}
@@ -117,7 +117,7 @@ const Section1 = () => {
             <h2 className="text-gray-800 text-sm min-[375px]:text-base sm:text-xl font-bold tracking-wider">MARKETS</h2>
           </div>
         </div>
-        <div className="flex-1 h-[2px] bg-orange-500 shrink min-w-0" />
+        <div className="flex-1 h-[2px] bg-primary-500 shrink min-w-0" />
       </div>
       {/* Market Cards Grid */}
       {loading ? (
@@ -137,9 +137,9 @@ const Section1 = () => {
             <div
               key={market.id}
               onClick={() => isClickable && navigate('/bidoptions', { state: { market } })}
-              className={`bg-white border-2 border-orange-200 rounded-lg overflow-hidden shadow-md transform transition-transform duration-200 ${
+              className={`bg-white border-2 border-primary-200 rounded-lg overflow-hidden shadow-md transform transition-transform duration-200 ${
                 isClickable 
-                  ? 'cursor-pointer hover:scale-[1.02] hover:border-orange-400' 
+                  ? 'cursor-pointer hover:scale-[1.02] hover:border-primary-400' 
                   : 'cursor-not-allowed opacity-60'
               }`}
             >
@@ -176,7 +176,7 @@ const Section1 = () => {
 
               {/* Result */}
               <div>
-                <p className="text-orange-500 text-lg min-[375px]:text-xl sm:text-2xl md:text-3xl font-bold">
+                <p className="text-primary-500 text-lg min-[375px]:text-xl sm:text-2xl md:text-3xl font-bold">
                   {market.result}
                 </p>
               </div>

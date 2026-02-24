@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Bet from '../models/bet/bet.js';
 import Payment from '../models/payment/payment.js';
 import User from '../models/user/user.js';
@@ -7,7 +8,7 @@ import { getBookieUserIds } from '../utils/bookieFilter.js';
 
 export const getReport = async (req, res) => {
     try {
-        const { startDate, endDate } = req.query;
+        const { startDate, endDate, marketId } = req.query;
         const dateFilter = {};
         const bookieUserIds = await getBookieUserIds(req.admin);
 
@@ -18,6 +19,9 @@ export const getReport = async (req, res) => {
         }
         if (bookieUserIds !== null) {
             dateFilter.userId = { $in: bookieUserIds };
+        }
+        if (marketId && mongoose.Types.ObjectId.isValid(marketId)) {
+            dateFilter.marketId = new mongoose.Types.ObjectId(marketId);
         }
 
         // Total revenue (from all bets)
@@ -40,9 +44,15 @@ export const getReport = async (req, res) => {
         const winningBets = await Bet.countDocuments({ status: 'won', ...dateFilter });
         const losingBets = await Bet.countDocuments({ status: 'lost', ...dateFilter });
 
-        // Active users (filter by bookie if applicable)
-        const userFilter = bookieUserIds !== null ? { _id: { $in: bookieUserIds }, isActive: true } : { isActive: true };
-        const activeUsers = await User.countDocuments(userFilter);
+        // Active users: when filtering by market, count distinct users who bet; otherwise global active count
+        let activeUsers;
+        if (dateFilter.marketId) {
+            const distinctUsers = await Bet.distinct('userId', dateFilter);
+            activeUsers = distinctUsers.length;
+        } else {
+            const userFilter = bookieUserIds !== null ? { _id: { $in: bookieUserIds }, isActive: true } : { isActive: true };
+            activeUsers = await User.countDocuments(userFilter);
+        }
 
         // Calculate net profit
         const revenue = totalRevenue[0]?.total || 0;

@@ -90,13 +90,13 @@ const SectionCard = ({ title, description, icon: Icon, children, linkTo, linkLab
         <div className="flex items-start justify-between mb-4">
             <div>
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                    {Icon && <Icon className="w-5 h-5 text-orange-500" />}
+                    {Icon && <Icon className="w-5 h-5 text-primary-500" />}
                     {title}
                 </h3>
                 {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
             </div>
             {linkTo && (
-                <Link to={linkTo} className="text-xs font-medium text-orange-500 hover:text-orange-600 flex items-center gap-1">
+                <Link to={linkTo} className="text-xs font-medium text-primary-500 hover:text-primary-600 flex items-center gap-1">
                     {linkLabel || t('view')} <FaArrowRight className="w-3 h-3" />
                 </Link>
             )}
@@ -137,6 +137,10 @@ const Dashboard = () => {
     const [customMode, setCustomMode] = useState(false);
     const [customOpen, setCustomOpen] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [markets, setMarkets] = useState([]);
+    const [selectedMarketId, setSelectedMarketId] = useState('');
+    const [marketReport, setMarketReport] = useState(null);
+    const [marketReportLoading, setMarketReportLoading] = useState(false);
 
     const PRESETS = getPresets(t);
 
@@ -162,10 +166,52 @@ const Dashboard = () => {
         }
     };
 
+    const fetchMarkets = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/markets/get-markets`);
+            const data = await response.json();
+            if (data.success && Array.isArray(data.data)) setMarkets(data.data);
+        } catch (_) {}
+    };
+
+    const fetchMarketReport = async () => {
+        if (!selectedMarketId) {
+            setMarketReport(null);
+            return;
+        }
+        try {
+            setMarketReportLoading(true);
+            const { from, to } = getFromTo();
+            const params = new URLSearchParams({ marketId: selectedMarketId });
+            if (from && to) {
+                params.set('startDate', from);
+                params.set('endDate', to);
+            }
+            const response = await fetch(`${API_BASE_URL}/reports?${params}`, { headers: getBookieAuthHeaders() });
+            const data = await response.json();
+            if (data.success) setMarketReport(data.data);
+            else setMarketReport(null);
+        } catch (_) {
+            setMarketReport(null);
+        } finally {
+            setMarketReportLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchDashboardStats();
         refreshBookieProfile();
+        fetchMarkets();
     }, []);
+
+    useEffect(() => {
+        if (selectedMarketId) fetchMarketReport();
+        else setMarketReport(null);
+    }, [selectedMarketId]);
+
+    useEffect(() => {
+        if (selectedMarketId && !loading) fetchMarketReport();
+    }, [datePreset, customMode, customFrom, customTo]);
 
     const fetchDashboardStats = async (rangeOverride, options = {}) => {
         const isRefresh = options.refresh === true;
@@ -198,7 +244,10 @@ const Dashboard = () => {
         }
     };
 
-    const handleRefresh = () => fetchDashboardStats(undefined, { refresh: true });
+    const handleRefresh = () => {
+        fetchDashboardStats(undefined, { refresh: true });
+        if (selectedMarketId) fetchMarketReport();
+    };
     const handlePresetSelect = (presetId) => {
         setDatePreset(presetId);
         setCustomMode(false);
@@ -249,7 +298,7 @@ const Dashboard = () => {
                         <FaExclamationTriangle className="w-8 h-8 text-red-500" />
                     </div>
                     <p className="text-red-500 text-lg font-medium mb-2">{error}</p>
-                    <button onClick={() => fetchDashboardStats()} className="mt-4 px-6 py-2 bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-xl">
+                    <button onClick={() => fetchDashboardStats()} className="mt-4 px-6 py-2 bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-xl">
                         {t('retry')}
                     </button>
                 </div>
@@ -268,8 +317,8 @@ const Dashboard = () => {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                            <span className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                                <FaChartLine className="w-5 h-5 text-orange-500" />
+                            <span className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center">
+                                <FaChartLine className="w-5 h-5 text-primary-500" />
                             </span>
                             {t('dashboardOverview')}
                         </h1>
@@ -279,7 +328,7 @@ const Dashboard = () => {
                         type="button"
                         onClick={handleRefresh}
                         disabled={refreshing}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-orange-500/20 border border-gray-200 hover:border-orange-300 text-gray-600 hover:text-orange-500 transition-all disabled:opacity-60 text-sm font-medium"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 transition-all disabled:opacity-60 text-sm font-medium"
                     >
                         <FaSyncAlt className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                         {t('refresh')}
@@ -297,17 +346,17 @@ const Dashboard = () => {
                                     key={p.id}
                                     type="button"
                                     onClick={() => handlePresetSelect(p.id)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isActive ? 'bg-orange-500 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'}`}
+                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isActive ? 'bg-primary-500 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'}`}
                                 >
                                     {p.label}
                                 </button>
                             );
                         })}
-                        <span className="text-xs text-gray-400 px-2">{t('showingDataFor')} <span className="text-orange-500 font-medium">{displayLabel}</span></span>
+                        <span className="text-xs text-gray-400 px-2">{t('showingDataFor')} <span className="text-primary-500 font-medium">{displayLabel}</span></span>
                         <button
                             type="button"
                             onClick={handleCustomToggle}
-                            className={`px-4 py-2 rounded-lg text-sm font-semibold ${customMode ? 'bg-orange-500 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'}`}
+                            className={`px-4 py-2 rounded-lg text-sm font-semibold ${customMode ? 'bg-primary-500 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'}`}
                         >
                             {t('custom')}
                         </button>
@@ -321,7 +370,7 @@ const Dashboard = () => {
                                     <label className="block text-xs text-gray-400 mb-1">{t('to')}</label>
                                     <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" />
                                 </div>
-                                <button type="button" onClick={handleCustomApply} className="px-4 py-2 rounded-lg bg-orange-500 text-white font-semibold text-sm">
+                                <button type="button" onClick={handleCustomApply} className="px-4 py-2 rounded-lg bg-primary-500 text-white font-semibold text-sm">
                                     {t('apply')}
                                 </button>
                             </div>
@@ -332,25 +381,109 @@ const Dashboard = () => {
 
             {/* Action Required */}
             {hasActionRequired && (
-                <div className="mb-6 p-4 rounded-xl bg-orange-500/10 border border-orange-200">
-                    <h3 className="text-sm font-semibold text-orange-500 flex items-center gap-2 mb-3">
+                <div className="mb-6 p-4 rounded-xl bg-primary-500/10 border border-primary-200">
+                    <h3 className="text-sm font-semibold text-primary-500 flex items-center gap-2 mb-3">
                         <FaExclamationTriangle className="w-4 h-4" />
                         {t('actionRequired')}
                     </h3>
                     <div className="flex flex-wrap gap-3">
                         {pendingPayments > 0 && (
-                            <Link to="/payments" className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-medium text-sm">
+                            <Link to="/payments" className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-medium text-sm">
                                 {pendingPayments} {pendingPayments !== 1 ? t('pendingPayments') : t('pendingPayment')} →
                             </Link>
                         )}
                         {helpDeskOpen > 0 && (
-                            <Link to="/help-desk" className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-medium text-sm">
+                            <Link to="/help-desk" className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-medium text-sm">
                                 {helpDeskOpen} {helpDeskOpen !== 1 ? t('openTickets') : t('openTicket')} →
                             </Link>
                         )}
                     </div>
                 </div>
             )}
+
+            {/* Market-wise Reports - full width, user-friendly */}
+            <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                            <FaChartBar className="w-5 h-5 text-primary-500" />
+                            {t('marketWiseReports')}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-0.5">{t('marketWiseReportsDescription')}</p>
+                    </div>
+                    <div className="w-full sm:w-72 shrink-0">
+                        <label className="block text-xs font-medium text-gray-600 mb-1">{t('selectMarket')}</label>
+                        <select
+                            value={selectedMarketId}
+                            onChange={(e) => setSelectedMarketId(e.target.value)}
+                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-shadow"
+                        >
+                            <option value="">{t('chooseMarket')}</option>
+                            {markets.map((m) => (
+                                <option key={m._id} value={m._id}>
+                                    {m.marketName || m.name || m._id}
+                                </option>
+                            ))}
+                        </select>
+                        {selectedMarketId && (
+                            <p className="text-xs text-gray-500 mt-1.5">{t('forPeriod')}: {displayLabel}</p>
+                        )}
+                    </div>
+                </div>
+                {marketReportLoading ? (
+                    <div className="flex items-center justify-center gap-3 py-12 rounded-lg bg-gray-50 border border-gray-100">
+                        <FaSyncAlt className="w-6 h-6 text-primary-500 animate-spin" />
+                        <span className="text-gray-500">{t('loadingReport')}</span>
+                    </div>
+                ) : selectedMarketId && marketReport ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4">
+                        <div className="bg-green-50 rounded-lg p-4 border border-green-100">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('totalRevenue')}</p>
+                            <p className="text-lg font-bold text-green-600 mt-0.5 font-mono">{formatCurrency(marketReport.totalRevenue)}</p>
+                        </div>
+                        <div className="bg-red-50 rounded-lg p-4 border border-red-100">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('totalPayouts')}</p>
+                            <p className="text-lg font-bold text-red-600 mt-0.5 font-mono">{formatCurrency(marketReport.totalPayouts)}</p>
+                        </div>
+                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('netProfit')}</p>
+                            <p className="text-lg font-bold text-blue-600 mt-0.5 font-mono">{formatCurrency(marketReport.netProfit)}</p>
+                        </div>
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('totalBets')}</p>
+                            <p className="text-lg font-bold text-gray-800 mt-0.5 font-mono">{marketReport.totalBets ?? 0}</p>
+                        </div>
+                        <div className="bg-green-50/70 rounded-lg p-4 border border-green-100">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('winningBets')}</p>
+                            <p className="text-lg font-bold text-green-600 mt-0.5 font-mono">{marketReport.winningBets ?? 0}</p>
+                        </div>
+                        <div className="bg-red-50/70 rounded-lg p-4 border border-red-100">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('losingBets')}</p>
+                            <p className="text-lg font-bold text-red-600 mt-0.5 font-mono">{marketReport.losingBets ?? 0}</p>
+                        </div>
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('activePlayers')}</p>
+                            <p className="text-lg font-bold text-gray-800 mt-0.5 font-mono">{marketReport.activeUsers ?? 0}</p>
+                        </div>
+                        <div className="bg-primary-50 rounded-lg p-4 border border-primary-100">
+                            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('winRate')}</p>
+                            <p className="text-lg font-bold text-primary-600 mt-0.5 font-mono">{marketReport.winRate ?? 0}%</p>
+                        </div>
+                    </div>
+                ) : selectedMarketId ? (
+                    <div className="flex flex-col items-center justify-center py-12 rounded-lg bg-gray-50 border border-gray-100 text-center">
+                        <FaChartBar className="w-12 h-12 text-gray-300 mb-3" />
+                        <p className="text-gray-500 font-medium">{t('noDataForMarket')}</p>
+                        <p className="text-sm text-gray-400 mt-1">{t('tryAnotherMarket')}</p>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-12 rounded-lg bg-gray-50/50 border border-dashed border-gray-200 text-center">
+                        <FaChartBar className="w-12 h-12 text-gray-300 mb-3" />
+                        <p className="text-gray-500 font-medium">{t('selectMarketAbove')}</p>
+                        <p className="text-sm text-gray-400 mt-1">{t('youWillSeeRevenue')}</p>
+                    </div>
+                )}
+            </div>
 
             {/* Primary KPIs - Related Financial Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
@@ -369,9 +502,9 @@ const Dashboard = () => {
                     <p className="text-2xl font-bold text-blue-600 font-mono">{formatCurrency(stats?.toGive || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('moneyToGiveToPlayers')}</p>
                 </div>
-                <div className="bg-gradient-to-br from-orange-50 to-transparent rounded-xl p-5 border border-orange-200">
+                <div className="bg-gradient-to-br from-primary-50 to-transparent rounded-xl p-5 border border-primary-200">
                     <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('pending')}</p>
-                    <p className="text-2xl font-bold text-orange-600 font-mono">{formatCurrency(stats?.pending || 0)}</p>
+                    <p className="text-2xl font-bold text-primary-600 font-mono">{formatCurrency(stats?.pending || 0)}</p>
                     <p className="text-xs text-gray-500 mt-1">{t('pendingBetsAmount')}</p>
                 </div>
                 <div className="bg-gradient-to-br from-purple-50 to-transparent rounded-xl p-5 border border-purple-200">
@@ -394,7 +527,7 @@ const Dashboard = () => {
                 <SectionCard title={t('players')} description={t('allTimeCounts')} icon={FaUserFriends} linkTo="/my-users" linkLabel={t('allPlayers')} t={t}>
                     <StatRow label={t('totalPlayers')} value={stats?.users?.total ?? 0} />
                     <StatRow label={t('activePlayers')} value={stats?.users?.active ?? 0} colorClass="text-green-600" />
-                    <StatRow label={t('newInPeriod')} value={stats?.users?.newToday ?? 0} colorClass="text-orange-500" />
+                    <StatRow label={t('newInPeriod')} value={stats?.users?.newToday ?? 0} colorClass="text-primary-500" />
                 </SectionCard>
 
                 {/* Bets */}
@@ -402,7 +535,7 @@ const Dashboard = () => {
                     <StatRow label={t('totalBets')} value={stats?.bets?.total ?? 0} />
                     <StatRow label={t('winningBets')} value={stats?.bets?.winning ?? 0} colorClass="text-green-600" />
                     <StatRow label={t('losingBets')} value={stats?.bets?.losing ?? 0} colorClass="text-red-500" />
-                    <StatRow label={t('pendingBets')} value={stats?.bets?.pending ?? 0} colorClass="text-orange-500" />
+                    <StatRow label={t('pendingBets')} value={stats?.bets?.pending ?? 0} colorClass="text-primary-500" />
                     <StatRow label={t('winRate')} value={`${stats?.bets?.winRate ?? 0}%`} />
                 </SectionCard>
 
@@ -410,9 +543,9 @@ const Dashboard = () => {
                 <SectionCard title={t('payments')} description={t('depositsAndWithdrawals')} icon={FaCreditCard} linkTo="/payments" linkLabel={t('managePayments')} t={t}>
                     <StatRow label={t('depositsPeriod')} value={formatCurrency(stats?.payments?.totalDeposits)} colorClass="text-green-600" />
                     <StatRow label={t('withdrawalsPeriod')} value={formatCurrency(stats?.payments?.totalWithdrawals)} colorClass="text-red-500" />
-                    <StatRow label={t('pendingDeposits')} value={pendingDeposits} colorClass="text-orange-500" />
-                    <StatRow label={t('pendingWithdrawals')} value={pendingWithdrawals} colorClass="text-orange-500" />
-                    <StatRow label={t('totalPending')} value={pendingPayments} colorClass="text-orange-500" />
+                    <StatRow label={t('pendingDeposits')} value={pendingDeposits} colorClass="text-primary-500" />
+                    <StatRow label={t('pendingWithdrawals')} value={pendingWithdrawals} colorClass="text-primary-500" />
+                    <StatRow label={t('totalPending')} value={pendingPayments} colorClass="text-primary-500" />
                 </SectionCard>
 
                 {/* Wallet */}
@@ -437,7 +570,7 @@ const Dashboard = () => {
                 {/* Help Desk */}
                 <SectionCard title={t('helpDesk')} description={t('helpDeskTickets')} icon={FaLifeRing} linkTo="/help-desk" linkLabel={t('helpDesk')} t={t}>
                     <StatRow label={t('totalTickets')} value={stats?.helpDesk?.total ?? 0} />
-                    <StatRow label={t('open')} value={stats?.helpDesk?.open ?? 0} colorClass="text-orange-500" />
+                    <StatRow label={t('open')} value={stats?.helpDesk?.open ?? 0} colorClass="text-primary-500" />
                     <StatRow label={t('inProgress')} value={stats?.helpDesk?.inProgress ?? 0} colorClass="text-blue-600" />
                 </SectionCard>
             </div>
@@ -445,7 +578,7 @@ const Dashboard = () => {
             {/* Revenue Summary */}
             <div className="bg-white rounded-xl p-5 border border-gray-200 mb-6">
                 <h3 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <FaMoneyBillWave className="w-4 h-4 text-orange-500" />
+                    <FaMoneyBillWave className="w-4 h-4 text-primary-500" />
                     {t('revenueSummary')}
                 </h3>
                 <p className="text-xs text-gray-500 mb-4">{t('totalRevenueInRange')}</p>
@@ -468,21 +601,21 @@ const Dashboard = () => {
             {/* Quick Links */}
             <div className="bg-white rounded-xl p-5 border border-gray-200">
                 <h3 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <FaClipboardList className="w-4 h-4 text-orange-500" />
+                    <FaClipboardList className="w-4 h-4 text-primary-500" />
                     {t('quickLinks')}
                 </h3>
                 <p className="text-xs text-gray-500 mb-4">{t('navigateToSections')}</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    <Link to="/my-users" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-orange-500/20 border border-gray-200 hover:border-orange-300 text-gray-600 hover:text-orange-500 text-sm font-medium transition-all text-center">
+                    <Link to="/my-users" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
                         {t('myPlayers')}
                     </Link>
-                    <Link to="/add-user" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-orange-500/20 border border-gray-200 hover:border-orange-300 text-gray-600 hover:text-orange-500 text-sm font-medium transition-all text-center">
+                    <Link to="/add-user" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
                         {t('addPlayer')}
                     </Link>
-                    <Link to="/bet-history" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-orange-500/20 border border-gray-200 hover:border-orange-300 text-gray-600 hover:text-orange-500 text-sm font-medium transition-all text-center">
+                    <Link to="/bet-history" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
                         {t('betHistory')}
                     </Link>
-                    <Link to="/reports" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-orange-500/20 border border-gray-200 hover:border-orange-300 text-gray-600 hover:text-orange-500 text-sm font-medium transition-all text-center">
+                    <Link to="/reports" className="px-4 py-3 rounded-lg bg-gray-100 hover:bg-primary-500/20 border border-gray-200 hover:border-primary-300 text-gray-600 hover:text-primary-500 text-sm font-medium transition-all text-center">
                         {t('report')}
                     </Link>
                 </div>

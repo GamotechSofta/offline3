@@ -166,7 +166,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                         {/* Startline edit: fixed market */}
                         {market && market.marketType === 'startline' ? (
                             <>
-                                <div className="rounded-lg bg-orange-50 border border-orange-200 px-3 py-2 text-sm text-orange-700">
+                                <div className="rounded-lg bg-primary-50 border border-primary-200 px-3 py-2 text-sm text-primary-700">
                                     Fixed Startline market – only <strong>Closing Time</strong> and result (Declare Result page) can be changed.
                                 </div>
                                 <div>
@@ -190,7 +190,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                                 value="main"
                                                 checked={formData.marketType === 'main'}
                                                 onChange={() => setFormData((p) => ({ ...p, marketType: 'main' }))}
-                                                className="text-orange-500 focus:ring-orange-500"
+                                                className="text-primary-500 focus:ring-primary-500"
                                             />
                                             <span className="text-gray-700">Main / Daily Market</span>
                                         </label>
@@ -201,7 +201,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                                 value="startline"
                                                 checked={formData.marketType === 'startline'}
                                                 onChange={() => setFormData((p) => ({ ...p, marketType: 'startline' }))}
-                                                className="text-orange-500 focus:ring-orange-500"
+                                                className="text-primary-500 focus:ring-primary-500"
                                             />
                                             <span className="text-gray-700">Startline</span>
                                         </label>
@@ -217,7 +217,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                         name="marketName"
                                         value={formData.marketName}
                                         onChange={handleChange}
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                                         placeholder="e.g., Rudraksh Morning"
                                         required
                                     />
@@ -231,7 +231,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                         name="marketNameHi"
                                         value={formData.marketNameHi}
                                         onChange={handleChange}
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                                         placeholder="e.g., नाइट मार्केट"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">Optional. Shown when bookie language is Hindi.</p>
@@ -248,7 +248,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                     <select
                                         value={start12.hour12}
                                         onChange={(e) => handleStart12Change('hour12', e.target.value)}
-                                        className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
+                                        className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
                                     >
                                         {HOURS_12.map((h) => (
                                             <option key={h} value={h}>{h}</option>
@@ -258,7 +258,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                     <select
                                         value={start12.minute}
                                         onChange={(e) => handleStart12Change('minute', e.target.value)}
-                                        className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
+                                        className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
                                     >
                                         {MINUTES.map((m) => (
                                             <option key={m} value={m}>{m}</option>
@@ -268,7 +268,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                     <select
                                         value={start12.ampm}
                                         onChange={(e) => handleStart12Change('ampm', e.target.value)}
-                                        className="w-full min-w-[4rem] px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
+                                        className="w-full min-w-[4rem] px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
                                     >
                                         <option value="AM">AM</option>
                                         <option value="PM">PM</option>
@@ -278,20 +278,20 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                         )}
 
                         {formData.marketType === 'startline' && (
-                            <p className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2">
+                            <p className="text-xs text-primary-700 bg-primary-50 border border-primary-200 rounded-lg px-3 py-2">
                                 Startline has no opening time. Only <strong>Closing Time</strong> (bet cutoff) can be updated below.
                             </p>
                         )}
 
                         <div>
                             <label className="block text-gray-600 text-sm font-medium mb-2">
-                                Closing Time {formData.marketType === 'startline' && <span className="text-orange-500">(bet cutoff)</span>}
+                                Closing Time {formData.marketType === 'startline' && <span className="text-primary-500">(bet cutoff)</span>}
                             </label>
                             <div className="grid grid-cols-[1fr_auto_1fr_auto_auto] gap-1 sm:gap-2 items-center">
                                 <select
                                     value={close12.hour12}
                                     onChange={(e) => handleClose12Change('hour12', e.target.value)}
-                                    className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
+                                    className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
                                 >
                                     {HOURS_12.map((h) => (
                                         <option key={h} value={h}>{h}</option>
@@ -301,7 +301,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                 <select
                                     value={close12.minute}
                                     onChange={(e) => handleClose12Change('minute', e.target.value)}
-                                    className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
+                                    className="w-full min-w-0 px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
                                 >
                                     {MINUTES.map((m) => (
                                         <option key={m} value={m}>{m}</option>
@@ -311,7 +311,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                 <select
                                     value={close12.ampm}
                                     onChange={(e) => handleClose12Change('ampm', e.target.value)}
-                                    className="w-full min-w-[4rem] px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
+                                    className="w-full min-w-[4rem] px-2 sm:px-3 py-2.5 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
                                 >
                                     <option value="AM">AM</option>
                                     <option value="PM">PM</option>
@@ -333,7 +333,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                                     step="1"
                                     placeholder="e.g. 300"
                                     inputMode="numeric"
-                                    className="flex-1 min-w-[80px] sm:min-w-[100px] px-3 sm:px-4 py-2.5 sm:py-2.5 bg-gray-50 text-gray-800 placeholder-gray-400 text-sm sm:text-base border-0 focus:ring-2 focus:ring-orange-500 focus:ring-inset"
+                                    className="flex-1 min-w-[80px] sm:min-w-[100px] px-3 sm:px-4 py-2.5 sm:py-2.5 bg-gray-50 text-gray-800 placeholder-gray-400 text-sm sm:text-base border-0 focus:ring-2 focus:ring-primary-500 focus:ring-inset"
                                 />
                                 <span className="inline-flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-2.5 bg-gray-100 text-gray-500 text-xs sm:text-sm font-medium whitespace-nowrap">
                                     Seconds
@@ -352,7 +352,7 @@ const MarketForm = ({ market, defaultMarketType = 'main', onClose, onSuccess, ap
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex-1 w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 sm:py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                className="flex-1 w-full sm:w-auto bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 sm:py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                             >
                                 {loading ? 'Saving...' : market ? 'Update' : 'Create'}
                             </button>

@@ -126,7 +126,7 @@ const Markets = () => {
                                     <div className="space-y-2 text-sm text-gray-600">
                                         <p><span className="font-semibold">Opening:</span> {market.startingTime}</p>
                                         <p><span className="font-semibold">Closing:</span> {market.closingTime}</p>
-                                        <p><span className="font-semibold">Result:</span> <span className="text-orange-500 font-mono">{market.displayResult || '***-**-***'}</span></p>
+                                        <p><span className="font-semibold">Result:</span> <span className="text-primary-500 font-mono">{market.displayResult || '***-**-***'}</span></p>
                                         {market.winNumber && <p><span className="font-semibold">Win Number:</span> <span className="text-green-600 font-mono">{market.winNumber}</span></p>}
                                     </div>
                                 </div>

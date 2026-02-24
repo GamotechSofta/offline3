@@ -22,7 +22,7 @@ const GAME_TYPES_LIST = [
     { id: 'single-digit', title: 'Single Digit', icon: '1', color: 'bg-blue-500' },
     { id: 'jodi', title: 'Jodi Bulk', icon: '12', color: 'bg-purple-500' },
     { id: 'single-pana-bulk', title: 'Single Pana Bulk', icon: '123+', color: 'bg-emerald-600' },
-    { id: 'double-pana-bulk', title: 'Double Pana Bulk', icon: '112+', color: 'bg-orange-600' },
+    { id: 'double-pana-bulk', title: 'Double Pana Bulk', icon: '112+', color: 'bg-primary-600' },
     { id: 'triple-pana', title: 'Triple Pana', icon: '111', color: 'bg-pink-500' },
     { id: 'full-sangam', title: 'Full Sangam', icon: 'F/S', color: 'bg-amber-600' },
     { id: 'half-sangam', title: 'Half Sangam (O)', icon: 'H/S', color: 'bg-cyan-500' },
@@ -142,7 +142,7 @@ const GamesSidebar = ({
                     `}
                 >
                     <div className={`w-[3px] h-12 rounded-full transition-colors ${
-                        isDragging ? 'bg-orange-500' : 'bg-gray-200 group-hover:bg-orange-400'
+                        isDragging ? 'bg-primary-500' : 'bg-gray-200 group-hover:bg-primary-400'
                     }`} />
                 </div>
 
@@ -152,7 +152,7 @@ const GamesSidebar = ({
                         <button
                             type="button"
                             onClick={handleBackToMarkets}
-                            className="flex items-center gap-1.5 text-gray-500 hover:text-orange-500 text-xs transition-colors"
+                            className="flex items-center gap-1.5 text-gray-500 hover:text-primary-500 text-xs transition-colors"
                         >
                             <FaArrowLeft className="w-3 h-3" />
                             <span>Markets</span>
@@ -183,7 +183,7 @@ const GamesSidebar = ({
                             onClick={() => handleGameClick(game.id)}
                             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all ${
                                 activeGameType === game.id
-                                    ? 'bg-orange-50 text-orange-600 font-semibold border border-orange-200'
+                                    ? 'bg-primary-50 text-primary-600 font-semibold border border-primary-200'
                                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 border border-transparent'
                             }`}
                         >
@@ -218,7 +218,7 @@ export const GamesSidebarToggle = ({ onClick }) => (
     <button
         type="button"
         onClick={onClick}
-        className="lg:hidden fixed bottom-6 left-3 z-30 w-11 h-11 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg shadow-orange-500/30 flex items-center justify-center transition-all active:scale-95"
+        className="lg:hidden fixed bottom-6 left-3 z-30 w-11 h-11 bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-lg shadow-primary-500/30 flex items-center justify-center transition-all active:scale-95"
         aria-label="Open game types"
     >
         <FaListUl className="w-4 h-4" />

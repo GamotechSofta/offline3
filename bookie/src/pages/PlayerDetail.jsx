@@ -576,7 +576,7 @@ const PlayerDetail = () => {
             <Layout title={t('playerDetail')}>
                 <div className="flex flex-col items-center justify-center min-h-[40vh]">
                     <p className="text-red-500 mb-4">{error || 'Player not found'}</p>
-                    <Link to="/my-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 text-white font-semibold">
+                    <Link to="/my-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 text-white font-semibold">
                         <FaArrowLeft /> Back to My Players
                     </Link>
                 </div>
@@ -589,7 +589,7 @@ const PlayerDetail = () => {
             <div className="min-w-0 max-w-full space-y-5">
                 {/* Breadcrumb */}
                 <div>
-                    <Link to="/my-users" className="text-gray-400 hover:text-orange-500 text-sm inline-flex items-center gap-1 mb-1">
+                    <Link to="/my-users" className="text-gray-400 hover:text-primary-500 text-sm inline-flex items-center gap-1 mb-1">
                         <FaArrowLeft className="w-3 h-3" /> My Players
                     </Link>
                     <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
@@ -635,7 +635,7 @@ const PlayerDetail = () => {
 
                             {/* Wallet balance and To Give/Take cards */}
                             <div className="flex flex-col gap-3 min-w-[180px]">
-                                <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-4 text-center shadow-lg">
+                                <div className="bg-gradient-to-br from-primary-500 to-primary-600 text-white rounded-xl p-4 text-center shadow-lg">
                                     <p className="text-white/80 text-xs uppercase tracking-wider mb-1">Wallet Balance</p>
                                     <p className="text-2xl sm:text-3xl font-bold font-mono">{formatCurrency(player.walletBalance ?? 0)}</p>
                                 </div>
@@ -667,7 +667,7 @@ const PlayerDetail = () => {
                         <button onClick={openPasswordModal} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-xs sm:text-sm font-semibold transition-colors">
                             Set Password
                         </button>
-                        <button onClick={() => navigate(`/games?playerId=${userId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-semibold transition-colors">
+                        <button onClick={() => navigate(`/games?playerId=${userId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs sm:text-sm font-semibold transition-colors">
                             <FaGamepad className="w-3.5 h-3.5" /> Place Bet
                         </button>
                         <button onClick={() => { fetchPlayer(); if (activeTab === 'bets_by_user' || activeTab === 'bets_by_bookie') fetchBets(); if (activeTab === 'wallet') fetchWalletTx(); }} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs sm:text-sm font-semibold transition-colors ml-auto">
@@ -683,9 +683,9 @@ const PlayerDetail = () => {
                         <button
                             type="button"
                             onClick={() => setCalendarOpen((o) => !o)}
-                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-700 hover:border-orange-300 transition-colors"
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-700 hover:border-primary-300 transition-colors"
                         >
-                            <FaCalendarAlt className="w-3.5 h-3.5 text-orange-500" />
+                            <FaCalendarAlt className="w-3.5 h-3.5 text-primary-500" />
                             {dateFrom && dateTo ? formatDateRange(dateFrom, dateTo) : 'Select Date'}
                         </button>
                         {calendarOpen && (
@@ -693,9 +693,9 @@ const PlayerDetail = () => {
                                 <div className="min-w-0 sm:min-w-[200px] py-1">
                                     {DATE_PRESETS.map((p) => (
                                         <button key={p.id} type="button" onClick={() => handlePresetSelect(p.id)}
-                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 flex items-center gap-2"
+                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 flex items-center gap-2"
                                         >
-                                            {datePreset === p.id ? <span className="text-orange-500">●</span> : <span className="w-2" />}
+                                            {datePreset === p.id ? <span className="text-primary-500">●</span> : <span className="w-2" />}
                                             {p.label}
                                         </button>
                                     ))}
@@ -711,7 +711,7 @@ const PlayerDetail = () => {
                                             <label className="block text-xs text-gray-500 mb-1">To</label>
                                             <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-800" />
                                         </div>
-                                        <button type="button" onClick={handleDateApply} className="w-full py-2 rounded-lg bg-orange-500 text-white font-semibold text-sm">
+                                        <button type="button" onClick={handleDateApply} className="w-full py-2 rounded-lg bg-primary-500 text-white font-semibold text-sm">
                                             Apply
                                         </button>
                                     </div>
@@ -731,7 +731,7 @@ const PlayerDetail = () => {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-1.5 px-4 py-2.5 font-semibold text-sm whitespace-nowrap border-b-2 transition-colors ${
                                     activeTab === tab.id
-                                        ? 'border-orange-500 text-orange-600'
+                                        ? 'border-primary-500 text-primary-600'
                                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }`}
                             >
@@ -751,7 +751,7 @@ const PlayerDetail = () => {
                             {/* Profile Info */}
                             <div>
                                 <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                    <FaUser className="w-3.5 h-3.5 text-orange-500" /> Profile Details
+                                    <FaUser className="w-3.5 h-3.5 text-primary-500" /> Profile Details
                                 </h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-sm">
                                     <div><p className="text-gray-400 text-xs uppercase">Username</p><p className="text-gray-800 font-mono">{player.username}</p></div>
@@ -772,7 +772,7 @@ const PlayerDetail = () => {
                             {/* Quick bet stats overview */}
                             <div>
                                 <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                    <FaHistory className="w-3.5 h-3.5 text-orange-500" /> Quick Stats
+                                    <FaHistory className="w-3.5 h-3.5 text-primary-500" /> Quick Stats
                                 </h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
                                     <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-100">
@@ -787,9 +787,9 @@ const PlayerDetail = () => {
                                         <p className="text-red-500 text-[10px] uppercase">Lost</p>
                                         <p className="text-red-600 font-bold text-lg">{betStats.lost}</p>
                                     </div>
-                                    <div className="bg-orange-50 rounded-lg p-3 text-center border border-orange-100">
-                                        <p className="text-orange-500 text-[10px] uppercase">Pending</p>
-                                        <p className="text-orange-600 font-bold text-lg">{betStats.pending}</p>
+                                    <div className="bg-primary-50 rounded-lg p-3 text-center border border-primary-100">
+                                        <p className="text-primary-500 text-[10px] uppercase">Pending</p>
+                                        <p className="text-primary-600 font-bold text-lg">{betStats.pending}</p>
                                     </div>
                                     <div className="bg-gray-50 rounded-lg p-3 text-center border border-gray-100">
                                         <p className="text-gray-400 text-[10px] uppercase">Bet Amount</p>
@@ -816,7 +816,7 @@ const PlayerDetail = () => {
                                         onClick={() => setBetFilter(f)}
                                         className={`px-3 py-1 rounded-full text-xs font-semibold capitalize transition-colors ${
                                             betFilter === f
-                                                ? 'bg-orange-500 text-white'
+                                                ? 'bg-primary-500 text-white'
                                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                     >
@@ -860,7 +860,7 @@ const PlayerDetail = () => {
                                         <tbody className="divide-y divide-gray-100">
                                             {filteredBets.map((b) => (
                                                 <tr key={b._id} className="hover:bg-gray-50">
-                                                    <td className="px-3 py-2 font-mono font-bold text-orange-600">{b.betNumber || '—'}</td>
+                                                    <td className="px-3 py-2 font-mono font-bold text-primary-600">{b.betNumber || '—'}</td>
                                                     <td className="px-3 py-2 text-gray-600 text-xs">{getBetTypeLabel(b.betType, t, b.betNumber)}</td>
                                                     <td className="px-3 py-2 text-gray-600 text-xs truncate max-w-[120px]">{b.marketId?.marketName || '—'}</td>
                                                     <td className="px-3 py-2 text-gray-500 uppercase text-xs">{b.betOn || '—'}</td>
@@ -871,7 +871,7 @@ const PlayerDetail = () => {
                                                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                                                             b.status === 'won' ? 'bg-green-100 text-green-700'
                                                             : b.status === 'lost' ? 'bg-red-100 text-red-600'
-                                                            : 'bg-orange-100 text-orange-600'
+                                                            : 'bg-primary-100 text-primary-600'
                                                         }`}>{b.status}</span>
                                                     </td>
                                                     <td className="px-3 py-2 text-gray-500 text-xs whitespace-nowrap">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
@@ -896,7 +896,7 @@ const PlayerDetail = () => {
                                 <select
                                     value={marketFilter}
                                     onChange={(e) => setMarketFilter(e.target.value)}
-                                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                 >
                                     <option value="all">All Markets</option>
                                     {markets.map((m) => (
@@ -953,7 +953,7 @@ const PlayerDetail = () => {
                                                             <div className="flex items-center gap-2 mt-0.5">
                                                                 <p className="text-gray-400 text-xs">{new Date(t.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</p>
                                                                 {t.bet && t.bet.marketName && (
-                                                                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-700">
+                                                                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-primary-100 text-primary-700">
                                                                         {t.bet.marketName}
                                                                     </span>
                                                                 )}
@@ -989,7 +989,7 @@ const PlayerDetail = () => {
                                     <div className="mb-4 print:hidden flex justify-end">
                                         <button
                                             onClick={() => window.print()}
-                                            className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
                                         >
                                             <FaPrint className="w-4 h-4" />
                                             {t('printStatement')}
@@ -1046,7 +1046,7 @@ const PlayerDetail = () => {
                                                     {summary.bets.totalPending > 0 && (
                                                         <div className="flex justify-between">
                                                             <span className="text-gray-600">Pending Bets</span>
-                                                            <span className="font-mono font-semibold text-orange-600">{formatCurrency(summary.bets.totalPending)}</span>
+                                                            <span className="font-mono font-semibold text-primary-600">{formatCurrency(summary.bets.totalPending)}</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -1117,7 +1117,7 @@ const PlayerDetail = () => {
                                                                 setToTakeValue((player?.toTake ?? 0).toString());
                                                                 setToGiveTakeModalOpen(true);
                                                             }}
-                                                            className="print:hidden text-orange-600 hover:text-orange-700 text-sm font-medium underline flex items-center gap-1"
+                                                            className="print:hidden text-primary-600 hover:text-primary-700 text-sm font-medium underline flex items-center gap-1"
                                                         >
                                                             <FaExchangeAlt className="w-3 h-3" /> Edit
                                                         </button>
@@ -1186,7 +1186,7 @@ const PlayerDetail = () => {
                                                     placeholder="0"
                                                     value={fundAmount}
                                                     onChange={(e) => setFundAmount(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
-                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                                    className="w-full pl-8 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 font-mono text-lg text-center focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                                     autoFocus
                                                 />
                                             </div>
@@ -1201,7 +1201,7 @@ const PlayerDetail = () => {
                                             className={`w-full font-bold py-3 rounded-lg text-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2 ${
                                                 fundModalType === 'add' ? 'bg-green-600 hover:bg-green-700'
                                                 : fundModalType === 'withdraw' ? 'bg-red-500 hover:bg-red-600'
-                                                : 'bg-orange-500 hover:bg-orange-600'
+                                                : 'bg-primary-500 hover:bg-primary-600'
                                             }`}
                                         >
                                             {fundLoading ? (
@@ -1218,7 +1218,7 @@ const PlayerDetail = () => {
                                 )}
 
                                 {fundSuccess && (
-                                    <button type="button" onClick={() => setFundModalOpen(false)} className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors">
+                                    <button type="button" onClick={() => setFundModalOpen(false)} className="w-full py-3 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-bold transition-colors">
                                         Done
                                     </button>
                                 )}
@@ -1268,7 +1268,7 @@ const PlayerDetail = () => {
                                 )}
 
                                 {passwordSuccess && (
-                                    <button type="button" onClick={() => setPasswordModalOpen(false)} className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors">
+                                    <button type="button" onClick={() => setPasswordModalOpen(false)} className="w-full py-3 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-bold transition-colors">
                                         Done
                                     </button>
                                 )}
@@ -1336,7 +1336,7 @@ const PlayerDetail = () => {
                                 )}
 
                                 {toGiveTakeSuccess && (
-                                    <button type="button" onClick={() => setToGiveTakeModalOpen(false)} className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors">
+                                    <button type="button" onClick={() => setToGiveTakeModalOpen(false)} className="w-full py-3 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-bold transition-colors">
                                         Done
                                     </button>
                                 )}

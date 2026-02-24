@@ -129,9 +129,9 @@ const WithdrawFund = () => {
         <div className="space-y-6">
             {/* Wallet Balance Card */}
             <div className="rounded-2xl bg-white p-0">
-                <div className="bg-white rounded-2xl shadow-md border border-orange-200 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-md border border-primary-200 overflow-hidden">
                     <div className="px-4 pt-3 pb-2 flex items-center justify-center gap-2 text-sm text-gray-600">
-                        <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 2c3.5 3.5 3.5 16.5 0 20" />
@@ -139,9 +139,9 @@ const WithdrawFund = () => {
                         <span className="font-semibold tracking-wide">RATAN 365</span>
                     </div>
 
-                    <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-orange-600 px-4 py-3 flex items-center gap-3">
+                    <div className="bg-gradient-to-r from-primary-500 via-primary-500 to-primary-600 px-4 py-3 flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
-                            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-sm font-extrabold text-orange-600">
+                            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-sm font-extrabold text-primary-600">
                                 ₹
                             </div>
                         </div>
@@ -153,13 +153,13 @@ const WithdrawFund = () => {
                         </div>
                     </div>
 
-                    <div className="px-4 py-3 flex items-center justify-between bg-orange-50">
+                    <div className="px-4 py-3 flex items-center justify-between bg-primary-50">
                         <div className="text-sm text-gray-700 truncate">
                             {user?.username || user?.name || 'User'}
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span className="w-3 h-3 rounded-full bg-orange-500 inline-block" />
-                            <span className="w-3 h-3 rounded-full bg-orange-400 inline-block" />
+                            <span className="w-3 h-3 rounded-full bg-primary-500 inline-block" />
+                            <span className="w-3 h-3 rounded-full bg-primary-400 inline-block" />
                         </div>
                     </div>
                 </div>
@@ -183,9 +183,9 @@ const WithdrawFund = () => {
 
             {/* No Bank Account Warning */}
             {bankAccounts.length === 0 && (
-                <div className="p-3 bg-orange-50 border border-orange-300 rounded-xl text-orange-700 text-xs sm:text-sm">
+                <div className="p-3 bg-primary-50 border border-primary-300 rounded-xl text-primary-700 text-xs sm:text-sm">
                     <p className="font-medium">No bank account added!</p>
-                    <p className="text-orange-600 mt-1 leading-snug">Please add a bank account first from the "Bank Detail" section to withdraw funds.</p>
+                    <p className="text-primary-600 mt-1 leading-snug">Please add a bank account first from the "Bank Detail" section to withdraw funds.</p>
                 </div>
             )}
 
@@ -199,14 +199,14 @@ const WithdrawFund = () => {
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         placeholder="Enter amount"
-                        className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         min={config?.minWithdrawal || 500}
                         max={Math.min(config?.maxWithdrawal || 25000, walletBalance)}
                     />
                     <button
                         type="button"
                         onClick={() => setAmount(Math.min(walletBalance, config?.maxWithdrawal || 25000).toString())}
-                        className="mt-2 text-orange-600 text-sm hover:text-orange-700"
+                        className="mt-2 text-primary-600 text-sm hover:text-primary-700"
                     >
                         Withdraw Max (₹{Math.min(walletBalance, config?.maxWithdrawal || 25000).toLocaleString()})
                     </button>
@@ -221,8 +221,8 @@ const WithdrawFund = () => {
                                 key={acc._id}
                                 className={`flex items-center p-4 bg-white border rounded-xl cursor-pointer transition-colors ${
                                     selectedBankId === acc._id
-                                        ? 'border-orange-500 bg-orange-50'
-                                        : 'border-orange-200 hover:border-orange-300'
+                                        ? 'border-primary-500 bg-primary-50'
+                                        : 'border-primary-200 hover:border-primary-300'
                                 }`}
                             >
                                 <input
@@ -245,15 +245,15 @@ const WithdrawFund = () => {
                                     )}
                                 </div>
                                 {acc.isDefault && (
-                                    <span className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full border border-orange-300">
+                                    <span className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full border border-primary-300">
                                         Default
                                     </span>
                                 )}
                                 <div className={`w-5 h-5 rounded-full border-2 ml-3 flex items-center justify-center ${
-                                    selectedBankId === acc._id ? 'border-orange-500' : 'border-gray-300'
+                                    selectedBankId === acc._id ? 'border-primary-500' : 'border-gray-300'
                                 }`}>
                                     {selectedBankId === acc._id && (
-                                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                                        <div className="w-3 h-3 bg-primary-500 rounded-full"></div>
                                     )}
                                 </div>
                             </label>
@@ -270,7 +270,7 @@ const WithdrawFund = () => {
                         value={userNote}
                         onChange={(e) => setUserNote(e.target.value)}
                         placeholder="Any special instructions..."
-                        className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
+                        className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
                         rows={2}
                     />
                 </div>
@@ -279,15 +279,15 @@ const WithdrawFund = () => {
                 <button
                     type="submit"
                     disabled={loading || bankAccounts.length === 0}
-                    className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-xl transition-all disabled:opacity-50 shadow-md hover:shadow-lg"
+                    className="w-full py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-xl transition-all disabled:opacity-50 shadow-md hover:shadow-lg"
                 >
                     {loading ? 'Submitting...' : 'Submit Withdrawal Request'}
                 </button>
             </form>
 
             {/* Info */}
-            <div className="bg-orange-50 rounded-xl p-4 border border-orange-200">
-                <h4 className="text-orange-700 font-semibold mb-2">Withdrawal Info:</h4>
+            <div className="bg-primary-50 rounded-xl p-4 border border-primary-200">
+                <h4 className="text-primary-700 font-semibold mb-2">Withdrawal Info:</h4>
                 <ul className="text-gray-700 text-sm space-y-1">
                     <li>• Withdrawals are processed within 24 hours</li>
                     <li>• Ensure your bank details are correct</li>
@@ -299,7 +299,7 @@ const WithdrawFund = () => {
             {/* Success Modal */}
             {showSuccessModal && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl max-w-sm w-full p-6 border border-orange-200 shadow-xl text-center">
+                    <div className="bg-white rounded-2xl max-w-sm w-full p-6 border border-primary-200 shadow-xl text-center">
                         {/* Success Icon */}
                         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,9 +309,9 @@ const WithdrawFund = () => {
 
                         <h3 className="text-xl font-bold text-gray-800 mb-2">Withdrawal Request Submitted!</h3>
                         
-                        <div className="bg-orange-50 rounded-xl p-4 mb-4 border border-orange-200">
+                        <div className="bg-primary-50 rounded-xl p-4 mb-4 border border-primary-200">
                             <p className="text-gray-600 text-sm">Amount</p>
-                            <p className="text-2xl font-bold text-orange-600">₹{submittedAmount.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-primary-600">₹{submittedAmount.toLocaleString()}</p>
                         </div>
 
                         <p className="text-gray-600 text-sm mb-6">
@@ -322,7 +322,7 @@ const WithdrawFund = () => {
                         <div className="space-y-3">
                             <button
                                 onClick={() => setShowSuccessModal(false)}
-                                className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors shadow-md"
+                                className="w-full py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors shadow-md"
                             >
                                 Done
                             </button>
@@ -331,7 +331,7 @@ const WithdrawFund = () => {
                                     setShowSuccessModal(false);
                                     window.location.href = '/funds?tab=withdraw-fund-history';
                                 }}
-                                className="w-full py-3 bg-white border border-orange-300 hover:bg-orange-50 text-orange-600 font-medium rounded-xl transition-colors"
+                                className="w-full py-3 bg-white border border-primary-300 hover:bg-primary-50 text-primary-600 font-medium rounded-xl transition-colors"
                             >
                                 View History
                             </button>

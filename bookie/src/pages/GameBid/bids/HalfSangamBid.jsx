@@ -42,7 +42,7 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
 
     const handleDelete = (id) => setBids((prev) => prev.filter((b) => b.id !== id));
 
-    const inputCl = 'flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none focus:ring-orange-500 focus:border-orange-500';
+    const inputCl = 'flex-1 min-w-0 bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 rounded-full py-2.5 min-h-[40px] px-4 text-center text-sm focus:ring-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500';
     const labelCl = 'text-gray-400 text-sm font-medium shrink-0 w-40';
 
     return (
@@ -101,7 +101,7 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
                             disabled={!bids.length}
                             className={`w-full font-bold py-3.5 min-h-[48px] rounded-lg shadow-md transition-all active:scale-[0.98] ${
                                 bids.length
-                                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700'
+                                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700'
                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                             }`}
                         >
@@ -110,21 +110,21 @@ const HalfSangamBid = ({ title, gameType, betType, embedInSingleScroll = false }
                     </div>
 
                     <div className="mt-6 md:mt-0">
-                        <div className="grid grid-cols-[1.4fr_0.7fr_0.6fr] gap-2 text-center text-orange-500 font-bold text-xs mb-2 px-2">
+                        <div className="grid grid-cols-[1.4fr_0.7fr_0.6fr] gap-2 text-center text-primary-500 font-bold text-xs mb-2 px-2">
                             <div className="truncate">Sangam</div>
                             <div className="truncate">Amount</div>
                             <div className="truncate">Delete</div>
                         </div>
-                        <div className="h-px bg-orange-200 w-full mb-2" />
+                        <div className="h-px bg-primary-200 w-full mb-2" />
                         {bids.length === 0 ? null : (
                             <div className="space-y-2">
                                 {bids.map((b) => (
                                     <div
                                         key={b.id}
-                                        className="grid grid-cols-[1.4fr_0.7fr_0.6fr] gap-2 text-center items-center py-2.5 px-3 bg-orange-50 rounded-lg border border-orange-200 text-sm"
+                                        className="grid grid-cols-[1.4fr_0.7fr_0.6fr] gap-2 text-center items-center py-2.5 px-3 bg-primary-50 rounded-lg border border-primary-200 text-sm"
                                     >
                                         <div className="font-bold text-gray-800 truncate">{b.number}</div>
-                                        <div className="font-bold text-orange-500 truncate">{b.points}</div>
+                                        <div className="font-bold text-primary-500 truncate">{b.points}</div>
                                         <div className="flex justify-center">
                                             <button type="button" onClick={() => handleDelete(b.id)} className="p-2 text-red-500 hover:text-red-600 active:scale-95" aria-label="Delete">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -162,8 +162,8 @@ function HalfSangamOSection({ bids, setBids, session, showWarning, inputCl, labe
     };
 
     return (
-        <div className="p-4 rounded-xl border border-orange-200 bg-orange-50/30 space-y-3">
-            <h3 className="text-orange-600 font-semibold text-sm">Half Sangam (O) — Open Pana + Close Ank</h3>
+        <div className="p-4 rounded-xl border border-primary-200 bg-primary-50/30 space-y-3">
+            <h3 className="text-primary-600 font-semibold text-sm">Half Sangam (O) — Open Pana + Close Ank</h3>
             <div className="flex flex-row items-center gap-2">
                 <label className={labelCl}>Open Pana:</label>
                 <input type="text" inputMode="numeric" value={openPana}
@@ -185,7 +185,7 @@ function HalfSangamOSection({ bids, setBids, session, showWarning, inputCl, labe
                 <label className={labelCl}>Points:</label>
                 <input ref={pointsInputRef} type="text" inputMode="numeric" value={points} onChange={(e) => setPoints(sanitizePoints(e.target.value))} placeholder="Point" className={`no-spinner ${inputCl}`} />
             </div>
-            <button type="button" onClick={handleAdd} className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 min-h-[44px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]">
+            <button type="button" onClick={handleAdd} className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-3 min-h-[44px] rounded-lg shadow-md hover:from-primary-600 hover:to-primary-700 transition-all active:scale-[0.98]">
                 Add to List
             </button>
         </div>
@@ -211,8 +211,8 @@ function HalfSangamCSection({ bids, setBids, session, showWarning, inputCl, labe
     };
 
     return (
-        <div className="p-4 rounded-xl border border-orange-200 bg-orange-50/30 space-y-3">
-            <h3 className="text-orange-600 font-semibold text-sm">Half Sangam (C) — Open Ank + Close Pana</h3>
+        <div className="p-4 rounded-xl border border-primary-200 bg-primary-50/30 space-y-3">
+            <h3 className="text-primary-600 font-semibold text-sm">Half Sangam (C) — Open Ank + Close Pana</h3>
             <div className="flex flex-row items-center gap-2">
                 <label className={labelCl}>Open Ank:</label>
                 <input type="text" inputMode="numeric" value={openAnk} onChange={(e) => setOpenAnk(sanitizeDigits(e.target.value, 1))} placeholder="Ank" className={inputCl} />
@@ -234,7 +234,7 @@ function HalfSangamCSection({ bids, setBids, session, showWarning, inputCl, labe
                 <label className={labelCl}>Points:</label>
                 <input ref={pointsInputRef} type="text" inputMode="numeric" value={points} onChange={(e) => setPoints(sanitizePoints(e.target.value))} placeholder="Point" className={`no-spinner ${inputCl}`} />
             </div>
-            <button type="button" onClick={handleAdd} className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 min-h-[44px] rounded-lg shadow-md hover:from-orange-600 hover:to-orange-700 transition-all active:scale-[0.98]">
+            <button type="button" onClick={handleAdd} className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-3 min-h-[44px] rounded-lg shadow-md hover:from-primary-600 hover:to-primary-700 transition-all active:scale-[0.98]">
                 Add to List
             </button>
         </div>

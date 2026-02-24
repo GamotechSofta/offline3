@@ -347,7 +347,7 @@ const BookieManagement = () => {
                                 setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false, balance: '' });
                                 setShowCreateModal(true);
                             }}
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-gray-800 font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-gray-800 font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
                         >
                             <FaPlus /> Add New Bookie
                         </button>
@@ -373,7 +373,7 @@ const BookieManagement = () => {
                     <div className="bg-white rounded-lg overflow-hidden">
                         {loading ? (
                             <div className="p-8 text-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
                                 <p className="mt-4 text-gray-400">Loading bookies...</p>
                             </div>
                         ) : bookies.length === 0 ? (
@@ -429,7 +429,7 @@ const BookieManagement = () => {
                                                     <span className="font-medium text-gray-800">{bookie.username}</span>
                                                     <button
                                                         onClick={() => copyToClipboard(bookie.username)}
-                                                        className="text-gray-400 hover:text-orange-500"
+                                                        className="text-gray-400 hover:text-primary-500"
                                                         title="Copy name"
                                                     >
                                                         <FaCopy size={14} />
@@ -443,7 +443,7 @@ const BookieManagement = () => {
                                                 {bookie.phone || '-'}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-600 border border-orange-200">
+                                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-primary-50 text-primary-600 border border-primary-200">
                                                     <FaPercent className="w-2.5 h-2.5" />
                                                     {bookie.commissionPercentage ?? 0}
                                                 </span>
@@ -524,7 +524,7 @@ const BookieManagement = () => {
 
                     {/* Info Card */}
                     <div className="mt-4 sm:mt-6 bg-white rounded-lg p-4 sm:p-6">
-                        <h3 className="text-base sm:text-lg font-semibold text-orange-500 mb-3">Bookie Login Information</h3>
+                        <h3 className="text-base sm:text-lg font-semibold text-primary-500 mb-3">Bookie Login Information</h3>
                         <div className="text-gray-600 space-y-2 text-sm sm:text-base">
                             <p><strong>Bookie Panel URL:</strong> <code className="bg-gray-100 px-2 py-1 rounded">/bookie</code></p>
                             <p><strong>Login:</strong> Bookies use their Phone number and the password you set.</p>
@@ -552,7 +552,7 @@ const BookieManagement = () => {
                                             name="firstName"
                                             value={formData.firstName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                             placeholder="First name"
                                         />
@@ -564,7 +564,7 @@ const BookieManagement = () => {
                                             name="lastName"
                                             value={formData.lastName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                             placeholder="Last name"
                                         />
@@ -577,7 +577,7 @@ const BookieManagement = () => {
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="Optional"
                                     />
                                 </div>
@@ -589,7 +589,7 @@ const BookieManagement = () => {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         maxLength={10}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="10-digit (6–9 start)"
                                         required
                                     />
@@ -604,7 +604,7 @@ const BookieManagement = () => {
                                             name="commissionPercentage"
                                             value={formData.commissionPercentage}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             placeholder="0"
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
@@ -619,7 +619,7 @@ const BookieManagement = () => {
                                         name="balance"
                                         value={formData.balance}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="0"
                                     />
                                     <p className="mt-0.5 text-xs text-gray-500">Deducted when bookie gives balance to players.</p>
@@ -631,7 +631,7 @@ const BookieManagement = () => {
                                             name="canManagePayments"
                                             checked={formData.canManagePayments}
                                             onChange={(e) => setFormData({ ...formData, canManagePayments: e.target.checked })}
-                                            className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                                            className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                                         />
                                         <span className="text-gray-600 text-sm font-medium">Allow Payment Management</span>
                                     </label>
@@ -645,7 +645,7 @@ const BookieManagement = () => {
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             required
                                             minLength={6}
                                             placeholder="Min 6 characters"
@@ -666,7 +666,7 @@ const BookieManagement = () => {
                                         name="confirmPassword"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         required
                                         placeholder="Re-enter password"
                                     />
@@ -683,7 +683,7 @@ const BookieManagement = () => {
                                     <button
                                         type="submit"
                                         disabled={formLoading}
-                                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                        className="flex-1 bg-primary-500 hover:bg-primary-600 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                                     >
                                         {formLoading ? 'Creating...' : 'Create Bookie'}
                                     </button>
@@ -713,7 +713,7 @@ const BookieManagement = () => {
                                             name="firstName"
                                             value={formData.firstName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                         />
                                     </div>
@@ -724,7 +724,7 @@ const BookieManagement = () => {
                                             name="lastName"
                                             value={formData.lastName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                         />
                                     </div>
@@ -736,7 +736,7 @@ const BookieManagement = () => {
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                     />
                                 </div>
                                 <div>
@@ -747,7 +747,7 @@ const BookieManagement = () => {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         maxLength={10}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="10-digit (6–9 start)"
                                         required
                                     />
@@ -761,7 +761,7 @@ const BookieManagement = () => {
                                             name="commissionPercentage"
                                             value={formData.commissionPercentage}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             placeholder="0"
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
@@ -776,7 +776,7 @@ const BookieManagement = () => {
                                         name="balance"
                                         value={formData.balance}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="0"
                                     />
                                     <p className="mt-0.5 text-xs text-gray-500">Deducted when bookie gives balance to players.</p>
@@ -788,7 +788,7 @@ const BookieManagement = () => {
                                             name="canManagePayments"
                                             checked={formData.canManagePayments}
                                             onChange={(e) => setFormData({ ...formData, canManagePayments: e.target.checked })}
-                                            className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                                            className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                                         />
                                         <span className="text-gray-600 text-sm font-medium">Allow Payment Management</span>
                                     </label>
@@ -802,7 +802,7 @@ const BookieManagement = () => {
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             minLength={6}
                                             placeholder="Enter new password"
                                         />
@@ -827,7 +827,7 @@ const BookieManagement = () => {
                                     <button
                                         type="submit"
                                         disabled={formLoading}
-                                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                        className="flex-1 bg-primary-500 hover:bg-primary-600 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                                     >
                                         {formLoading ? 'Updating...' : 'Update Bookie'}
                                     </button>
@@ -861,7 +861,7 @@ const BookieManagement = () => {
                                     placeholder="Secret declare password"
                                     value={secretPassword}
                                     onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
-                                    className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                 />
                                 {passwordError && (
                                     <p className="text-red-500 text-sm mt-2">{passwordError}</p>
@@ -892,7 +892,7 @@ const BookieManagement = () => {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
                     <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-md">
                         <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-orange-500">Confirm Suspend/Unsuspend Bookie</h3>
+                            <h3 className="text-lg font-semibold text-primary-500">Confirm Suspend/Unsuspend Bookie</h3>
                             <button type="button" onClick={() => { setShowPasswordModal(false); setPendingBookie(null); setSecretPassword(''); setPasswordError(''); }} className="text-gray-400 hover:text-gray-800 p-1">×</button>
                         </div>
                         <form onSubmit={handlePasswordSubmit} className="p-4 space-y-4">
@@ -912,7 +912,7 @@ const BookieManagement = () => {
                             )}
                             <div className="flex gap-2 justify-end">
                                 <button type="button" onClick={() => { setShowPasswordModal(false); setPendingBookie(null); setSecretPassword(''); setPasswordError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-500 text-gray-800 font-semibold">Cancel</button>
-                                <button type="submit" disabled={togglingId !== null} className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-gray-800 font-semibold disabled:opacity-50">
+                                <button type="submit" disabled={togglingId !== null} className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-gray-800 font-semibold disabled:opacity-50">
                                     {togglingId ? <span className="animate-spin">⏳</span> : 'Confirm'}
                                 </button>
                             </div>

@@ -101,7 +101,7 @@ const Markets = () => {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all ${
                                     isActive
-                                        ? 'bg-orange-500 text-gray-800 shadow-lg shadow-orange-500/20'
+                                        ? 'bg-primary-500 text-gray-800 shadow-lg shadow-primary-500/20'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 border border-gray-200'
                                 }`}
                             >
@@ -137,7 +137,7 @@ const Markets = () => {
                                 </h2>
                                 <button
                                     onClick={handleCreate}
-                                    className="w-full sm:w-auto px-4 py-3 sm:py-2.5 bg-orange-500 hover:bg-orange-600 text-gray-800 font-semibold rounded-xl transition-colors text-sm sm:text-base touch-manipulation"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2.5 bg-primary-500 hover:bg-primary-600 text-gray-800 font-semibold rounded-xl transition-colors text-sm sm:text-base touch-manipulation"
                                 >
                                     + Add Market
                                 </button>

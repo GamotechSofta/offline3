@@ -77,7 +77,7 @@ const HelpDesk = () => {
                                 <div key={ticket._id} onClick={() => setSelectedTicket(ticket)} className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedTicket?._id === ticket._id ? 'bg-gray-100' : ''}`}>
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-semibold">{ticket.subject}</h3>
-                                        <span className={`px-2 py-1 rounded text-xs ${ticket.status === 'resolved' ? 'bg-green-600' : ticket.status === 'in-progress' ? 'bg-orange-600' : ticket.status === 'closed' ? 'bg-gray-200' : 'bg-blue-600'}`}>{ticket.status}</span>
+                                        <span className={`px-2 py-1 rounded text-xs ${ticket.status === 'resolved' ? 'bg-green-600' : ticket.status === 'in-progress' ? 'bg-primary-600' : ticket.status === 'closed' ? 'bg-gray-200' : 'bg-blue-600'}`}>{ticket.status}</span>
                                     </div>
                                     <p className="text-sm text-gray-400 truncate">{ticket.description}</p>
                                     <p className="text-xs text-gray-500 mt-2">
@@ -97,7 +97,7 @@ const HelpDesk = () => {
                         <div>
                             <div className="flex justify-between items-start mb-4">
                                 <h2 className="text-2xl font-bold">{selectedTicket.subject}</h2>
-                                <span className={`px-3 py-1 rounded text-sm ${selectedTicket.status === 'resolved' ? 'bg-green-600' : selectedTicket.status === 'in-progress' ? 'bg-orange-600' : selectedTicket.status === 'closed' ? 'bg-gray-200' : 'bg-blue-600'}`}>{selectedTicket.status}</span>
+                                <span className={`px-3 py-1 rounded text-sm ${selectedTicket.status === 'resolved' ? 'bg-green-600' : selectedTicket.status === 'in-progress' ? 'bg-primary-600' : selectedTicket.status === 'closed' ? 'bg-gray-200' : 'bg-blue-600'}`}>{selectedTicket.status}</span>
                             </div>
                             <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Player</p><p className="font-semibold">{selectedTicket.userId?.username || selectedTicket.userId}{selectedTicket.userId?.source === 'bookie' ? ` — bookie user${selectedTicket.userId?.referredBy?.username ? ` (${selectedTicket.userId.referredBy.username})` : ''}` : ' — admin user'}</p></div>
                             <div className="mb-4"><p className="text-gray-400 text-sm mb-1">Description</p><p className="whitespace-pre-wrap">{selectedTicket.description}</p></div>
@@ -110,7 +110,7 @@ const HelpDesk = () => {
                                                 key={i}
                                                 type="button"
                                                 onClick={() => setFullScreenImage(s.startsWith('http') ? s : `${BASE_URL}${s}`)}
-                                                className="w-full h-32 rounded border border-gray-200 overflow-hidden focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                                                className="w-full h-32 rounded border border-gray-200 overflow-hidden focus:ring-2 focus:ring-primary-500 focus:outline-none"
                                             >
                                                 <img src={s.startsWith('http') ? s : `${BASE_URL}${s}`} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover cursor-pointer" />
                                             </button>
@@ -122,7 +122,7 @@ const HelpDesk = () => {
                             <div className="flex gap-2 mt-6">
                                 {selectedTicket.status === 'open' && (
                                     <>
-                                        <button onClick={() => handleStatusUpdate(selectedTicket._id, 'in-progress')} className="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded">Mark In Progress</button>
+                                        <button onClick={() => handleStatusUpdate(selectedTicket._id, 'in-progress')} className="px-4 py-2 bg-primary-600 hover:bg-primary-700 rounded">Mark In Progress</button>
                                         <button onClick={() => handleStatusUpdate(selectedTicket._id, 'resolved')} className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded">Mark Resolved</button>
                                     </>
                                 )}

@@ -145,7 +145,7 @@ const Payments = () => {
                                             <td className="px-6 py-4 text-sm"><span className={`px-2 py-1 rounded text-xs text-white ${p.type === 'deposit' ? 'bg-green-600' : 'bg-blue-600'}`}>{p.type}</span></td>
                                             <td className="px-6 py-4 text-sm font-semibold">₹{p.amount?.toLocaleString('en-IN')}</td>
                                             <td className="px-6 py-4 text-sm">{p.method || 'N/A'}</td>
-                                            <td className="px-6 py-4 text-sm"><span className={`px-2 py-1 rounded text-xs text-white ${p.status === 'approved' || p.status === 'completed' ? 'bg-green-600' : p.status === 'pending' ? 'bg-orange-600' : 'bg-red-600'}`}>{p.status}</span></td>
+                                            <td className="px-6 py-4 text-sm"><span className={`px-2 py-1 rounded text-xs text-white ${p.status === 'approved' || p.status === 'completed' ? 'bg-green-600' : p.status === 'pending' ? 'bg-primary-600' : 'bg-red-600'}`}>{p.status}</span></td>
                                             <td className="px-6 py-4 text-sm">
                                                 {p.screenshotUrl ? (
                                                     <button

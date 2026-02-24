@@ -346,4 +346,13 @@ export default {
     orEnterMarketNameManually: 'किंवा व्यक्तिचलितपणे बाजाराचे नाव प्रविष्ट करा',
     printUserReport: 'वापरकर्ता अहवाल प्रिंट करा',
     balance: 'शिल्लक',
+    marketWiseReports: 'बाजार-निहाय अहवाल',
+    marketWiseReportsDescription: 'निवडलेल्या कालावधीसाठी विशिष्ट बाजारासाठी उत्पन्न, बेट आणि विन रेट पहा.',
+    chooseMarket: 'बाजार निवडा...',
+    loadingReport: 'अहवाल लोड होत आहे...',
+    forPeriod: 'कालावधीसाठी',
+    noDataForMarket: 'या बाजारासाठी डेटा नाही',
+    tryAnotherMarket: 'दुसरा बाजार किंवा वेगळी तारीख श्रेणी वापरून पहा.',
+    selectMarketAbove: 'वरील बाजार निवडा',
+    youWillSeeRevenue: 'त्या बाजारासाठी उत्पन्न, पेआउट, बेट आणि विन रेट दिसेल.',
 };

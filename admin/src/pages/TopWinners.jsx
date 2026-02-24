@@ -72,9 +72,9 @@ const TopWinners = () => {
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold ${
-                                                    index === 0 ? 'bg-orange-500 text-gray-800' :
+                                                    index === 0 ? 'bg-primary-500 text-gray-800' :
                                                     index === 1 ? 'bg-gray-400 text-gray-800' :
-                                                    index === 2 ? 'bg-orange-600 text-gray-800' :
+                                                    index === 2 ? 'bg-primary-600 text-gray-800' :
                                                     'bg-gray-100 text-gray-800'
                                                 }`}>
                                                     {index + 1}
@@ -92,7 +92,7 @@ const TopWinners = () => {
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-gray-400">Total Winnings:</span>
-                                                <span className="font-semibold text-orange-500">₹{winner.totalWinnings}</span>
+                                                <span className="font-semibold text-primary-500">₹{winner.totalWinnings}</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-gray-400">Win Rate:</span>

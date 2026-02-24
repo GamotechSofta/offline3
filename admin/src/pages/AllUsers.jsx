@@ -226,7 +226,7 @@ const AllUsers = () => {
                 <button
                     type="button"
                     onClick={() => navigate('/add-user')}
-                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-500/90 text-gray-800 font-semibold transition-colors text-sm sm:text-base shrink-0"
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary-500 hover:bg-primary-500/90 text-gray-800 font-semibold transition-colors text-sm sm:text-base shrink-0"
                 >
                     <FaUserPlus className="w-5 h-5" />
                     Add Player
@@ -259,7 +259,7 @@ const AllUsers = () => {
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm sm:text-base ${
                             activeTab === tab.id
-                                ? 'bg-orange-500 text-gray-800'
+                                ? 'bg-primary-500 text-gray-800'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                     >
@@ -277,7 +277,7 @@ const AllUsers = () => {
                         placeholder="Search by name, email or phone..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`w-full pl-10 py-2.5 bg-gray-100/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
+                        className={`w-full pl-10 py-2.5 bg-gray-100/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
                     />
                     {searchQuery && (
                         <button
@@ -295,7 +295,7 @@ const AllUsers = () => {
             <div className="bg-white rounded-lg overflow-x-auto overflow-y-hidden border border-gray-200 min-w-0 max-w-full">
                 {loading ? (
                     <div className="p-8 text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto" />
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto" />
                         <p className="mt-4 text-gray-400">Loading...</p>
                     </div>
                 ) : list.length === 0 ? (
@@ -311,7 +311,7 @@ const AllUsers = () => {
                         {/* Header */}
                         <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-100/40 border-b border-gray-200/80">
                             <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                                <span className="font-semibold text-orange-500">All Bookies</span>
+                                <span className="font-semibold text-primary-500">All Bookies</span>
                                 <span className="hidden sm:inline"> — Bookie accounts who can add players via their link.</span>
                                 <span className="block sm:inline mt-1 sm:mt-0 sm:ml-1">Click <span className="font-medium text-gray-800">View Players</span> to see players under each bookie.</span>
                             </p>
@@ -371,7 +371,7 @@ const AllUsers = () => {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => setExpandedBookieId(isExpanded ? null : bookie._id)}
-                                                                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-orange-500/90 hover:bg-orange-500 text-gray-800 transition-colors"
+                                                                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500/90 hover:bg-primary-500 text-gray-800 transition-colors"
                                                             >
                                                                 {isExpanded ? 'Hide Players' : 'View Players'}
                                                             </button>
@@ -381,8 +381,8 @@ const AllUsers = () => {
                                                 {isExpanded && (
                                                     <tr>
                                                         <td colSpan="7" className="px-0 py-0 bg-gray-50/30">
-                                                            <div className="px-6 py-4 sm:py-5 border-l-4 border-orange-500 ml-4 sm:ml-6">
-                                                                <p className="text-orange-500 font-semibold mb-3 text-sm">
+                                                            <div className="px-6 py-4 sm:py-5 border-l-4 border-primary-500 ml-4 sm:ml-6">
+                                                                <p className="text-primary-500 font-semibold mb-3 text-sm">
                                                                     Players under <span className="text-gray-800">{bookie.username}</span>
                                                                 </p>
                                                                 {bookieUsers.length === 0 ? (
@@ -408,7 +408,7 @@ const AllUsers = () => {
                                                                                     <tr key={u._id} className="hover:bg-gray-100/20 transition-colors">
                                                                                         <td className="px-4 py-2.5 text-gray-400">{i + 1}</td>
                                                                                         <td className="px-4 py-2.5 font-medium">
-                                                                                            <Link to={`/all-users/${u._id}`} className="text-orange-500 hover:text-orange-600 hover:underline">{u.username}</Link>
+                                                                                            <Link to={`/all-users/${u._id}`} className="text-primary-500 hover:text-primary-600 hover:underline">{u.username}</Link>
                                                                                         </td>
                                                                                         <td className="px-4 py-2.5 text-gray-600 truncate max-w-[120px] lg:max-w-[160px]">{u.email || '—'}</td>
                                                                                         <td className="px-4 py-2.5 text-gray-600 hidden lg:table-cell">{u.phone || '—'}</td>
@@ -496,7 +496,7 @@ const AllUsers = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => setExpandedBookieId(isExpanded ? null : bookie._id)}
-                                                    className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-orange-500/90 hover:bg-orange-500 text-gray-800"
+                                                    className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500/90 hover:bg-primary-500 text-gray-800"
                                                 >
                                                     {isExpanded ? 'Hide' : 'View'} Players
                                                 </button>
@@ -508,15 +508,15 @@ const AllUsers = () => {
                                             <p>{bookie.createdAt ? new Date(bookie.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}</p>
                                         </div>
                                         {isExpanded && (
-                                            <div className="mt-4 pl-3 border-l-2 border-orange-500/70 space-y-3">
-                                                <p className="text-orange-500/90 font-medium text-sm">Players ({bookieUsers.length})</p>
+                                            <div className="mt-4 pl-3 border-l-2 border-primary-500/70 space-y-3">
+                                                <p className="text-primary-500/90 font-medium text-sm">Players ({bookieUsers.length})</p>
                                                 {bookieUsers.length === 0 ? (
                                                     <p className="text-gray-500 text-xs">No players yet.</p>
                                                 ) : (
                                                     bookieUsers.map((u, i) => (
                                                         <div key={u._id} className="p-3 rounded-lg bg-white border border-gray-200">
                                                             <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                                                                <Link to={`/all-users/${u._id}`} className="font-medium text-orange-500 hover:text-orange-600 hover:underline text-sm">{u.username}</Link>
+                                                                <Link to={`/all-users/${u._id}`} className="font-medium text-primary-500 hover:text-primary-600 hover:underline text-sm">{u.username}</Link>
                                                                 <div className="flex items-center gap-1.5">
                                                                     <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs ${computeIsOnline(u) ? 'text-green-600' : 'text-gray-500'}`}>
                                                                         <span className={`w-1.5 h-1.5 rounded-full ${computeIsOnline(u) ? 'bg-green-500' : 'bg-gray-500'}`} />
@@ -556,9 +556,9 @@ const AllUsers = () => {
                         {(activeTab === 'bookie_users' || activeTab === 'super_admin_users') && (
                             <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 text-sm text-gray-600">
                                 {activeTab === 'bookie_users' ? (
-                                    <><strong className="text-orange-500">All Bookies Players</strong> – Players who signed up via a bookie&apos;s link.</>
+                                    <><strong className="text-primary-500">All Bookies Players</strong> – Players who signed up via a bookie&apos;s link.</>
                                 ) : (
-                                    <><strong className="text-orange-500">Super Admin Players</strong> – Players who signed up directly or were created by super admin.</>
+                                    <><strong className="text-primary-500">Super Admin Players</strong> – Players who signed up directly or were created by super admin.</>
                                 )}
                             </div>
                         )}
@@ -584,7 +584,7 @@ const AllUsers = () => {
                                         <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{index + 1}</td>
                                         <td className="px-2 sm:px-3 py-2 sm:py-3 font-medium">
                                             {isUserList ? (
-                                                <Link to={`/all-users/${item._id}`} className="text-orange-500 hover:text-orange-600 hover:underline truncate block max-w-[120px]">{item.username}</Link>
+                                                <Link to={`/all-users/${item._id}`} className="text-primary-500 hover:text-primary-600 hover:underline truncate block max-w-[120px]">{item.username}</Link>
                                             ) : (
                                                 <span className="text-gray-800 truncate block max-w-[120px]">{item.username}</span>
                                             )}
@@ -705,7 +705,7 @@ const AllUsers = () => {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
                     <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-md">
                         <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-orange-500">
+                            <h3 className="text-lg font-semibold text-primary-500">
                                 Confirm {pendingAction.type === 'player' ? 'Suspend/Unsuspend Player' : 'Suspend/Unsuspend Bookie'}
                             </h3>
                             <button type="button" onClick={() => { setShowPasswordModal(false); setPendingAction(null); setSecretPassword(''); setPasswordError(''); }} className="text-gray-400 hover:text-gray-800 p-1">×</button>
@@ -727,7 +727,7 @@ const AllUsers = () => {
                             )}
                             <div className="flex gap-2 justify-end">
                                 <button type="button" onClick={() => { setShowPasswordModal(false); setPendingAction(null); setSecretPassword(''); setPasswordError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-500 text-gray-800 font-semibold">Cancel</button>
-                                <button type="submit" disabled={togglingId !== null} className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-gray-800 font-semibold disabled:opacity-50">
+                                <button type="submit" disabled={togglingId !== null} className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-gray-800 font-semibold disabled:opacity-50">
                                     {togglingId ? <span className="animate-spin">⏳</span> : 'Confirm'}
                                 </button>
                             </div>

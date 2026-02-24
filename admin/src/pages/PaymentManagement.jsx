@@ -155,7 +155,7 @@ const PaymentManagement = () => {
 
     const getStatusBadge = (status) => {
         const styles = {
-            pending: 'bg-orange-50 text-orange-600 border-orange-200',
+            pending: 'bg-primary-50 text-primary-600 border-primary-200',
             approved: 'bg-green-600/30 text-green-600 border-green-600/50',
             rejected: 'bg-red-600/30 text-red-500 border-red-600/50',
             completed: 'bg-blue-600/30 text-blue-600 border-blue-600/50',
@@ -177,7 +177,7 @@ const PaymentManagement = () => {
             {/* Header */}
             <div className="mb-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                    <FaWallet className="text-orange-500" />
+                    <FaWallet className="text-primary-500" />
                     Payment Management
                 </h1>
                 <p className="mt-2 text-gray-400 text-sm sm:text-base max-w-2xl">
@@ -190,7 +190,7 @@ const PaymentManagement = () => {
                 <div
                     className={`rounded-xl p-5 border-2 transition-all cursor-pointer ${
                         filters.status === 'pending' && filters.type === 'deposit'
-                            ? 'border-amber-500 bg-orange-500/10'
+                            ? 'border-amber-500 bg-primary-500/10'
                             : 'border-gray-200 bg-white hover:border-gray-200'
                     }`}
                     onClick={() => setFilters({ status: 'pending', type: 'deposit' })}
@@ -199,16 +199,16 @@ const PaymentManagement = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Pending Deposits</p>
-                            <p className="text-2xl sm:text-3xl font-bold text-orange-500 mt-1">{pendingCounts.deposits}</p>
+                            <p className="text-2xl sm:text-3xl font-bold text-primary-500 mt-1">{pendingCounts.deposits}</p>
                             <p className="text-xs text-gray-500 mt-1">Click to filter</p>
                         </div>
-                        <FaArrowDown className="w-10 h-10 text-orange-500/50" />
+                        <FaArrowDown className="w-10 h-10 text-primary-500/50" />
                     </div>
                 </div>
                 <div
                     className={`rounded-xl p-5 border-2 transition-all cursor-pointer ${
                         filters.status === 'pending' && filters.type === 'withdrawal'
-                            ? 'border-amber-500 bg-orange-500/10'
+                            ? 'border-amber-500 bg-primary-500/10'
                             : 'border-gray-200 bg-white hover:border-gray-200'
                     }`}
                     onClick={() => setFilters({ status: 'pending', type: 'withdrawal' })}
@@ -217,7 +217,7 @@ const PaymentManagement = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Pending Withdrawals</p>
-                            <p className="text-2xl sm:text-3xl font-bold text-orange-500 mt-1">{pendingCounts.withdrawals}</p>
+                            <p className="text-2xl sm:text-3xl font-bold text-primary-500 mt-1">{pendingCounts.withdrawals}</p>
                             <p className="text-xs text-gray-500 mt-1">Click to filter</p>
                         </div>
                         <FaArrowUp className="w-10 h-10 text-purple-500/50" />
@@ -249,7 +249,7 @@ const PaymentManagement = () => {
                     <FaFilter className="text-gray-500 w-4 h-4" />
                     <span className="text-sm font-medium text-gray-400">Filter Payments</span>
                     {hasActiveFilters && (
-                        <span className="ml-2 px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-500 text-xs">
+                        <span className="ml-2 px-2 py-0.5 rounded-full bg-primary-500/20 text-primary-500 text-xs">
                             Filters active
                         </span>
                     )}
@@ -298,11 +298,11 @@ const PaymentManagement = () => {
                     <p className="text-sm text-gray-400">
                         Showing <span className="font-semibold text-gray-800">{payments.length}</span> payment{payments.length !== 1 ? 's' : ''}
                         {hasActiveFilters && (
-                            <span className="ml-2 text-orange-500">(filtered)</span>
+                            <span className="ml-2 text-primary-500">(filtered)</span>
                         )}
                     </p>
                     {pendingRequireAction && payments.some((p) => p.status === 'pending') && (
-                        <p className="text-xs text-orange-500 flex items-center gap-2">
+                        <p className="text-xs text-primary-500 flex items-center gap-2">
                             <FaClock className="w-3.5 h-3.5" />
                             Some payments need your approval
                         </p>
@@ -353,7 +353,7 @@ const PaymentManagement = () => {
                                                 {hasActiveFilters && (
                                                     <button
                                                         onClick={() => setFilters({ status: '', type: '' })}
-                                                        className="mt-4 px-4 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg text-gray-800 text-sm font-medium"
+                                                        className="mt-4 px-4 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg text-gray-800 text-sm font-medium"
                                                     >
                                                         Clear Filters
                                                     </button>

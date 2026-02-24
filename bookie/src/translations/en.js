@@ -347,4 +347,14 @@ export default {
     orEnterMarketNameManually: 'Or enter market name manually',
     printUserReport: 'Print User Report',
     balance: 'Balance',
+    // Market-wise Reports
+    marketWiseReports: 'Market-wise Reports',
+    marketWiseReportsDescription: 'View revenue, bets and win rate for a specific market in the selected period.',
+    chooseMarket: 'Choose a market...',
+    loadingReport: 'Loading report...',
+    forPeriod: 'For period',
+    noDataForMarket: 'No data for this market',
+    tryAnotherMarket: 'Try another market or a different date range.',
+    selectMarketAbove: 'Select a market above',
+    youWillSeeRevenue: "You'll see revenue, payouts, bets and win rate for that market.",
 };

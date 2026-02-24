@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #25d366;
+  --color-primary-hover: #1eb855;
+  --color-primary-50: #e8f8ee;
+  --color-primary-100: #d1f1dd;
+  --color-primary-200: #a3e3bb;
+  --color-primary-300: #75d599;
+  --color-primary-400: #47c777;
+  --color-primary-500: #25d366;
+  --color-primary-600: #1eb855;
+  --color-primary-700: #189345;
+  --color-dark: #1d1f1f;
+  --color-dark-elevated: #252728;
+}
+
 @keyframes scroll {
   0% {
     transform: translateX(0);
@@ -82,12 +97,12 @@ input[type="number"] {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #f97316;
+  background: #25d366;
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #ea580c;
+  background: #1eb855;
 }
 
 /* Hide native date input calendar icon */
@@ -102,11 +117,11 @@ input[type="date"]::-webkit-clear-button {
   -webkit-appearance: none;
 }
 
-/* Mobile-first responsive base */
+/* Mobile-first responsive base - dark theme */
 html {
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
-  background: #ffffff;
+  background: #1d1f1f;
   height: 100%;
 }
 
@@ -115,13 +130,13 @@ body {
   min-height: 100dvh;
   min-height: -webkit-fill-available;
   padding-bottom: env(safe-area-inset-bottom, 0);
-  background: #ffffff;
+  background: #1d1f1f;
   position: relative;
-  color: #1f2937;
+  color: #e5e7eb;
 }
 
 #root {
-  background: #ffffff;
+  background: #1d1f1f;
   min-height: 100%;
   min-height: -webkit-fill-available;
 }

@@ -130,7 +130,7 @@ const Revenue = () => {
                 {/* Header */}
                 <div>
                     <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-2">
-                        <FaMoneyBillWave className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500 shrink-0" />
+                        <FaMoneyBillWave className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500 shrink-0" />
                         Revenue
                     </h1>
                     <p className="text-gray-400 text-xs sm:text-sm mt-1">Bookie-wise revenue breakdown and admin profit</p>
@@ -139,7 +139,7 @@ const Revenue = () => {
                 {/* Date filters */}
                 <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-5">
                     <div className="flex flex-wrap items-center gap-2 mb-3">
-                        <FaCalendarAlt className="w-4 h-4 text-orange-500 shrink-0" />
+                        <FaCalendarAlt className="w-4 h-4 text-primary-500 shrink-0" />
                         <span className="text-sm font-medium text-gray-600">Period</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
@@ -150,7 +150,7 @@ const Revenue = () => {
                                 onClick={() => applyPreset(p.id)}
                                 className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                                     activePreset === p.id
-                                        ? 'bg-orange-500 text-gray-800'
+                                        ? 'bg-primary-500 text-gray-800'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                             >
@@ -176,7 +176,7 @@ const Revenue = () => {
                             type="button"
                             onClick={fetchRevenue}
                             disabled={loading}
-                            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm"
+                            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm"
                         >
                             <FaSyncAlt className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                             Refresh
@@ -224,14 +224,14 @@ const Revenue = () => {
 
                             {/* Bookie Commissions */}
                             <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-200/60 relative overflow-hidden">
-                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-primary-400" />
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="min-w-0">
                                         <p className="text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">Bookie Comm.</p>
-                                        <p className="text-base sm:text-xl lg:text-2xl font-bold text-orange-400 mt-1 truncate">{formatCurrency(summary.totalBookieCommission)}</p>
+                                        <p className="text-base sm:text-xl lg:text-2xl font-bold text-primary-400 mt-1 truncate">{formatCurrency(summary.totalBookieCommission)}</p>
                                     </div>
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-orange-500/15 flex items-center justify-center shrink-0">
-                                        <FaUserTie className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-500/15 flex items-center justify-center shrink-0">
+                                        <FaUserTie className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400" />
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@ const Revenue = () => {
                                             {formatCurrency(summary.totalAdminProfit)}
                                         </p>
                                     </div>
-                                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 ${summary.totalAdminProfit >= 0 ? 'bg-orange-500/15' : 'bg-red-500/15'}`}>
+                                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 ${summary.totalAdminProfit >= 0 ? 'bg-primary-500/15' : 'bg-red-500/15'}`}>
                                         {summary.totalAdminProfit >= 0
                                             ? <FaArrowUp className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
                                             : <FaArrowDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
@@ -260,7 +260,7 @@ const Revenue = () => {
                         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                             <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-gray-200">
                                 <h2 className="text-sm sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                    <FaUsers className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+                                    <FaUsers className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
                                     Bookie-wise Breakdown
                                 </h2>
                             </div>
@@ -287,7 +287,7 @@ const Revenue = () => {
                                                     <div className="flex items-center gap-2">
                                                         <div className={`w-2 h-2 rounded-full shrink-0 ${b.bookieStatus === 'active' ? 'bg-emerald-400' : 'bg-red-400'}`} />
                                                         <div className="min-w-0">
-                                                            <Link to={`/revenue/${b.bookieId}`} className="font-medium text-gray-800 truncate hover:text-orange-500 transition-colors">{b.bookieName}</Link>
+                                                            <Link to={`/revenue/${b.bookieId}`} className="font-medium text-gray-800 truncate hover:text-primary-500 transition-colors">{b.bookieName}</Link>
                                                             {b.bookiePhone && <p className="text-[11px] text-gray-500">{b.bookiePhone}</p>}
                                                         </div>
                                                     </div>
@@ -296,11 +296,11 @@ const Revenue = () => {
                                                 <td className="text-right px-3 py-3 text-gray-800 font-medium">{formatCurrency(b.totalBetAmount)}</td>
                                                 <td className="text-right px-3 py-3 text-red-500">{formatCurrency(b.totalPayouts)}</td>
                                                 <td className="text-center px-3 py-3">
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-orange-500/15 text-orange-500">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-500/15 text-primary-500">
                                                         {b.commissionPercentage}%
                                                     </span>
                                                 </td>
-                                                <td className="text-right px-3 py-3 text-orange-400 font-medium">{formatCurrency(b.bookieShare)}</td>
+                                                <td className="text-right px-3 py-3 text-primary-400 font-medium">{formatCurrency(b.bookieShare)}</td>
                                                 <td className="text-right px-3 py-3 text-gray-400">{formatCurrency(b.adminPool)}</td>
                                                 <td className={`text-right px-4 py-3 font-semibold ${b.adminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                     {formatCurrency(b.adminProfit)}
@@ -335,12 +335,12 @@ const Revenue = () => {
 
                                         {/* Totals */}
                                         <tr className="bg-gray-100/30 border-t-2 border-gray-200/80">
-                                            <td className="px-4 py-3.5 font-bold text-orange-500 text-xs uppercase tracking-wider">Total</td>
+                                            <td className="px-4 py-3.5 font-bold text-primary-500 text-xs uppercase tracking-wider">Total</td>
                                             <td className="text-right px-3 py-3.5 text-gray-500">-</td>
                                             <td className="text-right px-3 py-3.5 text-gray-800 font-bold">{formatCurrency(summary.grandTotalBets)}</td>
                                             <td className="text-right px-3 py-3.5 text-red-500 font-bold">{formatCurrency(summary.grandTotalPayouts)}</td>
                                             <td className="text-center px-3 py-3.5 text-gray-500">-</td>
-                                            <td className="text-right px-3 py-3.5 text-orange-400 font-bold">{formatCurrency(summary.totalBookieCommission)}</td>
+                                            <td className="text-right px-3 py-3.5 text-primary-400 font-bold">{formatCurrency(summary.totalBookieCommission)}</td>
                                             <td className="text-right px-3 py-3.5 text-gray-500">-</td>
                                             <td className={`text-right px-4 py-3.5 font-bold ${summary.totalAdminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                 {formatCurrency(summary.totalAdminProfit)}
@@ -359,11 +359,11 @@ const Revenue = () => {
                                             <div className="flex items-center gap-2 min-w-0">
                                                 <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${b.bookieStatus === 'active' ? 'bg-emerald-400' : 'bg-red-400'}`} />
                                                 <div className="min-w-0">
-                                                    <Link to={`/revenue/${b.bookieId}`} className="font-semibold text-gray-800 text-sm truncate hover:text-orange-500 transition-colors">{b.bookieName}</Link>
+                                                    <Link to={`/revenue/${b.bookieId}`} className="font-semibold text-gray-800 text-sm truncate hover:text-primary-500 transition-colors">{b.bookieName}</Link>
                                                     {b.bookiePhone && <p className="text-[11px] text-gray-500">{b.bookiePhone}</p>}
                                                 </div>
                                             </div>
-                                            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-orange-500/15 text-orange-500 shrink-0">
+                                            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-500/15 text-primary-500 shrink-0">
                                                 {b.commissionPercentage}%
                                             </span>
                                         </div>
@@ -379,7 +379,7 @@ const Revenue = () => {
                                             </div>
                                             <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
                                                 <p className="text-[10px] text-gray-500 uppercase">Bookie Share</p>
-                                                <p className="text-xs font-semibold text-orange-400 truncate">{formatCurrency(b.bookieShare)}</p>
+                                                <p className="text-xs font-semibold text-primary-400 truncate">{formatCurrency(b.bookieShare)}</p>
                                             </div>
                                             <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
                                                 <p className="text-[10px] text-gray-500 uppercase">Admin Profit</p>
@@ -426,7 +426,7 @@ const Revenue = () => {
 
                                 {/* Totals - mobile */}
                                 <div className="p-3 sm:p-4 bg-gray-100/20">
-                                    <p className="text-[10px] font-bold text-orange-500 uppercase tracking-wider mb-2">Total Summary</p>
+                                    <p className="text-[10px] font-bold text-primary-500 uppercase tracking-wider mb-2">Total Summary</p>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
                                             <p className="text-[10px] text-gray-500 uppercase">Bets Volume</p>
@@ -438,7 +438,7 @@ const Revenue = () => {
                                         </div>
                                         <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
                                             <p className="text-[10px] text-gray-500 uppercase">Bookie Comm.</p>
-                                            <p className="text-xs font-bold text-orange-400 truncate">{formatCurrency(summary.totalBookieCommission)}</p>
+                                            <p className="text-xs font-bold text-primary-400 truncate">{formatCurrency(summary.totalBookieCommission)}</p>
                                         </div>
                                         <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
                                             <p className="text-[10px] text-gray-500 uppercase">Admin Profit</p>
@@ -484,7 +484,7 @@ const Revenue = () => {
                         <button
                             type="button"
                             onClick={fetchRevenue}
-                            className="mt-4 px-4 py-2 bg-orange-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors text-sm"
+                            className="mt-4 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors text-sm"
                         >
                             Refresh
                         </button>

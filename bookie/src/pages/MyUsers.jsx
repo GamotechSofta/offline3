@@ -75,7 +75,7 @@ const MyUsers = () => {
                 <button
                     type="button"
                     onClick={() => navigate('/add-user')}
-                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-500/90 text-gray-800 font-semibold transition-colors text-sm sm:text-base shrink-0"
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary-500 hover:bg-primary-500/90 text-gray-800 font-semibold transition-colors text-sm sm:text-base shrink-0"
                 >
                     <FaUserPlus className="w-5 h-5" />
                     {t('addPlayer')}
@@ -98,7 +98,7 @@ const MyUsers = () => {
                 </div>
                 <div className="bg-white rounded-xl p-4 border border-gray-200">
                     <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{t('onlineNow')}</p>
-                    <p className="text-2xl font-bold text-orange-500 font-mono">{onlineCount}</p>
+                    <p className="text-2xl font-bold text-primary-500 font-mono">{onlineCount}</p>
                 </div>
             </div>
 
@@ -111,7 +111,7 @@ const MyUsers = () => {
                         placeholder={t('searchPlayers')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`w-full pl-10 py-2.5 bg-gray-100/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
+                        className={`w-full pl-10 py-2.5 bg-gray-100/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm sm:text-base ${searchQuery ? 'pr-10' : 'pr-4'}`}
                     />
                     {searchQuery && (
                         <button
@@ -136,7 +136,7 @@ const MyUsers = () => {
             <div className="bg-white rounded-lg overflow-x-auto overflow-y-hidden border border-gray-200 min-w-0 max-w-full">
                 {loading ? (
                     <div className="p-8 text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto" />
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto" />
                         <p className="mt-4 text-gray-400">{t('loading')}</p>
                     </div>
                 ) : users.length === 0 ? (
@@ -146,7 +146,7 @@ const MyUsers = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/add-user')}
-                            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-500/90 text-gray-800 font-semibold text-sm"
+                            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-500/90 text-gray-800 font-semibold text-sm"
                         >
                             <FaUserPlus className="w-4 h-4" /> {t('addPlayer')}
                         </button>
@@ -181,7 +181,7 @@ const MyUsers = () => {
                                             <tr key={item._id} className="hover:bg-gray-50">
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{index + 1}</td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3 font-medium">
-                                                    <Link to={`/my-users/${item._id}`} className="text-orange-500 hover:text-orange-600 hover:underline truncate block max-w-[140px]">{item.username}</Link>
+                                                    <Link to={`/my-users/${item._id}`} className="text-primary-500 hover:text-primary-600 hover:underline truncate block max-w-[140px]">{item.username}</Link>
                                                 </td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3 text-gray-600">{item.phone || '—'}</td>
                                                 <td className="px-2 sm:px-3 py-2 sm:py-3">
@@ -238,7 +238,7 @@ const MyUsers = () => {
                                                         <button
                                                             type="button"
                                                             onClick={(e) => { e.stopPropagation(); navigate(`/games?playerId=${item._id}`); }}
-                                                            className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold transition-colors"
+                                                            className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs font-semibold transition-colors"
                                                             title="Place bet for this player"
                                                         >
                                                             <FaGamepad className="w-3 h-3" />

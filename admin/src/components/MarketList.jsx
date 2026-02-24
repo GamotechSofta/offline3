@@ -87,7 +87,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                 return (
                     <div
                         key={market._id}
-                        className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 lg:p-6 hover:border-orange-300 hover:shadow-md transition-all min-w-0 overflow-hidden"
+                        className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 lg:p-6 hover:border-primary-300 hover:shadow-md transition-all min-w-0 overflow-hidden"
                     >
                         {/* Status Badge */}
                         <div className={`${status.color} text-white text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full inline-block mb-3 sm:mb-4`}>
@@ -112,13 +112,13 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                         <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                             <button
                                 onClick={() => navigate(`/markets/${market._id}`)}
-                                className="px-2 sm:px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-xs sm:text-sm font-semibold min-h-[40px] sm:min-h-0"
+                                className="px-2 sm:px-3 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg text-xs sm:text-sm font-semibold min-h-[40px] sm:min-h-0"
                             >
                                 View
                             </button>
                             <button
                                 onClick={() => onEdit(market)}
-                                className="px-2 sm:px-3 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 rounded-lg text-xs sm:text-sm font-semibold min-h-[40px] sm:min-h-0"
+                                className="px-2 sm:px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg text-xs sm:text-sm font-semibold min-h-[40px] sm:min-h-0"
                             >
                                 Edit
                             </button>
@@ -138,7 +138,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
         {showPasswordModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
                 <div className="bg-white rounded-xl border border-gray-200 shadow-2xl max-w-md w-full p-6">
-                    <h3 className="text-lg font-bold text-orange-500 mb-2">Enter Secret Password to Delete Market</h3>
+                    <h3 className="text-lg font-bold text-primary-500 mb-2">Enter Secret Password to Delete Market</h3>
                     <p className="text-gray-500 text-sm mb-4">
                         Please enter the secret password to confirm market deletion.
                     </p>
@@ -149,7 +149,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                             onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
                             placeholder="Secret password"
                             autoFocus
-                            className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
                         {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
                         <div className="flex gap-3">

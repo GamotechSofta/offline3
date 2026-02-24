@@ -19,7 +19,8 @@ const formatBetDetails = (bet) => {
 const Records = () => {
     const [loading, setLoading] = useState(true);
     const [records, setRecords] = useState([]);
-    const [betByFilter, setBetByFilter] = useState('all'); // all | player | bookie
+    const [betByFilter, setBetByFilter] = useState('all'); // all | player | bookie | market
+    const [selectedMarketName, setSelectedMarketName] = useState(''); // for market-wise filter
 
     useEffect(() => {
         fetchRecords();
@@ -75,47 +76,92 @@ const Records = () => {
         }
     };
 
+    const uniqueMarketNames = useMemo(() => {
+        const names = new Set();
+        records.forEach((r) => {
+            if (r.recordType === 'bet' && r.marketName && r.marketName !== '—') names.add(r.marketName);
+        });
+        return Array.from(names).sort((a, b) => String(a).localeCompare(String(b)));
+    }, [records]);
+
     const filteredRecords = useMemo(() => {
         let list = records;
-        if (betByFilter !== 'all') {
+        if (betByFilter === 'player' || betByFilter === 'bookie') {
             list = list.filter((r) => r.recordType === 'bet' && r.betPlacedBy === betByFilter);
+        } else if (betByFilter === 'market') {
+            if (selectedMarketName) list = list.filter((r) => r.marketName === selectedMarketName);
         }
-        return list;
-    }, [records, betByFilter]);
+        return [...list].sort((a, b) => {
+            const marketA = String(a.marketName || '').toLowerCase();
+            const marketB = String(b.marketName || '').toLowerCase();
+            if (marketA !== marketB) return marketA.localeCompare(marketB);
+            const at = new Date(a.createdAt).getTime() || 0;
+            const bt = new Date(b.createdAt).getTime() || 0;
+            return bt - at;
+        });
+    }, [records, betByFilter, selectedMarketName]);
 
     return (
         <Layout title="Bets History">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Bets History</h1>
 
-            <div className="bg-white rounded-lg p-4 mb-4 sm:mb-6 border border-gray-200 flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">Bets By:</span>
-                <button
-                    type="button"
-                    onClick={() => setBetByFilter('all')}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                        betByFilter === 'all' ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 text-gray-700 border-gray-200'
-                    }`}
-                >
-                    All
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setBetByFilter('player')}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                        betByFilter === 'player' ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 text-gray-700 border-gray-200'
-                    }`}
-                >
-                    Bets by Player
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setBetByFilter('bookie')}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
-                        betByFilter === 'bookie' ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-100 text-gray-700 border-gray-200'
-                    }`}
-                >
-                    Bets by Bookie
-                </button>
+            <div className="bg-white rounded-lg p-4 mb-4 sm:mb-6 border border-gray-200">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">Bets By:</span>
+                    <button
+                        type="button"
+                        onClick={() => setBetByFilter('all')}
+                        className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
+                            betByFilter === 'all' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                        }`}
+                    >
+                        All
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setBetByFilter('player')}
+                        className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
+                            betByFilter === 'player' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                        }`}
+                    >
+                        Bets by Player
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setBetByFilter('bookie')}
+                        className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
+                            betByFilter === 'bookie' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                        }`}
+                    >
+                        Bets by Bookie
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setBetByFilter('market')}
+                        className={`px-3 py-2 rounded-lg text-sm font-semibold border ${
+                            betByFilter === 'market' ? 'bg-primary-500 text-white border-primary-500' : 'bg-gray-100 text-gray-700 border-gray-200'
+                        }`}
+                    >
+                        Bets by Market
+                    </button>
+                </div>
+                {betByFilter === 'market' && (
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
+                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Market:</label>
+                        <select
+                            value={selectedMarketName}
+                            onChange={(e) => setSelectedMarketName(e.target.value)}
+                            className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-50 border border-gray-200 text-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-400 min-w-[180px]"
+                        >
+                            <option value="">All markets</option>
+                            {uniqueMarketNames.map((name) => (
+                                <option key={name} value={name}>
+                                    {name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
             </div>
 
             {loading ? (
@@ -165,7 +211,7 @@ const Records = () => {
                                                     ? 'bg-green-100 text-green-700'
                                                     : r.status === 'lost' || r.status === 'rejected'
                                                         ? 'bg-red-100 text-red-700'
-                                                        : 'bg-orange-100 text-orange-700'
+                                                        : 'bg-primary-100 text-primary-700'
                                             }`}>
                                                 {String(r.status || 'pending').toUpperCase()}
                                             </span>

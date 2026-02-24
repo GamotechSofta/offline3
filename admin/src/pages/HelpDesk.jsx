@@ -157,7 +157,7 @@ const HelpDesk = () => {
                                                 <h3 className="font-semibold">{ticket.subject}</h3>
                                                 <span className={`px-2 py-1 rounded text-xs ${
                                                     ticket.status === 'resolved' ? 'bg-green-600' :
-                                                    ticket.status === 'in-progress' ? 'bg-orange-600' :
+                                                    ticket.status === 'in-progress' ? 'bg-primary-600' :
                                                     ticket.status === 'closed' ? 'bg-gray-200' :
                                                     'bg-blue-600'
                                                 }`}>
@@ -186,7 +186,7 @@ const HelpDesk = () => {
                                         <h2 className="text-2xl font-bold">{selectedTicket.subject}</h2>
                                         <span className={`px-3 py-1 rounded text-sm ${
                                             selectedTicket.status === 'resolved' ? 'bg-green-600' :
-                                            selectedTicket.status === 'in-progress' ? 'bg-orange-600' :
+                                            selectedTicket.status === 'in-progress' ? 'bg-primary-600' :
                                             selectedTicket.status === 'closed' ? 'bg-gray-200' :
                                             'bg-blue-600'
                                         }`}>
@@ -218,7 +218,7 @@ const HelpDesk = () => {
                                                         key={index}
                                                         type="button"
                                                         onClick={() => setFullScreenImage(screenshot.startsWith('http') ? screenshot : `${UPLOAD_BASE_URL}${screenshot}`)}
-                                                        className="w-full h-32 rounded border border-gray-200 overflow-hidden focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                                                        className="w-full h-32 rounded border border-gray-200 overflow-hidden focus:ring-2 focus:ring-primary-500 focus:outline-none"
                                                     >
                                                         <img
                                                             src={screenshot.startsWith('http') ? screenshot : `${UPLOAD_BASE_URL}${screenshot}`}
@@ -241,7 +241,7 @@ const HelpDesk = () => {
                                             <>
                                                 <button
                                                     onClick={() => handleStatusUpdate(selectedTicket._id, 'in-progress')}
-                                                    className="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded"
+                                                    className="px-4 py-2 bg-primary-600 hover:bg-primary-700 rounded"
                                                 >
                                                     Mark In Progress
                                                 </button>

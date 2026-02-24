@@ -1,8 +1,22 @@
 @import "tailwindcss";
 
-/* Base */
+@theme {
+  --color-primary: #25d366;
+  --color-primary-50: #e8f8ee;
+  --color-primary-100: #d1f1dd;
+  --color-primary-200: #a3e3bb;
+  --color-primary-300: #75d599;
+  --color-primary-400: #47c777;
+  --color-primary-500: #25d366;
+  --color-primary-600: #1eb855;
+  --color-primary-700: #189345;
+  --color-dark: #1d1f1f;
+}
+
+/* Base - dark theme */
 body {
-  background: #f8f9fb;
+  background: #1d1f1f;
+  color: #e5e7eb;
 }
 
 /* Hide number input spinners globally across all browsers */
@@ -18,12 +32,12 @@ input[type="number"] {
 }
 
 /* Match theme - button glow */
-.glow-orange {
-  box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.15);
+.glow-primary {
+  box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.15);
 }
 
-.glow-orange:hover {
-  box-shadow: 0 20px 25px -5px rgba(249, 115, 22, 0.25);
+.glow-primary:hover {
+  box-shadow: 0 20px 25px -5px rgba(37, 211, 102, 0.25);
 }
 
 .glow-red {

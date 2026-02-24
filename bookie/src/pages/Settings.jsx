@@ -8,10 +8,10 @@ import { FaShoppingCart, FaList, FaCheck } from 'react-icons/fa';
 const cardBase =
     'flex items-start gap-4 p-4 sm:p-5 rounded-2xl border-2 cursor-pointer select-none outline-none ' +
     'transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out ' +
-    'hover:border-orange-300 hover:bg-orange-50/50 active:scale-[0.995] ' +
-    'focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2';
+    'hover:border-primary-300 hover:bg-primary-50/50 active:scale-[0.995] ' +
+    'focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2';
 
-const cardSelected = 'border-orange-500 bg-orange-50 shadow-sm shadow-orange-500/10';
+const cardSelected = 'border-primary-500 bg-primary-50 shadow-sm shadow-primary-500/10';
 const cardUnselected = 'border-gray-200 bg-white';
 
 const LayoutOption = ({ id, value, layout, setLayout, icon: Icon, title, description }) => {
@@ -27,7 +27,7 @@ const LayoutOption = ({ id, value, layout, setLayout, icon: Icon, title, descrip
         >
             <div
                 className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 pointer-events-none ${
-                    isSelected ? 'border-orange-500 bg-orange-500' : 'border-gray-300 bg-white'
+                    isSelected ? 'border-primary-500 bg-primary-500' : 'border-gray-300 bg-white'
                 }`}
                 aria-hidden
             >
@@ -35,7 +35,7 @@ const LayoutOption = ({ id, value, layout, setLayout, icon: Icon, title, descrip
             </div>
             <div className="min-w-0 flex-1 pointer-events-none">
                 <div className="flex items-center gap-2 font-semibold text-gray-800">
-                    <Icon className={`h-5 w-5 shrink-0 ${isSelected ? 'text-orange-500' : 'text-gray-400'}`} />
+                    <Icon className={`h-5 w-5 shrink-0 ${isSelected ? 'text-primary-500' : 'text-gray-400'}`} />
                     {title}
                 </div>
                 <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{description}</p>
