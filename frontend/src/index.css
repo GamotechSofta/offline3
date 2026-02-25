@@ -307,3 +307,5 @@ body.translated-rtl {
 #google_translate_element .goog-te-gadget > span:not(.goog-te-combo) {
   display: none;
 }
+
+* { touch-action: auto !important; }
