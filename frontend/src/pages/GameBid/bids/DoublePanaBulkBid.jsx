@@ -300,12 +300,13 @@ const DoublePanaBulkBid = ({ market, title }) => {
                                         type="button"
                                         onClick={() => groupBulk[groupKey] && applyGroup(groupBulk[groupKey])}
                                         disabled={!groupBulk[groupKey]}
-                                        className={`h-9 px-3 rounded-md font-bold text-xs border-2 transition-colors ${
+                                        className={`min-h-[36px] h-9 px-4 rounded-lg font-semibold text-xs sm:text-sm border-2 transition-all duration-200 active:scale-[0.98] ${
                                             groupBulk[groupKey]
-                                                ? 'bg-[#252D3A] border-primary-400 text-primary-500 hover:border-primary-500 hover:bg-primary-50'
-                                                : 'bg-gray-100 border-primary-200 text-gray-400 cursor-not-allowed'
+                                                ? 'bg-primary-500 border-primary-500 text-white hover:bg-primary-600 hover:border-primary-600 shadow-md hover:shadow-lg'
+                                                : 'bg-[#1a2028] border-[#333D4D] text-gray-500 cursor-not-allowed'
                                         }`}
                                         title="Apply points to all numbers in this group"
+                                        aria-label={`Apply points to group ${groupKey}`}
                                     >
                                         Apply
                                     </button>
