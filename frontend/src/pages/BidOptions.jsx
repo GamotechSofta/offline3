@@ -192,9 +192,9 @@ const BidOptions = () => {
     : visibleOptionsBase;
 
   return (
-    <div className="min-h-screen bg-[#1F2732] flex flex-col items-center">
+    <div className="h-[100dvh] h-screen max-h-[100dvh] overflow-hidden bg-[#1F2732] flex flex-col items-center">
       {/* Header */}
-      <div className="w-full flex items-center px-3 sm:px-4 pt-4 sm:pt-5 pb-3 sm:pb-4 bg-[#1F2732] border-b-2 border-gray-700 relative shadow-sm">
+      <div className="w-full flex-shrink-0 flex items-center px-3 sm:px-4 pt-4 sm:pt-5 pb-3 sm:pb-4 bg-[#1F2732] border-b-2 border-gray-700 relative shadow-sm">
         <button
           onClick={() => navigate(isStarline ? '/startline-dashboard' : '/')}
           className="absolute left-3 sm:left-4 flex items-center justify-center min-w-[44px] min-h-[44px] -ml-1 text-gray-600 hover:text-primary-500 active:scale-95 touch-manipulation"
@@ -217,10 +217,11 @@ const BidOptions = () => {
         </div>
       </div>
 
-      {/* Grid Content */}
-      <div className="w-full max-w-md lg:max-w-none px-2.5 sm:px-4 pt-2.5 sm:pt-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
+      {/* Grid Content: page doesn't scroll; grid scrolls inside viewport if needed */}
+      <div className="w-full flex-1 min-h-0 max-w-md lg:max-w-none px-2.5 sm:px-4 pt-2.5 sm:pt-4 pb-3 md:pb-6 overflow-y-auto overflow-x-hidden grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 md:gap-4 content-start">
         {visibleOptions.map((option) => (
-          <div
+          <button
+            type="button"
             key={option.id}
             onClick={() => navigate('/game-bid', {
               state: {
@@ -229,18 +230,19 @@ const BidOptions = () => {
                 gameMode: option.title.toLowerCase().includes('bulk') ? 'bulk' : 'easy'
               }
             })}
-            className="relative rounded-xl sm:rounded-2xl bg-[#252D3A] border-2 border-primary-200 p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center gap-1 sm:gap-2 md:gap-2.5 hover:border-primary-400 hover:bg-primary-500/20 active:scale-[0.98] transition-all cursor-pointer shadow-md hover:shadow-lg group touch-manipulation min-h-0"
+            className="relative rounded-xl sm:rounded-2xl bg-[#252D3A] border-2 border-[#333D4D] flex flex-col items-center justify-start overflow-hidden hover:border-[#4a5568] hover:bg-primary-500/20 active:scale-[0.98] transition-all cursor-pointer shadow-md hover:shadow-lg group touch-manipulation text-left w-full aspect-square max-md:min-h-0 md:aspect-auto md:min-h-[140px] p-1.5 sm:p-3 md:p-4"
           >
-            {/* Icon Container with subtle glow effect */}
-            <div className="flex items-center justify-center w-11 h-11 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 group-hover:scale-[1.03] transition-transform duration-300 shrink-0">
-              {option.icon}
+            {/* Icon area: larger on mobile (more of card), normal on md+ */}
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-3 group-hover:scale-[1.03] transition-transform duration-300">
+              <div className="aspect-square w-[92%] max-h-[78%] md:w-[72%] md:max-w-[88px] md:max-h-[70%] flex items-center justify-center shrink-0">
+                {option.icon}
+              </div>
             </div>
-
-            {/* Title */}
-            <span className="text-white text-[9px] sm:text-[11px] md:text-sm font-semibold tracking-[0.1em] sm:tracking-[0.18em] uppercase text-center line-clamp-2 leading-tight">
+            {/* Title: fixed at bottom; smaller text on mobile */}
+            <span className="text-white text-[9px] sm:text-xs md:text-sm font-semibold tracking-[0.06em] sm:tracking-[0.12em] uppercase text-center line-clamp-2 leading-tight w-full shrink-0 pb-0.5">
               {option.title}
             </span>
-          </div>
+          </button>
         ))}
       </div>
     </div>
