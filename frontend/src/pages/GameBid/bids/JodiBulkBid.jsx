@@ -64,8 +64,6 @@ const JodiBulkBid = ({ market, title }) => {
         if (typeof window === 'undefined') return true;
         return window.innerWidth >= 768;
     });
-    const [columnStart, setColumnStart] = useState(0);
-    const MOBILE_VISIBLE_COLS = 5;
 
     useEffect(() => {
         const onResize = () => setIsDesktop(window.innerWidth >= 768);
@@ -73,21 +71,8 @@ const JodiBulkBid = ({ market, title }) => {
         return () => window.removeEventListener('resize', onResize);
     }, []);
 
-    useEffect(() => {
-        // Reset view window when switching desktop/mobile
-        if (isDesktop) {
-            setColumnStart(0);
-        } else {
-            const maxStart = Math.max(0, DIGITS.length - MOBILE_VISIBLE_COLS);
-            setColumnStart((prev) => Math.max(0, Math.min(prev, maxStart)));
-        }
-    }, [isDesktop]);
-
-    const visibleDigits = isDesktop
-        ? DIGITS
-        : DIGITS.slice(columnStart, columnStart + MOBILE_VISIBLE_COLS);
-    const canSlideLeft = !isDesktop && columnStart > 0;
-    const canSlideRight = !isDesktop && columnStart + MOBILE_VISIBLE_COLS < DIGITS.length;
+    // Mobile: show full 10x10 grid on one screen (no prev/next)
+    const visibleDigits = DIGITS;
 
     // Auto-apply row/column Pts after typing (no Enter or blur needed)
     const rowApplyTimersRef = useRef({});
@@ -133,7 +118,7 @@ const JodiBulkBid = ({ market, title }) => {
             el.focus();
             pendingFocusRef.current = null;
         }
-    }, [columnStart]);
+    }, []);
 
     const handleCellKeyDown = useCallback(
         (e, r, c) => {
@@ -161,25 +146,11 @@ const JodiBulkBid = ({ market, title }) => {
 
             const nextRStr = DIGITS[nextR];
             const nextCStr = DIGITS[nextC];
-
-            if (!isDesktop) {
-                const colIdx = DIGITS.indexOf(nextCStr);
-                const visibleStart = columnStart;
-                const visibleEnd = columnStart + MOBILE_VISIBLE_COLS - 1;
-                if (colIdx < visibleStart || colIdx > visibleEnd) {
-                    const newStart = Math.max(0, Math.min(colIdx, DIGITS.length - MOBILE_VISIBLE_COLS));
-                    pendingFocusRef.current = { r: nextRStr, c: nextCStr };
-                    setColumnStart(newStart);
-                    e.preventDefault();
-                    return;
-                }
-            }
-
             e.preventDefault();
             const el = cellRefs.current[`${nextRStr}-${nextCStr}`];
             if (el) el.focus();
         },
-        [isDesktop, columnStart]
+        []
     );
 
     const walletBefore = useMemo(() => {
@@ -351,7 +322,7 @@ const JodiBulkBid = ({ market, title }) => {
                     </div>
                 )}
 
-                <div className="bg-[#252D3A] border-2 border-[#333D4D] rounded-2xl p-2 sm:p-3 md:p-3 overflow-hidden w-full">
+                <div className="bg-[#252D3A] border-2 border-[#333D4D] rounded-2xl p-1.5 sm:p-3 md:p-3 w-full overflow-visible md:overflow-hidden">
                     <div className="flex justify-end mb-2">
                         <button
                             type="button"
@@ -361,67 +332,36 @@ const JodiBulkBid = ({ market, title }) => {
                             Clear
                         </button>
                     </div>
-                    {!isDesktop && (
-                        <div className="mb-2 flex items-center justify-between gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setColumnStart((prev) => Math.max(0, prev - 1))}
-                                disabled={!canSlideLeft}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${
-                                    canSlideLeft
-                                        ? 'bg-[#252D3A] border-primary-400 text-primary-400'
-                                        : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                                }`}
-                            >
-                                ← Prev
-                            </button>
-                            <span className="text-[11px] text-gray-500 font-semibold">
-                                Jodi Columns {visibleDigits[0]} - {visibleDigits[visibleDigits.length - 1]}
-                            </span>
-                            <button
-                                type="button"
-                                onClick={() => setColumnStart((prev) => Math.min(DIGITS.length - MOBILE_VISIBLE_COLS, prev + 1))}
-                                disabled={!canSlideRight}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${
-                                    canSlideRight
-                                        ? 'bg-[#252D3A] border-primary-400 text-primary-400'
-                                        : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                                }`}
-                            >
-                                Next →
-                            </button>
-                        </div>
-                    )}
-                    <div className="overflow-x-hidden scrollbar-hidden">
+                    {/* Mobile: horizontal scroll so all 10 columns visible; grid has min-width so nothing is clipped */}
+                    <div className="overflow-x-auto overflow-y-visible scrollbar-hidden -mx-1 px-1 md:overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
                         <div
-                            className="grid w-full gap-[2px] sm:gap-1 md:gap-1"
+                            className="grid gap-[1px] sm:gap-1 md:gap-1"
                             style={{
-                                gridTemplateColumns:
-                                    `clamp(34px, 10vw, 80px) clamp(6px, 1vw, 18px) repeat(${visibleDigits.length}, minmax(18px, 1fr))`
+                                gridTemplateColumns: isDesktop
+                                    ? `clamp(34px, 10vw, 80px) clamp(6px, 1vw, 18px) repeat(10, minmax(18px, 1fr))`
+                                    : `minmax(56px, 60px) 10px repeat(10, minmax(24px, 1fr))`,
+                                width: isDesktop ? '100%' : 'max(100%, 360px)',
+                                minWidth: isDesktop ? undefined : 360,
                             }}
                         >
                             {/* Header digits */}
-                            <div className="h-6 md:h-7" />
-                            <div className="h-6 md:h-7" />
+                            <div className="h-5 md:h-7" />
+                            <div className="h-5 md:h-7" />
                             {visibleDigits.map((c) => (
                                 <div
                                     key={`h-${c}`}
-                                    className="h-6 md:h-7 w-full flex items-center justify-center text-primary-500 font-medium text-[10px] md:text-sm"
+                                    className="h-5 md:h-7 w-full min-w-0 flex items-center justify-center text-primary-500 font-medium text-[9px] md:text-sm"
                                 >
                                     {c}
                                 </div>
                             ))}
 
-                            {/* Column bulk inputs */}
-                            <div className="h-6 md:h-7 w-full flex items-center justify-center text-[9px] md:text-xs text-gray-300 font-normal px-1">
-                                <span className="md:hidden leading-[10px] text-center">
-                                    Enter
-                                    <br />
-                                    Points
-                                </span>
+                            {/* Column bulk label (vertical Pts) */}
+                            <div className="h-5 md:h-7 w-full min-w-0 flex items-center justify-center text-[8px] md:text-xs text-gray-300 font-normal px-0.5 shrink-0">
+                                <span className="md:hidden leading-tight text-center whitespace-nowrap">Pts</span>
                                 <span className="hidden md:inline">Enter Points</span>
                             </div>
-                            <div className="h-6 md:h-7" />
+                            <div className="h-5 md:h-7 shrink-0" />
                             {visibleDigits.map((c) => (
                                 <input
                                     key={`col-${c}`}
@@ -436,16 +376,16 @@ const JodiBulkBid = ({ market, title }) => {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && colBulk[c]) applyCol(c, colBulk[c]);
                                     }}
-                                    className="no-spinner w-full min-w-0 h-6 md:h-7 bg-[#252D3A] border-2 border-[#333D4D] text-white font-bold rounded text-[9px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
+                                    className="no-spinner w-full min-w-0 h-5 md:h-7 bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
                                 />
                             ))}
 
                             {/* Matrix rows */}
                             {DIGITS.map((r) => (
                                 <React.Fragment key={`row-${r}`}>
-                                    {/* Row label + bulk */}
-                                    <div className="flex items-center gap-1 min-w-0">
-                                        <div className="w-4 md:w-6 h-6 md:h-7 flex items-center justify-center text-primary-500 font-medium text-[10px] md:text-sm">
+                                    {/* Row label + vertical Pts box */}
+                                    <div className="flex items-center gap-1 min-w-0 w-full">
+                                        <div className="w-5 md:w-6 h-5 md:h-7 flex items-center justify-center text-primary-500 font-medium text-[9px] md:text-sm shrink-0">
                                             {r}
                                         </div>
                                         <input
@@ -460,17 +400,17 @@ const JodiBulkBid = ({ market, title }) => {
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && rowBulk[r]) applyRow(r, rowBulk[r]);
                                             }}
-                                            className="no-spinner h-6 md:h-7 flex-1 min-w-0 bg-[#252D3A] border-2 border-[#333D4D] text-white font-bold rounded text-[9px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
+                                            className="no-spinner h-5 md:h-7 flex-1 min-w-[28px] w-full bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
                                         />
                                     </div>
-                                    <div className="h-6 md:h-7" />
+                                    <div className="h-5 md:h-7" />
 
                                     {visibleDigits.map((c) => {
                                         const key = `${r}${c}`;
                                         return (
-                                            <div key={key} className="flex flex-col items-center justify-center">
-                                                <div className="text-[8px] md:text-[10px] leading-none text-gray-300 font-normal mb-0.5 select-none">
-                                                    {key[0]} {key[1]}
+                                            <div key={key} className="flex flex-col items-center justify-center min-w-0">
+                                                <div className="text-[7px] md:text-[10px] leading-none text-gray-300 font-normal mb-0.5 select-none">
+                                                    {key[0]}{key[1]}
                                                 </div>
                                                 <input
                                                     ref={(el) => {
@@ -486,7 +426,7 @@ const JodiBulkBid = ({ market, title }) => {
                                                         }))
                                                     }
                                                     onKeyDown={(e) => handleCellKeyDown(e, r, c)}
-                                                    className="no-spinner h-6 md:h-7 w-full bg-[#252D3A] border-2 border-[#333D4D] text-white font-bold rounded text-[9px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
+                                                    className="no-spinner h-5 md:h-7 w-full min-w-0 bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
                                                 />
                                             </div>
                                         );

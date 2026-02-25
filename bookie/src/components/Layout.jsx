@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar, { getStoredSidebarWidth, SIDEBAR_STORAGE_KEY } from './Sidebar';
+import GoogleTranslate from './GoogleTranslate';
 import { FaBars } from 'react-icons/fa';
 import { API_BASE_URL, getBookieAuthHeaders } from '../utils/api';
 
@@ -111,19 +112,21 @@ const Layout = ({ children, title }) => {
     return (
         <div className="min-h-screen bg-[#1F2732] text-gray-200">
             {/* Mobile header */}
-            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#181E27] border-b border-[#333D4D] flex items-center justify-between px-4 z-40 shadow-sm">
+            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#181E27] border-b border-[#333D4D] flex items-center justify-between px-4 z-40 shadow-sm gap-2">
                 <button
                     type="button"
                     onClick={() => setSidebarOpen(true)}
-                    className="p-2 rounded-lg hover:bg-[#252D3A] transition-colors text-white"
+                    className="p-2 rounded-lg hover:bg-[#252D3A] transition-colors text-white shrink-0"
                     aria-label="Open menu"
                 >
                     <FaBars className="w-6 h-6 text-primary-400" />
                 </button>
-                <h1 className="text-lg font-bold text-primary-400 truncate mx-2">
+                <h1 className="text-lg font-bold text-primary-400 truncate mx-1 min-w-0 flex-1 text-center">
                     {title || 'Bookie Panel'}
                 </h1>
-                <div className="w-10" />
+                <div className="shrink-0" title="Translate page">
+                    <GoogleTranslate />
+                </div>
             </header>
 
             {/* Sidebar */}

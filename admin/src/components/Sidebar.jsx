@@ -16,6 +16,7 @@ import {
     FaCog,
     FaMoneyBillWave,
 } from 'react-icons/fa';
+import GoogleTranslate from './GoogleTranslate';
 
 const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
     const navigate = useNavigate();
@@ -72,17 +73,20 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
             `}
         >
-            {/* Logo + Close (mobile) */}
-            <div className="p-4 sm:p-6 border-b border-gray-200 shrink-0 flex items-center justify-between">
-                <h2 className="text-lg sm:text-xl font-bold text-primary-500">Super Admin</h2>
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-400"
-                    aria-label="Close menu"
-                >
-                    <FaTimes className="w-5 h-5" />
-                </button>
+            {/* Logo + Language + Close (mobile) */}
+            <div className="p-4 sm:p-6 border-b border-gray-200 shrink-0 flex items-center justify-between gap-2">
+                <h2 className="text-lg sm:text-xl font-bold text-primary-500 truncate">Super Admin</h2>
+                <div className="shrink-0 flex items-center gap-2">
+                    <GoogleTranslate />
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-400"
+                        aria-label="Close menu"
+                    >
+                        <FaTimes className="w-5 h-5" />
+                    </button>
+                </div>
             </div>
 
             {/* Menu Items */}

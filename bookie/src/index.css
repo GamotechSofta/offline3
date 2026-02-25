@@ -23,6 +23,15 @@ html, body, #root {
   color: #e5e7eb;
 }
 
+/* Google Translate: hide banner iframe, keep dropdown only */
+.goog-te-banner-frame,
+iframe.skiptranslate,
+#goog-gt-tt {
+  display: none !important;
+  pointer-events: none !important;
+}
+body { top: 0 !important; margin-top: 0 !important; }
+
 /* Hide number input spinners globally across all browsers */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

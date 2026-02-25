@@ -217,8 +217,8 @@ const BidOptions = () => {
         <div className="min-w-[44px]" aria-hidden />
       </header>
 
-      {/* Grid: scrollable, consistent gaps, accessible cards */}
-      <main className="flex-1 w-full min-h-0 overflow-y-auto overflow-x-hidden">
+      {/* Grid: scrollable on mobile even when touching cards; pan-y allows vertical scroll */}
+      <main className="scroll-on-tap-mobile flex-1 w-full min-h-0 overflow-y-auto overflow-x-hidden ios-scroll-touch">
         <div className="w-full max-w-2xl lg:max-w-none mx-auto px-3 sm:px-4 py-4 sm:py-5 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-6 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-2.5 sm:gap-x-3 sm:gap-y-2.5 md:gap-x-4 md:gap-y-3">
           {visibleOptions.map((option) => (
             <button
@@ -231,7 +231,7 @@ const BidOptions = () => {
                   gameMode: option.title.toLowerCase().includes('bulk') ? 'bulk' : 'easy'
                 }
               })}
-              className="relative rounded-xl md:rounded-2xl bg-[#252D3A] border border-[#333D4D] md:border-2 md:border-[#333D4D] md:hover:border-primary-500/60 p-2.5 sm:p-3 md:p-4 flex flex-col items-center justify-center gap-1.5 sm:gap-2 md:gap-2.5 hover:bg-[#2a3342] md:hover:bg-primary-500/10 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] touch-manipulation w-full aspect-square md:aspect-auto md:min-h-[140px] group focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-[#1F2732] focus:border-primary-500/80"
+              className="scroll-card relative rounded-xl md:rounded-2xl bg-[#252D3A] border border-[#333D4D] md:border-2 md:border-[#333D4D] md:hover:border-primary-500/60 p-2.5 sm:p-3 md:p-4 flex flex-col items-center justify-center gap-1.5 sm:gap-2 md:gap-2.5 hover:bg-[#2a3342] md:hover:bg-primary-500/10 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] w-full aspect-square md:aspect-auto md:min-h-[140px] group focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-[#1F2732] focus:border-primary-500/80"
               aria-label={`${option.title} – choose this bet type`}
             >
               <div className="flex items-center justify-center w-full flex-1 min-h-0 min-w-0 aspect-square max-w-[76px] max-h-[76px] sm:max-w-[80px] sm:max-h-[80px] md:max-w-[88px] md:max-h-[88px] lg:max-w-[96px] lg:max-h-[96px] shrink-0 transition-transform duration-200 group-hover:scale-[1.05] group-active:scale-[1.02]">

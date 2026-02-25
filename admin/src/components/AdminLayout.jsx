@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
+import GoogleTranslate from './GoogleTranslate';
 import { FaBars, FaSignOutAlt } from 'react-icons/fa';
 
 const AdminLayout = ({ children, onLogout, title }) => {
@@ -8,20 +9,23 @@ const AdminLayout = ({ children, onLogout, title }) => {
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
             {/* Mobile header */}
-            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center justify-between px-4 z-40 shadow-sm">
+            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center justify-between px-4 z-40 shadow-sm gap-2">
                 <button
                     type="button"
                     onClick={() => setSidebarOpen(true)}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0"
                     aria-label="Open menu"
                 >
                     <FaBars className="w-6 h-6 text-primary-500" />
                 </button>
-                <h1 className="text-lg font-bold text-primary-600 truncate mx-2">{title || 'Admin'}</h1>
+                <h1 className="text-lg font-bold text-primary-600 truncate mx-1 min-w-0 flex-1 text-center">{title || 'Admin'}</h1>
+                <div className="shrink-0" title="Language">
+                    <GoogleTranslate />
+                </div>
                 <button
                     type="button"
                     onClick={onLogout}
-                    className="p-2 rounded-lg hover:bg-red-50 transition-colors"
+                    className="p-2 rounded-lg hover:bg-red-50 transition-colors shrink-0"
                     aria-label="Logout"
                 >
                     <FaSignOutAlt className="w-5 h-5 text-red-500" />

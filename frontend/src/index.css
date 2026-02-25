@@ -166,15 +166,13 @@ body {
 /* ========== Nested scroll containers (cards, modals, sidebars) ========== */
 /* Enables smooth touch scroll inside overflow areas; prevents scroll lock on mobile.
  * Works when Google script loads late, after language switch, with StrictMode, and nested modals. */
- .ios-scroll-touch,
- .scroll-touch-mobile,
- [class*="overflow-y-auto"],
- [class*="overflow-y-scroll"],
- [class*="overflow-auto"] {
-   -webkit-overflow-scrolling: touch;
-   touch-action: auto;
- }
+ 
 /* Optional utility: add scroll-touch-mobile to any scrollable container for explicit touch behavior */
+
+/* Allow scroll when touch starts on a button/card so list still scrolls on drag */
+.scroll-on-tap-mobile .scroll-card {
+  touch-action: pan-y;
+}
 
 /* iOS viewport height fix - prevents layout jump when address bar shows/hides */
 @supports (-webkit-touch-callout: none) {

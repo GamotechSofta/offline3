@@ -12,11 +12,11 @@ import {
     FaMoneyBillWave,
     FaKeyboard,
     FaFileInvoiceDollar,
-    FaGlobe,
     FaCreditCard,
     FaCog,
 } from 'react-icons/fa';
 import { useLanguage } from '../context/LanguageContext';
+import GoogleTranslate from './GoogleTranslate';
 
 export const SIDEBAR_MIN_WIDTH = 200;
 export const SIDEBAR_MAX_WIDTH = 400;
@@ -37,8 +37,7 @@ export const getStoredSidebarWidth = () => {
 const Sidebar = ({ user, onLogout, isOpen = true, onClose, width = SIDEBAR_DEFAULT_WIDTH, onWidthChange }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { t, language, changeLanguage } = useLanguage();
-    const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+    const { t } = useLanguage();
     const [isDragging, setIsDragging] = useState(false);
     const dragRef = useRef(null);
 
@@ -171,82 +170,22 @@ const Sidebar = ({ user, onLogout, isOpen = true, onClose, width = SIDEBAR_DEFAU
                 ))}
             </nav>
 
-            {/* Language Selector & Logout — icon-only, compact */}
-            <div className="p-3 sm:p-4 border-t border-[#333D4D] shrink-0">
-                <div className="flex items-center justify-center gap-2">
-                    {/* Language — globe icon only */}
-                    <div className="relative">
-                        <button
-                            type="button"
-                            onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
-                            title={t('changeLanguage')}
-                            aria-label={t('changeLanguage')}
-                            className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-primary-500/20 hover:text-primary-400 hover:border-primary-500/50 transition-all duration-200"
-                        >
-                            <FaGlobe className="w-5 h-5 shrink-0" />
-                        </button>
-                        {/* Language Dropdown */}
-                        {languageMenuOpen && (
-                            <>
-                                <div
-                                    className="fixed inset-0 z-40"
-                                    onClick={() => setLanguageMenuOpen(false)}
-                                />
-                                <div className="absolute bottom-full left-0 mb-2 bg-[#252D3A] rounded-xl shadow-lg border border-[#333D4D] overflow-hidden z-50 min-w-[140px]">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            changeLanguage('en');
-                                            setLanguageMenuOpen(false);
-                                        }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#1F2732] transition-colors ${
-                                            language === 'en' ? 'bg-primary-500/20 text-primary-400 font-semibold' : 'text-gray-300'
-                                        }`}
-                                    >
-                                        <span className="text-sm">English</span>
-                                        {language === 'en' && <span className="ml-auto text-primary-400">✓</span>}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            changeLanguage('hi');
-                                            setLanguageMenuOpen(false);
-                                        }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#1F2732] transition-colors border-t border-[#333D4D] ${
-                                            language === 'hi' ? 'bg-primary-500/20 text-primary-400 font-semibold' : 'text-gray-300'
-                                        }`}
-                                    >
-                                        <span className="text-sm">हिंदी</span>
-                                        {language === 'hi' && <span className="ml-auto text-primary-400">✓</span>}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            changeLanguage('mr');
-                                            setLanguageMenuOpen(false);
-                                        }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#1F2732] transition-colors border-t border-[#333D4D] ${
-                                            language === 'mr' ? 'bg-primary-500/20 text-primary-400 font-semibold' : 'text-gray-300'
-                                        }`}
-                                    >
-                                        <span className="text-sm">मराठी</span>
-                                        {language === 'mr' && <span className="ml-auto text-primary-400">✓</span>}
-                                    </button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    {/* Logout — icon only */}
-                    <button
-                        type="button"
-                        onClick={onLogout}
-                        title={t('logout')}
-                        aria-label={t('logout')}
-                        className="flex items-center justify-center w-11 h-11 rounded-xl bg-red-500 hover:bg-red-600 border border-red-500/50 text-white transition-all duration-200"
-                    >
-                        <FaSignOutAlt className="w-5 h-5 shrink-0" />
-                    </button>
+            {/* Translate page (Google) + Logout */}
+            <div className="p-3 sm:p-4 border-t border-[#333D4D] shrink-0 space-y-3">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 shrink-0">Translate page:</span>
+                    <GoogleTranslate />
                 </div>
+                <button
+                    type="button"
+                    onClick={onLogout}
+                    title={t('logout')}
+                    aria-label={t('logout')}
+                    className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 border border-red-500/50 text-white font-semibold transition-all duration-200"
+                >
+                    <FaSignOutAlt className="w-5 h-5 shrink-0" />
+                    <span>{t('logout')}</span>
+                </button>
             </div>
         </aside>
     );
