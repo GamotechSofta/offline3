@@ -167,3 +167,103 @@ body {
     min-height: -webkit-fill-available;
   }
 }
+
+/* ========== Google Translate Widget ========== */
+/* Wrapper: visible, clickable, dropdown not clipped */
+.google-translate-wrapper {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  min-width: 120px;
+  position: relative;
+  z-index: 60;
+  overflow: visible;
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .google-translate-wrapper {
+    min-width: 140px;
+    min-height: 40px;
+  }
+}
+
+/* Hide ONLY the top "Powered by Google" bar (iframe), not the widget in navbar */
+.goog-te-banner-frame,
+iframe.skiptranslate,
+#goog-gt-tt {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+/* Remove gap between navbar and content when Google Translate is active (it injects top/margin on body) */
+body {
+  top: 0 !important;
+  margin-top: 0 !important;
+}
+html.translated-ltr body,
+html.translated-rtl body,
+body.translated-ltr,
+body.translated-rtl {
+  top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Ensure our widget container and its select are visible and clickable */
+#google_translate_element {
+  display: inline-block !important;
+  line-height: 1;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  min-height: 36px;
+}
+
+#google_translate_element * {
+  pointer-events: auto !important;
+}
+
+/* Style the language select dropdown */
+#google_translate_element select,
+#google_translate_element .goog-te-combo {
+  max-width: 100% !important;
+  min-width: 100px !important;
+  min-height: 36px !important;
+  padding: 6px 28px 6px 10px !important;
+  font-size: 13px !important;
+  background: #252D3A !important;
+  color: #e5e7eb !important;
+  border: 1px solid #333D4D !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 6px center !important;
+  background-size: 18px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+@media (min-width: 768px) {
+  #google_translate_element select,
+  #google_translate_element .goog-te-combo {
+    min-height: 40px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* Hide only the "Select Language" text span, keep the dropdown */
+#google_translate_element .goog-te-gadget {
+  font-size: 0;
+}
+
+#google_translate_element .goog-te-gadget > span:not(.goog-te-combo) {
+  display: none;
+}
