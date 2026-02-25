@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const SCRIPT_ID = 'google-translate-script';
 const SCRIPT_URL = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
 const CONTAINER_ID = 'google_translate_element';
+
+/** Delay before reload so cookie/localStorage are committed (fixes "sometimes not translated") */
+const RELOAD_DELAY_MS = 120;
 
 const LANGUAGES = [
   { value: '', label: 'English', code: 'en' },
@@ -80,8 +84,8 @@ function applySavedLanguage() {
   const target = getTargetLangFromCookie();
   if (!target) return;
   const select = getWidgetSelect();
-  if (!select) return;
-  const opts = Array.from(select.options || []);
+  if (!select || !select.options || !select.options.length) return;
+  const opts = Array.from(select.options);
   const match = opts.find(
     (o) => o.value === target || o.value === `/en/${target}` || String(o.value).endsWith(`/${target}`)
   );
@@ -91,6 +95,11 @@ function applySavedLanguage() {
     select.value = valueToSet;
     select.dispatchEvent(new Event('change', { bubbles: true }));
   } catch (_) {}
+}
+
+/** Run applySavedLanguage at intervals so translation applies even if widget loads slowly */
+function scheduleApplySavedLanguage() {
+  [300, 800, 1500, 2500].forEach((ms) => setTimeout(applySavedLanguage, ms));
 }
 
 function doInit() {
@@ -122,8 +131,8 @@ function doInit() {
         });
       }
       applySavedLanguage();
-    }, 500);
-    setTimeout(applySavedLanguage, 1200);
+      scheduleApplySavedLanguage();
+    }, 200);
     return true;
   } catch (e) {
     console.warn('Google Translate init failed:', e);
@@ -136,6 +145,7 @@ function doInit() {
  * available (smooth, no redirect). Falls back to redirect only when widget is not ready.
  */
 const GoogleTranslate = () => {
+  const location = useLocation();
   const [displayValue, setDisplayValue] = useState('');
   const [isApplying, setIsApplying] = useState(false);
   const mounted = useRef(true);
@@ -183,6 +193,40 @@ const GoogleTranslate = () => {
     return () => { mounted.current = false; };
   }, []);
 
+  /* Re-apply saved language when route changes (SPA) so new page content gets translated */
+  useEffect(() => {
+    scheduleApplySavedLanguage();
+  }, [location.pathname]);
+
+  /* Re-apply when page is restored from bfcache so translation isn’t lost */
+  useEffect(() => {
+    const onPageShow = (ev) => {
+      if (ev.persisted) {
+        try {
+          const saved = typeof localStorage !== 'undefined' && localStorage.getItem('googtrans');
+          if (saved) document.cookie = `googtrans=${saved};path=/;max-age=31536000`;
+          scheduleApplySavedLanguage();
+        } catch (_) {}
+      }
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
+  }, []);
+
+  const forceReload = () => {
+    // Use top window and assign href so reload works in all contexts (mobile, PWA, iframe)
+    try {
+      if (typeof window !== 'undefined' && window.top) {
+        const url = window.top.location.origin + window.top.location.pathname + window.top.location.search;
+        window.top.location.href = url;
+      } else {
+        window.location.reload();
+      }
+    } catch (_) {
+      window.location.reload();
+    }
+  };
+
   const handleChange = (e) => {
     const select = e.target;
     const value = select.value;
@@ -196,21 +240,17 @@ const GoogleTranslate = () => {
       if (!normalized) {
         document.cookie = 'googtrans=;path=/;max-age=0';
         if (typeof localStorage !== 'undefined') localStorage.removeItem('googtrans');
-        if (typeof window !== 'undefined' && window.top !== window.self) {
-          window.top.location.href = window.location.origin + window.location.pathname + window.location.search;
-        } else {
-          window.location.reload();
-        }
+        setTimeout(forceReload, RELOAD_DELAY_MS);
         return;
       }
 
       document.cookie = `googtrans=${normalized};path=/;max-age=31536000`;
       if (typeof localStorage !== 'undefined') localStorage.setItem('googtrans', normalized);
-      // Auto refresh so Google Translate applies the selected language from cookie
-      window.location.reload();
+      // Short delay so cookie/localStorage are committed before reload (fixes intermittent "not translated")
+      setTimeout(forceReload, RELOAD_DELAY_MS);
     } catch (_) {
       if (mounted.current) setIsApplying(false);
-      window.location.reload();
+      setTimeout(forceReload, RELOAD_DELAY_MS);
     }
   };
 
@@ -236,7 +276,7 @@ const GoogleTranslate = () => {
         value={value}
         onChange={handleChange}
         disabled={isApplying}
-        className="notranslate min-h-[36px] w-full min-w-[100px] max-w-[140px] rounded-lg border border-[#333D4D] bg-[#252D3A] px-3 py-1.5 pr-8 text-sm text-gray-200 cursor-pointer appearance-none bg-no-repeat bg-[length:18px] bg-[right_6px_center] focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-70 disabled:cursor-wait transition-opacity duration-200"
+        className="google-translate-select notranslate w-full rounded-lg border border-[#333D4D] bg-[#252D3A] text-gray-200 cursor-pointer appearance-none bg-no-repeat focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-70 disabled:cursor-wait transition-all duration-200 min-h-[40px] min-w-0 max-w-[160px] pl-3 pr-9 py-2 text-sm bg-[right_8px_center] bg-[length:20px] sm:min-h-[36px] sm:max-w-[140px] sm:py-1.5 sm:pr-8 sm:bg-[length:18px] sm:bg-[right_6px_center]"
         style={{
           backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\")",
         }}

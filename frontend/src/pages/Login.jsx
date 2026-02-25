@@ -122,11 +122,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1F2732] text-white relative overflow-hidden">
-      {/* Desktop: Two Column Layout */}
-      <div className="hidden md:flex h-screen overflow-hidden">
+    <div className="min-h-[100dvh] min-h-screen bg-[#1F2732] text-white relative overflow-hidden">
+      {/* Desktop: Two Column Layout - min-height + height:auto avoids mobile viewport scroll traps */}
+      <div className="hidden md:flex min-h-[100dvh] min-h-screen overflow-hidden">
         {/* Left Side - Image (Fixed, Not Scrollable, Fits Screen) */}
-        <div className="w-1/2 h-screen fixed left-0 top-0 overflow-hidden bg-gradient-to-br from-primary-500/20 via-[#1F2732] to-primary-500/20">
+        <div className="w-1/2 min-h-[100dvh] min-h-screen h-auto fixed left-0 top-0 overflow-hidden bg-gradient-to-br from-primary-500/20 via-[#1F2732] to-primary-500/20">
           <img
             src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1770101961/Black_and_Gold_Classy_Casino_Night_Party_Instagram_Post_1080_x_1080_px_d1n00g.png"
             alt="Login banner"
@@ -135,7 +135,7 @@ const Login = () => {
         </div>
 
         {/* Right Side - Form (Scrollable) */}
-        <div className="w-1/2 ml-auto overflow-y-auto h-screen">
+        <div className="w-1/2 ml-auto overflow-y-auto min-h-[100dvh] min-h-screen h-auto ios-scroll-touch">
           <div className="flex items-center justify-center min-h-full p-4 lg:p-6">
             <div className="w-full max-w-md">
               {/* Title Section */}

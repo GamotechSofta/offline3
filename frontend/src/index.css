@@ -121,22 +121,27 @@ input[type="date"]::-webkit-clear-button {
   -webkit-appearance: none;
 }
 
-/* Mobile-first responsive base - dark blue-gray theme */
+/* ========== Global mobile scroll safety (post–Google Translate) ========== */
+/* Prevents scroll lock, enables smooth touch scroll, keeps horizontal overflow hidden */
 html {
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
   background: #1F2732;
-  height: 100%;
+  height: auto !important;
+  min-height: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
   overflow-x: hidden;
+  height: auto !important;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
   padding-bottom: env(safe-area-inset-bottom, 0);
   background: #1F2732;
   position: relative;
   color: #ffffff;
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {
@@ -144,6 +149,8 @@ body {
   min-height: 100%;
   min-height: -webkit-fill-available;
 }
+
+/* Modal body lock: when a modal is open, set body overflow hidden and restore on close to avoid permanent scroll lock on mobile. */
 
 /* Mobile optimizations */
 @media (max-width: 640px) {
@@ -156,10 +163,20 @@ body {
   }
 }
 
-/* iOS Safari - Game Bid screen fixes */
-.ios-scroll-touch {
+/* ========== Nested scroll containers (cards, modals, sidebars) ========== */
+/* Enables smooth touch scroll inside overflow areas; prevents scroll lock on mobile.
+ * Works when Google script loads late, after language switch, with StrictMode, and nested modals. */
+.ios-scroll-touch,
+.scroll-touch-mobile,
+[class*="overflow-y-auto"],
+[class*="overflow-y-scroll"],
+[class*="overflow-auto"] {
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
+
+/* Optional utility: add scroll-touch-mobile to any scrollable container for explicit touch behavior */
 
 /* iOS viewport height fix - prevents layout jump when address bar shows/hides */
 @supports (-webkit-touch-callout: none) {
@@ -173,12 +190,35 @@ body {
 .google-translate-wrapper {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  min-width: 120px;
+  min-height: 40px;
+  min-width: 0;
+  width: 100%;
+  max-width: 140px;
   position: relative;
   z-index: 60;
   overflow: visible;
   pointer-events: auto;
+}
+
+/* Mobile: larger touch target, readable width for language names */
+@media (max-width: 639px) {
+  .google-translate-wrapper {
+    min-height: 40px;
+    min-width: 110px;
+    max-width: 135px;
+  }
+  .google-translate-select {
+    font-size: 0.875rem;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .google-translate-wrapper {
+    min-width: 120px;
+    max-width: 140px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -188,7 +228,10 @@ body {
   }
 }
 
-/* Hide ONLY the top "Powered by Google" bar (iframe), not the widget in navbar */
+/* ========== Google Translate iframe: prevent blocking touch/scroll ========== */
+/* Hide banner iframe and ensure it never captures pointer events (critical for mobile scroll) */
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
 .goog-te-banner-frame,
 iframe.skiptranslate,
 #goog-gt-tt {
@@ -200,11 +243,12 @@ iframe.skiptranslate,
   padding: 0 !important;
   border: none !important;
   overflow: hidden !important;
+  pointer-events: none !important;
 }
 
-/* Remove gap between navbar and content when Google Translate is active (it injects top/margin on body) */
+/* Remove gap when Google Translate is active (it injects top/margin on body) */
 body {
-  top: 0 !important;
+  top: 0px !important;
   margin-top: 0 !important;
 }
 html.translated-ltr body,
