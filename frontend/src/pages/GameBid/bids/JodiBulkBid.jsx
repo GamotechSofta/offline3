@@ -294,7 +294,6 @@ const JodiBulkBid = ({ market, title }) => {
             hideSessionSelectCaret
             // Desktop only: make date ~1/3 width and keep controls same height
             dateSessionGridClassName="md:grid-cols-[1fr_2fr]"
-            dateSessionControlClassName="md:min-h-[52px] md:text-base"
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}
             sessionRightSlot={

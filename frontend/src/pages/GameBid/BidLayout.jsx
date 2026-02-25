@@ -145,25 +145,25 @@ const BidLayout = ({
 
     return (
         <div className="min-h-screen min-h-ios-screen bg-[#1F2732] font-sans w-full max-w-full overflow-x-hidden">
-            {/* Header - White/Orange theme - iOS safe area padding */}
+            {/* Header - minimal height */}
             <div
-                className="bg-[#1F2732] border-b-2 border-[#333D4D] py-2 flex items-center justify-between gap-2 sticky top-0 z-10 mt-4 shadow-sm"
-                style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
+                className="bg-[#1F2732] border-b border-[#333D4D] py-1 flex items-center justify-between gap-1 sticky top-0 z-10 mt-2 shadow-sm"
+                style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}
             >
                 <button
                     onClick={() => market ? navigate('/bidoptions', { state: { market } }) : navigate(-1)}
-                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-[#252D3A] border-2 border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400 text-white rounded-full active:scale-95 transition-colors touch-manipulation"
+                    className="p-1 min-w-[32px] min-h-[32px] flex items-center justify-center bg-[#252D3A] border border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400 text-white rounded-full active:scale-95 transition-colors touch-manipulation"
                     aria-label="Back"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </button>
-                <h1 className="text-xs sm:text-base md:text-lg font-bold uppercase tracking-wide truncate flex-1 text-center mx-1 text-white min-w-0">
+                <h1 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wide truncate flex-1 text-center mx-0.5 text-white min-w-0">
                     {market?.gameName ? `${market.gameName} - ${title}` : title}
                 </h1>
-                <div className="bg-primary-500 text-white px-2 sm:px-3 py-1 rounded-full flex items-center gap-1.5 text-[11px] sm:text-sm font-bold shadow-md shrink-0">
-                    <div className="w-5 h-5 bg-[#1F2732] rounded flex items-center justify-center text-primary-400 text-xs font-bold border border-[#333D4D]">₹</div>
+                <div className="bg-primary-500 text-white px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-0.5 text-[9px] sm:text-[10px] font-bold shadow shrink-0">
+                    <div className="w-3.5 h-3.5 bg-[#1F2732] rounded flex items-center justify-center text-primary-400 text-[9px] font-bold border border-[#333D4D] leading-none">₹</div>
                     {wallet.toFixed(1)}
                 </div>
             </div>
@@ -179,13 +179,13 @@ const BidLayout = ({
 
             {showDateSession && (
                 <div
-                    className={`pb-4 pt-2 flex flex-row flex-wrap gap-2 sm:gap-3 overflow-hidden ${dateSessionGridClassName}`}
+                    className={`pb-2 pt-1 flex flex-row flex-wrap gap-1.5 sm:gap-2 overflow-hidden ${dateSessionGridClassName}`}
                     style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
                 >
                     {/* Date Input Button */}
-                    <div className="relative flex-1 min-w-0 shrink overflow-hidden">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="relative flex-1 min-w-0 shrink overflow-hidden min-w-[120px]">
+                        <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none z-10">
+                            <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
@@ -212,7 +212,7 @@ const BidLayout = ({
                                 e.preventDefault();
                                 return false;
                             }}
-                            className={`w-full pl-9 sm:pl-10 pr-3 py-2.5 min-h-[44px] h-[44px] bg-[#252D3A] border-2 border-primary-200 text-white rounded-full text-xs sm:text-sm font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate ${dateSessionControlClassName}`}
+                            className={`w-full pl-8 sm:pl-9 pr-2 py-2 min-h-[36px] h-[36px] sm:min-h-[40px] sm:h-[40px] bg-[#252D3A] border-2 border-primary-200 text-white rounded-full text-xs font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate ${dateSessionControlClassName}`}
                             style={{
                                 colorScheme: 'light',
                             }}
@@ -240,7 +240,7 @@ const BidLayout = ({
                                 }
                             }
                         }}
-                        className={`shrink-0 px-2 sm:px-3 py-2.5 min-h-[44px] h-[44px] font-bold text-xs sm:text-sm rounded-full transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-1.5 min-w-[44px] ${
+                        className={`shrink-0 px-2 sm:px-3 py-2 min-h-[36px] h-[36px] sm:min-h-[40px] sm:h-[40px] font-bold text-xs rounded-full transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-1 min-w-[36px] sm:min-w-[40px] ${
                             isScheduled
                                 ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-400 hover:to-green-500 cursor-pointer'
                                 : 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 cursor-pointer'
@@ -264,7 +264,7 @@ const BidLayout = ({
                             value={session}
                             onChange={(e) => setSession(e.target.value)}
                             disabled={lockSessionSelect || (isToday && isRunning)}
-                            className={`w-full appearance-none bg-[#252D3A] border-2 border-primary-200 text-white font-bold text-xs sm:text-sm py-2.5 min-h-[44px] h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-primary-500 ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-60 cursor-not-allowed' : ''} ${dateSessionControlClassName}`}
+                            className={`w-full appearance-none bg-[#252D3A] border-2 border-primary-200 text-white font-bold text-xs py-2 min-h-[36px] h-[36px] sm:min-h-[40px] sm:h-[40px] md:min-h-[44px] md:h-[44px] px-4 pr-8 rounded-full text-center focus:outline-none focus:border-primary-500 ${(lockSessionSelect || (isToday && isRunning)) ? 'opacity-60 cursor-not-allowed' : ''} ${dateSessionControlClassName}`}
                         >
                             {sessionOptions.map((opt) => (
                                 <option key={opt} value={opt}>
