@@ -118,7 +118,7 @@ const Layout = ({ children }) => {
   const isFundsPage = location.pathname === '/funds';
   const isPassbookPage = location.pathname === '/passbook';
   const isBankPage = location.pathname === '/bank';
-  const isDarkLayout = isProfilePage || isFundsPage || isBetsPage || isHistoryPage || isPassbookPage || isBankPage;
+  const isDarkLayout = isProfilePage || isFundsPage || isBetsPage || isHistoryPage || isPassbookPage || isBankPage || isBidPage;
 
   return (
     <div className={`min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'}`}>

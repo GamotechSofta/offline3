@@ -166,16 +166,14 @@ body {
 /* ========== Nested scroll containers (cards, modals, sidebars) ========== */
 /* Enables smooth touch scroll inside overflow areas; prevents scroll lock on mobile.
  * Works when Google script loads late, after language switch, with StrictMode, and nested modals. */
-.ios-scroll-touch,
-.scroll-touch-mobile,
-[class*="overflow-y-auto"],
-[class*="overflow-y-scroll"],
-[class*="overflow-auto"] {
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  overscroll-behavior: contain;
-}
-
+ .ios-scroll-touch,
+ .scroll-touch-mobile,
+ [class*="overflow-y-auto"],
+ [class*="overflow-y-scroll"],
+ [class*="overflow-auto"] {
+   -webkit-overflow-scrolling: touch;
+   touch-action: auto;
+ }
 /* Optional utility: add scroll-touch-mobile to any scrollable container for explicit touch behavior */
 
 /* iOS viewport height fix - prevents layout jump when address bar shows/hides */
