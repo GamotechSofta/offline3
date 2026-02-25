@@ -313,17 +313,17 @@ const JodiBulkBid = ({ market, title }) => {
             }
             walletBalance={walletBefore}
             hideFooter
-            contentPaddingClass="pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-6"
+            contentPaddingClass="pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-8"
         >
-            <div className="px-2 sm:px-4 md:px-4 py-1 md:py-1 w-full">
+            <div className="px-2 sm:px-3 md:px-4 py-3 md:py-4 w-full">
                 {warning && (
-                    <div className="mb-3 bg-red-50 border-2 border-red-300 text-red-600 rounded-xl px-4 py-3 text-sm">
+                    <div className="mb-4 bg-red-50 border-2 border-red-300 text-red-600 rounded-xl px-4 py-3 text-sm">
                         {warning}
                     </div>
                 )}
 
-                <div className="bg-[#252D3A] border-2 border-[#333D4D] rounded-2xl p-1.5 sm:p-3 md:p-3 w-full overflow-visible md:overflow-hidden">
-                    <div className="flex justify-end mb-2">
+                <div className="p-2 sm:p-3 md:p-4 w-full overflow-visible md:overflow-hidden">
+                    <div className="flex justify-end mb-4">
                         <button
                             type="button"
                             onClick={clearAll}
@@ -332,36 +332,35 @@ const JodiBulkBid = ({ market, title }) => {
                             Clear
                         </button>
                     </div>
-                    {/* Mobile: horizontal scroll so all 10 columns visible; grid has min-width so nothing is clipped */}
-                    <div className="overflow-x-auto overflow-y-visible scrollbar-hidden -mx-1 px-1 md:overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+                    {/* Full width: left column fixed so 10 data columns align under headers and use remaining space */}
+                    <div className="overflow-x-hidden w-full">
                         <div
-                            className="grid gap-[1px] sm:gap-1 md:gap-1"
+                            className="grid gap-1 md:gap-2 w-full justify-items-stretch items-center"
                             style={{
                                 gridTemplateColumns: isDesktop
-                                    ? `clamp(34px, 10vw, 80px) clamp(6px, 1vw, 18px) repeat(10, minmax(18px, 1fr))`
-                                    : `minmax(56px, 60px) 10px repeat(10, minmax(24px, 1fr))`,
-                                width: isDesktop ? '100%' : 'max(100%, 360px)',
-                                minWidth: isDesktop ? undefined : 360,
+                                    ? `clamp(56px, 9vw, 80px) 8px repeat(10, 1fr)`
+                                    : `52px 6px repeat(10, minmax(0, 1fr))`,
+                                width: '100%',
                             }}
                         >
-                            {/* Header digits */}
-                            <div className="h-5 md:h-7" />
-                            <div className="h-5 md:h-7" />
+                            {/* Header digits — each centered in its column */}
+                            <div className="h-6 md:h-8" />
+                            <div className="h-6 md:h-8" />
                             {visibleDigits.map((c) => (
                                 <div
                                     key={`h-${c}`}
-                                    className="h-5 md:h-7 w-full min-w-0 flex items-center justify-center text-primary-500 font-medium text-[9px] md:text-sm"
+                                    className="h-6 md:h-8 min-w-0 flex items-center justify-center text-primary-500 font-medium text-[9px] md:text-sm"
                                 >
                                     {c}
                                 </div>
                             ))}
 
                             {/* Column bulk label (vertical Pts) */}
-                            <div className="h-5 md:h-7 w-full min-w-0 flex items-center justify-center text-[8px] md:text-xs text-gray-300 font-normal px-0.5 shrink-0">
-                                <span className="md:hidden leading-tight text-center whitespace-nowrap">Pts</span>
-                                <span className="hidden md:inline">Enter Points</span>
+                            <div className="h-6 md:h-8 min-w-0 flex items-center justify-center text-[8px] md:text-xs text-gray-300 font-normal">
+                                <span className="md:hidden">Pts</span>
+                                <span className="hidden md:inline">Pts</span>
                             </div>
-                            <div className="h-5 md:h-7 shrink-0" />
+                            <div className="h-6 md:h-8" />
                             {visibleDigits.map((c) => (
                                 <input
                                     key={`col-${c}`}
@@ -376,7 +375,7 @@ const JodiBulkBid = ({ market, title }) => {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && colBulk[c]) applyCol(c, colBulk[c]);
                                     }}
-                                    className="no-spinner w-full min-w-0 h-5 md:h-7 bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
+                                    className="no-spinner w-full min-w-0 h-6 md:h-8 bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
                                 />
                             ))}
 
@@ -384,8 +383,8 @@ const JodiBulkBid = ({ market, title }) => {
                             {DIGITS.map((r) => (
                                 <React.Fragment key={`row-${r}`}>
                                     {/* Row label + vertical Pts box */}
-                                    <div className="flex items-center gap-1 min-w-0 w-full">
-                                        <div className="w-5 md:w-6 h-5 md:h-7 flex items-center justify-center text-primary-500 font-medium text-[9px] md:text-sm shrink-0">
+                                    <div className="flex items-center gap-1 md:gap-1.5 min-w-0 w-full overflow-hidden">
+                                        <div className="w-5 md:w-7 h-6 md:h-8 flex items-center justify-center text-primary-500 font-medium text-[9px] md:text-sm shrink-0 rounded bg-[#252D3A]/50 border border-[#333D4D]">
                                             {r}
                                         </div>
                                         <input
@@ -400,16 +399,16 @@ const JodiBulkBid = ({ market, title }) => {
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && rowBulk[r]) applyRow(r, rowBulk[r]);
                                             }}
-                                            className="no-spinner h-5 md:h-7 flex-1 min-w-[28px] w-full bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
+                                            className="no-spinner h-6 md:h-8 flex-1 min-w-0 w-full bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
                                         />
                                     </div>
-                                    <div className="h-5 md:h-7" />
+                                    <div className="h-6 md:h-8" />
 
                                     {visibleDigits.map((c) => {
                                         const key = `${r}${c}`;
                                         return (
-                                            <div key={key} className="flex flex-col items-center justify-center min-w-0">
-                                                <div className="text-[7px] md:text-[10px] leading-none text-gray-300 font-normal mb-0.5 select-none">
+                                            <div key={key} className="flex flex-col items-center justify-center min-w-0 gap-0.5 w-full">
+                                                <div className="text-[7px] md:text-[10px] leading-none text-gray-400 font-normal select-none text-center w-full">
                                                     {key[0]}{key[1]}
                                                 </div>
                                                 <input
@@ -426,7 +425,7 @@ const JodiBulkBid = ({ market, title }) => {
                                                         }))
                                                     }
                                                     onKeyDown={(e) => handleCellKeyDown(e, r, c)}
-                                                    className="no-spinner h-5 md:h-7 w-full min-w-0 bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
+                                                    className="no-spinner h-6 md:h-8 w-full min-w-0 bg-[#252D3A] border border-[#333D4D] md:border-2 text-white font-bold rounded text-[8px] md:text-xs text-center placeholder:text-gray-400 placeholder:font-normal focus:outline-none focus:border-primary-500"
                                                 />
                                             </div>
                                         );
@@ -438,22 +437,20 @@ const JodiBulkBid = ({ market, title }) => {
                 </div>
             </div>
 
-            {/* Sticky Submit Bet button above mobile navbar */}
-            <div className="fixed left-0 right-0 bottom-[88px] z-20 px-3 sm:px-4 md:hidden">
-                <div className="flex">
-                    <button
-                        type="button"
-                        onClick={handleSubmitBet}
-                        disabled={!canSubmit}
-                        className={`w-full font-bold text-base py-4 min-h-[56px] rounded-xl shadow-lg transition-all ${
-                            canSubmit
-                                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-[0.98]'
-                                : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
-                        }`}
-                    >
-                        Submit Bet
-                    </button>
-                </div>
+            {/* Sticky Submit Bet: compact on mobile, clear gap above bottom bar */}
+            <div className="fixed left-0 right-0 z-20 px-3 sm:px-4 pb-1 md:hidden" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 8px)' }}>
+                <button
+                    type="button"
+                    onClick={handleSubmitBet}
+                    disabled={!canSubmit}
+                    className={`w-full font-semibold py-2.5 min-h-[44px] text-sm rounded-xl shadow-md transition-all active:scale-[0.98] ${
+                        canSubmit
+                            ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700'
+                            : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
+                    }`}
+                >
+                    Submit Bet
+                </button>
             </div>
 
             <BidReviewModal
