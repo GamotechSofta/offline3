@@ -179,6 +179,11 @@ const SinglePanaBulkBid = ({ market, title }) => {
             ? 'w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-3.5 min-h-[52px] rounded-lg shadow-lg transition-all active:scale-[0.98]'
             : 'w-full bg-gradient-to-r from-primary-300 to-primary-400 text-white font-bold py-3.5 min-h-[52px] rounded-lg shadow-lg opacity-50 cursor-not-allowed';
 
+    const mobileSubmitBtnClass = (enabled) =>
+        enabled
+            ? 'w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold py-2.5 min-h-[44px] text-sm rounded-xl shadow-md transition-all active:scale-[0.98]'
+            : 'w-full bg-gradient-to-r from-primary-300 to-primary-400 text-white font-semibold py-2.5 min-h-[44px] text-sm rounded-xl shadow-md opacity-50 cursor-not-allowed';
+
     return (
         <BidLayout
             market={market}
@@ -249,10 +254,21 @@ const SinglePanaBulkBid = ({ market, title }) => {
                             setGroupBulk((prev) => ({ ...prev, [groupKey]: '' }));
                         };
 
+                        const clearGroup = () => {
+                            setSpecialInputs((prev) => {
+                                const next = { ...prev };
+                                for (const num of list) next[num] = '';
+                                return next;
+                            });
+                            setGroupBulk((prev) => ({ ...prev, [groupKey]: '' }));
+                        };
+
+                        const hasGroupPoints = list.some((num) => specialInputs[num]);
+
                         return (
                             <div key={groupKey} className="space-y-3">
-                                {/* Group header: same "box + input" style */}
-                                <div className="flex items-center gap-2">
+                                {/* Group header: box + input + Apply + Clear */}
+                                <div className="flex items-center gap-2 flex-wrap">
                                     <div className="w-10 h-9 bg-primary-500 border-2 border-primary-300 text-white flex items-center justify-center rounded-l-md font-bold text-xs shrink-0">
                                         {groupKey}
                                     </div>
@@ -276,14 +292,29 @@ const SinglePanaBulkBid = ({ market, title }) => {
                                         type="button"
                                         onClick={() => groupBulk[groupKey] && applyGroup(groupBulk[groupKey])}
                                         disabled={!groupBulk[groupKey]}
-                                        className={`h-9 px-3 rounded-md font-bold text-xs border-2 transition-colors ${
+                                        className={`min-h-[36px] h-9 px-4 rounded-lg font-semibold text-xs sm:text-sm border-2 transition-all duration-200 active:scale-[0.98] ${
                                             groupBulk[groupKey]
-                                                ? 'bg-[#252D3A] border-primary-400 text-primary-500 hover:border-primary-500 hover:bg-primary-50'
-                                                : 'bg-gray-100 border-primary-200 text-gray-400 cursor-not-allowed'
+                                                ? 'bg-primary-500 border-primary-500 text-white hover:bg-primary-600 hover:border-primary-600 shadow-md hover:shadow-lg'
+                                                : 'bg-[#1a2028] border-[#333D4D] text-gray-500 cursor-not-allowed'
                                         }`}
                                         title="Apply points to all numbers in this group"
+                                        aria-label={`Apply points to group ${groupKey}`}
                                     >
                                         Apply
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={clearGroup}
+                                        disabled={!hasGroupPoints}
+                                        className={`min-h-[36px] h-9 px-4 rounded-lg font-semibold text-xs sm:text-sm border-2 transition-all duration-200 active:scale-[0.98] ${
+                                            hasGroupPoints
+                                                ? 'bg-[#252D3A] border-[#333D4D] text-gray-200 hover:bg-[#2a3342] hover:border-gray-500'
+                                                : 'bg-[#1a2028] border-[#333D4D] text-gray-500 cursor-not-allowed'
+                                        }`}
+                                        title="Clear points for this group"
+                                        aria-label={`Clear group ${groupKey}`}
+                                    >
+                                        Clear
                                     </button>
                                 </div>
 
@@ -316,9 +347,9 @@ const SinglePanaBulkBid = ({ market, title }) => {
                 </div>
             </div>
 
-            {/* Submit Bet: match Jodi Special Mode (mobile sticky, desktop inline) */}
-            <div className="md:hidden fixed left-0 right-0 bottom-[88px] z-20 px-3">
-                <button type="button" onClick={openReview} disabled={!canSubmit} className={submitBtnClass(canSubmit)}>
+            {/* Submit Bet: compact on mobile, clear gap above bottom bar */}
+            <div className="md:hidden fixed left-0 right-0 z-20 px-3 pb-1" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 8px)' }}>
+                <button type="button" onClick={openReview} disabled={!canSubmit} className={mobileSubmitBtnClass(canSubmit)}>
                     Submit Bet
                 </button>
             </div>
