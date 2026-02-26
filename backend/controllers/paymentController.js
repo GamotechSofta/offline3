@@ -1,6 +1,6 @@
 import Payment from '../models/payment/payment.js';
 import BankDetail from '../models/bankDetail/bankDetail.js';
-import { Wallet } from '../models/wallet/wallet.js';
+import { Wallet, WalletTransaction } from '../models/wallet/wallet.js';
 import Admin from '../models/admin/admin.js';
 import bcrypt from 'bcryptjs';
 import { getBookieUserIds } from '../utils/bookieFilter.js';
@@ -46,8 +46,10 @@ export const createDepositRequest = async (req, res) => {
             hasFile: !!req.file 
         });
 
-        const { amount, upiTransactionId, userNote } = req.body;
+        const { amount, upiTransactionId, userNote, method: paymentMethod } = req.body;
         const userId = req.body.userId;
+        const validMethods = ['upi', 'bank_transfer', 'wallet', 'cash'];
+        const method = validMethods.includes(paymentMethod) ? paymentMethod : 'upi';
 
         if (!userId) {
             console.error('❌ Missing userId');
@@ -138,7 +140,7 @@ export const createDepositRequest = async (req, res) => {
             userId,
             type: 'deposit',
             amount: numAmount,
-            method: 'upi',
+            method,
             status: 'pending',
             screenshotUrl: screenshotUrl,
             upiTransactionId: upiTransactionId || '',
@@ -511,6 +513,17 @@ export const approvePayment = async (req, res) => {
             wallet.balance -= payment.amount;
         }
         await wallet.save();
+
+        // Create wallet transaction so it shows in Passbook and transaction history everywhere
+        await WalletTransaction.create({
+            userId: payment.userId._id,
+            type: payment.type === 'deposit' ? 'credit' : 'debit',
+            amount: payment.amount,
+            description: payment.type === 'deposit'
+                ? `Deposit approved: ₹${payment.amount}`
+                : `Withdrawal approved: ₹${payment.amount}`,
+            referenceId: String(payment._id),
+        });
 
         await logActivity({
             action: `payment_${payment.type}_approved`,

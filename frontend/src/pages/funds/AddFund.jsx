@@ -6,7 +6,11 @@ const AddFund = () => {
     const navigate = useNavigate();
     const [config, setConfig] = useState(null);
     const [amount, setAmount] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('upi');
     const [upiTransactionId, setUpiTransactionId] = useState('');
+    const [paymentDate, setPaymentDate] = useState('');
+    const [payerName, setPayerName] = useState('');
+    const [remarks, setRemarks] = useState('');
     const [screenshot, setScreenshot] = useState(null);
     const [screenshotPreview, setScreenshotPreview] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -67,8 +71,8 @@ const AddFund = () => {
             setError('Please enter UTR / Transaction ID');
             return;
         }
-        if (!/^\d{12}$/.test(utr)) {
-            setError('UTR / Transaction ID must be 12 digits');
+        if (utr.length < 8 || utr.length > 24) {
+            setError('UTR / Transaction ID must be 8–24 characters');
             return;
         }
 
@@ -80,10 +84,18 @@ const AddFund = () => {
         setLoading(true);
 
         try {
+            const parts = [];
+            if (paymentDate) parts.push(`Payment date: ${paymentDate}`);
+            if (payerName.trim()) parts.push(`Payer name: ${payerName.trim()}`);
+            if (remarks.trim()) parts.push(`Remarks: ${remarks.trim()}`);
+            const userNoteStr = parts.join('\n');
+
             const formData = new FormData();
             formData.append('userId', user.id);
             formData.append('amount', numAmount);
+            formData.append('method', paymentMethod);
             formData.append('upiTransactionId', utr);
+            formData.append('userNote', userNoteStr);
             formData.append('screenshot', screenshot);
 
             const res = await fetch(`${API_BASE_URL}/payments/deposit`, {
@@ -96,7 +108,11 @@ const AddFund = () => {
                 setSubmittedAmount(numAmount);
                 setShowSuccessModal(true);
                 setAmount('');
+                setPaymentMethod('upi');
                 setUpiTransactionId('');
+                setPaymentDate('');
+                setPayerName('');
+                setRemarks('');
                 setScreenshot(null);
                 setScreenshotPreview(null);
                 setStep(1);
@@ -357,8 +373,27 @@ const AddFund = () => {
                         </div>
                     </div>
 
-                    {/* Add Fund Form (Step 2) */}
+                    {/* Add Fund Form (Step 2) - All payment request details */}
                     <form onSubmit={handleSubmit} className="space-y-5">
+                        <h4 className="text-primary-400 font-semibold text-sm border-b border-[#333D4D] pb-2">Required information</h4>
+
+                        {/* Payment Method */}
+                        <div>
+                            <label className="block text-gray-300 text-sm font-medium mb-2">
+                                Payment method
+                            </label>
+                            <select
+                                value={paymentMethod}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                className="w-full bg-[#1F2732] border-2 border-[#333D4D] rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            >
+                                <option value="upi">UPI (GPay, PhonePe, Paytm, etc.)</option>
+                                <option value="bank_transfer">Bank Transfer / NEFT / IMPS</option>
+                                <option value="wallet">Wallet</option>
+                                <option value="cash">Cash</option>
+                            </select>
+                        </div>
+
                         {/* UTR / Transaction ID */}
                         <div>
                             <label className="block text-gray-300 text-sm font-medium mb-2">
@@ -368,17 +403,16 @@ const AddFund = () => {
                                 type="text"
                                 value={upiTransactionId}
                                 onChange={(e) => setUpiTransactionId(e.target.value)}
-                                placeholder="Enter 12-digit UTR number"
-                                inputMode="numeric"
+                                placeholder="Enter 8–24 character UTR or reference number"
                                 className="w-full bg-[#1F2732] border-2 border-[#333D4D] rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                                 required
                             />
                         </div>
 
-                        {/* Screenshot Upload */}
+                        {/* Payment Screenshot - Required */}
                         <div>
                             <label className="block text-gray-300 text-sm font-medium mb-2">
-                                Payment Screenshot <span className="text-red-500">*</span>
+                                Payment screenshot / proof <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
                                 <input
@@ -411,6 +445,43 @@ const AddFund = () => {
                             </div>
                         </div>
 
+                        <h4 className="text-gray-400 font-semibold text-sm border-b border-[#333D4D] pb-2 pt-2">Optional (for faster verification)</h4>
+
+                        {/* Payment date */}
+                        <div>
+                            <label className="block text-gray-300 text-sm font-medium mb-2">Date of payment</label>
+                            <input
+                                type="date"
+                                value={paymentDate}
+                                onChange={(e) => setPaymentDate(e.target.value)}
+                                className="w-full bg-[#1F2732] border-2 border-[#333D4D] rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            />
+                        </div>
+
+                        {/* Payer name */}
+                        <div>
+                            <label className="block text-gray-300 text-sm font-medium mb-2">Payer name (as per bank/UPI)</label>
+                            <input
+                                type="text"
+                                value={payerName}
+                                onChange={(e) => setPayerName(e.target.value)}
+                                placeholder="Name as shown on payment"
+                                className="w-full bg-[#1F2732] border-2 border-[#333D4D] rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            />
+                        </div>
+
+                        {/* Remarks */}
+                        <div>
+                            <label className="block text-gray-300 text-sm font-medium mb-2">Remarks / Additional notes</label>
+                            <textarea
+                                value={remarks}
+                                onChange={(e) => setRemarks(e.target.value)}
+                                placeholder="Any extra details for admin..."
+                                rows={2}
+                                className="w-full bg-[#1F2732] border-2 border-[#333D4D] rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
+                            />
+                        </div>
+
                         {/* Submit Button */}
                         <button
                             type="submit"
@@ -425,11 +496,11 @@ const AddFund = () => {
                     <div className="bg-[#252D3A] rounded-xl p-4 border-2 border-[#333D4D]">
                         <h4 className="text-primary-400 font-semibold mb-2">How to Add Funds:</h4>
                         <ol className="text-gray-300 text-sm space-y-2 list-decimal list-inside">
-                            <li>Scan the QR code above OR copy the UPI ID</li>
-                            <li>Open any UPI app (GPay, PhonePe, Paytm, etc.)</li>
-                            <li>Send the exact amount you want to add</li>
-                            <li>Take a screenshot of the successful payment</li>
-                            <li>Enter amount and upload the screenshot above</li>
+                            <li>Scan the QR code above OR copy the UPI ID and pay the amount</li>
+                            <li>Take a screenshot of the successful payment (required)</li>
+                            <li>Enter your UTR / Transaction ID from the payment (required)</li>
+                            <li>Upload the payment screenshot in the box above (required)</li>
+                            <li>Optionally add payment date, payer name and remarks for faster verification</li>
                         </ol>
                     </div>
                 </div>

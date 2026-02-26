@@ -208,16 +208,22 @@ const AppHeader = () => {
             </span>
             <GoogleTranslate />
           </div>
-          {/* Wallet - desktop only, responsive size */}
+          {/* Wallet - desktop only, icon + balance */}
           <button
             onClick={() => navigate('/funds?tab=add-fund')}
             className="hidden md:flex shrink-0 items-center gap-1.5 md:gap-2 lg:gap-2.5 rounded-lg bg-[#252D3A] border-2 border-[#333D4D] px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 hover:bg-primary-500/20 hover:border-primary-400 transition-colors"
+            aria-label="Wallet balance"
           >
-            <img
-              src="https://res.cloudinary.com/dzd47mpdo/image/upload/v1769780438/Untitled_90_x_160_px_1080_x_1080_px_ychsx6.png"
-              alt="Wallet"
-              className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 object-contain brightness-0 invert"
-            />
+            <svg
+              className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 shrink-0 text-white"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 110 6h3.75A2.25 2.25 0 0021 13.5V12zm0 0V9.75a2.25 2.25 0 00-2.25-2.25h-13.5A2.25 2.25 0 003 9.75v7.5A2.25 2.25 0 005.25 19.5h13.5A2.25 2.25 0 0021 17.25V12z" />
+            </svg>
             <span className="text-sm md:text-base lg:text-lg font-bold text-white">₹{formattedBalance}</span>
           </button>
 
