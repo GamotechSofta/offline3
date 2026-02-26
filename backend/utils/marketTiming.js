@@ -33,8 +33,8 @@ function getMarketTimeBounds(market, now = new Date()) {
 
 /**
  * Check if a specific session (open/close) can accept bets at the given time.
- * - Open bets: allowed only when current time is before opening time.
- * - Close bets: allowed from opening time until closing time (lastBetAt).
+ * - Open bets: allowed only when current time is before opening time (until openAt).
+ * - Close bets: allowed until closing time (lastBetAt) only; independent of opening time.
  *
  * @param {Object} market - { startingTime, closingTime, betClosureTime }
  * @param {Date} [now]
@@ -50,16 +50,11 @@ export function isBettingAllowedForSession(market, now = new Date(), betOn = 'op
     const nowMs = now.getTime();
 
     if (betOn === 'close') {
-        if (nowMs < openAt) {
-            return {
-                allowed: false,
-                message: 'Close betting opens at opening time. You can place close bets after the opening time.',
-            };
-        }
+        // Close bets: allowed until closing time only (independent of opening time)
         if (nowMs > lastBetAt) {
             return {
                 allowed: false,
-                message: `Betting closed. Closing time has passed. You can place bets until ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
+                message: `Betting closed. Closing time has passed. You can place close bets until ${closureSec > 0 ? 'the set closure time.' : 'closing time.'}`,
             };
         }
         return { allowed: true };
@@ -83,7 +78,7 @@ export function isBettingAllowedForSession(market, now = new Date(), betOn = 'op
 }
 
 /**
- * Market betting window: OPEN until opening time, CLOSE from opening time until closing time.
+ * Market betting window: OPEN until opening time; CLOSE until closing time (independent of opening).
  * This returns allowed: true if ANY betting is currently allowed (open or close window).
  * For per-bet validation use isBettingAllowedForSession(market, now, betOn).
  *

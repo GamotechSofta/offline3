@@ -1,7 +1,8 @@
 /**
  * Check if betting is allowed for a market at the given time.
- * - Before opening time: OPEN and CLOSE bets allowed.
- * - From opening time until closing time: only CLOSE bets allowed (closeOnly: true).
+ * - Open bets: allowed until opening time.
+ * - Close bets: allowed until closing time (independent of opening time).
+ * - From opening time until closing time: only CLOSE bets allowed (closeOnly: true) because open window has ended.
  * - After closing time: no betting.
  * Uses IST (Asia/Kolkata) to match market reset and backend.
  *
