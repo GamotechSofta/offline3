@@ -10,6 +10,14 @@ const formatNum = (num) => {
     return Number(num).toLocaleString('en-IN', { maximumFractionDigits: 0 });
 };
 
+/** Format scheduled date for display (for close-market scheduled bets) */
+const formatScheduled = (bet) => {
+    const date = bet?.scheduledDate;
+    if (!date) return '—';
+    const d = new Date(date);
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+};
+
 const BetHistory = () => {
     const navigate = useNavigate();
     const [bets, setBets] = useState([]);
@@ -21,6 +29,7 @@ const BetHistory = () => {
         status: '',
         startDate: '',
         endDate: '',
+        scheduled: '', // '' | 'true' - show only scheduled (close-market) bets
     });
 
     useEffect(() => {
@@ -36,6 +45,7 @@ const BetHistory = () => {
             if (filters.status) queryParams.append('status', filters.status);
             if (filters.startDate) queryParams.append('startDate', filters.startDate);
             if (filters.endDate) queryParams.append('endDate', filters.endDate);
+            if (filters.scheduled === 'true') queryParams.append('scheduled', 'true');
 
             const response = await fetch(`${API_BASE_URL}/bets/history?${queryParams}`, {
                 headers: getAuthHeaders(),
@@ -151,6 +161,14 @@ const BetHistory = () => {
                             onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
                             className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
                         />
+                        <select
+                            value={filters.scheduled}
+                            onChange={(e) => setFilters({ ...filters, scheduled: e.target.value })}
+                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                        >
+                            <option value="">All Bets</option>
+                            <option value="true">Scheduled (close market) only</option>
+                        </select>
                     </div>
 
                     {/* Placed-by filter */}
@@ -243,6 +261,7 @@ const BetHistory = () => {
                                                                 <th className="px-3 py-2 text-center font-semibold text-gray-700">Number</th>
                                                                 <th className="px-3 py-2 text-right font-semibold text-gray-700">Amount</th>
                                                                 <th className="px-3 py-2 text-center font-semibold text-gray-700">Status</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Scheduled</th>
                                                                 <th className="px-3 py-2 text-center font-semibold text-gray-700">Placed By</th>
                                                             </tr>
                                                         </thead>
@@ -269,6 +288,13 @@ const BetHistory = () => {
                                                                         }`}>
                                                                             {bet.status?.toUpperCase() || 'PENDING'}
                                                                         </span>
+                                                                    </td>
+                                                                    <td className="px-3 py-2 text-center text-xs">
+                                                                        {(bet.isScheduled || bet.scheduledDate) ? (
+                                                                            <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-medium" title="Scheduled for close market">
+                                                                                {formatScheduled(bet)}
+                                                                            </span>
+                                                                        ) : '—'}
                                                                     </td>
                                                                     <td className="px-3 py-2 text-center text-xs text-gray-600">
                                                                         {bet.placedByBookie ? (bet.placedByBookieId?.username || 'Bookie') : 'Player'}
@@ -306,6 +332,7 @@ const BetHistory = () => {
                                                                 <th className="px-3 py-2 text-center font-semibold text-gray-700">Number</th>
                                                                 <th className="px-3 py-2 text-right font-semibold text-gray-700">Amount</th>
                                                                 <th className="px-3 py-2 text-center font-semibold text-gray-700">Status</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Scheduled</th>
                                                                 <th className="px-3 py-2 text-center font-semibold text-gray-700">Placed By</th>
                                                             </tr>
                                                         </thead>
@@ -332,6 +359,13 @@ const BetHistory = () => {
                                                                         }`}>
                                                                             {bet.status?.toUpperCase() || 'PENDING'}
                                                                         </span>
+                                                                    </td>
+                                                                    <td className="px-3 py-2 text-center text-xs">
+                                                                        {(bet.isScheduled || bet.scheduledDate) ? (
+                                                                            <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-medium" title="Scheduled for close market">
+                                                                                {formatScheduled(bet)}
+                                                                            </span>
+                                                                        ) : '—'}
                                                                     </td>
                                                                     <td className="px-3 py-2 text-center text-xs text-gray-600">
                                                                         {bet.placedByBookie ? (bet.placedByBookieId?.username || 'Bookie') : 'Player'}

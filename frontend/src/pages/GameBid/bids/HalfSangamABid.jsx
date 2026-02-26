@@ -8,7 +8,7 @@ const sanitizeDigits = (v, maxLen) => (v ?? '').toString().replace(/\D/g, '').sl
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
 // Half Sangam (O): Open Pana (3 digits) + Close Ank (1 digit)
-const HalfSangamABid = ({ market, title }) => {
+const HalfSangamABid = ({ market, title, initialSelectedDate }) => {
     const [session, setSession] = useState('OPEN');
     const [openPana, setOpenPana] = useState('');
     const [closeAnk, setCloseAnk] = useState('');
@@ -19,20 +19,19 @@ const HalfSangamABid = ({ market, title }) => {
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
-                    return savedDate;
-                }
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {
             // Ignore errors
         }
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        return new Date().toISOString().split('T')[0];
     });
     
     // Save to localStorage when date changes
@@ -325,6 +324,7 @@ const HalfSangamABid = ({ market, title }) => {
                 walletBefore={walletBefore}
                 totalBids={bids.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

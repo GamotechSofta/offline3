@@ -7,7 +7,7 @@ const DIGITS = Array.from({ length: 10 }, (_, i) => String(i));
 
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
-const JodiBulkBid = ({ market, title }) => {
+const JodiBulkBid = ({ market, title, initialSelectedDate }) => {
     const cellRefs = useRef({});
     const pendingFocusRef = useRef(null);
 
@@ -15,20 +15,19 @@ const JodiBulkBid = ({ market, title }) => {
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
-                    return savedDate;
-                }
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {
             // Ignore errors
         }
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        return new Date().toISOString().split('T')[0];
     });
     
     // Save to localStorage when date changes
@@ -297,18 +296,27 @@ const JodiBulkBid = ({ market, title }) => {
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}
             sessionRightSlot={
-                <button
-                    type="button"
-                    onClick={handleSubmitBet}
-                    disabled={!canSubmit}
-                    className={`hidden md:inline-flex items-center justify-center font-bold text-base min-h-[52px] min-w-[280px] px-7 rounded-full shadow-lg transition-all whitespace-nowrap ${
-                        canSubmit
-                            ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-[0.98]'
-                            : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
-                    }`}
-                >
-                    Submit Bet
-                </button>
+                <div className="hidden md:flex items-center gap-3 flex-1 min-w-0 justify-end">
+                    <button
+                        type="button"
+                        onClick={handleSubmitBet}
+                        disabled={!canSubmit}
+                        className={`inline-flex items-center justify-center font-bold text-base min-h-[52px] min-w-[200px] px-6 rounded-full shadow-lg transition-all whitespace-nowrap shrink-0 ${
+                            canSubmit
+                                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-[0.98]'
+                                : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
+                        }`}
+                    >
+                        Submit Bet
+                    </button>
+                    <button
+                        type="button"
+                        onClick={clearAll}
+                        className="shrink-0 px-4 py-2.5 min-h-[52px] rounded-full text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-500/20 active:scale-[0.98] transition-all"
+                    >
+                        Clear
+                    </button>
+                </div>
             }
             walletBalance={walletBefore}
             hideFooter
@@ -322,15 +330,6 @@ const JodiBulkBid = ({ market, title }) => {
                 )}
 
                 <div className="p-2 sm:p-3 md:p-4 w-full overflow-visible md:overflow-hidden">
-                    <div className="flex justify-end mb-4">
-                        <button
-                            type="button"
-                            onClick={clearAll}
-                            className="px-4 py-2 rounded-lg text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-500/20 active:scale-[0.98] transition-all"
-                        >
-                            Clear
-                        </button>
-                    </div>
                     {/* Full width: left column fixed so 10 data columns align under headers and use remaining space */}
                     <div className="overflow-x-hidden w-full">
                         <div
@@ -436,19 +435,26 @@ const JodiBulkBid = ({ market, title }) => {
                 </div>
             </div>
 
-            {/* Sticky Submit Bet: compact on mobile, clear gap above bottom bar */}
-            <div className="fixed left-0 right-0 z-20 px-3 sm:px-4 pb-1 md:hidden" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 8px)' }}>
+            {/* Sticky row: Submit (left) + Clear (right) on mobile */}
+            <div className="fixed left-0 right-0 z-20 px-3 sm:px-4 pb-1 md:hidden flex items-center gap-2" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 8px)' }}>
                 <button
                     type="button"
                     onClick={handleSubmitBet}
                     disabled={!canSubmit}
-                    className={`w-full font-semibold py-2.5 min-h-[44px] text-sm rounded-xl shadow-md transition-all active:scale-[0.98] ${
+                    className={`flex-1 min-w-0 font-semibold py-2.5 min-h-[44px] text-sm rounded-xl shadow-md transition-all active:scale-[0.98] ${
                         canSubmit
                             ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700'
                             : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
                     }`}
                 >
                     Submit Bet
+                </button>
+                <button
+                    type="button"
+                    onClick={clearAll}
+                    className="shrink-0 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-500/20 active:scale-[0.98] transition-all"
+                >
+                    Clear
                 </button>
             </div>
 
@@ -463,6 +469,7 @@ const JodiBulkBid = ({ market, title }) => {
                 walletBefore={walletBefore}
                 totalBids={rows.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

@@ -52,25 +52,24 @@ const buildDoublePanas = () => {
     return validPanas;
 };
 
-const DoublePanaBulkBid = ({ market, title }) => {
+const DoublePanaBulkBid = ({ market, title, initialSelectedDate }) => {
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
     const [warning, setWarning] = useState('');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
-                    return savedDate;
-                }
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {
             // Ignore errors
         }
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        return new Date().toISOString().split('T')[0];
     });
     
     // Save to localStorage when date changes
@@ -389,6 +388,7 @@ const DoublePanaBulkBid = ({ market, title }) => {
                 walletBefore={walletBefore}
                 totalBids={reviewRows.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

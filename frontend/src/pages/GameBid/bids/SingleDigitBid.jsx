@@ -3,7 +3,7 @@ import BidLayout from '../BidLayout';
 import BidReviewModal from './BidReviewModal';
 import { placeBet, updateUserBalance } from '../../../api/bets';
 
-const SingleDigitBid = ({ market, title }) => {
+const SingleDigitBid = ({ market, title, initialSelectedDate }) => {
     // Single Digit: show Special Mode first (per requirement)
     const [activeTab, setActiveTab] = useState('special');
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
@@ -14,20 +14,19 @@ const SingleDigitBid = ({ market, title }) => {
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
-                    return savedDate;
-                }
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {
             // Ignore errors
         }
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        return new Date().toISOString().split('T')[0];
     });
     
     // Save to localStorage when date changes
@@ -254,6 +253,7 @@ const SingleDigitBid = ({ market, title }) => {
                 walletBefore={walletBefore}
                 totalBids={bids.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

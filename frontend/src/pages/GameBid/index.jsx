@@ -28,10 +28,17 @@ const BID_COMPONENTS = {
     'half sangam': HalfSangamBid,
 };
 
+const getTomorrowISO = () => {
+    const t = new Date();
+    t.setDate(t.getDate() + 1);
+    return t.toISOString().split('T')[0];
+};
+
 const GameBid = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { market, betType } = location.state || {};
+    const { market, betType, scheduleForTomorrow } = location.state || {};
+    const initialSelectedDate = (scheduleForTomorrow && market?.status === 'closed') ? getTomorrowISO() : undefined;
 
     useEffect(() => {
         if (!market && !location.state?.title) {
@@ -45,7 +52,7 @@ const GameBid = () => {
 
     return (
         <BettingWindowProvider market={market}>
-            <BidComponent market={market} title={title} />
+            <BidComponent market={market} title={title} initialSelectedDate={initialSelectedDate} />
         </BettingWindowProvider>
     );
 };

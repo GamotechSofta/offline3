@@ -57,20 +57,28 @@ const BidLayout = ({
     const todayDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
     const wallet = Number.isFinite(Number(walletBalance)) ? Number(walletBalance) : getWalletFromStorage();
     
-    // Get minimum date (today) for date picker - calculate once
-    const minDate = React.useMemo(() => {
-        return new Date().toISOString().split('T')[0];
-    }, []); // Only calculate once on mount
-    
+    // Get minimum date (today) and maximum date (tomorrow only - scheduling is for next day only)
+    const { minDate, maxDate } = React.useMemo(() => {
+        const today = new Date();
+        const min = today.toISOString().split('T')[0];
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const max = tomorrow.toISOString().split('T')[0];
+        return { minDate: min, maxDate: max };
+    }, []);
+
     // Internal state for date if not provided via props
-    // Try to restore from localStorage, otherwise default to today
+    // Try to restore from localStorage (only today or tomorrow), otherwise default to today
     const [internalDate, setInternalDate] = React.useState(() => {
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                // Only restore if saved date is tomorrow (scheduling); ignore past or far-future
+                if (savedDate > today && savedDate <= maxAllowed) {
                     return savedDate;
                 }
             }
@@ -93,13 +101,29 @@ const BidLayout = ({
     };
 
     const marketStatus = market?.status;
-    const isRunning = marketStatus === 'running'; // "CLOSED IS RUNNING"
-    
-    // Check if selected date is today or in the future
-    // Compare dates as strings (YYYY-MM-DD format)
-    const isToday = currentDate === minDate;
-    // Schedule button should only show if date is in the future (not today)
-    const isScheduled = currentDate > minDate;
+    const isRunning = marketStatus === 'running'; // "CLOSED IS RUNNING" = market is open for betting
+    // Scheduling only for closed markets; open/running = today only, no tomorrow option
+    const canSchedule = marketStatus === 'closed';
+
+    // When market is NOT closed: force date to today (scheduling only for closed markets)
+    React.useEffect(() => {
+        if (!canSchedule && currentDate !== minDate) {
+            setCurrentDate(minDate);
+        }
+    }, [canSchedule, minDate, currentDate, setCurrentDate]);
+
+    // When market is closed (canSchedule), only tomorrow - no calendar; force date to tomorrow
+    React.useEffect(() => {
+        if (canSchedule && currentDate !== maxDate) {
+            setCurrentDate(maxDate);
+        }
+    }, [canSchedule, maxDate, currentDate, setCurrentDate]);
+
+    // Check if selected date is today or in the future (respect maxDate = tomorrow)
+    const effectiveDate = !canSchedule ? minDate : (currentDate > maxDate ? maxDate : currentDate);
+    const isToday = effectiveDate === minDate;
+    // Only treat as scheduled when market is closed AND date is tomorrow (scheduling only for closed markets)
+    const isScheduled = canSchedule && effectiveDate > minDate;
     
     // Determine session options based on date selection and betting window:
     // - If today and (market is running OR opening time passed = closeOnly): only CLOSE
@@ -168,10 +192,16 @@ const BidLayout = ({
                 </div>
             </div>
 
-            {!bettingAllowed && bettingMessage && (
+            {!bettingAllowed && bettingMessage && !isScheduled && (
                 <div className="mx-3 sm:mx-6 mt-2 p-3 rounded-xl bg-red-50 border-2 border-red-300 text-red-600 text-sm font-medium flex items-center gap-2">
                     <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                     {bettingMessage}
+                </div>
+            )}
+            {isScheduled && (
+                <div className="mx-3 sm:mx-6 mt-2 p-3 rounded-xl bg-green-50 border-2 border-green-300 text-green-700 text-sm font-medium flex items-center gap-2">
+                    <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    These bets will count for tomorrow&apos;s result.
                 </div>
             )}
 
@@ -182,82 +212,30 @@ const BidLayout = ({
                     className={`pb-2 pt-1 flex flex-row flex-wrap gap-1.5 sm:gap-2 overflow-hidden ${dateSessionGridClassName}`}
                     style={{ paddingLeft: 'max(0.75rem, env(safe-area-inset-left))', paddingRight: 'max(0.75rem, env(safe-area-inset-right))' }}
                 >
-                    {/* Date Input Button */}
-                    <div className="relative flex-1 min-w-0 shrink overflow-hidden min-w-[120px]">
-                        <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none z-10">
-                            <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                    {/* Closed market: show only tomorrow's date (no calendar picker) */}
+                    {canSchedule && (
+                        <div className="flex-1 min-w-0 flex items-center gap-2 min-w-[140px] py-1">
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-[#252D3A] border-2 border-primary-200 text-white text-xs font-bold">
+                                <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>
+                                    Tomorrow · {(() => {
+                                        const d = new Date(maxDate);
+                                        return d.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                                    })()}
+                                </span>
+                            </div>
+                            <span className="px-2 py-1 rounded-full bg-green-600 text-white text-[10px] sm:text-xs font-semibold shrink-0">Scheduled</span>
                         </div>
-                        <input
-                            ref={dateInputRef}
-                            type="date"
-                            value={currentDate}
-                            min={minDate}
-                            max="2099-12-31"
-                            onChange={(e) => {
-                                const selected = e.target.value;
-                                // Ensure selected date is not in the past
-                                if (selected >= minDate) {
-                                    setCurrentDate(selected);
-                                }
-                            }}
-                            onKeyDown={(e) => {
-                                // Prevent manual typing - only allow calendar selection
-                                e.preventDefault();
-                                return false;
-                            }}
-                            onPaste={(e) => {
-                                // Prevent pasting dates
-                                e.preventDefault();
-                                return false;
-                            }}
-                            className={`w-full pl-8 sm:pl-9 pr-2 py-2 min-h-[36px] h-[36px] sm:min-h-[40px] sm:h-[40px] bg-[#252D3A] border-2 border-primary-200 text-white rounded-full text-xs font-bold text-center focus:outline-none focus:border-primary-500 cursor-pointer truncate ${dateSessionControlClassName}`}
-                            style={{
-                                colorScheme: 'light',
-                            }}
-                            title="Select date for scheduling your bet"
-                        />
-                    </div>
-                    
-                    {/* Schedule Button */}
-                    <button
-                        type="button"
-                        onClick={() => {
-                            // Open the date picker when Schedule button is clicked
-                            if (dateInputRef.current) {
-                                // Try modern showPicker API first
-                                if (typeof dateInputRef.current.showPicker === 'function') {
-                                    dateInputRef.current.showPicker().catch(() => {
-                                        // Fallback if showPicker fails
-                                        dateInputRef.current.focus();
-                                        dateInputRef.current.click();
-                                    });
-                                } else {
-                                    // Fallback for browsers that don't support showPicker
-                                    dateInputRef.current.focus();
-                                    dateInputRef.current.click();
-                                }
-                            }
-                        }}
-                        className={`shrink-0 px-2 sm:px-3 py-2 min-h-[36px] h-[36px] sm:min-h-[40px] sm:h-[40px] font-bold text-xs rounded-full transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-1 min-w-[36px] sm:min-w-[40px] ${
-                            isScheduled
-                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-400 hover:to-green-500 cursor-pointer'
-                                : 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 cursor-pointer'
-                        }`}
-                        title={isScheduled ? "Bet scheduled! Click to change date" : "Click to open calendar and schedule bet"}
-                    >
-                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span className="hidden sm:inline whitespace-nowrap truncate max-w-[70px]">{isScheduled ? 'Scheduled' : 'Schedule'}</span>
-                        {isScheduled && (
-                            <svg className="hidden sm:block w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                        )}
-                    </button>
-                    
+                    )}
+                    {/* When market is running: no date/schedule (bets are for today only) */}
+                    {!canSchedule && (
+                        <div className="flex-1 min-w-0 flex items-center justify-center sm:justify-start text-gray-400 text-xs font-medium py-1">
+                            Today only
+                        </div>
+                    )}
+
                     {/* Session Select - hidden on mobile, each bid screen has its own session control */}
                     <div className="relative flex-1 min-w-0 hidden md:block">
                         <select
@@ -328,9 +306,9 @@ const BidLayout = ({
                         <button
                             type="button"
                             onClick={onSubmit}
-                            disabled={!bidsCount || !bettingAllowed}
+                            disabled={!bidsCount || (!bettingAllowed && !isScheduled)}
                             className={`flex-1 w-full sm:w-auto sm:min-w-[140px] font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-sm sm:text-base ${
-                                bidsCount && bettingAllowed
+                                bidsCount && (bettingAllowed || isScheduled)
                                     ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-[0.98]'
                                     : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
                             }`}

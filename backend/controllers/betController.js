@@ -82,7 +82,21 @@ export const placeBet = async (req, res) => {
                 ? 'open'
                 : (market?.openingNumber && THREE_DIGITS.test(String(market.openingNumber)) ? 'close' : 'open');
 
-        if (!isBettingAllowed(market).allowed) {
+        // If valid future scheduledDate is provided, allow placement even when market is closed (tomorrow's bets).
+        let isScheduledBet = false;
+        if (scheduledDate) {
+            const scheduledDateObj = new Date(scheduledDate);
+            if (!isNaN(scheduledDateObj.getTime())) {
+                const todayStart = new Date();
+                todayStart.setHours(0, 0, 0, 0);
+                scheduledDateObj.setHours(0, 0, 0, 0);
+                if (scheduledDateObj > todayStart) {
+                    isScheduledBet = true;
+                }
+            }
+        }
+
+        if (!isScheduledBet && !isBettingAllowed(market).allowed) {
             return res.status(400).json({
                 success: false,
                 message: 'Betting is not allowed for this market at this time.',
@@ -109,13 +123,15 @@ export const placeBet = async (req, res) => {
                     message: 'Each bet must have betType, betNumber and amount > 0',
                 });
             }
-            const timing = isBettingAllowedForSession(market, now, betOn);
-            if (!timing.allowed) {
-                return res.status(400).json({
-                    success: false,
-                    message: timing.message || 'Betting is not allowed for this session at this time.',
-                    code: 'BETTING_CLOSED',
-                });
+            if (!isScheduledBet) {
+                const timing = isBettingAllowedForSession(market, now, betOn);
+                if (!timing.allowed) {
+                    return res.status(400).json({
+                        success: false,
+                        message: timing.message || 'Betting is not allowed for this session at this time.',
+                        code: 'BETTING_CLOSED',
+                    });
+                }
             }
             totalAmount += amount;
             sanitized.push({ betType, betNumber, amount, betOn });
@@ -274,7 +290,7 @@ export const placeBetForPlayer = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Bookie access required' });
         }
 
-        const { userId, marketId, bets } = req.body;
+        const { userId, marketId, bets, scheduledDate } = req.body;
 
         if (!userId || !marketId || !Array.isArray(bets) || bets.length === 0) {
             return res.status(400).json({
@@ -315,7 +331,21 @@ export const placeBetForPlayer = async (req, res) => {
                 ? 'open'
                 : (market?.openingNumber && THREE_DIGITS.test(String(market.openingNumber)) ? 'close' : 'open');
 
-        if (!isBettingAllowed(market).allowed) {
+        // If valid future scheduledDate is provided, allow placement even when market is closed (tomorrow's bets).
+        let isScheduledBet = false;
+        if (scheduledDate) {
+            const schedDateParsed = new Date(scheduledDate);
+            if (!isNaN(schedDateParsed.getTime())) {
+                const todayStart = new Date();
+                todayStart.setHours(0, 0, 0, 0);
+                schedDateParsed.setHours(0, 0, 0, 0);
+                if (schedDateParsed > todayStart) {
+                    isScheduledBet = true;
+                }
+            }
+        }
+
+        if (!isScheduledBet && !isBettingAllowed(market).allowed) {
             return res.status(400).json({
                 success: false,
                 message: 'Betting is not allowed for this market at this time.',
@@ -341,16 +371,41 @@ export const placeBetForPlayer = async (req, res) => {
                     message: 'Each bet must have betType, betNumber and amount > 0',
                 });
             }
-            const timing = isBettingAllowedForSession(market, now, betOn);
-            if (!timing.allowed) {
-                return res.status(400).json({
-                    success: false,
-                    message: timing.message || 'Betting is not allowed for this session at this time.',
-                    code: 'BETTING_CLOSED',
-                });
+            if (!isScheduledBet) {
+                const timing = isBettingAllowedForSession(market, now, betOn);
+                if (!timing.allowed) {
+                    return res.status(400).json({
+                        success: false,
+                        message: timing.message || 'Betting is not allowed for this session at this time.',
+                        code: 'BETTING_CLOSED',
+                    });
+                }
             }
             totalAmount += amount;
             sanitized.push({ betType, betNumber, amount, betOn });
+        }
+
+        // Validate scheduledDate if provided (same rules as placeBet)
+        let scheduledDateObj = null;
+        let isScheduled = false;
+        if (scheduledDate) {
+            scheduledDateObj = new Date(scheduledDate);
+            if (isNaN(scheduledDateObj.getTime())) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid scheduledDate format',
+                });
+            }
+            const nowDate = new Date();
+            nowDate.setHours(0, 0, 0, 0);
+            scheduledDateObj.setHours(0, 0, 0, 0);
+            if (scheduledDateObj < nowDate) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Scheduled date must be today or in the future',
+                });
+            }
+            isScheduled = true;
         }
 
         // Deduct from BOOKIE's balance (not user's wallet)
@@ -386,6 +441,8 @@ export const placeBetForPlayer = async (req, res) => {
                     amount,
                     status: 'pending',
                     payout: 0,
+                    scheduledDate: scheduledDateObj,
+                    isScheduled: isScheduled,
                     placedByBookie: true,
                     placedByBookieId: bookie._id,
                     commissionAmount: 0, // Commission calculated at end of day
@@ -427,8 +484,15 @@ export const placeBetForPlayer = async (req, res) => {
 
 export const getBetHistory = async (req, res) => {
     try {
-        const { userId, marketId, status, startDate, endDate } = req.query;
+        const { userId, marketId, status, startDate, endDate, scheduled } = req.query;
         const query = {};
+
+        if (scheduled === 'true' || scheduled === '1') {
+            query.$or = [
+                { isScheduled: true },
+                { scheduledDate: { $exists: true, $ne: null } },
+            ];
+        }
 
         const bookieUserIds = await getBookieUserIds(req.admin);
         if (bookieUserIds !== null) {

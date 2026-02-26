@@ -8,17 +8,20 @@ const sanitizeDigits = (v, maxLen) => (v ?? '').toString().replace(/\D/g, '').sl
 const sanitizePoints = (v) => (v ?? '').toString().replace(/\D/g, '').slice(0, 6);
 
 // Half Sangam: single game with common UI for (O) Open Pana + Close Ank and (C) Open Ank + Close Pana
-const HalfSangamBid = ({ market, title }) => {
+const HalfSangamBid = ({ market, title, initialSelectedDate }) => {
     const [session, setSession] = useState('OPEN');
     const [bids, setBids] = useState([]);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [warning, setWarning] = useState('');
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                if (savedDate > today) return savedDate;
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {}
         return new Date().toISOString().split('T')[0];
@@ -199,6 +202,7 @@ const HalfSangamBid = ({ market, title }) => {
                 walletBefore={walletBefore}
                 totalBids={bids.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

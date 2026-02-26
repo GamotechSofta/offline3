@@ -129,14 +129,6 @@ function isWinningHalfSangam(betNumber, resultParts = {}) {
 }
 
 /**
- * Helper: Get today's date at midnight (start of day) for scheduled bet filtering.
- */
-function getTodayMidnight() {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-}
-
-/**
  * Helper: Pay winnings to the correct account.
  * - If bet was placed by bookie (placedByBookie=true), credit to BOOKIE's balance
  * - If bet was placed by player themselves, credit to PLAYER's wallet
@@ -197,20 +189,24 @@ function getTodayISTRange() {
     };
 }
 
+/** End of today in IST – for scheduled bet filter so "scheduled for 26 Feb" is settled on 26 Feb IST. */
+function getTodayEndIST() {
+    return getTodayISTRange().end;
+}
+
 /**
  * Helper: Check if a bet should be settled today.
- * Returns true if bet is NOT scheduled OR if it's scheduled for today or earlier.
+ * Returns true if bet is NOT scheduled OR if it's scheduled for today or earlier (using IST for "today").
  */
 function shouldSettleToday(bet) {
     // Not scheduled - always settle
     if (!bet.isScheduled || !bet.scheduledDate) {
         return true;
     }
-    // Scheduled - only settle if scheduledDate is today or in the past
-    const today = getTodayMidnight();
+    // Scheduled - only settle if scheduledDate is today or in the past (compare with end of today IST)
+    const todayEnd = getTodayEndIST();
     const schedDate = new Date(bet.scheduledDate);
-    schedDate.setHours(0, 0, 0, 0);
-    return schedDate.getTime() <= today.getTime();
+    return schedDate.getTime() <= todayEnd.getTime();
 }
 
 /**
@@ -238,22 +234,22 @@ export async function settleOpening(marketId, openingNumber) {
     const oid = toObjectId(canonicalId);
     const marketIdStr = String(canonicalId).trim();
     
-    // Get today's midnight for scheduled bet filtering
-    const todayMidnight = getTodayMidnight();
+    // End of today IST – include scheduled bets for today (scheduledDate stored as UTC midnight)
+    const todayEndIST = getTodayEndIST();
     
     const pendingBets = await Bet.find({
         status: 'pending',
         $or: oid ? [{ marketId: oid }, { marketId: marketIdStr }] : [{ marketId: marketIdStr }],
         // Only settle OPEN-session bets on opening (legacy bets without betOn also treated as open)
         betOn: { $ne: 'close' },
-        // Only include bets that are NOT scheduled for a future date
+        // Only include bets that are NOT scheduled for a future date (use IST so 26 Feb bet settles on 26 Feb India)
         $and: [
             {
                 $or: [
                     { isScheduled: { $ne: true } },
                     { scheduledDate: { $exists: false } },
                     { scheduledDate: null },
-                    { scheduledDate: { $lte: todayMidnight } }
+                    { scheduledDate: { $lte: todayEndIST } }
                 ]
             }
         ]
@@ -317,20 +313,20 @@ export async function settleClosing(marketId, closingNumber) {
     const oid = toObjectId(canonicalId);
     const marketIdStr = String(canonicalId).trim();
     
-    // Get today's midnight for scheduled bet filtering
-    const todayMidnight = getTodayMidnight();
+    // End of today IST – include scheduled bets for today
+    const todayEndIST = getTodayEndIST();
     
     const pendingBets = await Bet.find({
         status: 'pending',
         $or: oid ? [{ marketId: oid }, { marketId: marketIdStr }] : [{ marketId: marketIdStr }],
-        // Only include bets that are NOT scheduled for a future date
+        // Only include bets that are NOT scheduled for a future date (use IST)
         $and: [
             {
                 $or: [
                     { isScheduled: { $ne: true } },
                     { scheduledDate: { $exists: false } },
                     { scheduledDate: null },
-                    { scheduledDate: { $lte: todayMidnight } }
+                    { scheduledDate: { $lte: todayEndIST } }
                 ]
             }
         ]
@@ -539,7 +535,7 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
     const bookieUserIds = options.bookieUserIds;
     const hasBookieFilter = Array.isArray(bookieUserIds) && bookieUserIds.length > 0;
 
-    const todayMidnight = getTodayMidnight();
+    const todayEndIST = getTodayEndIST();
     const todayIST = getTodayISTRange();
 
     const matchFilterAll = {
@@ -551,7 +547,7 @@ export async function previewDeclareClose(marketId, closingNumber, options = {})
                     { isScheduled: { $ne: true } },
                     { scheduledDate: { $exists: false } },
                     { scheduledDate: null },
-                    { scheduledDate: { $lte: todayMidnight } }
+                    { scheduledDate: { $lte: todayEndIST } }
                 ]
             }
         ]
@@ -719,14 +715,14 @@ export async function getWinningBetsForOpen(marketId, openingNumber, options = {
     const marketIdStr = String(marketId).trim();
     const bookieUserIds = options.bookieUserIds;
     const hasBookieFilter = Array.isArray(bookieUserIds) && bookieUserIds.length > 0;
-    const todayMidnight = getTodayMidnight();
+    const todayEndIST = getTodayEndIST();
     const todayIST = getTodayISTRange();
     const matchFilter = {
         status: 'pending',
         $or: [{ marketId: oid }, { marketId: marketIdStr }],
         createdAt: { $gte: todayIST.start, $lte: todayIST.end },
         $and: [
-            { $or: [{ isScheduled: { $ne: true } }, { scheduledDate: { $exists: false } }, { scheduledDate: null }, { scheduledDate: { $lte: todayMidnight } }] },
+            { $or: [{ isScheduled: { $ne: true } }, { scheduledDate: { $exists: false } }, { scheduledDate: null }, { scheduledDate: { $lte: todayEndIST } }] },
             { betOn: { $ne: 'close' } },
         ],
     };
@@ -774,13 +770,13 @@ export async function getWinningBetsForClose(marketId, closingNumber, options = 
     const marketIdStr = String(marketId).trim();
     const bookieUserIds = options.bookieUserIds;
     const hasBookieFilter = Array.isArray(bookieUserIds) && bookieUserIds.length > 0;
-    const todayMidnight = getTodayMidnight();
+    const todayEndIST = getTodayEndIST();
     const todayIST = getTodayISTRange();
     const matchFilter = {
         status: 'pending',
         $or: [{ marketId: oid }, { marketId: marketIdStr }],
         createdAt: { $gte: todayIST.start, $lte: todayIST.end },
-        $and: [{ $or: [{ isScheduled: { $ne: true } }, { scheduledDate: { $exists: false } }, { scheduledDate: null }, { scheduledDate: { $lte: todayMidnight } }] }],
+        $and: [{ $or: [{ isScheduled: { $ne: true } }, { scheduledDate: { $exists: false } }, { scheduledDate: null }, { scheduledDate: { $lte: todayEndIST } }] }],
     };
     if (hasBookieFilter) matchFilter.userId = { $in: bookieUserIds };
     const pendingBets = await Bet.find(matchFilter).lean();

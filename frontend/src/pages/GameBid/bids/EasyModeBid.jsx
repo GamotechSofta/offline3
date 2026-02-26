@@ -6,6 +6,7 @@ import { placeBet, updateUserBalance } from '../../../api/bets';
 const EasyModeBid = ({
     market,
     title,
+    initialSelectedDate,
     label,
     maxLength = 3,
     validateInput,
@@ -32,20 +33,19 @@ const EasyModeBid = ({
     const [matchingPanas, setMatchingPanas] = useState([]);
     const [selectedSum, setSelectedSum] = useState(null);
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
-                    return savedDate;
-                }
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {
             // Ignore errors
         }
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        return new Date().toISOString().split('T')[0];
     });
     
     // Save to localStorage when date changes
@@ -426,7 +426,7 @@ const EasyModeBid = ({
                         key={bid.id}
                         className="grid grid-cols-4 gap-1 sm:gap-2 text-center items-center py-2.5 px-2 bg-primary-50 rounded-lg border-2 border-primary-200 text-sm"
                     >
-                        <div className="font-bold text-white">
+                        <div className="font-bold text-gray-800">
                             {maxLength === 2 && typeof bid.number === 'string' && bid.number.length === 2 ? (
                                 <span className="inline-flex items-center gap-2 justify-center">
                                     <span>{bid.number[0]}</span>
@@ -436,8 +436,8 @@ const EasyModeBid = ({
                                 bid.number
                             )}
                         </div>
-                        <div className="font-bold text-primary-500">{bid.points}</div>
-                        <div className="text-sm text-gray-300">{bid.type}</div>
+                        <div className="font-bold text-primary-600">{bid.points}</div>
+                        <div className="text-sm font-medium text-gray-800">{bid.type}</div>
                         <div className="flex justify-center">
                             <button
                                 type="button"
@@ -830,6 +830,7 @@ const EasyModeBid = ({
                 walletBefore={walletBefore}
                 totalBids={bids.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

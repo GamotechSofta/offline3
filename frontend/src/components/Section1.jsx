@@ -116,6 +116,7 @@ const Section1 = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {markets.map((market) => {
             const isClickable = market.status === 'open' || market.status === 'running';
+            const isClosed = market.status === 'closed';
             return (
               <div
                 key={market.id}
@@ -124,8 +125,8 @@ const Section1 = () => {
                 className={`rounded-xl overflow-hidden transition-all duration-200 ${
                   isClickable
                     ? 'bg-[#252D3A] border-2 border-green-500/70 cursor-pointer hover:border-green-400 hover:shadow-lg hover:shadow-green-500/20'
-                    : 'bg-[#1E2630] border border-[#333D4D] cursor-not-allowed'
-                }`}
+                    : 'bg-[#1E2630] border border-[#333D4D]'
+                } ${!isClickable ? 'cursor-default' : ''}`}
               >
                 {/* Status bar - bold green for Open/Running, dark red for Closed */}
                 <div className={`px-3 py-2 text-center ${
@@ -149,6 +150,19 @@ const Section1 = () => {
                   </div>
                   <h3 className={`text-sm sm:text-base font-semibold mb-3 truncate ${isClickable ? 'text-white' : 'text-gray-500'}`}>{market.gameName}</h3>
                   <p className={`text-lg sm:text-xl font-bold font-mono tracking-wide ${isClickable ? 'text-primary-400' : 'text-gray-600'}`}>{market.result}</p>
+                  {/* Closed market: button to place tomorrow's bets */}
+                  {isClosed && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/bidoptions', { state: { market, scheduleForTomorrow: true } });
+                      }}
+                      className="mt-2 w-full py-2 px-3 rounded-full border border-green-600 hover:bg-green-300 text-green-600 text-xs font-bold uppercase tracking-wide transition-colors active:scale-[0.98]"
+                    >
+                      Place tomorrow&apos;s bets
+                    </button>
+                  )}
                 </div>
               </div>
             );

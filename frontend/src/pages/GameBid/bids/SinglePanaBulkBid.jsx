@@ -24,25 +24,24 @@ const buildSinglePanas = () =>
         .sort()
         .flatMap((k) => SINGLE_PANA_BY_SUM[k]);
 
-const SinglePanaBulkBid = ({ market, title }) => {
+const SinglePanaBulkBid = ({ market, title, initialSelectedDate }) => {
     const [session, setSession] = useState(() => (market?.status === 'running' ? 'CLOSE' : 'OPEN'));
     const [warning, setWarning] = useState('');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(() => {
+        if (initialSelectedDate) return initialSelectedDate;
         try {
             const savedDate = localStorage.getItem('betSelectedDate');
             if (savedDate) {
                 const today = new Date().toISOString().split('T')[0];
-                // Only restore if saved date is in the future (not today)
-                if (savedDate > today) {
-                    return savedDate;
-                }
+                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                const maxAllowed = tomorrow.toISOString().split('T')[0];
+                if (savedDate > today && savedDate <= maxAllowed) return savedDate;
             }
         } catch (e) {
             // Ignore errors
         }
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        return new Date().toISOString().split('T')[0];
     });
     
     // Save to localStorage when date changes
@@ -195,18 +194,27 @@ const SinglePanaBulkBid = ({ market, title }) => {
             selectedDate={selectedDate}
             setSelectedDate={handleDateChange}
             sessionRightSlot={
-                <button
-                    type="button"
-                    onClick={openReview}
-                    disabled={!canSubmit}
-                    className={`hidden md:inline-flex items-center justify-center font-bold min-h-[44px] min-w-[220px] px-6 rounded-full shadow-lg transition-all whitespace-nowrap ${
-                        canSubmit
-                            ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-[0.98]'
-                            : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
-                    }`}
-                >
-                    Submit Bet
-                </button>
+                <div className="hidden md:flex items-center gap-3 flex-1 min-w-0 justify-end">
+                    <button
+                        type="button"
+                        onClick={openReview}
+                        disabled={!canSubmit}
+                        className={`inline-flex items-center justify-center font-bold min-h-[44px] min-w-[180px] px-6 rounded-full shadow-lg transition-all whitespace-nowrap shrink-0 ${
+                            canSubmit
+                                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-[0.98]'
+                                : 'bg-gradient-to-r from-primary-300 to-primary-400 text-white opacity-50 cursor-not-allowed'
+                        }`}
+                    >
+                        Submit Bet
+                    </button>
+                    <button
+                        type="button"
+                        onClick={clearAll}
+                        className="shrink-0 px-4 py-2.5 min-h-[44px] rounded-full text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-500/20 active:scale-[0.98] transition-all"
+                    >
+                        Clear
+                    </button>
+                </div>
             }
             walletBalance={walletBefore}
             extraHeader={null}
@@ -219,16 +227,6 @@ const SinglePanaBulkBid = ({ market, title }) => {
                         {warning}
                     </div>
                 )}
-
-                <div className="flex justify-end mb-3">
-                    <button
-                        type="button"
-                        onClick={clearAll}
-                        className="px-4 py-2 rounded-lg text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-500/20 active:scale-[0.98] transition-all"
-                    >
-                        Clear
-                    </button>
-                </div>
 
                 {/* Same visual style as Jodi Special Mode: flat grid + small cells */}
                 <div className="space-y-5 md:space-y-0 md:grid md:grid-cols-4 md:gap-x-5 md:gap-y-10 md:items-start">
@@ -347,10 +345,17 @@ const SinglePanaBulkBid = ({ market, title }) => {
                 </div>
             </div>
 
-            {/* Submit Bet: compact on mobile, clear gap above bottom bar */}
-            <div className="md:hidden fixed left-0 right-0 z-20 px-3 pb-1" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 8px)' }}>
-                <button type="button" onClick={openReview} disabled={!canSubmit} className={mobileSubmitBtnClass(canSubmit)}>
+            {/* Submit (left) + Clear (right) in one row on mobile */}
+            <div className="md:hidden fixed left-0 right-0 z-20 px-3 pb-1 flex items-center gap-2" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 8px)' }}>
+                <button type="button" onClick={openReview} disabled={!canSubmit} className={`flex-1 min-w-0 ${mobileSubmitBtnClass(canSubmit)}`}>
                     Submit Bet
+                </button>
+                <button
+                    type="button"
+                    onClick={clearAll}
+                    className="shrink-0 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-semibold border-2 border-primary-300 text-primary-600 bg-[#252D3A] hover:bg-primary-500/20 active:scale-[0.98] transition-all"
+                >
+                    Clear
                 </button>
             </div>
 
@@ -365,6 +370,7 @@ const SinglePanaBulkBid = ({ market, title }) => {
                 walletBefore={walletBefore}
                 totalBids={reviewRows.length}
                 totalAmount={totalPoints}
+                isScheduled={selectedDate > new Date().toISOString().split('T')[0]}
             />
         </BidLayout>
     );

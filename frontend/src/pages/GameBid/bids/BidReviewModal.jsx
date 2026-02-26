@@ -45,7 +45,8 @@ const BidReviewModal = ({
   rows = [],
   walletBefore = 0,
   totalBids = 0,
-  totalAmount = 0
+  totalAmount = 0,
+  isScheduled = false, // true when bet is for tomorrow (counts in next day's result)
 }) => {
   const { allowed: bettingAllowed, message: bettingMessage } = useBettingWindow();
   const [stage, setStage] = useState('review'); // 'review' | 'success'
@@ -66,7 +67,7 @@ const BidReviewModal = ({
   const amount = Number(totalAmount) || 0;
   const after = before - amount;
   const insufficientBalance = after < 0;
-  const cannotSubmit = insufficientBalance || !bettingAllowed;
+  const cannotSubmit = insufficientBalance || (!bettingAllowed && !isScheduled);
   const handleClose = () => {
     if (onClose) onClose();
   };
@@ -191,10 +192,10 @@ const BidReviewModal = ({
                 <div className="mt-2.5 sm:mt-3 space-y-2 sm:space-y-3">
                   {rows.map((r) => (
                     <div key={r.id} className="bg-primary-50 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-primary-200">
-                      <div className="grid grid-cols-3 text-center text-white font-semibold text-[12px] sm:text-base">
-                        <div className="truncate">{renderBetNumber(r.number)}</div>
-                        <div className="truncate text-primary-500">{r.points}</div>
-                        <div className="truncate font-medium text-gray-600 uppercase">{r.type}</div>
+                      <div className="grid grid-cols-3 text-center font-semibold text-[12px] sm:text-base">
+                        <div className="truncate text-gray-800">{renderBetNumber(r.number)}</div>
+                        <div className="truncate text-primary-600">{r.points}</div>
+                        <div className="truncate font-medium text-gray-800 uppercase">{r.type}</div>
                       </div>
                     </div>
                   ))}
@@ -207,28 +208,33 @@ const BidReviewModal = ({
                   <div className="grid grid-cols-2">
                     <div className="p-3 sm:p-4 text-center border-r-2 border-b-2 border-primary-200">
                       <div className="text-gray-600 text-[11px] sm:text-sm">Total Bets</div>
-                      <div className="text-white font-bold text-base sm:text-lg leading-tight">{totalBids}</div>
+                      <div className="text-gray-800 font-bold text-base sm:text-lg leading-tight">{totalBids}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center border-b-2 border-primary-200">
                       <div className="text-gray-600 text-[11px] sm:text-sm">Total Bet Amount</div>
-                      <div className="text-primary-500 font-bold text-base sm:text-lg leading-tight">{amount}</div>
+                      <div className="text-primary-600 font-bold text-base sm:text-lg leading-tight">{amount}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center border-r-2 border-primary-200">
                       <div className="text-gray-600 text-[11px] sm:text-sm">Wallet Balance Before Deduction</div>
-                      <div className="text-white font-bold text-base sm:text-lg leading-tight">{formatMoney(before)}</div>
+                      <div className="text-gray-800 font-bold text-base sm:text-lg leading-tight">{formatMoney(before)}</div>
                     </div>
                     <div className="p-3 sm:p-4 text-center">
                       <div className="text-gray-600 text-[11px] sm:text-sm">Wallet Balance After Deduction</div>
-                      <div className={`font-bold text-base sm:text-lg leading-tight ${after < 0 ? 'text-red-600' : 'text-white'}`}>{formatMoney(after)}</div>
+                      <div className={`font-bold text-base sm:text-lg leading-tight ${after < 0 ? 'text-red-600' : 'text-gray-800'}`}>{formatMoney(after)}</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Betting closed / outside window */}
-              {!bettingAllowed && bettingMessage && (
+              {/* Betting closed / outside window (not shown when placing for tomorrow) */}
+              {!bettingAllowed && bettingMessage && !isScheduled && (
                 <div className="mx-3 sm:mx-4 mt-2 p-3 rounded-xl bg-red-50 border-2 border-red-300 text-red-600 text-sm shrink-0">
                   {bettingMessage}
+                </div>
+              )}
+              {isScheduled && (
+                <div className="mx-3 sm:mx-4 mt-2 p-3 rounded-xl bg-green-50 border-2 border-green-300 text-green-700 text-sm shrink-0">
+                  This bet will count for tomorrow&apos;s result.
                 </div>
               )}
 

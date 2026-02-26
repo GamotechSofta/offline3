@@ -7,6 +7,8 @@ const CONTAINER_ID = 'google_translate_element';
 
 /** Delay before reload so cookie/localStorage are committed (fixes "sometimes not translated") */
 const RELOAD_DELAY_MS = 120;
+/** Longer delay on mobile so storage is committed before reload */
+const RELOAD_DELAY_MOBILE_MS = 280;
 
 const LANGUAGES = [
   { value: '', label: 'English', code: 'en' },
@@ -214,14 +216,18 @@ const GoogleTranslate = () => {
   }, []);
 
   const forceReload = () => {
-    // Use top window and assign href so reload works in all contexts (mobile, PWA, iframe)
     try {
-      if (typeof window !== 'undefined' && window.top) {
-        const url = window.top.location.origin + window.top.location.pathname + window.top.location.search;
-        window.top.location.href = url;
-      } else {
-        window.location.reload();
+      if (typeof window === 'undefined') return;
+      // Same window (desktop + mobile): full reload so translation applies everywhere
+      if (window.self === window.top) {
+        const url = window.location.origin + window.location.pathname + window.location.search;
+        // Assigning href forces a full navigation/reload (more reliable on mobile than reload() in some PWAs/WebViews)
+        window.location.href = url;
+        return;
       }
+      // If inside iframe, reload top so whole page updates
+      const url = window.top.location.origin + window.top.location.pathname + window.top.location.search;
+      window.top.location.href = url;
     } catch (_) {
       window.location.reload();
     }
@@ -236,21 +242,24 @@ const GoogleTranslate = () => {
     if (isApplying) return;
     setIsApplying(true);
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const delay = isMobile ? RELOAD_DELAY_MOBILE_MS : RELOAD_DELAY_MS;
+
     try {
       if (!normalized) {
         document.cookie = 'googtrans=;path=/;max-age=0';
         if (typeof localStorage !== 'undefined') localStorage.removeItem('googtrans');
-        setTimeout(forceReload, RELOAD_DELAY_MS);
+        setTimeout(forceReload, delay);
         return;
       }
 
       document.cookie = `googtrans=${normalized};path=/;max-age=31536000`;
       if (typeof localStorage !== 'undefined') localStorage.setItem('googtrans', normalized);
-      // Short delay so cookie/localStorage are committed before reload (fixes intermittent "not translated")
-      setTimeout(forceReload, RELOAD_DELAY_MS);
+      // Delay so cookie/localStorage are committed before reload (longer on mobile)
+      setTimeout(forceReload, delay);
     } catch (_) {
       if (mounted.current) setIsApplying(false);
-      setTimeout(forceReload, RELOAD_DELAY_MS);
+      setTimeout(forceReload, delay);
     }
   };
 
@@ -276,7 +285,7 @@ const GoogleTranslate = () => {
         value={value}
         onChange={handleChange}
         disabled={isApplying}
-        className="google-translate-select notranslate w-full rounded-lg border border-[#333D4D] bg-[#252D3A] text-gray-200 cursor-pointer appearance-none bg-no-repeat focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-70 disabled:cursor-wait transition-all duration-200 min-h-[40px] min-w-0 max-w-[160px] pl-3 pr-9 py-2 text-sm bg-[right_8px_center] bg-[length:20px] sm:min-h-[36px] sm:max-w-[140px] sm:py-1.5 sm:pr-8 sm:bg-[length:18px] sm:bg-[right_6px_center]"
+        className="google-translate-select notranslate"
         style={{
           backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\")",
         }}
