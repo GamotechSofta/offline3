@@ -123,7 +123,11 @@ const Layout = ({ children }) => {
   const isDarkLayout = isProfilePage || isFundsPage || isBetsPage || isHistoryPage || isPassbookPage || isBankPage || isBidPage || isRoulettePage;
 
   return (
-    <div className={`min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'}`}>
+    <div
+      className={`min-h-screen min-h-ios-screen ${
+        isRoulettePage ? 'pb-0' : 'pb-[calc(4rem+env(safe-area-inset-bottom,0px))]'
+      } md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'}`}
+    >
       <AppHeader />
       {/* Reduce mobile top-gap under fixed header */}
       {/* Desktop: ensure no overlap under fixed header */}
@@ -136,7 +140,7 @@ const Layout = ({ children }) => {
       >
         {children}
       </div>
-      <BottomNavbar />
+      {!isRoulettePage && <BottomNavbar />}
     </div>
   );
 };

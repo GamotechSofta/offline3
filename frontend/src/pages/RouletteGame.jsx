@@ -37,6 +37,7 @@ const RouletteGame = () => {
   const wheelSpinTimeoutRef = useRef(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showMobileResult, setShowMobileResult] = useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -109,6 +110,7 @@ const RouletteGame = () => {
     }
 
     setSpinning(true);
+    setShowMobileResult(false);
     setError('');
     setResult(null);
 
@@ -156,6 +158,7 @@ const RouletteGame = () => {
           biggestWin: Math.max(stats.biggestWin || 0, data.data.payout),
         });
       }
+      setShowMobileResult(true);
     } catch (err) {
       setError('Network error. Please try again.');
     } finally {
@@ -178,7 +181,7 @@ const RouletteGame = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#186213] bg-gradient-to-br from-[#0f3d12] via-[#186213] to-[#10410f] text-white p-4 pb-24">
+    <div className="min-h-screen bg-[#186213] bg-gradient-to-br from-[#0f3d12] via-[#186213] to-[#10410f] text-white p-2 md:p-4 pb-24">
       <div className="max-w-6xl mx-auto">
         <div className="mb-4 flex items-center justify-between">
           <button
@@ -201,21 +204,21 @@ const RouletteGame = () => {
         )}
 
         {/* Two-column layout: wheel left, betting controls right (stack on mobile) */}
-        <div className="mb-4 md:mb-6 grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-4 md:gap-6">
+        <div className="mb-3 md:mb-6 grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-3 md:gap-6">
           {/* Left: wheel + stats */}
-          <div className="p-4 rounded-2xl bg-[#186213]/30 border border-yellow-500/60 flex items-center justify-center">
+          <div className="p-2 md:p-4 rounded-2xl bg-transparent md:bg-[#186213]/30 border-0 md:border md:border-yellow-500/60 flex items-center justify-center">
             <div className="w-full flex flex-col items-center">
               <RouletteWheel
                 winningNumber={result?.winningNumber ?? null}
                 isSpinning={wheelSpinning}
-                size={340}
+                size={300}
               />
-              {/* Spin button directly below wheel */}
+              {/* Spin button directly below wheel (desktop/tablet only) */}
               <button
                 type="button"
                 onClick={handleSpin}
                 disabled={spinning || bets.length === 0 || totalBet <= 0 || (balance !== null && balance < totalBet)}
-                className="w-full max-w-[340px] mt-5 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg text-white relative overflow-hidden"
+                className="hidden md:block w-full max-w-[340px] mt-5 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg text-white relative overflow-hidden"
                 style={{
                   backgroundImage: `url(${SPIN_BTN_SVG_URL})`,
                   backgroundSize: 'cover',
@@ -227,8 +230,9 @@ const RouletteGame = () => {
                   {spinning ? 'Spinning…' : `Spin (₹${totalBet.toLocaleString('en-IN')})`}
                 </span>
               </button>
-              {result !== null && (
-                <div className="text-center mt-4 pt-3 border-t border-[#333D4D] w-full">
+              {/* Desktop result summary under wheel */}
+              {result !== null && !wheelSpinning && (
+                <div className="hidden md:block text-center mt-4 pt-3 border-t border-[#333D4D] w-full">
                   <p className="text-gray-300 text-sm">
                     Winning number:{' '}
                     <span className={result.winningNumber === 0 ? 'text-green-400 font-semibold' : isRed(result.winningNumber) ? 'text-red-400 font-semibold' : 'text-white font-semibold'}>
@@ -246,8 +250,8 @@ const RouletteGame = () => {
                   </p>
                 </div>
               )}
-              {/* Balance & Stats under wheel */}
-              <div className="mt-4 w-full rounded-lg bg-[#186213]/40 border border-yellow-500/60 p-3">
+              {/* Balance & Stats under wheel - hidden on mobile */}
+              <div className="hidden md:block mt-4 w-full rounded-lg bg-[#186213]/40 border border-yellow-500/60 p-3">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-gray-400 text-xs uppercase tracking-wide">Balance</p>
                   <p className="text-xs text-gray-400">Live</p>
@@ -280,7 +284,7 @@ const RouletteGame = () => {
           </div>
 
           {/* Right: number grid first, then bet amount / quick bets / current bets */}
-          <div className="rounded-2xl bg-[#186213]/40 border border-yellow-500/60 p-4 flex flex-col max-h-[640px] overflow-y-auto min-w-0">
+          <div className="rounded-2xl bg-transparent md:bg-[#186213]/40 border-0 md:border md:border-yellow-500/60 p-2 md:p-4 flex flex-col max-h-[640px] overflow-y-auto min-w-0">
             {/* Number grid 0-36 - constrained so it doesn't overflow */}
             <div className="flex-shrink-0">
               <p className="text-gray-300 text-xs mb-2 uppercase tracking-wide">
@@ -292,7 +296,7 @@ const RouletteGame = () => {
                   type="button"
                   onClick={() => addBet('number', 0)}
                   disabled={spinning}
-                  className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg text-green-300 hover:opacity-90 disabled:opacity-50 text-xs md:text-sm font-semibold border border-yellow-400/80 shadow-[0_0_10px_rgba(0,0,0,0.8)]"
+                  className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg text-green-300 hover:opacity-90 disabled:opacity-50 text-xs md:text-sm font-semibold shadow-[0_0_10px_rgba(0,0,0,0.8)]"
                   style={{
                     backgroundImage: `url(${GREEN_SVG_URL})`,
                     backgroundSize: 'cover',
@@ -333,7 +337,7 @@ const RouletteGame = () => {
                         type="button"
                         onClick={() => addBet('number', n)}
                         disabled={spinning}
-                        className={`w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg text-xs md:text-sm font-semibold disabled:opacity-50 border border-yellow-400/80 shadow-[0_0_8px_rgba(0,0,0,0.8)] ${
+                        className={`w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg text-xs md:text-sm font-semibold disabled:opacity-50 shadow-[0_0_8px_rgba(0,0,0,0.8)] ${
                           useRedSvgBg
                             ? 'text-red-50 hover:brightness-110'
                             : useBlackSvgBg
@@ -388,12 +392,12 @@ const RouletteGame = () => {
                       type="button"
                       onClick={() => addBet(type)}
                       disabled={spinning}
-                      className={`px-3 py-2 rounded-full text-xs font-semibold capitalize disabled:opacity-50 ${
+                      className={`min-w-[64px] px-3 py-2 rounded-full text-xs font-semibold capitalize disabled:opacity-50 shadow-[0_0_8px_rgba(0,0,0,0.7)] border border-yellow-500/70 ${
                         type === 'red'
-                          ? 'bg-gradient-to-br from-red-500 to-red-700 text-white shadow-[0_0_12px_rgba(248,113,113,0.7)]'
+                          ? 'bg-gradient-to-br from-red-500 to-red-700 text-white'
                           : type === 'black'
                             ? 'bg-gradient-to-br from-gray-700 to-black text-white'
-                            : 'bg-[#186213]/60 text-white border border-yellow-500/60'
+                            : 'bg-[#186213]/80 text-white'
                       }`}
                     >
                       {type}
@@ -426,6 +430,57 @@ const RouletteGame = () => {
             </div>
           </div>
         </div>
+
+      {/* Mobile sticky spin button at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden px-4 pb-[calc(16px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none">
+        <button
+          type="button"
+          onClick={handleSpin}
+          disabled={spinning || bets.length === 0 || totalBet <= 0 || (balance !== null && balance < totalBet)}
+          className="pointer-events-auto w-full max-w-[420px] mx-auto py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg text-white relative overflow-hidden"
+          style={{
+            backgroundImage: `url(${SPIN_BTN_SVG_URL})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
+          <span className="relative z-10">
+            {spinning ? 'Spinning…' : `Spin (₹${totalBet.toLocaleString('en-IN')})`}
+          </span>
+        </button>
+      </div>
+
+      {/* Mobile result popup */}
+      {result !== null && !wheelSpinning && showMobileResult && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 md:hidden">
+          <div className="mx-6 rounded-xl bg-[#186213] border border-yellow-500/80 px-5 py-4 text-center shadow-2xl">
+            <p className="text-xs text-gray-200 uppercase tracking-wide mb-1">Result</p>
+            <p className="text-sm text-gray-200">
+              Winning number:{' '}
+              <span className={result.winningNumber === 0 ? 'text-green-400 font-semibold' : isRed(result.winningNumber) ? 'text-red-400 font-semibold' : 'text-white font-semibold'}>
+                {result.winningNumber}
+              </span>
+            </p>
+            <p className="text-sm text-gray-200 mt-1">
+              Payout:{' '}
+              <span className="font-semibold">
+                ₹{Number(result.payout).toLocaleString('en-IN')}
+              </span>
+            </p>
+            <p className={result.profit >= 0 ? 'text-green-400 font-semibold mt-1' : 'text-red-400 font-semibold mt-1'}>
+              {result.profit >= 0 ? '+' : ''}₹{result.profit.toLocaleString('en-IN')}
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowMobileResult(false)}
+              className="mt-3 px-4 py-1.5 rounded-full bg-emerald-600 text-white text-sm font-medium"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Recent history */}
       {history.length > 0 && (
