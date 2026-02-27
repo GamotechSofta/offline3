@@ -82,7 +82,7 @@ const Markets = () => {
         <AdminLayout onLogout={handleLogout} title="Markets">
             <div className="min-w-0">
                 {error && (
-                    <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm sm:text-base">
+                    <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400 text-sm sm:text-base">
                         {error}
                     </div>
                 )}
@@ -101,8 +101,8 @@ const Markets = () => {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all ${
                                     isActive
-                                        ? 'bg-primary-500 text-gray-800 shadow-lg shadow-primary-500/20'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 border border-gray-200'
+                                        ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
+                                        : 'bg-[#1F2732] text-gray-300 hover:bg-[#252D3A] hover:text-white border border-[#333D4D]'
                                 }`}
                             >
                                 <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -131,13 +131,13 @@ const Markets = () => {
                     ) : (
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                                <h2 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2">
-                                    <span className="inline-block w-1 h-6 sm:h-7 bg-gray-500 rounded-full" />
+                                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                                    <span className="inline-block w-1 h-6 sm:h-7 bg-primary-500 rounded-full" />
                                     Main / Daily Markets
                                 </h2>
                                 <button
                                     onClick={handleCreate}
-                                    className="w-full sm:w-auto px-4 py-3 sm:py-2.5 bg-primary-500 hover:bg-primary-600 text-gray-800 font-semibold rounded-xl transition-colors text-sm sm:text-base touch-manipulation"
+                                    className="w-full sm:w-auto px-4 py-3 sm:py-2.5 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors text-sm sm:text-base touch-manipulation"
                                 >
                                     + Add Market
                                 </button>

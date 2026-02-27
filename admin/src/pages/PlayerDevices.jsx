@@ -77,8 +77,8 @@ const PlayerDevices = () => {
         return (
             <AdminLayout onLogout={handleLogout} title="Devices used">
                 <div className="animate-pulse space-y-4">
-                    <div className="h-8 w-48 bg-gray-100 rounded" />
-                    <div className="h-64 bg-gray-100 rounded-xl" />
+                    <div className="h-8 w-48 bg-[#1F2732] rounded" />
+                    <div className="h-64 bg-[#1F2732] rounded-xl" />
                 </div>
             </AdminLayout>
         );
@@ -89,7 +89,7 @@ const PlayerDevices = () => {
             <AdminLayout onLogout={handleLogout} title="Devices used">
                 <div className="flex flex-col items-center justify-center min-h-[40vh]">
                     <p className="text-red-500 mb-4">{error || 'Player not found'}</p>
-                    <Link to="/all-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 text-gray-800 font-semibold">
+                    <Link to="/all-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 text-white font-semibold">
                         <FaArrowLeft /> Back to All Players
                     </Link>
                 </div>
@@ -129,21 +129,21 @@ const PlayerDevices = () => {
                         type="button"
                         onClick={handleClearDevices}
                         disabled={clearing || loginDevices.length === 0}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 border border-gray-200 text-gray-600 hover:bg-red-600 hover:border-red-500 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-[#1F2732] border border-[#333D4D] text-gray-300 hover:bg-red-600 hover:border-red-500 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Clear devices list"
                     >
                         {clearing ? <span className="animate-spin">⏳</span> : 'Clear'}
                     </button>
                 </div>
 
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden min-w-0">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden min-w-0">
                     <div className="p-4 sm:p-6 min-w-0 overflow-x-auto">
                         {loginDevices.length === 0 ? (
-                            <p className="text-gray-500 text-sm">—</p>
+                            <p className="text-gray-400 text-sm">—</p>
                         ) : (
                             <table className="w-full text-sm min-w-[320px]">
                                 <thead>
-                                    <tr className="border-b border-gray-200">
+                                    <tr className="border-b border-[#333D4D]">
                                         <th className="text-left py-2.5 pr-4 text-xs font-medium text-gray-400 uppercase">Device ID</th>
                                         <th className="text-left py-2.5 pr-4 text-xs font-medium text-gray-400 uppercase">First Login Date</th>
                                         <th className="text-left py-2.5 pr-4 text-xs font-medium text-gray-400 uppercase">Last Login Date</th>
@@ -151,8 +151,8 @@ const PlayerDevices = () => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-700">
                                     {loginDevices.map((d, i) => (
-                                        <tr key={(d.deviceId || i).toString()} className="hover:bg-gray-100/30">
-                                            <td className="py-2.5 pr-4 font-mono text-gray-600 truncate max-w-[200px] sm:max-w-none" title={d.deviceId}>{d.deviceId || '—'}</td>
+                                        <tr key={(d.deviceId || i).toString()} className="hover:bg-[#1F2732]/30">
+                                            <td className="py-2.5 pr-4 font-mono text-gray-300 truncate max-w-[200px] sm:max-w-none" title={d.deviceId}>{d.deviceId || '—'}</td>
                                             <td className="py-2.5 pr-4 text-gray-400">
                                                 {d.firstLoginAt ? new Date(d.firstLoginAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}
                                             </td>

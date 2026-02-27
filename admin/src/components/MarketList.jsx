@@ -87,7 +87,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                 return (
                     <div
                         key={market._id}
-                        className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 lg:p-6 hover:border-primary-300 hover:shadow-md transition-all min-w-0 overflow-hidden"
+                        className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-4 sm:p-5 lg:p-6 hover:border-primary-300 hover:shadow-md transition-all min-w-0 overflow-hidden"
                     >
                         {/* Status Badge */}
                         <div className={`${status.color} text-white text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full inline-block mb-3 sm:mb-4`}>
@@ -96,15 +96,15 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                         </div>
 
                         {/* Market Info */}
-                        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-800 mb-2 truncate" title={market.marketName}>{market.marketName}</h3>
-                        <div className="space-y-1.5 sm:space-y-2 mb-4 text-xs sm:text-sm text-gray-500 min-w-0">
-                            <p className="truncate"><span className="font-semibold text-gray-600">Opening:</span> {market.startingTime}</p>
-                            <p className="truncate"><span className="font-semibold text-gray-600">Closing:</span> {market.closingTime}</p>
+                        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-2 truncate" title={market.marketName}>{market.marketName}</h3>
+                        <div className="space-y-1.5 sm:space-y-2 mb-4 text-xs sm:text-sm text-gray-400 min-w-0">
+                            <p className="truncate"><span className="font-semibold text-gray-300">Opening:</span> {market.startingTime}</p>
+                            <p className="truncate"><span className="font-semibold text-gray-300">Closing:</span> {market.closingTime}</p>
                             {market.betClosureTime != null && market.betClosureTime !== '' && (
-                                <p><span className="font-semibold text-gray-600">Bet Closure:</span> {market.betClosureTime} sec</p>
+                                <p><span className="font-semibold text-gray-300">Bet Closure:</span> {market.betClosureTime} sec</p>
                             )}
                             {market.winNumber && (
-                                <p><span className="font-semibold text-gray-600">Win Number:</span> <span className="text-green-600 font-mono">{market.winNumber}</span></p>
+                                <p><span className="font-semibold text-gray-300">Win Number:</span> <span className="text-green-600 font-mono">{market.winNumber}</span></p>
                             )}
                         </div>
 
@@ -118,7 +118,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                             </button>
                             <button
                                 onClick={() => onEdit(market)}
-                                className="px-2 sm:px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg text-xs sm:text-sm font-semibold min-h-[40px] sm:min-h-0"
+                                className="px-2 sm:px-3 py-2 bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 rounded-lg text-xs sm:text-sm font-semibold min-h-[40px] sm:min-h-0"
                             >
                                 Edit
                             </button>
@@ -137,9 +137,9 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
         {/* Secret declare password modal for delete */}
         {showPasswordModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-                <div className="bg-white rounded-xl border border-gray-200 shadow-2xl max-w-md w-full p-6">
-                    <h3 className="text-lg font-bold text-primary-500 mb-2">Enter Secret Password to Delete Market</h3>
-                    <p className="text-gray-500 text-sm mb-4">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-2xl max-w-md w-full p-6">
+                    <h3 className="text-lg font-bold text-primary-400 mb-2">Enter Secret Password to Delete Market</h3>
+                    <p className="text-gray-400 text-sm mb-4">
                         Please enter the secret password to confirm market deletion.
                     </p>
                     <form onSubmit={handlePasswordSubmit} className="space-y-4">
@@ -149,7 +149,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                             onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
                             placeholder="Secret password"
                             autoFocus
-                            className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
                         {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
                         <div className="flex gap-3">
@@ -162,7 +162,7 @@ const MarketList = ({ markets, onEdit, onDelete, apiBaseUrl, getAuthHeaders }) =
                             <button
                                 type="button"
                                 onClick={() => { setShowPasswordModal(false); setMarketToDelete(null); setSecretPassword(''); setPasswordError(''); }}
-                                className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg border border-gray-200"
+                                className="px-4 py-3 bg-[#1F2732] hover:bg-[#252D3A] text-gray-200 font-semibold rounded-lg border border-[#333D4D]"
                             >
                                 Cancel
                             </button>

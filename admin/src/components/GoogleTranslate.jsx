@@ -224,7 +224,7 @@ const GoogleTranslate = () => {
         value={value}
         onChange={handleChange}
         disabled={isApplying}
-        className="notranslate min-h-[36px] max-w-[140px] rounded-lg border border-gray-300 bg-white px-3 py-1.5 pr-8 text-sm text-gray-800 cursor-pointer appearance-none bg-no-repeat bg-[length:18px] bg-[right_6px_center] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-70"
+        className="notranslate min-h-[36px] max-w-[140px] rounded-lg border border-[#333D4D] bg-[#1F2732] px-3 py-1.5 pr-8 text-sm text-white cursor-pointer appearance-none bg-no-repeat bg-[length:18px] bg-[right_6px_center] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-70"
         style={{
           backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\")",
         }}

@@ -120,28 +120,28 @@ const BetHistory = () => {
 
     return (
         <AdminLayout onLogout={handleLogout} title="Bet History">
-                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Bet History</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white">Bet History</h1>
 
                     {/* Filters */}
-                    <div className="bg-white rounded-lg p-4 mb-4 sm:mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                    <div className="bg-[#252D3A] rounded-lg p-4 mb-4 sm:mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 border border-[#333D4D]">
                         <input
                             type="text"
                             placeholder="Player ID"
                             value={filters.userId}
                             onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         />
                         <input
                             type="text"
                             placeholder="Market ID"
                             value={filters.marketId}
                             onChange={(e) => setFilters({ ...filters, marketId: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         />
                         <select
                             value={filters.status}
                             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         >
                             <option value="">All Status</option>
                             <option value="pending">Pending</option>
@@ -153,18 +153,18 @@ const BetHistory = () => {
                             type="date"
                             value={filters.startDate}
                             onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         />
                         <input
                             type="date"
                             value={filters.endDate}
                             onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         />
                         <select
                             value={filters.scheduled}
                             onChange={(e) => setFilters({ ...filters, scheduled: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         >
                             <option value="">All Bets</option>
                             <option value="true">Scheduled (close market) only</option>
@@ -172,8 +172,8 @@ const BetHistory = () => {
                     </div>
 
                     {/* Placed-by filter */}
-                    <div className="bg-white rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-gray-200">
-                        <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-3">Bet Type View</p>
+                    <div className="bg-[#252D3A] rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-[#333D4D]">
+                        <p className="text-xs sm:text-sm font-semibold text-gray-200 mb-3">Bet Type View</p>
                         <div className="flex flex-wrap gap-2">
                             <button
                                 type="button"
@@ -181,7 +181,7 @@ const BetHistory = () => {
                                 className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors ${
                                     placedByFilter === 'all'
                                         ? 'bg-primary-500 text-white border-primary-500'
-                                        : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                                        : 'bg-[#1F2732] text-gray-200 border-[#333D4D] hover:bg-[#252D3A]'
                                 }`}
                             >
                                 All Bets
@@ -192,7 +192,7 @@ const BetHistory = () => {
                                 className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors ${
                                     placedByFilter === 'player'
                                         ? 'bg-primary-500 text-white border-primary-500'
-                                        : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                                        : 'bg-[#1F2732] text-gray-200 border-[#333D4D] hover:bg-[#252D3A]'
                                 }`}
                             >
                                 Bets By Player
@@ -203,7 +203,7 @@ const BetHistory = () => {
                                 className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors ${
                                     placedByFilter === 'bookie'
                                         ? 'bg-primary-500 text-white border-primary-500'
-                                        : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                                        : 'bg-[#1F2732] text-gray-200 border-[#333D4D] hover:bg-[#252D3A]'
                                 }`}
                             >
                                 Bets By Bookie
@@ -217,13 +217,13 @@ const BetHistory = () => {
                             <p className="text-gray-400">Loading bets...</p>
                         </div>
                     ) : betsByMarket.length === 0 ? (
-                        <div className="bg-white rounded-lg p-8 text-center">
-                            <p className="text-gray-500">No bets found</p>
+                        <div className="bg-[#252D3A] rounded-lg p-8 text-center border border-[#333D4D]">
+                            <p className="text-gray-400">No bets found</p>
                         </div>
                     ) : (
                         <div className="space-y-6">
                             {betsByMarket.map((marketData) => (
-                                <div key={marketData.marketId} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                <div key={marketData.marketId} className="bg-[#252D3A] rounded-lg border border-[#333D4D] overflow-hidden">
                                     {/* Market Header */}
                                     <div className="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-4 border-b border-primary-300">
                                         <div className="flex items-center justify-between">
@@ -239,39 +239,39 @@ const BetHistory = () => {
                                         {/* Opening Bets Section */}
                                         <div>
                                             <div className="flex items-center justify-between mb-4">
-                                                <h3 className="text-lg font-bold text-primary-600 flex items-center gap-2">
+                                                <h3 className="text-lg font-bold text-primary-400 flex items-center gap-2">
                                                     <span className="w-2 h-2 rounded-full bg-green-500"></span>
                                                     Opening Bets ({marketData.totalOpen})
                                                 </h3>
-                                                <span className="text-sm text-gray-600">
+                                                <span className="text-sm text-gray-300">
                                                     Total: ₹{formatNum(marketData.totalOpenAmount)}
                                                 </span>
                                             </div>
                                             {marketData.open.length === 0 ? (
-                                                <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-lg">No opening bets found</p>
+                                                <p className="text-gray-400 text-center py-4 bg-[#1F2732] rounded-lg">No opening bets found</p>
                                             ) : (
-                                                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                                                <div className="overflow-x-auto rounded-lg border border-[#333D4D]">
                                                     <table className="w-full text-sm">
-                                                        <thead className="bg-gray-50">
+                                                        <thead className="bg-[#1F2732]">
                                                             <tr>
-                                                                <th className="px-3 py-2 text-left font-semibold text-gray-700">Time</th>
-                                                                <th className="px-3 py-2 text-left font-semibold text-gray-700">Player</th>
-                                                                <th className="px-3 py-2 text-left font-semibold text-gray-700">Phone</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Bet Type</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Number</th>
-                                                                <th className="px-3 py-2 text-right font-semibold text-gray-700">Amount</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Status</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Scheduled</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Placed By</th>
+                                                                <th className="px-3 py-2 text-left font-semibold text-gray-200">Time</th>
+                                                                <th className="px-3 py-2 text-left font-semibold text-gray-200">Player</th>
+                                                                <th className="px-3 py-2 text-left font-semibold text-gray-200">Phone</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Bet Type</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Number</th>
+                                                                <th className="px-3 py-2 text-right font-semibold text-gray-200">Amount</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Status</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Scheduled</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Placed By</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody className="divide-y divide-gray-200">
+                                                        <tbody className="divide-y divide-[#333D4D]">
                                                             {marketData.open.map((bet) => (
-                                                                <tr key={bet._id} className="hover:bg-gray-50">
-                                                                    <td className="px-3 py-2 text-gray-600 font-mono text-xs">
+                                                                <tr key={bet._id} className="hover:bg-[#252D3A] bg-[#252D3A]">
+                                                                    <td className="px-3 py-2 text-gray-300 font-mono text-xs">
                                                                         {new Date(bet.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-gray-800 font-medium">{bet.userId?.username || 'N/A'}</td>
+                                                                    <td className="px-3 py-2 text-white font-medium">{bet.userId?.username || 'N/A'}</td>
                                                                     <td className="px-3 py-2 text-gray-600 text-xs">{bet.userId?.phone || bet.userId?.email || '—'}</td>
                                                                     <td className="px-3 py-2 text-center">
                                                                         <span className="px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-700">
@@ -279,7 +279,7 @@ const BetHistory = () => {
                                                                         </span>
                                                                     </td>
                                                                     <td className="px-3 py-2 text-center font-mono font-bold text-primary-600">{bet.betNumber || '—'}</td>
-                                                                    <td className="px-3 py-2 text-right font-semibold text-gray-800">₹{formatNum(bet.amount)}</td>
+                                                                    <td className="px-3 py-2 text-right font-semibold text-white">₹{formatNum(bet.amount)}</td>
                                                                     <td className="px-3 py-2 text-center">
                                                                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
                                                                             bet.status === 'won' ? 'bg-green-100 text-green-700' :
@@ -291,12 +291,12 @@ const BetHistory = () => {
                                                                     </td>
                                                                     <td className="px-3 py-2 text-center text-xs">
                                                                         {(bet.isScheduled || bet.scheduledDate) ? (
-                                                                            <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-medium" title="Scheduled for close market">
+                                                                            <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-medium" title="Scheduled for close market">
                                                                                 {formatScheduled(bet)}
                                                                             </span>
                                                                         ) : '—'}
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-center text-xs text-gray-600">
+                                                                    <td className="px-3 py-2 text-center text-xs text-gray-300">
                                                                         {bet.placedByBookie ? (bet.placedByBookieId?.username || 'Bookie') : 'Player'}
                                                                     </td>
                                                                 </tr>
@@ -308,66 +308,66 @@ const BetHistory = () => {
                                         </div>
 
                                         {/* Closing Bets Section */}
-                                        <div className="pt-6 border-t border-gray-200">
+                                        <div className="pt-6 border-t border-[#333D4D]">
                                             <div className="flex items-center justify-between mb-4">
-                                                <h3 className="text-lg font-bold text-primary-600 flex items-center gap-2">
+                                                <h3 className="text-lg font-bold text-primary-400 flex items-center gap-2">
                                                     <span className="w-2 h-2 rounded-full bg-red-500"></span>
                                                     Closing Bets ({marketData.totalClose})
                                                 </h3>
-                                                <span className="text-sm text-gray-600">
+                                                <span className="text-sm text-gray-300">
                                                     Total: ₹{formatNum(marketData.totalCloseAmount)}
                                                 </span>
                                             </div>
                                             {marketData.close.length === 0 ? (
-                                                <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-lg">No closing bets found</p>
+                                                <p className="text-gray-400 text-center py-4 bg-[#1F2732] rounded-lg">No closing bets found</p>
                                             ) : (
-                                                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                                                <div className="overflow-x-auto rounded-lg border border-[#333D4D]">
                                                     <table className="w-full text-sm">
-                                                        <thead className="bg-gray-50">
+                                                        <thead className="bg-[#1F2732]">
                                                             <tr>
-                                                                <th className="px-3 py-2 text-left font-semibold text-gray-700">Time</th>
-                                                                <th className="px-3 py-2 text-left font-semibold text-gray-700">Player</th>
-                                                                <th className="px-3 py-2 text-left font-semibold text-gray-700">Phone</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Bet Type</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Number</th>
-                                                                <th className="px-3 py-2 text-right font-semibold text-gray-700">Amount</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Status</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Scheduled</th>
-                                                                <th className="px-3 py-2 text-center font-semibold text-gray-700">Placed By</th>
+                                                                <th className="px-3 py-2 text-left font-semibold text-gray-200">Time</th>
+                                                                <th className="px-3 py-2 text-left font-semibold text-gray-200">Player</th>
+                                                                <th className="px-3 py-2 text-left font-semibold text-gray-200">Phone</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Bet Type</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Number</th>
+                                                                <th className="px-3 py-2 text-right font-semibold text-gray-200">Amount</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Status</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Scheduled</th>
+                                                                <th className="px-3 py-2 text-center font-semibold text-gray-200">Placed By</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody className="divide-y divide-gray-200">
+                                                        <tbody className="divide-y divide-[#333D4D]">
                                                             {marketData.close.map((bet) => (
-                                                                <tr key={bet._id} className="hover:bg-gray-50">
-                                                                    <td className="px-3 py-2 text-gray-600 font-mono text-xs">
+                                                                <tr key={bet._id} className="hover:bg-[#252D3A] bg-[#252D3A]">
+                                                                    <td className="px-3 py-2 text-gray-300 font-mono text-xs">
                                                                         {new Date(bet.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-gray-800 font-medium">{bet.userId?.username || 'N/A'}</td>
-                                                                    <td className="px-3 py-2 text-gray-600 text-xs">{bet.userId?.phone || bet.userId?.email || '—'}</td>
+                                                                    <td className="px-3 py-2 text-white font-medium">{bet.userId?.username || 'N/A'}</td>
+                                                                    <td className="px-3 py-2 text-gray-300 text-xs">{bet.userId?.phone || bet.userId?.email || '—'}</td>
                                                                     <td className="px-3 py-2 text-center">
-                                                                        <span className="px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-700">
+                                                                        <span className="px-2 py-1 rounded text-xs font-semibold bg-blue-500/20 text-blue-400">
                                                                             {bet.betType?.toUpperCase() || 'N/A'}
                                                                         </span>
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-center font-mono font-bold text-primary-600">{bet.betNumber || '—'}</td>
-                                                                    <td className="px-3 py-2 text-right font-semibold text-gray-800">₹{formatNum(bet.amount)}</td>
+                                                                    <td className="px-3 py-2 text-center font-mono font-bold text-primary-400">{bet.betNumber || '—'}</td>
+                                                                    <td className="px-3 py-2 text-right font-semibold text-white">₹{formatNum(bet.amount)}</td>
                                                                     <td className="px-3 py-2 text-center">
                                                                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                                                            bet.status === 'won' ? 'bg-green-100 text-green-700' :
-                                                                            bet.status === 'lost' ? 'bg-red-100 text-red-700' :
-                                                                            'bg-yellow-100 text-yellow-700'
+                                                                            bet.status === 'won' ? 'bg-green-500/20 text-green-400' :
+                                                                            bet.status === 'lost' ? 'bg-red-500/20 text-red-400' :
+                                                                            'bg-amber-500/20 text-amber-400'
                                                                         }`}>
                                                                             {bet.status?.toUpperCase() || 'PENDING'}
                                                                         </span>
                                                                     </td>
                                                                     <td className="px-3 py-2 text-center text-xs">
                                                                         {(bet.isScheduled || bet.scheduledDate) ? (
-                                                                            <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-medium" title="Scheduled for close market">
+                                                                            <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-medium" title="Scheduled for close market">
                                                                                 {formatScheduled(bet)}
                                                                             </span>
                                                                         ) : '—'}
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-center text-xs text-gray-600">
+                                                                    <td className="px-3 py-2 text-center text-xs text-gray-300">
                                                                         {bet.placedByBookie ? (bet.placedByBookieId?.username || 'Bookie') : 'Player'}
                                                                     </td>
                                                                 </tr>

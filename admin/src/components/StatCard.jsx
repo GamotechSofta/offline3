@@ -11,40 +11,40 @@ const StatCard = ({
 }) => {
     const colors = {
         green: {
-            bg: 'from-green-50 to-transparent',
-            border: 'border-green-200',
-            iconBg: 'bg-green-50',
-            iconBorder: 'border-green-200',
-            iconText: 'text-green-600',
-            shadow: 'shadow-green-100',
-            textColor: 'text-green-600',
+            bg: 'from-green-500/10 to-transparent',
+            border: 'border-green-400/50',
+            iconBg: 'bg-green-500/20',
+            iconBorder: 'border-green-400/50',
+            iconText: 'text-green-400',
+            shadow: 'shadow-green-500/10',
+            textColor: 'text-green-400',
         },
         blue: {
-            bg: 'from-blue-50 to-transparent',
-            border: 'border-blue-200',
-            iconBg: 'bg-blue-50',
-            iconBorder: 'border-blue-200',
-            iconText: 'text-blue-600',
-            shadow: 'shadow-blue-100',
-            textColor: 'text-blue-600',
+            bg: 'from-blue-500/10 to-transparent',
+            border: 'border-blue-400/50',
+            iconBg: 'bg-blue-500/20',
+            iconBorder: 'border-blue-400/50',
+            iconText: 'text-blue-400',
+            shadow: 'shadow-blue-500/10',
+            textColor: 'text-blue-400',
         },
         purple: {
-            bg: 'from-purple-50 to-transparent',
-            border: 'border-purple-200',
-            iconBg: 'bg-purple-50',
-            iconBorder: 'border-purple-200',
-            iconText: 'text-purple-600',
-            shadow: 'shadow-purple-100',
-            textColor: 'text-purple-600',
+            bg: 'from-purple-500/10 to-transparent',
+            border: 'border-purple-400/50',
+            iconBg: 'bg-purple-500/20',
+            iconBorder: 'border-purple-400/50',
+            iconText: 'text-purple-400',
+            shadow: 'shadow-purple-500/10',
+            textColor: 'text-purple-400',
         },
         yellow: {
-            bg: 'from-primary-50 to-transparent',
-            border: 'border-primary-200',
-            iconBg: 'bg-primary-50',
-            iconBorder: 'border-primary-200',
-            iconText: 'text-primary-600',
-            shadow: 'shadow-primary-100',
-            textColor: 'text-primary-600',
+            bg: 'from-primary-500/10 to-transparent',
+            border: 'border-primary-400/50',
+            iconBg: 'bg-primary-500/20',
+            iconBorder: 'border-primary-400/50',
+            iconText: 'text-primary-400',
+            shadow: 'shadow-primary-500/10',
+            textColor: 'text-primary-400',
         },
     };
 
@@ -52,32 +52,24 @@ const StatCard = ({
 
     return (
         <div
-            className={`group relative bg-white rounded-xl p-6 border border-gray-200 hover:${c.border} transition-all duration-300 hover:shadow-xl hover:${c.shadow} hover:-translate-y-1 overflow-hidden animate-slideUp`}
+            className={`group relative bg-[#252D3A] rounded-xl p-6 border border-[#333D4D] hover:border-primary-400/50 transition-all duration-300 overflow-hidden animate-slideUp`}
             style={{ animationDelay: `${delay}s` }}
         >
-            {/* Animated background gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br ${c.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-
-            {/* Content */}
             <div className="relative z-10">
-                {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
-                        <p className="text-3xl font-bold text-gray-800 font-mono">{value}</p>
+                        <p className="text-sm font-medium text-gray-400 mb-1">{title}</p>
+                        <p className="text-3xl font-bold text-white font-mono">{value}</p>
                     </div>
-
-                    {/* Icon */}
                     {Icon && (
                         <div className={`w-12 h-12 rounded-xl ${c.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border ${c.iconBorder}`}>
                             <Icon className={`w-6 h-6 ${c.iconText}`} />
                         </div>
                     )}
                 </div>
-
-                {/* Details */}
                 {details.length > 0 && (
-                    <div className="pt-3 border-t border-gray-100">
+                    <div className="pt-3 border-t border-[#333D4D]">
                         <div className="flex gap-4 text-xs">
                             {details.map((detail, index) => (
                                 <div key={index}>
@@ -88,11 +80,9 @@ const StatCard = ({
                         </div>
                     </div>
                 )}
-
-                {/* Subtitle */}
                 {subtitle && (
-                    <div className="pt-3 border-t border-gray-100">
-                        <p className="text-xs text-gray-400">{subtitle}</p>
+                    <div className="pt-3 border-t border-[#333D4D]">
+                        <p className="text-xs text-gray-500">{subtitle}</p>
                     </div>
                 )}
             </div>

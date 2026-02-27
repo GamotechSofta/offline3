@@ -129,7 +129,7 @@ const Revenue = () => {
             <div className="space-y-4 sm:space-y-6 print:hidden">
                 {/* Header */}
                 <div>
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
                         <FaMoneyBillWave className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500 shrink-0" />
                         Revenue
                     </h1>
@@ -137,10 +137,10 @@ const Revenue = () => {
                 </div>
 
                 {/* Date filters */}
-                <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-5">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-3 sm:p-5">
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                         <FaCalendarAlt className="w-4 h-4 text-primary-500 shrink-0" />
-                        <span className="text-sm font-medium text-gray-600">Period</span>
+                        <span className="text-sm font-medium text-gray-300">Period</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                         {PRESETS.map((p) => (
@@ -150,8 +150,8 @@ const Revenue = () => {
                                 onClick={() => applyPreset(p.id)}
                                 className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                                     activePreset === p.id
-                                        ? 'bg-primary-500 text-gray-800'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        ? 'bg-primary-500 text-white'
+                                        : 'bg-[#1F2732] text-gray-300 hover:bg-gray-200'
                                 }`}
                             >
                                 {p.label}
@@ -163,20 +163,20 @@ const Revenue = () => {
                             type="date"
                             value={dateRange.startDate}
                             onChange={(e) => { setDateRange((r) => ({ ...r, startDate: e.target.value })); setActivePreset(''); }}
-                            className="px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent w-[130px] sm:w-auto"
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent w-[130px] sm:w-auto"
                         />
-                        <span className="text-gray-500 text-sm">to</span>
+                        <span className="text-gray-400 text-sm">to</span>
                         <input
                             type="date"
                             value={dateRange.endDate}
                             onChange={(e) => { setDateRange((r) => ({ ...r, endDate: e.target.value })); setActivePreset(''); }}
-                            className="px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent w-[130px] sm:w-auto"
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent w-[130px] sm:w-auto"
                         />
                         <button
                             type="button"
                             onClick={fetchRevenue}
                             disabled={loading}
-                            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm"
+                            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary-500 hover:bg-amber-400 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm"
                         >
                             <FaSyncAlt className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                             Refresh
@@ -187,7 +187,7 @@ const Revenue = () => {
                 {loading ? (
                     <div className="grid grid-cols-2 gap-3 sm:gap-4">
                         {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="bg-white rounded-xl h-24 sm:h-28 animate-pulse border border-gray-200" />
+                            <div key={i} className="bg-[#252D3A] rounded-xl h-24 sm:h-28 animate-pulse border border-[#333D4D]" />
                         ))}
                     </div>
                 ) : data ? (
@@ -195,7 +195,7 @@ const Revenue = () => {
                         {/* Summary Cards - 2 cols on mobile, 4 on desktop */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4">
                             {/* Total Bets Volume */}
-                            <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-200/60 relative overflow-hidden">
+                            <div className="bg-[#252D3A] rounded-xl p-3 sm:p-5 border border-[#333D4D]/60 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400" />
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="min-w-0">
@@ -209,7 +209,7 @@ const Revenue = () => {
                             </div>
 
                             {/* Total Payouts */}
-                            <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-200/60 relative overflow-hidden">
+                            <div className="bg-[#252D3A] rounded-xl p-3 sm:p-5 border border-[#333D4D]/60 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-red-400" />
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="min-w-0">
@@ -223,7 +223,7 @@ const Revenue = () => {
                             </div>
 
                             {/* Bookie Commissions */}
-                            <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-200/60 relative overflow-hidden">
+                            <div className="bg-[#252D3A] rounded-xl p-3 sm:p-5 border border-[#333D4D]/60 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-primary-400" />
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="min-w-0">
@@ -237,7 +237,7 @@ const Revenue = () => {
                             </div>
 
                             {/* Admin Profit */}
-                            <div className={`bg-white rounded-xl p-3 sm:p-5 border relative overflow-hidden ${summary.totalAdminProfit >= 0 ? 'border-emerald-500/40' : 'border-red-500/40'}`}>
+                            <div className={`bg-[#252D3A] rounded-xl p-3 sm:p-5 border relative overflow-hidden ${summary.totalAdminProfit >= 0 ? 'border-emerald-500/40' : 'border-red-500/40'}`}>
                                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${summary.totalAdminProfit >= 0 ? 'from-emerald-500 to-emerald-400' : 'from-red-500 to-red-400'}`} />
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="min-w-0">
@@ -257,9 +257,9 @@ const Revenue = () => {
                         </div>
 
                         {/* Bookie-wise Breakdown */}
-                        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                            <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-gray-200">
-                                <h2 className="text-sm sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+                        <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden">
+                            <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-[#333D4D]">
+                                <h2 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2">
                                     <FaUsers className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
                                     Bookie-wise Breakdown
                                 </h2>
@@ -269,7 +269,7 @@ const Revenue = () => {
                             <div className="hidden md:block overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="bg-gray-100/40 text-gray-400 text-[11px] uppercase tracking-wider">
+                                        <tr className="bg-[#1F2732]/40 text-gray-400 text-[11px] uppercase tracking-wider">
                                             <th className="text-left px-4 py-3 font-medium">Bookie</th>
                                             <th className="text-right px-3 py-3 font-medium">Users</th>
                                             <th className="text-right px-3 py-3 font-medium">Total Bets</th>
@@ -282,18 +282,18 @@ const Revenue = () => {
                                     </thead>
                                     <tbody className="divide-y divide-gray-700/40">
                                         {sortedBookies.map((b) => (
-                                            <tr key={b.bookieId} className="hover:bg-gray-100/20 transition-colors">
+                                            <tr key={b.bookieId} className="hover:bg-[#1F2732]/20 transition-colors">
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-2">
                                                         <div className={`w-2 h-2 rounded-full shrink-0 ${b.bookieStatus === 'active' ? 'bg-emerald-400' : 'bg-red-400'}`} />
                                                         <div className="min-w-0">
-                                                            <Link to={`/revenue/${b.bookieId}`} className="font-medium text-gray-800 truncate hover:text-primary-500 transition-colors">{b.bookieName}</Link>
-                                                            {b.bookiePhone && <p className="text-[11px] text-gray-500">{b.bookiePhone}</p>}
+                                                            <Link to={`/revenue/${b.bookieId}`} className="font-medium text-white truncate hover:text-primary-500 transition-colors">{b.bookieName}</Link>
+                                                            {b.bookiePhone && <p className="text-[11px] text-gray-400">{b.bookiePhone}</p>}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="text-right px-3 py-3 text-gray-600 text-xs">{formatNumber(b.totalUsers)}</td>
-                                                <td className="text-right px-3 py-3 text-gray-800 font-medium">{formatCurrency(b.totalBetAmount)}</td>
+                                                <td className="text-right px-3 py-3 text-gray-300 text-xs">{formatNumber(b.totalUsers)}</td>
+                                                <td className="text-right px-3 py-3 text-white font-medium">{formatCurrency(b.totalBetAmount)}</td>
                                                 <td className="text-right px-3 py-3 text-red-500">{formatCurrency(b.totalPayouts)}</td>
                                                 <td className="text-center px-3 py-3">
                                                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-500/15 text-primary-500">
@@ -315,17 +315,17 @@ const Revenue = () => {
                                                         <div className="w-2 h-2 rounded-full shrink-0 bg-blue-400" />
                                                         <div>
                                                             <p className="font-medium text-blue-300">Direct Users</p>
-                                                            <p className="text-[11px] text-gray-500">Admin's own</p>
+                                                            <p className="text-[11px] text-gray-400">Admin's own</p>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="text-right px-3 py-3 text-gray-600 text-xs">{formatNumber(direct.totalUsers || 0)}</td>
-                                                <td className="text-right px-3 py-3 text-gray-800 font-medium">{formatCurrency(direct.totalBetAmount)}</td>
+                                                <td className="text-right px-3 py-3 text-gray-300 text-xs">{formatNumber(direct.totalUsers || 0)}</td>
+                                                <td className="text-right px-3 py-3 text-white font-medium">{formatCurrency(direct.totalBetAmount)}</td>
                                                 <td className="text-right px-3 py-3 text-red-500">{formatCurrency(direct.totalPayouts)}</td>
                                                 <td className="text-center px-3 py-3">
                                                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/15 text-blue-600">0%</span>
                                                 </td>
-                                                <td className="text-right px-3 py-3 text-gray-600">-</td>
+                                                <td className="text-right px-3 py-3 text-gray-300">-</td>
                                                 <td className="text-right px-3 py-3 text-gray-400">{formatCurrency(direct.totalBetAmount)}</td>
                                                 <td className={`text-right px-4 py-3 font-semibold ${direct.adminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                     {formatCurrency(direct.adminProfit)}
@@ -334,14 +334,14 @@ const Revenue = () => {
                                         )}
 
                                         {/* Totals */}
-                                        <tr className="bg-gray-100/30 border-t-2 border-gray-200/80">
+                                        <tr className="bg-[#1F2732]/30 border-t-2 border-[#333D4D]/80">
                                             <td className="px-4 py-3.5 font-bold text-primary-500 text-xs uppercase tracking-wider">Total</td>
-                                            <td className="text-right px-3 py-3.5 text-gray-500">-</td>
-                                            <td className="text-right px-3 py-3.5 text-gray-800 font-bold">{formatCurrency(summary.grandTotalBets)}</td>
+                                            <td className="text-right px-3 py-3.5 text-gray-400">-</td>
+                                            <td className="text-right px-3 py-3.5 text-white font-bold">{formatCurrency(summary.grandTotalBets)}</td>
                                             <td className="text-right px-3 py-3.5 text-red-500 font-bold">{formatCurrency(summary.grandTotalPayouts)}</td>
-                                            <td className="text-center px-3 py-3.5 text-gray-500">-</td>
+                                            <td className="text-center px-3 py-3.5 text-gray-400">-</td>
                                             <td className="text-right px-3 py-3.5 text-primary-400 font-bold">{formatCurrency(summary.totalBookieCommission)}</td>
-                                            <td className="text-right px-3 py-3.5 text-gray-500">-</td>
+                                            <td className="text-right px-3 py-3.5 text-gray-400">-</td>
                                             <td className={`text-right px-4 py-3.5 font-bold ${summary.totalAdminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                 {formatCurrency(summary.totalAdminProfit)}
                                             </td>
@@ -359,8 +359,8 @@ const Revenue = () => {
                                             <div className="flex items-center gap-2 min-w-0">
                                                 <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${b.bookieStatus === 'active' ? 'bg-emerald-400' : 'bg-red-400'}`} />
                                                 <div className="min-w-0">
-                                                    <Link to={`/revenue/${b.bookieId}`} className="font-semibold text-gray-800 text-sm truncate hover:text-primary-500 transition-colors">{b.bookieName}</Link>
-                                                    {b.bookiePhone && <p className="text-[11px] text-gray-500">{b.bookiePhone}</p>}
+                                                    <Link to={`/revenue/${b.bookieId}`} className="font-semibold text-white text-sm truncate hover:text-primary-500 transition-colors">{b.bookieName}</Link>
+                                                    {b.bookiePhone && <p className="text-[11px] text-gray-400">{b.bookiePhone}</p>}
                                                 </div>
                                             </div>
                                             <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-500/15 text-primary-500 shrink-0">
@@ -369,26 +369,26 @@ const Revenue = () => {
                                         </div>
                                         {/* Stats grid */}
                                         <div className="grid grid-cols-2 gap-2">
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Bets</p>
-                                                <p className="text-xs font-semibold text-gray-800 truncate">{formatCurrency(b.totalBetAmount)}</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Bets</p>
+                                                <p className="text-xs font-semibold text-white truncate">{formatCurrency(b.totalBetAmount)}</p>
                                             </div>
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Payouts</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Payouts</p>
                                                 <p className="text-xs font-semibold text-red-500 truncate">{formatCurrency(b.totalPayouts)}</p>
                                             </div>
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Bookie Share</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Bookie Share</p>
                                                 <p className="text-xs font-semibold text-primary-400 truncate">{formatCurrency(b.bookieShare)}</p>
                                             </div>
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Admin Profit</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Admin Profit</p>
                                                 <p className={`text-xs font-semibold truncate ${b.adminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                     {formatCurrency(b.adminProfit)}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-500">
+                                        <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400">
                                             <span>{formatNumber(b.totalUsers)} users</span>
                                             <span>Pool: {formatCurrency(b.adminPool)}</span>
                                         </div>
@@ -406,16 +406,16 @@ const Revenue = () => {
                                             <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/15 text-blue-600">0%</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Bets</p>
-                                                <p className="text-xs font-semibold text-gray-800 truncate">{formatCurrency(direct.totalBetAmount)}</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Bets</p>
+                                                <p className="text-xs font-semibold text-white truncate">{formatCurrency(direct.totalBetAmount)}</p>
                                             </div>
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Payouts</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Payouts</p>
                                                 <p className="text-xs font-semibold text-red-500 truncate">{formatCurrency(direct.totalPayouts)}</p>
                                             </div>
-                                            <div className="bg-gray-100/30 rounded-lg px-2.5 py-2 col-span-2">
-                                                <p className="text-[10px] text-gray-500 uppercase">Admin Profit</p>
+                                            <div className="bg-[#1F2732]/30 rounded-lg px-2.5 py-2 col-span-2">
+                                                <p className="text-[10px] text-gray-400 uppercase">Admin Profit</p>
                                                 <p className={`text-xs font-semibold truncate ${direct.adminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                     {formatCurrency(direct.adminProfit)}
                                                 </p>
@@ -425,23 +425,23 @@ const Revenue = () => {
                                 )}
 
                                 {/* Totals - mobile */}
-                                <div className="p-3 sm:p-4 bg-gray-100/20">
+                                <div className="p-3 sm:p-4 bg-[#1F2732]/20">
                                     <p className="text-[10px] font-bold text-primary-500 uppercase tracking-wider mb-2">Total Summary</p>
                                     <div className="grid grid-cols-2 gap-2">
-                                        <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
-                                            <p className="text-[10px] text-gray-500 uppercase">Bets Volume</p>
-                                            <p className="text-xs font-bold text-gray-800 truncate">{formatCurrency(summary.grandTotalBets)}</p>
+                                        <div className="bg-[#1F2732]/40 rounded-lg px-2.5 py-2">
+                                            <p className="text-[10px] text-gray-400 uppercase">Bets Volume</p>
+                                            <p className="text-xs font-bold text-white truncate">{formatCurrency(summary.grandTotalBets)}</p>
                                         </div>
-                                        <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
-                                            <p className="text-[10px] text-gray-500 uppercase">Payouts</p>
+                                        <div className="bg-[#1F2732]/40 rounded-lg px-2.5 py-2">
+                                            <p className="text-[10px] text-gray-400 uppercase">Payouts</p>
                                             <p className="text-xs font-bold text-red-500 truncate">{formatCurrency(summary.grandTotalPayouts)}</p>
                                         </div>
-                                        <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
-                                            <p className="text-[10px] text-gray-500 uppercase">Bookie Comm.</p>
+                                        <div className="bg-[#1F2732]/40 rounded-lg px-2.5 py-2">
+                                            <p className="text-[10px] text-gray-400 uppercase">Bookie Comm.</p>
                                             <p className="text-xs font-bold text-primary-400 truncate">{formatCurrency(summary.totalBookieCommission)}</p>
                                         </div>
-                                        <div className="bg-gray-100/40 rounded-lg px-2.5 py-2">
-                                            <p className="text-[10px] text-gray-500 uppercase">Admin Profit</p>
+                                        <div className="bg-[#1F2732]/40 rounded-lg px-2.5 py-2">
+                                            <p className="text-[10px] text-gray-400 uppercase">Admin Profit</p>
                                             <p className={`text-xs font-bold truncate ${summary.totalAdminProfit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                                 {formatCurrency(summary.totalAdminProfit)}
                                             </p>
@@ -451,7 +451,7 @@ const Revenue = () => {
 
                                 {sortedBookies.length === 0 && (!direct || direct.totalBetAmount === 0) && (
                                     <div className="p-8 text-center">
-                                        <p className="text-gray-500 text-sm">No revenue data for this period</p>
+                                        <p className="text-gray-400 text-sm">No revenue data for this period</p>
                                     </div>
                                 )}
                             </div>
@@ -459,7 +459,7 @@ const Revenue = () => {
                             {/* Empty state for desktop */}
                             {sortedBookies.length === 0 && (!direct || direct.totalBetAmount === 0) && (
                                 <div className="hidden md:block p-12 text-center">
-                                    <p className="text-gray-500">No revenue data for this period</p>
+                                    <p className="text-gray-400">No revenue data for this period</p>
                                 </div>
                             )}
                         </div>
@@ -469,7 +469,7 @@ const Revenue = () => {
                             <button
                                 type="button"
                                 onClick={() => window.print()}
-                                className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-xs sm:text-sm font-medium transition-colors"
+                                className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#1F2732] hover:bg-gray-200 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors"
                             >
                                 <FaPrint className="w-3.5 h-3.5" />
                                 Print Report
@@ -477,14 +477,14 @@ const Revenue = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="bg-white rounded-xl border border-gray-200 p-8 sm:p-12 text-center">
-                        <FaMoneyBillWave className="w-12 h-12 sm:w-16 sm:h-16 text-gray-600 mx-auto mb-4" />
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-8 sm:p-12 text-center">
+                        <FaMoneyBillWave className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
                         <p className="text-gray-400 text-base sm:text-lg">No revenue data available</p>
-                        <p className="text-gray-500 text-xs sm:text-sm mt-2">Try a different date range or refresh</p>
+                        <p className="text-gray-400 text-xs sm:text-sm mt-2">Try a different date range or refresh</p>
                         <button
                             type="button"
                             onClick={fetchRevenue}
-                            className="mt-4 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors text-sm"
+                            className="mt-4 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-white font-semibold rounded-lg transition-colors text-sm"
                         >
                             Refresh
                         </button>
@@ -494,7 +494,7 @@ const Revenue = () => {
 
             {/* Print-only */}
             {data && (
-                <div className="hidden print:block mt-8 p-6 bg-white text-gray-800 rounded-lg">
+                <div className="hidden print:block mt-8 p-6 bg-[#252D3A] text-white rounded-lg">
                     <h2 className="text-xl font-bold mb-4">Revenue Report</h2>
                     <table className="w-full text-sm border-collapse">
                         <thead>
@@ -509,7 +509,7 @@ const Revenue = () => {
                         </thead>
                         <tbody>
                             {sortedBookies.map((b) => (
-                                <tr key={b.bookieId} className="border-b border-gray-200">
+                                <tr key={b.bookieId} className="border-b border-[#333D4D]">
                                     <td className="py-1.5">{b.bookieName}</td>
                                     <td className="text-right py-1.5">{formatCurrency(b.totalBetAmount)}</td>
                                     <td className="text-right py-1.5">{formatCurrency(b.totalPayouts)}</td>
@@ -519,7 +519,7 @@ const Revenue = () => {
                                 </tr>
                             ))}
                             {direct && direct.totalBetAmount > 0 && (
-                                <tr className="border-b border-gray-200">
+                                <tr className="border-b border-[#333D4D]">
                                     <td className="py-1.5 font-medium">Direct Users</td>
                                     <td className="text-right py-1.5">{formatCurrency(direct.totalBetAmount)}</td>
                                     <td className="text-right py-1.5">{formatCurrency(direct.totalPayouts)}</td>

@@ -15,12 +15,12 @@ const Button = ({
     const baseStyles = "font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2";
 
     const variants = {
-        primary: "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white glow-primary hover:-translate-y-0.5",
-        secondary: "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 hover:border-gray-300",
-        success: "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white glow-green hover:-translate-y-0.5",
-        danger: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white glow-red hover:-translate-y-0.5",
-        ghost: "bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-800 border border-gray-200 hover:border-gray-300",
-        outline: "bg-transparent hover:bg-primary-50 text-primary-500 border border-primary-300 hover:border-primary-500",
+        primary: "bg-primary-500 hover:bg-primary-600 text-white glow-primary hover:-translate-y-0.5",
+        secondary: "bg-[#252D3A] hover:bg-primary-500/20 text-gray-200 border border-[#333D4D] hover:border-primary-400",
+        success: "bg-green-500 hover:bg-green-600 text-white glow-red hover:-translate-y-0.5",
+        danger: "bg-red-500 hover:bg-red-600 text-white glow-red hover:-translate-y-0.5",
+        ghost: "bg-transparent hover:bg-[#252D3A] text-gray-300 hover:text-white border border-[#333D4D] hover:border-primary-400",
+        outline: "bg-transparent hover:bg-primary-500/20 text-primary-400 border border-primary-400/50 hover:border-primary-500",
     };
 
     const sizes = {

@@ -44,7 +44,7 @@ const TopWinners = () => {
                         <select
                             value={timeRange}
                             onChange={(e) => setTimeRange(e.target.value)}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         >
                             <option value="all">All Time</option>
                             <option value="today">Today</option>
@@ -67,15 +67,15 @@ const TopWinners = () => {
                                 winners.map((winner, index) => (
                                     <div
                                         key={winner._id}
-                                        className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200"
+                                        className="bg-[#252D3A] rounded-lg p-4 sm:p-6 border border-[#333D4D]"
                                     >
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold ${
-                                                    index === 0 ? 'bg-primary-500 text-gray-800' :
-                                                    index === 1 ? 'bg-gray-400 text-gray-800' :
-                                                    index === 2 ? 'bg-primary-600 text-gray-800' :
-                                                    'bg-gray-100 text-gray-800'
+                                                    index === 0 ? 'bg-primary-500 text-white' :
+                                                    index === 1 ? 'bg-gray-400 text-white' :
+                                                    index === 2 ? 'bg-primary-600 text-white' :
+                                                    'bg-[#1F2732] text-white'
                                                 }`}>
                                                     {index + 1}
                                                 </div>

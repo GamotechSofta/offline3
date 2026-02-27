@@ -77,10 +77,10 @@ const Wallet = () => {
 
     return (
         <AdminLayout onLogout={handleLogout} title="Wallet">
-                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Wallet Management</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white">Wallet Management</h1>
 
                     {/* Tabs */}
-                    <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6 border-b border-gray-200 overflow-x-auto">
+                    <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6 border-b border-[#333D4D] overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('wallets')}
                             className={`pb-4 px-4 font-semibold ${
@@ -105,16 +105,16 @@ const Wallet = () => {
                         </div>
                     ) : activeTab === 'wallets' ? (
                         <div className="overflow-x-auto -mx-4 sm:mx-0">
-                            <div className="bg-white rounded-lg overflow-hidden min-w-[400px]">
+                            <div className="bg-[#252D3A] rounded-lg overflow-hidden min-w-[400px] border border-[#333D4D]">
                                 <table className="w-full text-sm sm:text-base">
-                                <thead className="bg-gray-100">
+                                <thead className="bg-[#1F2732]">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Player</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Balance</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Balance</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-700">
+                                <tbody className="divide-y divide-[#333D4D]">
                                     {wallets.length === 0 ? (
                                         <tr>
                                             <td colSpan="3" className="px-6 py-4 text-center text-gray-400">
@@ -123,9 +123,9 @@ const Wallet = () => {
                                         </tr>
                                     ) : (
                                         wallets.map((wallet) => (
-                                            <tr key={wallet._id} className="hover:bg-gray-100">
-                                                <td className="px-6 py-4 text-sm">{wallet.userId?.username || wallet.userId}</td>
-                                                <td className="px-6 py-4 text-sm font-semibold text-primary-500">₹{wallet.balance}</td>
+                                            <tr key={wallet._id} className="hover:bg-[#252D3A] bg-[#252D3A]">
+                                                <td className="px-6 py-4 text-sm text-white">{wallet.userId?.username || wallet.userId}</td>
+                                                <td className="px-6 py-4 text-sm font-semibold text-primary-400">₹{wallet.balance}</td>
                                                 <td className="px-6 py-4 text-sm">
                                                     <div className="flex gap-2">
                                                         <button
@@ -157,17 +157,17 @@ const Wallet = () => {
                         </div>
                     ) : (
                         <div className="overflow-x-auto -mx-4 sm:mx-0">
-                            <div className="bg-white rounded-lg overflow-hidden min-w-[400px]">
+                            <div className="bg-[#252D3A] rounded-lg overflow-hidden min-w-[400px] border border-[#333D4D]">
                                 <table className="w-full text-sm sm:text-base">
-                                <thead className="bg-gray-100">
+                                <thead className="bg-[#1F2732]">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Player</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Amount</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Date</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Player</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Amount</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Date</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-700">
+                                <tbody className="divide-y divide-[#333D4D]">
                                     {transactions.length === 0 ? (
                                         <tr>
                                             <td colSpan="4" className="px-6 py-4 text-center text-gray-400">
@@ -176,8 +176,8 @@ const Wallet = () => {
                                         </tr>
                                     ) : (
                                         transactions.map((transaction) => (
-                                            <tr key={transaction._id} className="hover:bg-gray-100">
-                                                <td className="px-6 py-4 text-sm">{transaction.userId?.username || transaction.userId}</td>
+                                            <tr key={transaction._id} className="hover:bg-[#252D3A] bg-[#252D3A]">
+                                                <td className="px-6 py-4 text-sm text-white">{transaction.userId?.username || transaction.userId}</td>
                                                 <td className="px-6 py-4 text-sm">
                                                     <span className={`px-2 py-1 rounded text-xs ${
                                                         transaction.type === 'credit' ? 'bg-green-600' : 'bg-red-600'

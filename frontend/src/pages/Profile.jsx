@@ -112,6 +112,7 @@ const Profile = () => {
   const [user, setUser] = useState(() => readUserFromStorage());
   const [toast, setToast] = useState('');
   const [copiedField, setCopiedField] = useState('');
+  const [rouletteStats, setRouletteStats] = useState(null);
 
   const initialForm = useMemo(() => {
     const u = user || {};
@@ -156,6 +157,17 @@ const Profile = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    const uid = user?.id || user?._id;
+    if (!uid) return;
+    fetch(`${API_BASE_URL}/roulette/stats?userId=${encodeURIComponent(uid)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && data.data) setRouletteStats(data.data);
+      })
+      .catch(() => {});
+  }, [user]);
 
   const avatarInitial = (form.username || 'U').charAt(0).toUpperCase();
 
@@ -413,6 +425,41 @@ const Profile = () => {
           <h2 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 px-0.5">Quick actions</h2>
           {quickActionsBlock('grid-cols-4')}
         </div>
+        {rouletteStats !== null && (
+          <div className="rounded-2xl bg-[#252D3A] border border-[#333D4D] overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
+              <div>
+                <h3 className="text-white font-semibold text-sm">Roulette</h3>
+                <p className="text-gray-500 text-xs mt-0.5">Games played, win rate, biggest win</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate('/games/roulette')}
+                className="text-xs font-medium text-primary-400 hover:text-primary-300"
+              >
+                Play
+              </button>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 text-center">
+              <div>
+                <p className="text-gray-500 text-xs">Played</p>
+                <p className="text-white font-semibold">{rouletteStats.gamesPlayed ?? 0}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-xs">Win rate</p>
+                <p className="text-white font-semibold">{rouletteStats.winRate ?? 0}%</p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-xs">Wagered</p>
+                <p className="text-white font-semibold">₹{(rouletteStats.totalWagered ?? 0).toLocaleString('en-IN')}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-xs">Biggest win</p>
+                <p className="text-green-400 font-semibold">₹{(rouletteStats.biggestWin ?? 0).toLocaleString('en-IN')}</p>
+              </div>
+            </div>
+          </div>
+        )}
         {accountInfoBlock}
         {logoutBtn}
         <div className="h-4" />
@@ -426,6 +473,20 @@ const Profile = () => {
           <div className="sticky top-[72px] space-y-4">
             {heroCard}
             {quickActionsBlock('grid-cols-4')}
+            {rouletteStats !== null && (
+              <div className="rounded-2xl bg-[#252D3A] border border-[#333D4D] overflow-hidden">
+                <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
+                  <h3 className="text-white font-semibold text-sm">Roulette</h3>
+                  <button type="button" onClick={() => navigate('/games/roulette')} className="text-xs font-medium text-primary-400 hover:text-primary-300">Play</button>
+                </div>
+                <div className="grid grid-cols-2 gap-2 p-3 text-center">
+                  <div><p className="text-gray-500 text-[10px]">Played</p><p className="text-white font-semibold text-sm">{rouletteStats.gamesPlayed ?? 0}</p></div>
+                  <div><p className="text-gray-500 text-[10px]">Win rate</p><p className="text-white font-semibold text-sm">{rouletteStats.winRate ?? 0}%</p></div>
+                  <div><p className="text-gray-500 text-[10px]">Wagered</p><p className="text-white font-semibold text-sm">₹{(rouletteStats.totalWagered ?? 0).toLocaleString('en-IN')}</p></div>
+                  <div><p className="text-gray-500 text-[10px]">Biggest win</p><p className="text-green-400 font-semibold text-sm">₹{(rouletteStats.biggestWin ?? 0).toLocaleString('en-IN')}</p></div>
+                </div>
+              </div>
+            )}
             {logoutBtn}
           </div>
 

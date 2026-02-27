@@ -84,14 +84,14 @@ const HelpDesk = () => {
 
     return (
         <AdminLayout onLogout={handleLogout} title="Help Desk">
-                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Help Desk</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white">Help Desk</h1>
 
                     {/* Filters */}
-                    <div className="bg-white rounded-lg p-4 mb-4 sm:mb-6 flex flex-wrap gap-3 items-center">
+                    <div className="bg-[#252D3A] rounded-lg p-4 mb-4 sm:mb-6 flex flex-wrap gap-3 items-center border border-[#333D4D]">
                         <select
                             value={filters.status}
                             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         >
                             <option value="">All Status</option>
                             <option value="open">Open</option>
@@ -102,7 +102,7 @@ const HelpDesk = () => {
                         <select
                             value={filters.userSource}
                             onChange={(e) => setFilters({ ...filters, userSource: e.target.value })}
-                            className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                            className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                         >
                             <option value="">All Users</option>
                             <option value="bookie">Bookie user only</option>
@@ -112,7 +112,7 @@ const HelpDesk = () => {
                             <select
                                 value={filters.bookieId}
                                 onChange={(e) => setFilters({ ...filters, bookieId: e.target.value })}
-                                className="px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800"
+                                className="px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white"
                             >
                                 <option value="">All bookies</option>
                                 {bookies.map((b) => (
@@ -123,7 +123,7 @@ const HelpDesk = () => {
                         <button
                             type="button"
                             onClick={() => setFilters({ status: '', userSource: '', bookieId: '' })}
-                            className="px-4 py-2 bg-gray-200 hover:bg-gray-500 border border-gray-500 rounded-lg text-gray-800 text-sm font-medium"
+                            className="px-4 py-2 bg-[#252D3A] hover:bg-[#333D4D] border border-[#333D4D] rounded-lg text-white text-sm font-medium"
                         >
                             Clear filter
                         </button>
@@ -131,9 +131,9 @@ const HelpDesk = () => {
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
                         {/* Tickets List */}
-                        <div className="bg-white rounded-lg overflow-hidden">
-                            <div className="p-4 border-b border-gray-200">
-                                <h2 className="text-xl font-semibold">Tickets</h2>
+                        <div className="bg-[#252D3A] rounded-lg overflow-hidden border border-[#333D4D]">
+                            <div className="p-4 border-b border-[#333D4D]">
+                                <h2 className="text-xl font-semibold text-white">Tickets</h2>
                             </div>
                             {loading ? (
                                 <div className="text-center py-12">
@@ -149,8 +149,8 @@ const HelpDesk = () => {
                                         <div
                                             key={ticket._id}
                                             onClick={() => setSelectedTicket(ticket)}
-                                            className={`p-4 cursor-pointer hover:bg-gray-100 ${
-                                                selectedTicket?._id === ticket._id ? 'bg-gray-100' : ''
+                                            className={`p-4 cursor-pointer hover:bg-[#252D3A] ${
+                                                selectedTicket?._id === ticket._id ? 'bg-[#252D3A]' : ''
                                             }`}
                                         >
                                             <div className="flex justify-between items-start mb-2">
@@ -158,14 +158,14 @@ const HelpDesk = () => {
                                                 <span className={`px-2 py-1 rounded text-xs ${
                                                     ticket.status === 'resolved' ? 'bg-green-600' :
                                                     ticket.status === 'in-progress' ? 'bg-primary-600' :
-                                                    ticket.status === 'closed' ? 'bg-gray-200' :
+                                                    ticket.status === 'closed' ? 'bg-[#333D4D] text-gray-200' :
                                                     'bg-blue-600'
                                                 }`}>
                                                     {ticket.status}
                                                 </span>
                                             </div>
                                             <p className="text-sm text-gray-400 truncate">{ticket.description}</p>
-                                            <p className="text-xs text-gray-500 mt-2">
+                                            <p className="text-xs text-gray-400 mt-2">
                                                 {ticket.userId?.username || 'Unknown'}
                                                 {ticket.userId?.source === 'bookie'
                                                     ? ` — bookie user${ticket.userId?.referredBy?.username ? ` (${ticket.userId.referredBy.username})` : ''}`
@@ -179,15 +179,15 @@ const HelpDesk = () => {
                         </div>
 
                         {/* Ticket Details */}
-                        <div className="bg-white rounded-lg p-6">
+                        <div className="bg-[#252D3A] rounded-lg p-6 border border-[#333D4D]">
                             {selectedTicket ? (
                                 <div>
                                     <div className="flex justify-between items-start mb-4">
-                                        <h2 className="text-2xl font-bold">{selectedTicket.subject}</h2>
+                                        <h2 className="text-2xl font-bold text-white">{selectedTicket.subject}</h2>
                                         <span className={`px-3 py-1 rounded text-sm ${
                                             selectedTicket.status === 'resolved' ? 'bg-green-600' :
                                             selectedTicket.status === 'in-progress' ? 'bg-primary-600' :
-                                            selectedTicket.status === 'closed' ? 'bg-gray-200' :
+                                            selectedTicket.status === 'closed' ? 'bg-[#333D4D] text-gray-200' :
                                             'bg-blue-600'
                                         }`}>
                                             {selectedTicket.status}
@@ -196,7 +196,7 @@ const HelpDesk = () => {
 
                                     <div className="mb-4">
                                         <p className="text-gray-400 text-sm mb-1">Player</p>
-                                        <p className="font-semibold">
+                                        <p className="font-semibold text-white">
                                             {selectedTicket.userId?.username || selectedTicket.userId}
                                             {selectedTicket.userId?.source === 'bookie'
                                                 ? ` — bookie user${selectedTicket.userId?.referredBy?.username ? ` (${selectedTicket.userId.referredBy.username})` : ''}`
@@ -206,7 +206,7 @@ const HelpDesk = () => {
 
                                     <div className="mb-4">
                                         <p className="text-gray-400 text-sm mb-1">Description</p>
-                                        <p className="whitespace-pre-wrap">{selectedTicket.description}</p>
+                                        <p className="whitespace-pre-wrap text-gray-200">{selectedTicket.description}</p>
                                     </div>
 
                                     {selectedTicket.screenshots && selectedTicket.screenshots.length > 0 && (
@@ -218,7 +218,7 @@ const HelpDesk = () => {
                                                         key={index}
                                                         type="button"
                                                         onClick={() => setFullScreenImage(screenshot.startsWith('http') ? screenshot : `${UPLOAD_BASE_URL}${screenshot}`)}
-                                                        className="w-full h-32 rounded border border-gray-200 overflow-hidden focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                                                        className="w-full h-32 rounded border border-[#333D4D] overflow-hidden focus:ring-2 focus:ring-primary-500 focus:outline-none"
                                                     >
                                                         <img
                                                             src={screenshot.startsWith('http') ? screenshot : `${UPLOAD_BASE_URL}${screenshot}`}
@@ -233,7 +233,7 @@ const HelpDesk = () => {
 
                                     <div className="mb-4">
                                         <p className="text-gray-400 text-sm mb-1">Created</p>
-                                        <p>{new Date(selectedTicket.createdAt).toLocaleString()}</p>
+                                        <p className="text-gray-200">{new Date(selectedTicket.createdAt).toLocaleString()}</p>
                                     </div>
 
                                     <div className="flex gap-2 mt-6">
@@ -263,7 +263,7 @@ const HelpDesk = () => {
                                         )}
                                         <button
                                             onClick={() => handleStatusUpdate(selectedTicket._id, 'closed')}
-                                            className="px-4 py-2 bg-gray-200 hover:bg-gray-100 rounded"
+                                            className="px-4 py-2 bg-[#333D4D] hover:bg-[#252D3A] text-white rounded"
                                         >
                                             Close Ticket
                                         </button>
@@ -290,7 +290,7 @@ const HelpDesk = () => {
                             <button
                                 type="button"
                                 onClick={() => setFullScreenImage(null)}
-                                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-2xl leading-none flex items-center justify-center"
+                                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-[#252D3A] hover:bg-[#333D4D] text-white text-2xl leading-none flex items-center justify-center border border-[#333D4D]"
                                 aria-label="Close"
                             >
                                 ×

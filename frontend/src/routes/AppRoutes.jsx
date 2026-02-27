@@ -19,6 +19,7 @@ import Profile from '../pages/Profile';
 import BetHistory from '../pages/BetHistory';
 import MarketResultHistory from '../pages/MarketResultHistory';
 import TopWinners from '../pages/TopWinners';
+import RouletteGame from '../pages/RouletteGame';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -118,7 +119,8 @@ const Layout = ({ children }) => {
   const isFundsPage = location.pathname === '/funds';
   const isPassbookPage = location.pathname === '/passbook';
   const isBankPage = location.pathname === '/bank';
-  const isDarkLayout = isProfilePage || isFundsPage || isBetsPage || isHistoryPage || isPassbookPage || isBankPage || isBidPage;
+  const isRoulettePage = location.pathname === '/games/roulette';
+  const isDarkLayout = isProfilePage || isFundsPage || isBetsPage || isHistoryPage || isPassbookPage || isBankPage || isBidPage || isRoulettePage;
 
   return (
     <div className={`min-h-screen min-h-ios-screen pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'}`}>
@@ -162,6 +164,7 @@ const AppRoutes = () => {
           <Route path="/market-result-history" element={<MarketResultHistory />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/top-winners" element={<TopWinners />} />
+          <Route path="/games/roulette" element={<RouletteGame />} />
         </Routes>
       </Layout>
     </Router>

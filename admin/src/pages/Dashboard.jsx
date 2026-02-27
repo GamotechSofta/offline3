@@ -78,7 +78,7 @@ const Dashboard = () => {
                 <div className="mb-6">
                     <button
                         onClick={handleCreate}
-                        className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-gray-800 font-semibold rounded-lg transition-colors"
+                        className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-colors"
                     >
                         + Add New Market
                     </button>

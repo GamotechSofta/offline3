@@ -39,9 +39,9 @@ const DeclareSuccess = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Result declared successfully</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">Result declared successfully</h1>
                     {marketName && (
-                        <p className="text-gray-600 text-sm sm:text-base mb-1 truncate" title={marketName}>{marketName}</p>
+                        <p className="text-gray-300 text-sm sm:text-base mb-1 truncate" title={marketName}>{marketName}</p>
                     )}
                     {displayText && (
                         <p className="text-primary-500 font-mono text-sm sm:text-base">{displayText}</p>
@@ -56,14 +56,14 @@ const DeclareSuccess = () => {
                     <button
                         type="button"
                         onClick={handleAddAnother}
-                        className="px-5 py-3 bg-primary-500 hover:bg-primary-600 text-gray-800 font-semibold rounded-xl transition-colors"
+                        className="px-5 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors"
                     >
                         Add another result
                     </button>
                     <button
                         type="button"
                         onClick={handleDashboard}
-                        className="px-5 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl border border-gray-200 transition-colors"
+                        className="px-5 py-3 bg-[#1F2732] hover:bg-[#252D3A] text-white font-semibold rounded-xl border border-[#333D4D] transition-colors"
                     >
                         Dashboard
                     </button>

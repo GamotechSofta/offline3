@@ -21,7 +21,7 @@ const AddMarket = () => {
 
     return (
         <AdminLayout onLogout={handleLogout} title="Add Market">
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-6">Add New Market</h1>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-6 text-white">Add New Market</h1>
                     {showForm && (
                         <MarketForm
                             market={null}

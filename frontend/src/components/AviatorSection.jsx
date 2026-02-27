@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AVIATOR_BASE_URL = 'https://aviator-jet-theta.vercel.app/?uid=68c3b5afbc7114822c777c1b';
 const AVIATOR_GAMES_IMAGE = 'https://res.cloudinary.com/dnyp5jknp/image/upload/v1771667250/Aviator_Games_kvsp7v.png';
@@ -8,12 +9,18 @@ const ROULETTE_IMAGE = 'https://res.cloudinary.com/dzd47mpdo/image/upload/v17718
 const aviatorCards = [
   { title: 'Aviator', sub: 'Crash Game', image: AVIATOR_GAMES_IMAGE, url: AVIATOR_BASE_URL },
   { title: 'Chicken Road', sub: 'Game', image: CHICKEN_ROAD_BANNER, url: AVIATOR_BASE_URL },
-  { title: 'Roulette', sub: 'Game', image: ROULETTE_IMAGE, url: AVIATOR_BASE_URL },
+  { title: 'Roulette', sub: 'Game', image: ROULETTE_IMAGE, path: '/games/roulette' },
 ];
 
 const AviatorSection = () => {
-  const openGame = (url) => {
-    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+  const navigate = useNavigate();
+
+  const handleCardClick = (card) => {
+    if (card.path) {
+      navigate(card.path);
+    } else if (card.url) {
+      window.open(card.url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (
@@ -43,7 +50,7 @@ const AviatorSection = () => {
             <button
               key={index}
               type="button"
-              onClick={() => openGame(card.url)}
+              onClick={() => handleCardClick(card)}
               className="flex-[0_0_calc((100%-1rem)/3)] min-w-0 shrink-0 snap-start bg-[#252D3A] border border-[#333D4D] rounded-lg overflow-hidden transition-all duration-200 cursor-pointer hover:border-primary-500/60 active:scale-[0.98] text-left group"
             >
               <div className="relative overflow-hidden aspect-[3/4]">
@@ -71,7 +78,7 @@ const AviatorSection = () => {
           <button
             key={index}
             type="button"
-            onClick={() => openGame(card.url)}
+            onClick={() => handleCardClick(card)}
             className="bg-[#252D3A] border border-[#333D4D] rounded-xl overflow-hidden transition-all duration-200 cursor-pointer hover:border-primary-500/60 hover:shadow-lg hover:shadow-primary-500/10 text-left w-full group"
           >
             <div className="relative overflow-hidden aspect-[4/3]">

@@ -442,9 +442,9 @@ const PlayerDetail = () => {
         return (
             <AdminLayout onLogout={handleLogout} title="Player">
                 <div className="animate-pulse space-y-4">
-                    <div className="h-8 w-48 bg-gray-100 rounded" />
-                    <div className="h-24 bg-gray-100 rounded-xl" />
-                    <div className="h-10 w-full bg-gray-100 rounded" />
+                    <div className="h-8 w-48 bg-[#1F2732] rounded" />
+                    <div className="h-24 bg-[#1F2732] rounded-xl" />
+                    <div className="h-10 w-full bg-[#1F2732] rounded" />
                 </div>
             </AdminLayout>
         );
@@ -455,7 +455,7 @@ const PlayerDetail = () => {
             <AdminLayout onLogout={handleLogout} title="Player">
                 <div className="flex flex-col items-center justify-center min-h-[40vh]">
                     <p className="text-red-500 mb-4">{error || 'Player not found'}</p>
-                    <Link to="/all-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 text-gray-800 font-semibold">
+                    <Link to="/all-users" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 text-white font-semibold">
                         <FaArrowLeft /> Back to All Players
                     </Link>
                 </div>
@@ -475,18 +475,18 @@ const PlayerDetail = () => {
             </div>
 
             {/* Player info card - responsive, no overflow */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6 min-w-0">
-                <div className="px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
+            <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden mb-6 min-w-0">
+                <div className="px-4 sm:px-6 py-4 border-b border-[#333D4D] flex flex-wrap items-center justify-between gap-3">
                     <h2 className="text-lg font-semibold text-primary-500">Player Information</h2>
                     <div className="flex flex-wrap items-center gap-3">
                         <button
                             type="button"
                             onClick={handleTogglePlayerStatus}
                             disabled={togglingStatus || deletingPlayer}
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed border ${
                                 player.isActive !== false
-                                    ? 'bg-red-600 hover:bg-red-500 text-gray-800'
-                                    : 'bg-green-600 hover:bg-green-500 text-gray-800'
+                                    ? 'bg-[#252D3A] border-red-600/60 text-red-400 hover:bg-red-900/40 hover:border-red-500'
+                                    : 'bg-[#252D3A] border-green-600/60 text-green-400 hover:bg-green-900/40 hover:border-green-500'
                             }`}
                         >
                             {togglingStatus ? (
@@ -500,7 +500,7 @@ const PlayerDetail = () => {
                         <button
                             type="button"
                             onClick={() => { setWalletModalOpen(true); setWalletActionError(''); setWalletAdjustAmount(''); setWalletSetBalance(''); }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-green-700 hover:bg-green-600 text-gray-800 transition-colors"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-[#252D3A] border border-[#333D4D] text-primary-400 hover:bg-primary-500/20 hover:border-primary-400 transition-colors"
                             title="Edit wallet"
                         >
                             <FaWallet className="w-4 h-4" /> Edit Wallet
@@ -509,31 +509,31 @@ const PlayerDetail = () => {
                             type="button"
                             onClick={handleDeletePlayer}
                             disabled={deletingPlayer}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-200 hover:bg-red-600 text-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-[#252D3A] border border-[#333D4D] text-red-400 hover:bg-red-900/40 hover:border-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Delete player"
                         >
                             {deletingPlayer ? <span className="animate-spin">⏳</span> : <><FaTrash className="w-4 h-4" /> Delete</>}
                         </button>
                         <Link
                             to={`/all-users/${userId}/devices`}
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors border ${
                                 Array.isArray(player.loginDevices) && player.loginDevices.length > 1
-                                    ? 'bg-red-50 border border-red-600 text-red-600 hover:bg-red-800 hover:border-red-500 hover:text-red-100'
-                                    : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200 hover:border-primary-300 hover:text-primary-500'
+                                    ? 'bg-red-900/30 border-red-700/50 text-red-400 hover:bg-red-900/50 hover:border-red-500'
+                                    : 'bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-primary-500/20 hover:border-primary-400 hover:text-primary-400'
                             }`}
                             title="Devices used"
                         >
                             Devices used
                             {Array.isArray(player.loginDevices) && player.loginDevices.length > 0 && (
                                 <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${
-                                    player.loginDevices.length > 1 ? 'bg-red-800 text-red-600' : 'bg-gray-200 text-gray-600'
+                                    player.loginDevices.length > 1 ? 'bg-red-800/80 text-red-300' : 'bg-[#333D4D] text-gray-400'
                                 }`}>
                                     {player.loginDevices.length}
                                 </span>
                             )}
                         </Link>
                         {toggleMessage && (
-                            <span className={`text-sm ${toggleMessage.includes('success') ? 'text-green-600' : 'text-red-500'}`}>
+                            <span className={`text-sm ${toggleMessage.includes('success') ? 'text-green-400' : 'text-red-400'}`}>
                                 {toggleMessage}
                             </span>
                         )}
@@ -542,54 +542,54 @@ const PlayerDetail = () => {
                 <div className="p-4 sm:p-6 min-w-0">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 text-sm">
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">UserID</p>
-                            <p className="text-gray-800 font-mono truncate" title={player.username}>{player.username}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">UserID</p>
+                            <p className="text-white font-mono truncate" title={player.username}>{player.username}</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">First Name</p>
-                            <p className="text-gray-800 truncate">{player.username || '—'}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">First Name</p>
+                            <p className="text-white truncate">{player.username || '—'}</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Last Name</p>
-                            <p className="text-gray-800">—</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Last Name</p>
+                            <p className="text-white">—</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Email</p>
-                            <p className="text-gray-800 truncate" title={player.email}>{player.email || '—'}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Email</p>
+                            <p className="text-white truncate" title={player.email}>{player.email || '—'}</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Name</p>
-                            <p className="text-gray-800 truncate">{player.username}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Name</p>
+                            <p className="text-white truncate">{player.username}</p>
                         </div>
                         <div className="min-w-0 col-span-2 sm:col-span-1">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Id</p>
-                            <p className="text-gray-600 font-mono text-xs truncate break-all" title={player._id}>{player._id}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Id</p>
+                            <p className="text-gray-300 font-mono text-xs truncate break-all" title={player._id}>{player._id}</p>
                         </div>
                         <div className="min-w-0 col-span-2 sm:col-span-1">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Device ID</p>
-                            <p className="text-gray-600 font-mono text-xs truncate break-all" title={displayDeviceId || ''}>{displayDeviceId || '—'}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Device ID</p>
+                            <p className="text-gray-300 font-mono text-xs truncate break-all" title={displayDeviceId || ''}>{displayDeviceId || '—'}</p>
                         </div>
                         <div className="min-w-0 col-span-2 sm:col-span-1">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">IP Address</p>
-                            <p className="text-gray-600 font-mono text-xs truncate" title={player.lastLoginIp || ''}>{formatIpDisplay(player.lastLoginIp)}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">IP Address</p>
+                            <p className="text-gray-300 font-mono text-xs truncate" title={player.lastLoginIp || ''}>{formatIpDisplay(player.lastLoginIp)}</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Status</p>
-                            <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${player.isActive !== false ? 'bg-green-900/50 text-green-600 border border-green-700' : 'bg-red-50 text-red-500 border border-red-200'}`}>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Status</p>
+                            <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${player.isActive !== false ? 'bg-green-900/40 text-green-400 border border-green-700/50' : 'bg-red-900/40 text-red-400 border border-red-700/50'}`}>
                                 {player.isActive !== false ? 'ALLOW' : 'SUSPENDED'}
                             </span>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Balance</p>
-                            <p className="text-green-600 font-mono font-semibold">{player.walletBalance ?? 0}</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Balance</p>
+                            <p className="text-green-400 font-mono font-semibold">{player.walletBalance ?? 0}</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Exchange Balance</p>
-                            <p className="text-gray-600">0</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Exchange Balance</p>
+                            <p className="text-gray-300">0</p>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-500 uppercase tracking-wider text-xs">Bonus Balance</p>
-                            <p className="text-gray-600">0</p>
+                            <p className="text-gray-400 uppercase tracking-wider text-xs">Bonus Balance</p>
+                            <p className="text-gray-300">0</p>
                         </div>
                     </div>
                 </div>
@@ -598,7 +598,7 @@ const PlayerDetail = () => {
             {/* Multiple devices warning (admin-only) – red when multiple devices */}
             {Array.isArray(player.loginDevices) && player.loginDevices.length > 1 && (
                 <div className="mb-4 min-w-0">
-                    <div className="rounded-xl border border-red-500/60 bg-red-500/10 px-4 py-3 text-red-600 text-sm font-medium">
+                    <div className="rounded-xl border border-red-700/50 bg-red-900/20 px-4 py-3 text-red-400 text-sm font-medium">
                         ⚠️ User has logged in from multiple devices
                     </div>
                 </div>
@@ -610,38 +610,38 @@ const PlayerDetail = () => {
                         <button
                             type="button"
                             onClick={() => setCalendarOpen((o) => !o)}
-                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-600"
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-gray-300"
                         >
                             <FaCalendarAlt className="w-4 h-4 text-primary-500" />
                             {statementFrom && statementTo ? formatDateRange(statementFrom, statementTo) : 'Select Date'}
                         </button>
                         {calendarOpen && (
-                            <div className="absolute left-0 top-full mt-2 py-3 rounded-xl bg-white border border-gray-200 shadow-xl z-50 flex flex-col sm:flex-row gap-4 max-w-[100vw]">
+                            <div className="absolute left-0 top-full mt-2 py-3 rounded-xl bg-[#252D3A] border border-[#333D4D] shadow-xl z-50 flex flex-col sm:flex-row gap-4 max-w-[100vw]">
                                 <div className="min-w-0 sm:min-w-[200px] py-1">
                                     {STATEMENT_PRESETS.map((p) => (
                                         <button
                                             key={p.id}
                                             type="button"
                                             onClick={() => handlePresetSelect(p.id)}
-                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-100 flex items-center gap-2"
+                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-[#1F2732] flex items-center gap-2"
                                         >
                                             {statementPreset === p.id ? <span className="text-primary-500">●</span> : <span className="w-2" />}
                                             {p.label}
                                         </button>
                                     ))}
                                 </div>
-                                <div className="border-t sm:border-t-0 sm:border-l border-gray-200 pt-3 sm:pt-0 sm:pl-4 pr-4 min-w-0 sm:min-w-[200px]">
+                                <div className="border-t sm:border-t-0 sm:border-l border-[#333D4D] pt-3 sm:pt-0 sm:pl-4 pr-4 min-w-0 sm:min-w-[200px]">
                                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Custom Date Range</div>
                                     <div className="space-y-2">
                                         <div>
                                             <label className="block text-xs text-gray-400 mb-1">From</label>
-                                            <input type="date" value={statementFrom} onChange={(e) => setStatementFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" />
+                                            <input type="date" value={statementFrom} onChange={(e) => setStatementFrom(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-400 mb-1">To</label>
-                                            <input type="date" value={statementTo} onChange={(e) => setStatementTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" />
+                                            <input type="date" value={statementTo} onChange={(e) => setStatementTo(e.target.value)} className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-sm text-white" />
                                         </div>
-                                        <button type="button" onClick={handleDateApply} className="w-full py-2 rounded-lg bg-primary-500 text-gray-800 font-semibold text-sm">
+                                        <button type="button" onClick={handleDateApply} className="w-full py-2 rounded-lg bg-primary-500 text-white font-semibold text-sm">
                                             Apply
                                         </button>
                                     </div>
@@ -652,12 +652,12 @@ const PlayerDetail = () => {
                 </div>
 
             {/* Tabs */}
-            <div className="flex flex-wrap gap-2 mb-4 border-b border-gray-200 pb-2">
+            <div className="flex flex-wrap gap-2 mb-4 border-b border-[#333D4D] pb-2">
                 {TABS.map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${activeTab === tab.id ? 'bg-primary-500 text-gray-800' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                        className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors border ${activeTab === tab.id ? 'bg-primary-500 border-primary-500 text-white' : 'bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:bg-primary-500/20 hover:border-primary-400 hover:text-primary-400'}`}
                     >
                         {tab.label}
                     </button>
@@ -665,15 +665,15 @@ const PlayerDetail = () => {
             </div>
 
             {/* Tab content - no horizontal scroll, responsive */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden min-h-[200px] min-w-0 max-w-full">
+            <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden min-h-[200px] min-w-0 max-w-full">
                 {activeTab === 'statement' && (
                     <>
                         {loadingTab ? (
                             <div className="p-8 text-center text-gray-400">Loading...</div>
                         ) : statementData.length === 0 ? (
-                            <div className="p-8 text-center text-gray-500">No transactions in this period.</div>
+                            <div className="p-8 text-center text-gray-400">No transactions in this period.</div>
                         ) : (
-                            <div id="statement-slip" className="bg-white p-6 max-w-2xl mx-auto print:p-8 print:max-w-none">
+                            <div id="statement-slip" className="bg-[#252D3A] p-6 max-w-2xl mx-auto print:p-8 print:max-w-none">
                                 {/* Print button */}
                                 <div className="mb-4 print:hidden flex justify-end">
                                     <button
@@ -690,51 +690,51 @@ const PlayerDetail = () => {
                                     <div key={i} className="border-2 border-gray-300 rounded-lg p-6 print:border-gray-800 print:rounded-none">
                                         {/* Header */}
                                         <div className="text-center mb-6 pb-4 border-b-2 border-gray-300 print:border-gray-800">
-                                            <h2 className="text-2xl font-bold text-gray-800 mb-2">ACCOUNT STATEMENT</h2>
-                                            <p className="text-sm text-gray-600">
+                                            <h2 className="text-2xl font-bold text-white mb-2">ACCOUNT STATEMENT</h2>
+                                            <p className="text-sm text-gray-300">
                                                 {summary.period.from && summary.period.to && formatDateRange(summary.period.from, summary.period.to)}
                                             </p>
                                         </div>
 
                                         {/* Player Info */}
                                         {summary.player && (
-                                            <div className="mb-6 pb-4 border-b border-gray-200">
+                                            <div className="mb-6 pb-4 border-b border-[#333D4D]">
                                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                                     <div>
-                                                        <p className="text-gray-500 mb-1">Player Name</p>
-                                                        <p className="font-semibold text-gray-800">{summary.player.name}</p>
+                                                        <p className="text-gray-400 mb-1">Player Name</p>
+                                                        <p className="font-semibold text-white">{summary.player.name}</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-gray-500 mb-1">Phone</p>
-                                                        <p className="font-semibold text-gray-800">{summary.player.phone || '—'}</p>
+                                                        <p className="text-gray-400 mb-1">Phone</p>
+                                                        <p className="font-semibold text-white">{summary.player.phone || '—'}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         )}
 
                                         {/* Bet Summary */}
-                                        <div className="mb-6 pb-4 border-b border-gray-200">
-                                            <h3 className="text-lg font-bold text-gray-800 mb-3">BET SUMMARY</h3>
+                                        <div className="mb-6 pb-4 border-b border-[#333D4D]">
+                                            <h3 className="text-lg font-bold text-white mb-3">BET SUMMARY</h3>
                                             <div className="space-y-2 text-sm">
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Bets Placed</span>
-                                                    <span className="font-mono font-semibold text-gray-800">{summary.bets.count} bets</span>
+                                                    <span className="text-gray-300">Total Bets Placed</span>
+                                                    <span className="font-mono font-semibold text-white">{summary.bets.count} bets</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Bet Amount</span>
+                                                    <span className="text-gray-300">Total Bet Amount</span>
                                                     <span className="font-mono font-semibold text-red-600">₹{Number(summary.bets.totalAmount || 0).toLocaleString('en-IN')}</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Win Amount</span>
+                                                    <span className="text-gray-300">Total Win Amount</span>
                                                     <span className="font-mono font-semibold text-green-600">₹{Number(summary.bets.totalWin || 0).toLocaleString('en-IN')}</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Loss Amount</span>
+                                                    <span className="text-gray-300">Total Loss Amount</span>
                                                     <span className="font-mono font-semibold text-red-600">₹{Number(summary.bets.totalLoss || 0).toLocaleString('en-IN')}</span>
                                                 </div>
                                                 {summary.bets.totalPending > 0 && (
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Pending Bets</span>
+                                                        <span className="text-gray-300">Pending Bets</span>
                                                         <span className="font-mono font-semibold text-primary-600">₹{Number(summary.bets.totalPending || 0).toLocaleString('en-IN')}</span>
                                                     </div>
                                                 )}
@@ -742,26 +742,26 @@ const PlayerDetail = () => {
                                         </div>
 
                                         {/* Wallet Summary */}
-                                        <div className="mb-6 pb-4 border-b border-gray-200">
-                                            <h3 className="text-lg font-bold text-gray-800 mb-3">WALLET TRANSACTIONS</h3>
+                                        <div className="mb-6 pb-4 border-b border-[#333D4D]">
+                                            <h3 className="text-lg font-bold text-white mb-3">WALLET TRANSACTIONS</h3>
                                             <div className="space-y-2 text-sm">
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Deposits</span>
+                                                    <span className="text-gray-300">Total Deposits</span>
                                                     <span className="font-mono font-semibold text-green-600">₹{Number(summary.wallet.deposits || 0).toLocaleString('en-IN')}</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Withdrawals</span>
+                                                    <span className="text-gray-300">Total Withdrawals</span>
                                                     <span className="font-mono font-semibold text-red-600">₹{Number(summary.wallet.withdrawals || 0).toLocaleString('en-IN')}</span>
                                                 </div>
                                                 {summary.wallet.otherCredits > 0 && (
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Other Credits</span>
+                                                        <span className="text-gray-300">Other Credits</span>
                                                         <span className="font-mono font-semibold text-green-600">₹{Number(summary.wallet.otherCredits || 0).toLocaleString('en-IN')}</span>
                                                     </div>
                                                 )}
                                                 {summary.wallet.otherDebits > 0 && (
                                                     <div className="flex justify-between">
-                                                        <span className="text-gray-600">Other Debits</span>
+                                                        <span className="text-gray-300">Other Debits</span>
                                                         <span className="font-mono font-semibold text-red-600">₹{Number(summary.wallet.otherDebits || 0).toLocaleString('en-IN')}</span>
                                                     </div>
                                                 )}
@@ -770,18 +770,18 @@ const PlayerDetail = () => {
 
                                         {/* Totals */}
                                         <div className="mb-6 pb-4 border-b-2 border-gray-300 print:border-gray-800">
-                                            <h3 className="text-lg font-bold text-gray-800 mb-3">TOTALS</h3>
+                                            <h3 className="text-lg font-bold text-white mb-3">TOTALS</h3>
                                             <div className="space-y-2 text-sm">
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Credits</span>
+                                                    <span className="text-gray-300">Total Credits</span>
                                                     <span className="font-mono font-semibold text-green-600">₹{Number(summary.totals.totalCredits || 0).toLocaleString('en-IN')}</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Total Debits</span>
+                                                    <span className="text-gray-300">Total Debits</span>
                                                     <span className="font-mono font-semibold text-red-600">₹{Number(summary.totals.totalDebits || 0).toLocaleString('en-IN')}</span>
                                                 </div>
-                                                <div className="flex justify-between pt-2 border-t border-gray-200">
-                                                    <span className="text-gray-800 font-bold">Net Amount</span>
+                                                <div className="flex justify-between pt-2 border-t border-[#333D4D]">
+                                                    <span className="text-white font-bold">Net Amount</span>
                                                     <span className={`font-mono font-bold text-lg ${summary.totals.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                                         ₹{Number(summary.totals.netAmount || 0).toLocaleString('en-IN')}
                                                     </span>
@@ -791,14 +791,14 @@ const PlayerDetail = () => {
 
                                         {/* Current Status */}
                                         <div className="space-y-3">
-                                            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                                <span className="text-gray-700 font-semibold">Current Wallet Balance</span>
-                                                <span className="font-mono font-bold text-xl text-gray-800">₹{Number(summary.currentBalance || 0).toLocaleString('en-IN')}</span>
+                                            <div className="flex justify-between items-center p-3 bg-[#1F2732] rounded-lg">
+                                                <span className="text-gray-200 font-semibold">Current Wallet Balance</span>
+                                                <span className="font-mono font-bold text-xl text-white">₹{Number(summary.currentBalance || 0).toLocaleString('en-IN')}</span>
                                             </div>
                                         </div>
 
                                         {/* Footer */}
-                                        <div className="mt-6 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
+                                        <div className="mt-6 pt-4 border-t border-[#333D4D] text-center text-xs text-gray-400">
                                             <p>Generated on {new Date().toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' })}</p>
                                             <p className="mt-1">This is a computer-generated statement</p>
                                         </div>
@@ -814,14 +814,14 @@ const PlayerDetail = () => {
                         {loadingTab ? (
                             <div className="p-8 text-center text-gray-400">Loading...</div>
                         ) : walletTx.length === 0 ? (
-                            <div className="p-8 text-center text-gray-500">No wallet transactions.</div>
+                            <div className="p-8 text-center text-gray-400">No wallet transactions.</div>
                         ) : (
                             <div className="divide-y divide-gray-700 min-w-0">
                                 {walletTx.map((t) => (
-                                    <div key={t._id} className="p-4 hover:bg-gray-100/20 flex flex-wrap items-center justify-between gap-3">
+                                    <div key={t._id} className="p-4 hover:bg-[#1F2732]/20 flex flex-wrap items-center justify-between gap-3">
                                         <div className="min-w-0 flex-1">
-                                            <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium mr-2 ${t.type === 'credit' ? 'bg-green-900/50 text-green-600' : 'bg-red-50 text-red-500'}`}>{t.type}</span>
-                                            <span className="text-gray-600 text-sm break-words">{t.description || '—'}</span>
+                                            <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium mr-2 ${t.type === 'credit' ? 'bg-green-900/40 text-green-400 border border-green-700/50' : 'bg-red-900/40 text-red-400 border border-red-700/50'}`}>{t.type}</span>
+                                            <span className="text-gray-300 text-sm break-words">{t.description || '—'}</span>
                                         </div>
                                         <div className="flex items-center gap-3 shrink-0">
                                             <span className="font-mono font-medium text-sm">{t.type === 'credit' ? '+' : '-'}{formatCurrency(t.amount)}</span>
@@ -839,19 +839,19 @@ const PlayerDetail = () => {
                         {loadingTab ? (
                             <div className="p-8 text-center text-gray-400">Loading...</div>
                         ) : bets.length === 0 ? (
-                            <div className="p-8 text-center text-gray-500">No bets.</div>
+                            <div className="p-8 text-center text-gray-400">No bets.</div>
                         ) : (
                             <div className="divide-y divide-gray-700 min-w-0">
                                 {bets.map((b) => (
-                                    <div key={b._id} className="p-4 hover:bg-gray-100/20">
+                                    <div key={b._id} className="p-4 hover:bg-[#1F2732]/20">
                                         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                                             <span className="text-primary-500 font-mono font-medium">{b.betNumber}</span>
-                                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${b.status === 'won' ? 'bg-green-900/50 text-green-600' : b.status === 'lost' ? 'bg-red-50 text-red-500' : 'bg-gray-200 text-gray-600'}`}>{b.status}</span>
+                                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${b.status === 'won' ? 'bg-green-900/40 text-green-400 border border-green-700/50' : b.status === 'lost' ? 'bg-red-900/40 text-red-400 border border-red-700/50' : 'bg-[#252D3A] border border-[#333D4D] text-gray-400'}`}>{b.status}</span>
                                         </div>
                                         <p className="text-gray-400 text-xs mb-2">{b.marketId?.marketName || '—'} · {b.betType || '—'}</p>
                                         <div className="flex flex-wrap gap-4 text-sm">
-                                            <span><span className="text-gray-500">Amount</span> <span className="text-gray-800 font-mono">{formatCurrency(b.amount)}</span></span>
-                                            <span><span className="text-gray-500">Payout</span> <span className="text-green-600 font-mono">{formatCurrency(b.payout)}</span></span>
+                                            <span><span className="text-gray-400">Amount</span> <span className="text-white font-mono">{formatCurrency(b.amount)}</span></span>
+                                            <span><span className="text-gray-400">Payout</span> <span className="text-green-600 font-mono">{formatCurrency(b.payout)}</span></span>
                                             <span className="text-gray-400 text-xs">{new Date(b.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</span>
                                         </div>
                                     </div>
@@ -864,12 +864,12 @@ const PlayerDetail = () => {
                 {activeTab === 'profile' && (
                     <div className="p-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-                            <div><p className="text-gray-500 text-sm">Name</p><p className="text-gray-800">{player.username}</p></div>
-                            <div><p className="text-gray-500 text-sm">Email</p><p className="text-gray-800">{player.email}</p></div>
-                            <div><p className="text-gray-500 text-sm">Phone</p><p className="text-gray-800">{player.phone || '—'}</p></div>
-                            <div><p className="text-gray-500 text-sm">Role</p><p className="text-gray-800 capitalize">{player.role || 'Player'}</p></div>
-                            <div><p className="text-gray-500 text-sm">Source</p><p className="text-gray-800">{player.source === 'bookie' ? 'Bookie' : 'Super Admin'}</p></div>
-                            <div><p className="text-gray-500 text-sm">Created</p><p className="text-gray-800">{player.createdAt ? new Date(player.createdAt).toLocaleString('en-IN') : '—'}</p></div>
+                            <div><p className="text-gray-400 text-sm">Name</p><p className="text-white">{player.username}</p></div>
+                            <div><p className="text-gray-400 text-sm">Email</p><p className="text-white">{player.email}</p></div>
+                            <div><p className="text-gray-400 text-sm">Phone</p><p className="text-white">{player.phone || '—'}</p></div>
+                            <div><p className="text-gray-400 text-sm">Role</p><p className="text-white capitalize">{player.role || 'Player'}</p></div>
+                            <div><p className="text-gray-400 text-sm">Source</p><p className="text-white">{player.source === 'bookie' ? 'Bookie' : 'Super Admin'}</p></div>
+                            <div><p className="text-gray-400 text-sm">Created</p><p className="text-white">{player.createdAt ? new Date(player.createdAt).toLocaleString('en-IN') : '—'}</p></div>
                         </div>
                     </div>
                 )}
@@ -879,13 +879,13 @@ const PlayerDetail = () => {
             {/* Edit Wallet Modal */}
             {walletModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-md">
-                        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-md">
+                        <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-primary-500">Edit Wallet</h3>
-                            <button type="button" onClick={() => setWalletModalOpen(false)} className="text-gray-400 hover:text-gray-800 p-1">×</button>
+                            <button type="button" onClick={() => setWalletModalOpen(false)} className="text-gray-400 hover:text-white p-1">×</button>
                         </div>
                         <div className="p-4 space-y-4">
-                            <div className="rounded-lg bg-gray-50 px-3 py-2">
+                            <div className="rounded-lg bg-[#1F2732] px-3 py-2">
                                 <p className="text-gray-400 text-xs uppercase tracking-wider">Current Balance</p>
                                 <p className="text-green-600 font-mono font-bold text-xl">{formatCurrency(player?.walletBalance ?? 0)}</p>
                             </div>
@@ -902,10 +902,10 @@ const PlayerDetail = () => {
                                         placeholder="Amount"
                                         value={walletAdjustAmount}
                                         onChange={(e) => setWalletAdjustAmount(e.target.value.replace(/\D/g, '').slice(0, 12))}
-                                        className="flex-1 px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400"
+                                        className="flex-1 px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400"
                                     />
-                                    <button type="button" onClick={() => handleWalletAdjust('credit')} disabled={walletActionLoading} className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-gray-800 font-semibold disabled:opacity-50">Add</button>
-                                    <button type="button" onClick={() => handleWalletAdjust('debit')} disabled={walletActionLoading} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-gray-800 font-semibold disabled:opacity-50">Deduct</button>
+                                    <button type="button" onClick={() => handleWalletAdjust('credit')} disabled={walletActionLoading} className="px-4 py-2 rounded-lg bg-[#252D3A] border border-green-600/60 text-green-400 hover:bg-green-900/40 font-semibold disabled:opacity-50">Add</button>
+                                    <button type="button" onClick={() => handleWalletAdjust('debit')} disabled={walletActionLoading} className="px-4 py-2 rounded-lg bg-[#252D3A] border border-red-600/60 text-red-400 hover:bg-red-900/40 font-semibold disabled:opacity-50">Deduct</button>
                                 </div>
                             </div>
                         </div>
@@ -916,15 +916,15 @@ const PlayerDetail = () => {
             {/* Secret password modal for suspend/delete */}
             {showPasswordModal && (pendingAction === 'suspend' || pendingAction === 'delete') && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-md">
-                        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-md">
+                        <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-primary-500">
                                 {pendingAction === 'suspend' ? 'Confirm Suspend/Unsuspend' : 'Confirm Delete'}
                             </h3>
-                            <button type="button" onClick={() => { setShowPasswordModal(false); setPendingAction(null); setSecretPassword(''); setPasswordError(''); }} className="text-gray-400 hover:text-gray-800 p-1">×</button>
+                            <button type="button" onClick={() => { setShowPasswordModal(false); setPendingAction(null); setSecretPassword(''); setPasswordError(''); }} className="text-gray-400 hover:text-white p-1">×</button>
                         </div>
                         <form onSubmit={handlePasswordSubmit} className="p-4 space-y-4">
-                            <p className="text-gray-600 text-sm">
+                            <p className="text-gray-300 text-sm">
                                 {pendingAction === 'suspend' ? 'Enter secret declare password to suspend/unsuspend this player.' : 'Enter secret declare password to delete this player.'}
                             </p>
                             <input
@@ -932,15 +932,15 @@ const PlayerDetail = () => {
                                 placeholder="Secret declare password"
                                 value={secretPassword}
                                 onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
-                                className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400"
+                                className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400"
                                 autoFocus
                             />
                             {passwordError && (
                                 <div className="rounded-lg bg-red-900/30 border border-red-600/50 text-red-600 text-sm px-3 py-2">{passwordError}</div>
                             )}
                             <div className="flex gap-2 justify-end">
-                                <button type="button" onClick={() => { setShowPasswordModal(false); setPendingAction(null); setSecretPassword(''); setPasswordError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-500 text-gray-800 font-semibold">Cancel</button>
-                                <button type="submit" disabled={togglingStatus || deletingPlayer} className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-gray-800 font-semibold disabled:opacity-50">
+                                <button type="button" onClick={() => { setShowPasswordModal(false); setPendingAction(null); setSecretPassword(''); setPasswordError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-[#1F2732]0 text-white font-semibold">Cancel</button>
+                                <button type="submit" disabled={togglingStatus || deletingPlayer} className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-semibold disabled:opacity-50">
                                     {togglingStatus || deletingPlayer ? <span className="animate-spin">⏳</span> : 'Confirm'}
                                 </button>
                             </div>

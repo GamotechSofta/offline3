@@ -143,7 +143,7 @@ const DeclareConfirm = () => {
                     Back to Add Result
                 </button>
 
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-2 break-words">{title}</h1>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 break-words">{title}</h1>
                 <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6 truncate">{marketName}</p>
 
                 {error && (
@@ -152,7 +152,7 @@ const DeclareConfirm = () => {
 
                 {loading ? (
                     <div className="flex items-center justify-center py-16">
-                        <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-yellow-500" />
+                        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#333D4D] border-t-yellow-500" />
                     </div>
                 ) : data ? (
                     <>
@@ -161,33 +161,33 @@ const DeclareConfirm = () => {
                             <p className="text-gray-400 text-xs sm:text-sm mt-1">{data.winningBets?.length ?? 0} winning bet(s)</p>
                         </div>
 
-                        <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden mb-4 sm:mb-6">
-                            <h2 className="text-base sm:text-lg font-bold text-primary-500 bg-white px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200">Winning players</h2>
+                        <div className="rounded-xl border border-[#333D4D] bg-[#252D3A] shadow-lg overflow-hidden mb-4 sm:mb-6">
+                            <h2 className="text-base sm:text-lg font-bold text-primary-500 bg-[#252D3A] px-3 sm:px-4 py-2 sm:py-3 border-b border-[#333D4D]">Winning players</h2>
                             <div className="overflow-x-auto overscroll-x-contain touch-pan-x">
                                 <table className="w-full text-xs sm:text-sm border-collapse min-w-[340px] sm:min-w-[480px]">
                                     <thead>
-                                        <tr className="bg-gray-100/70 border-b border-gray-200">
+                                        <tr className="bg-[#1F2732]/70 border-b border-[#333D4D]">
                                             <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-primary-500 text-[11px] sm:text-sm">#</th>
-                                            <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-600 text-[11px] sm:text-sm">Username</th>
-                                            <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-600 text-[11px] sm:text-sm">Bet type</th>
-                                            <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-600 text-[11px] sm:text-sm">Bet number</th>
-                                            <th className="text-right py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-600 text-[11px] sm:text-sm">Amount (₹)</th>
+                                            <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-300 text-[11px] sm:text-sm">Username</th>
+                                            <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-300 text-[11px] sm:text-sm">Bet type</th>
+                                            <th className="text-left py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-300 text-[11px] sm:text-sm">Bet number</th>
+                                            <th className="text-right py-2 sm:py-3 px-2 sm:px-3 font-semibold text-gray-300 text-[11px] sm:text-sm">Amount (₹)</th>
                                             <th className="text-right py-2 sm:py-3 px-2 sm:px-3 font-semibold text-primary-500 text-[11px] sm:text-sm">Payout (₹)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {(data.winningBets || []).length === 0 ? (
                                             <tr>
-                                                <td colSpan={6} className="py-8 text-center text-gray-500">No winning players for this result.</td>
+                                                <td colSpan={6} className="py-8 text-center text-gray-400">No winning players for this result.</td>
                                             </tr>
                                         ) : (
                                             (data.winningBets || []).map((row, idx) => (
-                                                <tr key={idx} className="border-b border-gray-200 hover:bg-gray-100/30">
+                                                <tr key={idx} className="border-b border-[#333D4D] hover:bg-[#1F2732]/30">
                                                     <td className="py-2 sm:py-2.5 px-2 sm:px-3 text-gray-400 text-[11px] sm:text-sm">{idx + 1}</td>
-                                                    <td className="py-2 sm:py-2.5 px-2 sm:px-3 font-medium text-gray-800 text-[11px] sm:text-sm truncate max-w-[90px] sm:max-w-[120px] md:max-w-none">{row.username}</td>
-                                                    <td className="py-2 sm:py-2.5 px-2 sm:px-3 text-gray-600 capitalize text-[11px] sm:text-sm">{row.betType}</td>
+                                                    <td className="py-2 sm:py-2.5 px-2 sm:px-3 font-medium text-white text-[11px] sm:text-sm truncate max-w-[90px] sm:max-w-[120px] md:max-w-none">{row.username}</td>
+                                                    <td className="py-2 sm:py-2.5 px-2 sm:px-3 text-gray-300 capitalize text-[11px] sm:text-sm">{row.betType}</td>
                                                     <td className="py-2 sm:py-2.5 px-2 sm:px-3 font-mono text-amber-300 text-[11px] sm:text-sm">{row.betNumber}</td>
-                                                    <td className="py-2 sm:py-2.5 px-2 sm:px-3 text-right font-mono text-gray-800 text-[11px] sm:text-sm">{formatNum(row.amount)}</td>
+                                                    <td className="py-2 sm:py-2.5 px-2 sm:px-3 text-right font-mono text-white text-[11px] sm:text-sm">{formatNum(row.amount)}</td>
                                                     <td className="py-2 sm:py-2.5 px-2 sm:px-3 text-right font-mono font-semibold text-green-600 text-[11px] sm:text-sm">{formatNum(row.payout)}</td>
                                                 </tr>
                                             ))
@@ -202,14 +202,14 @@ const DeclareConfirm = () => {
                                 type="button"
                                 onClick={handleConfirmDeclare}
                                 disabled={declaring}
-                                className="w-full sm:w-auto px-4 sm:px-6 py-3 min-h-[44px] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-gray-800 font-semibold rounded-lg shadow-lg disabled:opacity-50 transition-all touch-manipulation"
+                                className="w-full sm:w-auto px-4 sm:px-6 py-3 min-h-[44px] bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white font-semibold rounded-lg shadow-lg disabled:opacity-50 transition-all touch-manipulation"
                             >
                                 {declaring ? 'Declaring...' : 'Confirm & Declare'}
                             </button>
                             <button
                                 type="button"
                                 onClick={handleBack}
-                                className="w-full sm:w-auto px-4 sm:px-6 py-3 min-h-[44px] bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-lg border border-gray-200 transition-colors touch-manipulation"
+                                className="w-full sm:w-auto px-4 sm:px-6 py-3 min-h-[44px] bg-[#1F2732] hover:bg-gray-200 text-white font-semibold rounded-lg border border-[#333D4D] transition-colors touch-manipulation"
                             >
                                 Cancel
                             </button>
@@ -218,7 +218,7 @@ const DeclareConfirm = () => {
                         {/* Secret declare password modal */}
                         {showPasswordModal && (
                             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-3 sm:p-4 overflow-y-auto">
-                                <div className="bg-white rounded-xl border border-gray-200 shadow-xl max-w-md w-full p-4 sm:p-6 my-auto">
+                                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl max-w-md w-full p-4 sm:p-6 my-auto">
                                     <h3 className="text-base sm:text-lg font-bold text-primary-500 mb-2">Enter Secret Declare Password</h3>
                                     <p className="text-gray-400 text-xs sm:text-sm mb-4">
                                         Please enter the secret password to confirm and declare this result.
@@ -230,14 +230,14 @@ const DeclareConfirm = () => {
                                             onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
                                             placeholder="Secret password"
                                             autoFocus
-                                            className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent touch-manipulation"
+                                            className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent touch-manipulation"
                                         />
                                         {passwordError && <p className="text-red-500 text-xs sm:text-sm">{passwordError}</p>}
                                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                             <button
                                                 type="submit"
                                                 disabled={declaring}
-                                                className="flex-1 px-4 py-3 min-h-[44px] bg-primary-500 hover:bg-primary-600 text-gray-800 font-semibold rounded-lg disabled:opacity-50 touch-manipulation"
+                                                className="flex-1 px-4 py-3 min-h-[44px] bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg disabled:opacity-50 touch-manipulation"
                                             >
                                                 {declaring ? 'Declaring...' : 'Confirm & Declare'}
                                             </button>
@@ -245,7 +245,7 @@ const DeclareConfirm = () => {
                                                 type="button"
                                                 onClick={() => { setShowPasswordModal(false); setSecretPassword(''); setPasswordError(''); }}
                                                 disabled={declaring}
-                                                className="px-4 py-3 min-h-[44px] bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-lg border border-gray-200 touch-manipulation"
+                                                className="px-4 py-3 min-h-[44px] bg-[#1F2732] hover:bg-gray-200 text-white font-semibold rounded-lg border border-[#333D4D] touch-manipulation"
                                             >
                                                 Cancel
                                             </button>

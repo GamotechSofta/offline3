@@ -85,10 +85,10 @@ const Settings = () => {
     return (
         <AdminLayout onLogout={handleLogout} title="Settings">
             <div className="w-full min-w-0 px-3 sm:px-4 md:px-6 pb-6 sm:pb-8">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Settings</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-white mb-6">Settings</h1>
 
-                <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden max-w-xl">
-                    <h2 className="text-lg font-bold text-primary-500 bg-white px-4 py-3 border-b border-gray-200">
+                <div className="rounded-xl border border-[#333D4D] bg-[#252D3A] shadow-lg overflow-hidden max-w-xl">
+                    <h2 className="text-lg font-bold text-primary-500 bg-[#252D3A] px-4 py-3 border-b border-[#333D4D]">
                         Secret Declare Password
                     </h2>
                     <div className="p-4 space-y-3">
@@ -101,7 +101,7 @@ const Settings = () => {
                                 <div>
                                     {!forgotSecret ? (
                                         <>
-                                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                                            <label className="block text-sm font-medium text-gray-300 mb-1">
                                                 Current secret password *
                                             </label>
                                             <input
@@ -109,10 +109,10 @@ const Settings = () => {
                                                 value={currentSecretPassword}
                                                 onChange={(e) => { setCurrentSecretPassword(e.target.value); setAdminLoginPassword(''); setStatusMsg(''); }}
                                                 placeholder=""
-                                                className="w-full px-4 py-2.5 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                                className="w-full px-4 py-2.5 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                                 autoComplete="current-password"
                                             />
-                                            <p className="mt-1 text-xs text-gray-500">Enter current secret password to verify it&apos;s you before changing.</p>
+                                            <p className="mt-1 text-xs text-gray-400">Enter current secret password to verify it&apos;s you before changing.</p>
                                             <button
                                                 type="button"
                                                 onClick={() => { setForgotSecret(true); setCurrentSecretPassword(''); setAdminLoginPassword(''); setStatusMsg(''); }}
@@ -123,7 +123,7 @@ const Settings = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <label className="block text-sm font-medium text-gray-600 mb-1">
+                                            <label className="block text-sm font-medium text-gray-300 mb-1">
                                                 Admin login password * (reset option)
                                             </label>
                                             <input
@@ -131,10 +131,10 @@ const Settings = () => {
                                                 value={adminLoginPassword}
                                                 onChange={(e) => { setAdminLoginPassword(e.target.value); setStatusMsg(''); }}
                                                 placeholder=""
-                                                className="w-full px-4 py-2.5 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                                className="w-full px-4 py-2.5 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                                 autoComplete="current-password"
                                             />
-                                            <p className="mt-1 text-xs text-gray-500">Enter the password you use to log into admin panel. This proves you&apos;re the admin and allows you to reset the secret.</p>
+                                            <p className="mt-1 text-xs text-gray-400">Enter the password you use to log into admin panel. This proves you&apos;re the admin and allows you to reset the secret.</p>
                                             <button
                                                 type="button"
                                                 onClick={() => { setForgotSecret(false); setAdminLoginPassword(''); setCurrentSecretPassword(''); setStatusMsg(''); }}
@@ -147,7 +147,7 @@ const Settings = () => {
                                 </div>
                             )}
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     {hasSecret ? 'New secret password' : 'Secret password'}
                                 </label>
                                 <input
@@ -155,17 +155,17 @@ const Settings = () => {
                                     value={secretDeclarePassword}
                                     onChange={(e) => setSecretDeclarePassword(e.target.value)}
                                     placeholder=""
-                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                    className="w-full px-4 py-2.5 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 mb-1">Confirm password</label>
+                                <label className="block text-sm font-medium text-gray-300 mb-1">Confirm password</label>
                                 <input
                                     type="password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder=""
-                                    className="w-full px-4 py-2.5 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                    className="w-full px-4 py-2.5 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                 />
                             </div>
                             {statusMsg && (
@@ -176,7 +176,7 @@ const Settings = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-gray-800 font-semibold rounded-lg disabled:opacity-50 transition-colors"
+                                className="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg disabled:opacity-50 transition-colors"
                             >
                                 {loading ? 'Saving...' : 'Set Secret Password'}
                             </button>

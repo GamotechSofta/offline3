@@ -347,7 +347,7 @@ const BookieManagement = () => {
                                 setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', commissionPercentage: '', canManagePayments: false, balance: '' });
                                 setShowCreateModal(true);
                             }}
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-gray-800 font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 px-4 rounded-lg transition-colors text-sm sm:text-base"
                         >
                             <FaPlus /> Add New Bookie
                         </button>
@@ -355,7 +355,7 @@ const BookieManagement = () => {
 
                     {/* Alerts */}
                     {error && (
-                        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+                        <div className="mb-4 p-4 bg-red-500/20 border border-red-200 rounded-lg text-red-600">
                             {error}
                             <button onClick={() => setError('')} className="float-right">
                                 <FaTimes />
@@ -364,13 +364,13 @@ const BookieManagement = () => {
                     )}
 
                     {success && (
-                        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
+                        <div className="mb-4 p-4 bg-green-500/20 border border-green-200 rounded-lg text-green-700">
                             {success}
                         </div>
                     )}
 
                     {/* Bookies Table */}
-                    <div className="bg-white rounded-lg overflow-hidden">
+                    <div className="bg-[#252D3A] rounded-lg overflow-hidden">
                         {loading ? (
                             <div className="p-8 text-center">
                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
@@ -384,49 +384,49 @@ const BookieManagement = () => {
                         ) : (
                             <div className="overflow-x-auto">
                             <table className="w-full min-w-[640px] text-sm sm:text-base">
-                                <thead className="bg-gray-100">
+                                <thead className="bg-[#1F2732]">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             #
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Name
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Email
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Phone
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Commission
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Balance
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Payment Management
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Status
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Created At
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
                                     {bookies.map((bookie, index) => (
-                                        <tr key={bookie._id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                        <tr key={bookie._id} className="hover:bg-[#1F2732]">
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-300">
                                                 {index + 1}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-gray-800">{bookie.username}</span>
+                                                    <span className="font-medium text-white">{bookie.username}</span>
                                                     <button
                                                         onClick={() => copyToClipboard(bookie.username)}
                                                         className="text-gray-400 hover:text-primary-500"
@@ -436,10 +436,10 @@ const BookieManagement = () => {
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-300">
                                                 {bookie.email || '-'}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-300">
                                                 {bookie.phone || '-'}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -457,7 +457,7 @@ const BookieManagement = () => {
                                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                                     bookie.canManagePayments 
                                                         ? 'bg-green-100 text-green-700 border border-green-200' 
-                                                        : 'bg-gray-100 text-gray-600 border border-gray-200'
+                                                        : 'bg-[#1F2732] text-gray-300 border border-[#333D4D]'
                                                 }`}>
                                                     {bookie.canManagePayments ? 'Enabled' : 'Disabled'}
                                                 </span>
@@ -466,12 +466,12 @@ const BookieManagement = () => {
                                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                                     bookie.status === 'active' 
                                                         ? 'bg-green-100 text-green-700 border border-green-200' 
-                                                        : 'bg-red-50 text-red-500 border border-red-200'
+                                                        : 'bg-red-500/20 text-red-500 border border-red-200'
                                                 }`}>
                                                     {bookie.status === 'active' ? 'Active' : 'Suspended'}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-300">
                                                 {new Date(bookie.createdAt).toLocaleDateString('en-IN', {
                                                     day: '2-digit',
                                                     month: 'short',
@@ -486,7 +486,7 @@ const BookieManagement = () => {
                                                         className={`p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                                                             bookie.status === 'active'
                                                                 ? 'bg-green-900/30 text-green-600 hover:bg-green-900/50'
-                                                                : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                                                                : 'bg-[#1F2732] text-gray-400 hover:bg-gray-200'
                                                         }`}
                                                         title={bookie.status === 'active' ? 'Suspend' : 'Unsuspend'}
                                                     >
@@ -507,7 +507,7 @@ const BookieManagement = () => {
                                                     </button>
                                                     <button
                                                         onClick={() => openDeleteModal(bookie)}
-                                                        className="p-2 rounded-lg bg-red-900/30 text-red-500 hover:bg-red-50 transition-colors"
+                                                        className="p-2 rounded-lg bg-red-900/30 text-red-500 hover:bg-red-500/20 transition-colors"
                                                         title="Delete"
                                                     >
                                                         <FaTrash size={16} />
@@ -523,10 +523,10 @@ const BookieManagement = () => {
                     </div>
 
                     {/* Info Card */}
-                    <div className="mt-4 sm:mt-6 bg-white rounded-lg p-4 sm:p-6">
+                    <div className="mt-4 sm:mt-6 bg-[#252D3A] rounded-lg p-4 sm:p-6">
                         <h3 className="text-base sm:text-lg font-semibold text-primary-500 mb-3">Bookie Login Information</h3>
-                        <div className="text-gray-600 space-y-2 text-sm sm:text-base">
-                            <p><strong>Bookie Panel URL:</strong> <code className="bg-gray-100 px-2 py-1 rounded">/bookie</code></p>
+                        <div className="text-gray-300 space-y-2 text-sm sm:text-base">
+                            <p><strong>Bookie Panel URL:</strong> <code className="bg-[#1F2732] px-2 py-1 rounded">/bookie</code></p>
                             <p><strong>Login:</strong> Bookies use their Phone number and the password you set.</p>
                             <p><strong>Status:</strong> Suspended bookies cannot login to the bookie panel.</p>
                         </div>
@@ -535,10 +535,10 @@ const BookieManagement = () => {
             {/* Create Modal */}
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-white rounded-lg w-full max-w-md my-auto flex flex-col max-h-[90vh] shadow-xl">
+                    <div className="bg-[#252D3A] rounded-lg w-full max-w-md my-auto flex flex-col max-h-[90vh] shadow-xl">
                         <div className="flex justify-between items-center p-4 pb-0 shrink-0">
                             <h2 className="text-xl font-bold">Create New Bookie</h2>
-                            <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-gray-800">
+                            <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-white">
                                 <FaTimes size={20} />
                             </button>
                         </div>
@@ -546,57 +546,57 @@ const BookieManagement = () => {
                             <div className="overflow-y-auto px-4 py-3 space-y-3 max-h-[calc(90vh-140px)]">
                                 <div className="grid grid-cols-2 gap-2">
                                     <div>
-                                        <label className="block text-gray-600 text-sm font-medium mb-1">First Name *</label>
+                                        <label className="block text-gray-300 text-sm font-medium mb-1">First Name *</label>
                                         <input
                                             type="text"
                                             name="firstName"
                                             value={formData.firstName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                             placeholder="First name"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-600 text-sm font-medium mb-1">Last Name *</label>
+                                        <label className="block text-gray-300 text-sm font-medium mb-1">Last Name *</label>
                                         <input
                                             type="text"
                                             name="lastName"
                                             value={formData.lastName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                             placeholder="Last name"
                                         />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Email</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Email</label>
                                     <input
                                         type="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="Optional"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Phone Number *</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Phone Number *</label>
                                     <input
                                         type="tel"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
                                         maxLength={10}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="10-digit (6–9 start)"
                                         required
                                     />
-                                    <p className="mt-0.5 text-xs text-gray-500">Bookies log in with phone + password.</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Bookies log in with phone + password.</p>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Commission %</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Commission %</label>
                                     <div className="relative">
                                         <input
                                             type="text"
@@ -604,25 +604,25 @@ const BookieManagement = () => {
                                             name="commissionPercentage"
                                             value={formData.commissionPercentage}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             placeholder="0"
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
                                     </div>
-                                    <p className="mt-0.5 text-xs text-gray-500">0–100%. Default: 0%</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">0–100%. Default: 0%</p>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Initial Balance (₹)</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Initial Balance (₹)</label>
                                     <input
                                         type="text"
                                         inputMode="decimal"
                                         name="balance"
                                         value={formData.balance}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="0"
                                     />
-                                    <p className="mt-0.5 text-xs text-gray-500">Deducted when bookie gives balance to players.</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Deducted when bookie gives balance to players.</p>
                                 </div>
                                 <div>
                                     <label className="flex items-center gap-2 cursor-pointer">
@@ -631,21 +631,21 @@ const BookieManagement = () => {
                                             name="canManagePayments"
                                             checked={formData.canManagePayments}
                                             onChange={(e) => setFormData({ ...formData, canManagePayments: e.target.checked })}
-                                            className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+                                            className="w-4 h-4 text-primary-500 border-[#333D4D] rounded focus:ring-primary-500"
                                         />
-                                        <span className="text-gray-600 text-sm font-medium">Allow Payment Management</span>
+                                        <span className="text-gray-300 text-sm font-medium">Allow Payment Management</span>
                                     </label>
-                                    <p className="mt-0.5 text-xs text-gray-500">Can approve/reject player payment requests</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Can approve/reject player payment requests</p>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Password *</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Password *</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             required
                                             minLength={6}
                                             placeholder="Min 6 characters"
@@ -653,37 +653,37 @@ const BookieManagement = () => {
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-800"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                                         >
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Confirm Password *</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Confirm Password *</label>
                                     <input
                                         type="password"
                                         name="confirmPassword"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         required
                                         placeholder="Re-enter password"
                                     />
                                 </div>
                             </div>
-                            <div className="flex gap-3 p-4 pt-3 border-t border-gray-200 shrink-0">
+                            <div className="flex gap-3 p-4 pt-3 border-t border-[#333D4D] shrink-0">
                                     <button
                                         type="button"
                                         onClick={() => setShowCreateModal(false)}
-                                        className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors"
+                                        className="flex-1 bg-[#1F2732] hover:bg-gray-200 text-white font-bold py-2 px-4 rounded-lg transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={formLoading}
-                                        className="flex-1 bg-primary-500 hover:bg-primary-600 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                        className="flex-1 bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                                     >
                                         {formLoading ? 'Creating...' : 'Create Bookie'}
                                     </button>
@@ -696,10 +696,10 @@ const BookieManagement = () => {
             {/* Edit Modal */}
             {showEditModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-white rounded-lg w-full max-w-md my-auto flex flex-col max-h-[90vh] shadow-xl">
+                    <div className="bg-[#252D3A] rounded-lg w-full max-w-md my-auto flex flex-col max-h-[90vh] shadow-xl">
                         <div className="flex justify-between items-center p-4 pb-0 shrink-0">
                             <h2 className="text-xl font-bold">Edit Bookie</h2>
-                            <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-800">
+                            <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-white">
                                 <FaTimes size={20} />
                             </button>
                         </div>
@@ -707,53 +707,53 @@ const BookieManagement = () => {
                             <div className="overflow-y-auto px-4 py-3 space-y-3 max-h-[calc(90vh-140px)]">
                                 <div className="grid grid-cols-2 gap-2">
                                     <div>
-                                        <label className="block text-gray-600 text-sm font-medium mb-1">First Name *</label>
+                                        <label className="block text-gray-300 text-sm font-medium mb-1">First Name *</label>
                                         <input
                                             type="text"
                                             name="firstName"
                                             value={formData.firstName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-600 text-sm font-medium mb-1">Last Name *</label>
+                                        <label className="block text-gray-300 text-sm font-medium mb-1">Last Name *</label>
                                         <input
                                             type="text"
                                             name="lastName"
                                             value={formData.lastName}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                             required
                                         />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Email</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Email</label>
                                     <input
                                         type="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Phone Number *</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Phone Number *</label>
                                     <input
                                         type="tel"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
                                         maxLength={10}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="10-digit (6–9 start)"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Commission %</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Commission %</label>
                                     <div className="relative">
                                         <input
                                             type="text"
@@ -761,25 +761,25 @@ const BookieManagement = () => {
                                             name="commissionPercentage"
                                             value={formData.commissionPercentage}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             placeholder="0"
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
                                     </div>
-                                    <p className="mt-0.5 text-xs text-gray-500">0–100%</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">0–100%</p>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">Balance (₹)</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">Balance (₹)</label>
                                     <input
                                         type="text"
                                         inputMode="decimal"
                                         name="balance"
                                         value={formData.balance}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                         placeholder="0"
                                     />
-                                    <p className="mt-0.5 text-xs text-gray-500">Deducted when bookie gives balance to players.</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Deducted when bookie gives balance to players.</p>
                                 </div>
                                 <div>
                                     <label className="flex items-center gap-2 cursor-pointer">
@@ -788,46 +788,46 @@ const BookieManagement = () => {
                                             name="canManagePayments"
                                             checked={formData.canManagePayments}
                                             onChange={(e) => setFormData({ ...formData, canManagePayments: e.target.checked })}
-                                            className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+                                            className="w-4 h-4 text-primary-500 border-[#333D4D] rounded focus:ring-primary-500"
                                         />
-                                        <span className="text-gray-600 text-sm font-medium">Allow Payment Management</span>
+                                        <span className="text-gray-300 text-sm font-medium">Allow Payment Management</span>
                                     </label>
-                                    <p className="mt-0.5 text-xs text-gray-500">Can approve/reject player payment requests</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Can approve/reject player payment requests</p>
                                 </div>
                                 <div>
-                                    <label className="block text-gray-600 text-sm font-medium mb-1">New Password (leave empty to keep)</label>
+                                    <label className="block text-gray-300 text-sm font-medium mb-1">New Password (leave empty to keep)</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             name="password"
                                             value={formData.password}
                                             onChange={handleChange}
-                                            className="w-full px-3 py-1.5 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
+                                            className="w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10"
                                             minLength={6}
                                             placeholder="Enter new password"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-800"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                                         >
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-3 p-4 pt-3 border-t border-gray-200 shrink-0">
+                            <div className="flex gap-3 p-4 pt-3 border-t border-[#333D4D] shrink-0">
                                     <button
                                         type="button"
                                         onClick={() => setShowEditModal(false)}
-                                        className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors"
+                                        className="flex-1 bg-[#1F2732] hover:bg-gray-200 text-white font-bold py-2 px-4 rounded-lg transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={formLoading}
-                                        className="flex-1 bg-primary-500 hover:bg-primary-600 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                        className="flex-1 bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                                     >
                                         {formLoading ? 'Updating...' : 'Update Bookie'}
                                     </button>
@@ -840,15 +840,15 @@ const BookieManagement = () => {
             {/* Delete Confirmation Modal */}
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                    <div className="bg-[#252D3A] rounded-lg p-6 w-full max-w-md mx-4">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-bold text-red-500">Delete Bookie</h2>
-                            <button onClick={() => setShowDeleteModal(false)} className="text-gray-400 hover:text-gray-800">
+                            <button onClick={() => setShowDeleteModal(false)} className="text-gray-400 hover:text-white">
                                 <FaTimes size={20} />
                             </button>
                         </div>
-                        <p className="text-gray-600 mb-4">
-                            Are you sure you want to delete the bookie account <strong className="text-gray-800">"{selectedBookie?.username}"</strong>?
+                        <p className="text-gray-300 mb-4">
+                            Are you sure you want to delete the bookie account <strong className="text-white">"{selectedBookie?.username}"</strong>?
                         </p>
                         <p className="text-red-500 text-sm mb-4">
                             This action cannot be undone. The bookie will lose access to their account permanently.
@@ -861,7 +861,7 @@ const BookieManagement = () => {
                                     placeholder="Secret declare password"
                                     value={secretPassword}
                                     onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
-                                    className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                    className="w-full px-4 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                                 />
                                 {passwordError && (
                                     <p className="text-red-500 text-sm mt-2">{passwordError}</p>
@@ -871,14 +871,14 @@ const BookieManagement = () => {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setShowDeleteModal(false)}
-                                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors"
+                                className="flex-1 bg-[#1F2732] hover:bg-gray-200 text-white font-bold py-2 px-4 rounded-lg transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleDelete}
                                 disabled={formLoading || (hasSecretDeclarePassword && !secretPassword.trim())}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                             >
                                 {formLoading ? 'Deleting...' : 'Delete'}
                             </button>
@@ -890,13 +890,13 @@ const BookieManagement = () => {
             {/* Secret password modal for suspend/unsuspend bookie */}
             {showPasswordModal && pendingBookie && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-xl w-full max-w-md">
-                        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-md">
+                        <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-primary-500">Confirm Suspend/Unsuspend Bookie</h3>
-                            <button type="button" onClick={() => { setShowPasswordModal(false); setPendingBookie(null); setSecretPassword(''); setPasswordError(''); }} className="text-gray-400 hover:text-gray-800 p-1">×</button>
+                            <button type="button" onClick={() => { setShowPasswordModal(false); setPendingBookie(null); setSecretPassword(''); setPasswordError(''); }} className="text-gray-400 hover:text-white p-1">×</button>
                         </div>
                         <form onSubmit={handlePasswordSubmit} className="p-4 space-y-4">
-                            <p className="text-gray-600 text-sm">
+                            <p className="text-gray-300 text-sm">
                                 Enter secret declare password to suspend/unsuspend this bookie.
                             </p>
                             <input
@@ -904,15 +904,15 @@ const BookieManagement = () => {
                                 placeholder="Secret declare password"
                                 value={secretPassword}
                                 onChange={(e) => { setSecretPassword(e.target.value); setPasswordError(''); }}
-                                className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-800 placeholder-gray-400"
+                                className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400"
                                 autoFocus
                             />
                             {passwordError && (
                                 <div className="rounded-lg bg-red-900/30 border border-red-600/50 text-red-600 text-sm px-3 py-2">{passwordError}</div>
                             )}
                             <div className="flex gap-2 justify-end">
-                                <button type="button" onClick={() => { setShowPasswordModal(false); setPendingBookie(null); setSecretPassword(''); setPasswordError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-500 text-gray-800 font-semibold">Cancel</button>
-                                <button type="submit" disabled={togglingId !== null} className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-gray-800 font-semibold disabled:opacity-50">
+                                <button type="button" onClick={() => { setShowPasswordModal(false); setPendingBookie(null); setSecretPassword(''); setPasswordError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-[#1F2732]0 text-white font-semibold">Cancel</button>
+                                <button type="submit" disabled={togglingId !== null} className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-semibold disabled:opacity-50">
                                     {togglingId ? <span className="animate-spin">⏳</span> : 'Confirm'}
                                 </button>
                             </div>

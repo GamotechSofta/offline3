@@ -184,8 +184,8 @@ const AddUser = () => {
         navigate('/');
     };
 
-    const inputClass = "w-full px-3 py-1.5 text-sm bg-gray-100/80 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all";
-    const labelClass = "block text-gray-600 text-sm font-medium mb-1";
+    const inputClass = "w-full px-3 py-1.5 text-sm bg-[#1F2732] border border-[#333D4D] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all";
+    const labelClass = "block text-gray-300 text-sm font-medium mb-1";
 
     return (
         <AdminLayout onLogout={handleLogout} title="Add Player">
@@ -197,36 +197,36 @@ const AddUser = () => {
                     <button
                         type="button"
                         onClick={() => navigate('/all-users')}
-                        className="p-2 rounded-lg bg-gray-100/80 hover:bg-gray-200 border border-gray-200 text-gray-600 hover:text-gray-800 transition-colors"
+                        className="p-2 rounded-lg bg-[#1F2732] hover:bg-[#252D3A] border border-[#333D4D] text-gray-300 hover:text-white transition-colors"
                         title="Back to All Players"
                     >
                         <FaArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h1 className="text-xl sm:text-2xl font-bold">Add New Player</h1>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white">Add New Player</h1>
                         <p className="text-gray-400 text-xs mt-0.5">Create a new player account</p>
                     </div>
                 </div>
 
                 {error && (
-                    <div className="mb-4 p-3 bg-red-900/30 border border-red-200/60 rounded-lg text-red-600 text-sm">
+                    <div className="mb-4 p-3 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400 text-sm">
                         {error}
                     </div>
                 )}
 
                 {success && (
-                    <div className="mb-4 p-3 bg-green-900/30 border border-green-700/60 rounded-lg text-green-200 text-sm flex items-center gap-2">
+                    <div className="mb-4 p-3 bg-green-500/20 border border-green-400/50 rounded-lg text-green-400 text-sm flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                         {success}
                     </div>
                 )}
 
                 {/* Form Card */}
-                <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+                <form onSubmit={handleSubmit} className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden shadow-lg">
                     <div className="p-4 sm:p-5">
                         {/* Basic Info Section - matches frontend signup (firstName, lastName, email, phone) */}
                         <div className="mb-5">
-                            <h2 className="text-sm font-semibold text-primary-500 mb-2 flex items-center gap-2">
+                            <h2 className="text-sm font-semibold text-primary-400 mb-2 flex items-center gap-2">
                                 <span className="w-1 h-4 bg-primary-500 rounded-full" />
                                 Basic Information
                             </h2>
@@ -283,14 +283,14 @@ const AddUser = () => {
                                         maxLength={10}
                                         required
                                     />
-                                    <p className="mt-0.5 text-xs text-gray-500">Login: phone + password. 10 digits (6–9 start).</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Login: phone + password. 10 digits (6–9 start).</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Security Section */}
                         <div className="mb-5">
-                            <h2 className="text-sm font-semibold text-primary-500 mb-2 flex items-center gap-2">
+                            <h2 className="text-sm font-semibold text-primary-400 mb-2 flex items-center gap-2">
                                 <span className="w-1 h-4 bg-primary-500 rounded-full" />
                                 Account Security
                             </h2>
@@ -308,7 +308,7 @@ const AddUser = () => {
                                         required
                                         minLength={6}
                                     />
-                                    <p className="mt-0.5 text-xs text-gray-500">Min 6 characters</p>
+                                    <p className="mt-0.5 text-xs text-gray-400">Min 6 characters</p>
                                 </div>
                                 <div>
                                     <label htmlFor="confirmPassword" className={labelClass}>Confirm Password *</label>
@@ -328,7 +328,7 @@ const AddUser = () => {
 
                         {/* Account Details Section */}
                         <div className="mb-5">
-                            <h2 className="text-sm font-semibold text-primary-500 mb-2 flex items-center gap-2">
+                            <h2 className="text-sm font-semibold text-primary-400 mb-2 flex items-center gap-2">
                                 <span className="w-1 h-4 bg-primary-500 rounded-full" />
                                 Account Details
                             </h2>
@@ -347,7 +347,7 @@ const AddUser = () => {
                                         <option value="bookie">Bookie</option>
                                     </select>
                                     {formData.role === 'bookie' && (
-                                        <p className="mt-0.5 text-xs text-primary-600 font-medium">
+                                        <p className="mt-0.5 text-xs text-primary-400 font-medium">
                                             Bookie Panel: phone + password
                                         </p>
                                     )}
@@ -368,7 +368,7 @@ const AddUser = () => {
                                             className={inputClass}
                                             autoComplete="off"
                                         />
-                                        <p className="mt-0.5 text-xs text-gray-500">0–100% from player bets</p>
+                                        <p className="mt-0.5 text-xs text-gray-400">0–100% from player bets</p>
                                     </div>
                                 )}
                                 {formData.role !== 'bookie' && (
@@ -396,18 +396,18 @@ const AddUser = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/all-users')}
-                                className="px-5 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors font-medium text-sm"
+                                className="px-5 py-2 rounded-lg border border-[#333D4D] text-gray-300 hover:bg-[#252D3A] hover:text-white transition-colors font-medium text-sm"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-primary-500 hover:bg-primary-500/90 text-gray-800 font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-primary-500 hover:bg-primary-500/90 text-white font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {loading ? (
                                     <>
-                                        <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                         Creating...
                                     </>
                                 ) : (
@@ -424,29 +424,29 @@ const AddUser = () => {
 
                 {/* Right: Created players list */}
                 <div className="lg:w-72 xl:w-80 shrink-0">
-                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden sticky top-4 shadow-lg">
-                        <div className="px-3 py-2 border-b border-gray-200 bg-gray-100/30">
-                            <h2 className="text-sm font-semibold text-primary-500 flex items-center gap-2">
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] overflow-hidden sticky top-4 shadow-lg">
+                        <div className="px-3 py-2 border-b border-[#333D4D] bg-[#1F2732]">
+                            <h2 className="text-sm font-semibold text-primary-400 flex items-center gap-2">
                                 <FaUser className="w-4 h-4" />
                                 Created Players
                             </h2>
-                            <p className="text-gray-500 text-xs mt-0.5">Recently added in this session</p>
+                            <p className="text-gray-400 text-xs mt-0.5">Recently added in this session</p>
                         </div>
                         <div className="max-h-[50vh] overflow-y-auto p-2">
                             {createdPlayers.length === 0 ? (
-                                <p className="text-gray-500 text-xs py-3 text-center">No players created yet</p>
+                                <p className="text-gray-400 text-xs py-3 text-center">No players created yet</p>
                             ) : (
                                 <ul className="space-y-1.5">
                                     {createdPlayers.map((p) => (
                                         <li key={(p.id || p.createdAt?.getTime?.()) ?? Math.random()}>
                                             <Link
                                                 to={p.id ? `/all-users/${p.id}` : '/all-users'}
-                                                className="block p-2 rounded-lg bg-gray-50 border border-gray-200 hover:border-primary-300 hover:bg-gray-100 transition-colors"
+                                                className="block p-2 rounded-lg bg-[#1F2732] border border-[#333D4D] hover:border-primary-300 hover:bg-[#252D3A] transition-colors"
                                             >
-                                                <p className="font-medium text-gray-800 text-sm truncate">{p.username}</p>
+                                                <p className="font-medium text-white text-sm truncate">{p.username}</p>
                                                 <p className="text-gray-400 text-xs truncate mt-0.5">{p.email || '—'}</p>
                                                 {p.phone && <p className="text-gray-400 text-xs truncate mt-0.5">{p.phone}</p>}
-                                                <p className="text-gray-500 text-xs mt-0.5">
+                                                <p className="text-gray-400 text-xs mt-0.5">
                                                     {p.createdAt ? new Date(p.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}
                                                 </p>
                                             </Link>

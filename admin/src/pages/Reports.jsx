@@ -163,8 +163,8 @@ const Reports = () => {
                 {/* Page header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
-                            <FaChartLine className="w-8 h-8 text-primary-500" />
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
+                            <FaChartLine className="w-8 h-8 text-primary-400" />
                             Reports
                         </h1>
                         <p className="text-gray-400 text-sm mt-1">Financial and betting summary for the selected period</p>
@@ -172,10 +172,10 @@ const Reports = () => {
                 </div>
 
                 {/* Date range & filters */}
-                <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+                <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-4 sm:p-5">
                     <div className="flex flex-wrap items-center gap-2 mb-4">
-                        <FaCalendarAlt className="w-5 h-5 text-primary-500 shrink-0" />
-                        <span className="text-sm font-medium text-gray-600">Period</span>
+                        <FaCalendarAlt className="w-5 h-5 text-primary-400 shrink-0" />
+                        <span className="text-sm font-medium text-gray-300">Period</span>
                     </div>
                     <div className="flex flex-wrap gap-2 mb-4">
                         {PRESETS.map((p) => (
@@ -185,8 +185,8 @@ const Reports = () => {
                                 onClick={() => applyPreset(p.id)}
                                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                                     activePreset === p.id
-                                        ? 'bg-primary-500 text-gray-800'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        ? 'bg-primary-500 text-white'
+                                        : 'bg-[#1F2732] text-gray-300 hover:bg-[#252D3A]'
                                 }`}
                             >
                                 {p.label}
@@ -201,9 +201,9 @@ const Reports = () => {
                                 setDateRange((r) => ({ ...r, startDate: e.target.value }));
                                 setActivePreset('');
                             }}
-                            className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                            className="px-3 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
-                        <span className="text-gray-500">to</span>
+                        <span className="text-gray-400">to</span>
                         <input
                             type="date"
                             value={dateRange.endDate}
@@ -211,32 +211,32 @@ const Reports = () => {
                                 setDateRange((r) => ({ ...r, endDate: e.target.value }));
                                 setActivePreset('');
                             }}
-                            className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                            className="px-3 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
                         <button
                             type="button"
                             onClick={fetchReport}
                             disabled={loading}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
                         >
                             <FaSyncAlt className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                             Refresh
                         </button>
-                        <span className="text-gray-500 text-sm">{formatRangeLabel(dateRange.startDate, dateRange.endDate)}</span>
+                        <span className="text-gray-400 text-sm">{formatRangeLabel(dateRange.startDate, dateRange.endDate)}</span>
                     </div>
                 </div>
 
                 {loading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <div key={i} className="bg-white rounded-xl h-28 animate-pulse border border-gray-200" />
+                            <div key={i} className="bg-[#252D3A] rounded-xl h-28 animate-pulse border border-[#333D4D]" />
                         ))}
                     </div>
                 ) : report ? (
                     <>
                         {/* Summary strip - key metrics */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div className="bg-gradient-to-br from-green-50 to-green-600/5 rounded-xl p-5 border border-green-200">
+                            <div className="bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl p-5 border border-green-400/50">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-400">Total Revenue</p>
@@ -258,55 +258,55 @@ const Reports = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gradient-to-br from-primary-50 to-amber-600/5 rounded-xl p-5 border border-primary-200">
+                            <div className="bg-gradient-to-br from-primary-500/10 to-amber-600/5 rounded-xl p-5 border border-primary-400/50">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-400">Net Profit</p>
-                                        <p className="text-2xl font-bold text-primary-500 mt-1">{formatCurrency(report.netProfit)}</p>
+                                        <p className="text-2xl font-bold text-primary-400 mt-1">{formatCurrency(report.netProfit)}</p>
                                     </div>
                                     <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
-                                        <FaChartBar className="w-6 h-6 text-primary-500" />
+                                        <FaChartBar className="w-6 h-6 text-primary-400" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Betting stats */}
-                        <div className="bg-white rounded-xl border border-gray-200 p-5">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                <FaChartBar className="w-5 h-5 text-primary-500" />
+                        <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-5">
+                            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                                <FaChartBar className="w-5 h-5 text-primary-400" />
                                 Betting Summary
                             </h2>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div className="bg-[#1F2732] rounded-lg p-4 border border-[#333D4D]">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider">Total Bets</p>
-                                    <p className="text-xl font-bold text-gray-800 mt-1">{formatNumber(report.totalBets)}</p>
+                                    <p className="text-xl font-bold text-white mt-1">{formatNumber(report.totalBets)}</p>
                                 </div>
-                                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div className="bg-[#1F2732] rounded-lg p-4 border border-[#333D4D]">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider">Active Players</p>
-                                    <p className="text-xl font-bold text-gray-800 mt-1">{formatNumber(report.activeUsers)}</p>
+                                    <p className="text-xl font-bold text-white mt-1">{formatNumber(report.activeUsers)}</p>
                                 </div>
-                                <div className="bg-gray-50 rounded-lg p-4 border border-green-500/20">
+                                <div className="bg-[#1F2732] rounded-lg p-4 border border-green-500/20">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider">Winning Bets</p>
                                     <p className="text-xl font-bold text-green-600 mt-1">{formatNumber(report.winningBets)}</p>
                                 </div>
-                                <div className="bg-gray-50 rounded-lg p-4 border border-red-500/20">
+                                <div className="bg-[#1F2732] rounded-lg p-4 border border-red-500/20">
                                     <p className="text-xs text-gray-400 uppercase tracking-wider">Losing Bets</p>
                                     <p className="text-xl font-bold text-red-500 mt-1">{formatNumber(report.losingBets)}</p>
                                 </div>
                             </div>
-                            <div className="mt-4 pt-4 border-t border-gray-200">
-                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
+                            <div className="mt-4 pt-4 border-t border-[#333D4D]">
+                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1F2732] rounded-lg">
                                     <span className="text-sm text-gray-400">Win Rate</span>
-                                    <span className="text-lg font-bold text-gray-800">{report.winRate}%</span>
+                                    <span className="text-lg font-bold text-white">{report.winRate}%</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Related reports / quick links */}
-                        <div className="bg-white rounded-xl border border-gray-200 p-5">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                <FaFileExport className="w-5 h-5 text-primary-500" />
+                        <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-5">
+                            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                                <FaFileExport className="w-5 h-5 text-primary-400" />
                                 Related Reports & Actions
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -314,23 +314,23 @@ const Reports = () => {
                                     <Link
                                         key={item.to}
                                         to={item.to}
-                                        className="flex items-start gap-3 p-4 rounded-xl bg-gray-50 border border-gray-200 hover:border-primary-200 hover:bg-gray-100/80 transition-all group"
+                                        className="flex items-start gap-3 p-4 rounded-xl bg-[#1F2732] border border-[#333D4D] hover:border-primary-400/50 hover:bg-[#1F2732]/80 transition-all group"
                                     >
                                         <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center shrink-0 group-hover:bg-primary-500/30 transition-colors">
-                                            <item.icon className="w-5 h-5 text-primary-500" />
+                                            <item.icon className="w-5 h-5 text-primary-400" />
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="font-semibold text-gray-800 group-hover:text-primary-500 transition-colors">{item.label}</p>
-                                            <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                                            <p className="font-semibold text-white group-hover:text-primary-400 transition-colors">{item.label}</p>
+                                            <p className="text-xs text-gray-400 mt-0.5">{item.description}</p>
                                         </div>
                                     </Link>
                                 ))}
                             </div>
-                            <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-3">
+                            <div className="mt-4 pt-4 border-t border-[#333D4D] flex flex-wrap gap-3">
                                 <button
                                     type="button"
                                     onClick={handlePrint}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors print:hidden"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#1F2732] hover:bg-[#252D3A] text-white rounded-lg text-sm font-medium transition-colors print:hidden"
                                 >
                                     <FaPrint className="w-4 h-4" />
                                     Print Report
@@ -339,14 +339,14 @@ const Reports = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                        <FaChartLine className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] p-12 text-center">
+                        <FaChartLine className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                         <p className="text-gray-400 text-lg">No report data available for this period</p>
-                        <p className="text-gray-500 text-sm mt-2">Try a different date range or refresh the page</p>
+                        <p className="text-gray-400 text-sm mt-2">Try a different date range or refresh the page</p>
                         <button
                             type="button"
                             onClick={fetchReport}
-                            className="mt-4 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-gray-800 font-semibold rounded-lg transition-colors"
+                            className="mt-4 px-4 py-2 bg-primary-500 hover:bg-amber-400 text-white font-semibold rounded-lg transition-colors"
                         >
                             Refresh
                         </button>
@@ -356,9 +356,9 @@ const Reports = () => {
 
             {/* Print-only summary */}
             {report && (
-                <div className="hidden print:block mt-8 p-6 bg-white text-gray-800 rounded-lg">
+                <div className="hidden print:block mt-8 p-6 bg-[#252D3A] text-white rounded-lg">
                     <h2 className="text-xl font-bold mb-4">Report Summary</h2>
-                    <p className="text-sm text-gray-600 mb-4">{formatRangeLabel(dateRange.startDate, dateRange.endDate)}</p>
+                    <p className="text-sm text-gray-300 mb-4">{formatRangeLabel(dateRange.startDate, dateRange.endDate)}</p>
                     <table className="w-full text-sm">
                         <tbody>
                             <tr><td className="py-1 font-medium">Total Revenue</td><td className="text-right">{formatCurrency(report.totalRevenue)}</td></tr>

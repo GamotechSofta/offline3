@@ -108,31 +108,31 @@ const Logs = () => {
 
     return (
         <AdminLayout onLogout={handleLogout} title="Logs">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Activity Logs</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white">Activity Logs</h1>
             <p className="text-gray-400 mb-4 sm:mb-6 text-sm">
                 All activity from admin, bookie and player (frontend) – auto-refreshes every 15 seconds.
             </p>
 
             {/* Filters */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-3 mb-4 p-3 sm:p-4 bg-white rounded-lg border border-gray-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-3 mb-4 p-3 sm:p-4 bg-[#252D3A] rounded-lg border border-[#333D4D]">
                 <input
                     type="text"
                     placeholder="Filter by action..."
                     value={filterAction}
                     onChange={(e) => { setFilterAction(e.target.value); setPage(1); }}
-                    className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
+                    className="px-3 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
                 />
                 <input
                     type="text"
                     placeholder="Filter by user..."
                     value={filterPerformedBy}
                     onChange={(e) => { setFilterPerformedBy(e.target.value); setPage(1); }}
-                    className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
+                    className="px-3 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
                 />
                 <select
                     value={filterType}
                     onChange={(e) => { setFilterType(e.target.value); setPage(1); }}
-                    className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
+                    className="px-3 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-sm focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
                 >
                     <option value="">All types</option>
                     {Object.entries(TYPE_LABELS).map(([val, label]) => (
@@ -142,14 +142,14 @@ const Logs = () => {
                 <select
                     value={sortOrder}
                     onChange={(e) => { setSortOrder(e.target.value); setPage(1); }}
-                    className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
+                    className="px-3 py-2 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white text-sm focus:ring-2 focus:ring-primary-500 min-w-0 w-full"
                 >
                     <option value="desc">Newest first</option>
                     <option value="asc">Oldest first</option>
                 </select>
                 <button
                     onClick={() => { setFilterAction(''); setFilterPerformedBy(''); setFilterType(''); setPage(1); }}
-                    className="px-3 py-2 bg-gray-200 hover:bg-gray-500 rounded-lg text-sm font-medium w-full sm:col-span-2 xl:col-span-1"
+                    className="px-3 py-2 bg-[#252D3A] hover:bg-[#333D4D] rounded-lg text-sm font-medium w-full sm:col-span-2 xl:col-span-1 text-white"
                 >
                     Clear
                 </button>
@@ -161,7 +161,7 @@ const Logs = () => {
                 </div>
             )}
 
-            <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+            <div className="bg-[#252D3A] rounded-lg overflow-hidden border border-[#333D4D]">
                 {loading ? (
                     <div className="p-8 text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto" />
@@ -176,34 +176,34 @@ const Logs = () => {
                         {/* Desktop table */}
                         <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-sm sm:text-base">
-                                <thead className="bg-gray-100">
+                                <thead className="bg-[#1F2732]">
                                     <tr>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">#</th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Timestamp</th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase min-w-[140px]">Action</th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Performed By</th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Details</th>
-                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Target</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">#</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Timestamp</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase min-w-[140px]">Action</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Performed By</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Details</th>
+                                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Target</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-700">
+                                <tbody className="divide-y divide-[#333D4D]">
                                     {logs.map((log, index) => (
-                                        <tr key={log._id} className="hover:bg-gray-50">
+                                        <tr key={log._id} className="hover:bg-[#252D3A] bg-[#252D3A]">
                                             <td className="px-4 sm:px-6 py-3 text-gray-400 whitespace-nowrap">{(pagination.page - 1) * 50 + index + 1}</td>
-                                            <td className="px-4 sm:px-6 py-3 text-gray-600 font-mono text-xs whitespace-nowrap">{formatTimestamp(log.createdAt)}</td>
+                                            <td className="px-4 sm:px-6 py-3 text-gray-300 font-mono text-xs whitespace-nowrap">{formatTimestamp(log.createdAt)}</td>
                                             <td className="px-4 sm:px-6 py-3 min-w-0">
-                                                <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-primary-50 text-primary-600 border border-primary-200 break-words max-w-full">
+                                                <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-primary-500/20 text-primary-400 border border-primary-400/50 break-words max-w-full">
                                                     {getActionLabel(log.action)}
                                                 </span>
                                             </td>
-                                            <td className="px-4 sm:px-6 py-3 font-medium text-gray-800 break-words max-w-[120px]">{log.performedBy || '—'}</td>
+                                            <td className="px-4 sm:px-6 py-3 font-medium text-white break-words max-w-[120px]">{log.performedBy || '—'}</td>
                                             <td className="px-4 sm:px-6 py-3">
-                                                <span className="px-2 py-0.5 rounded text-xs bg-gray-200 text-gray-700 capitalize">
+                                                <span className="px-2 py-0.5 rounded text-xs bg-[#333D4D] text-gray-200 capitalize">
                                                     {TYPE_LABELS[log.performedByType] || log.performedByType || '—'}
                                                 </span>
                                             </td>
-                                            <td className="px-4 sm:px-6 py-3 text-gray-600 break-words max-w-[200px]">{log.details || '—'}</td>
+                                            <td className="px-4 sm:px-6 py-3 text-gray-300 break-words max-w-[200px]">{log.details || '—'}</td>
                                             <td className="px-4 sm:px-6 py-3 text-gray-400 text-xs">{log.targetType && (log.targetId ? `${log.targetType}: ${String(log.targetId).slice(-8)}` : log.targetType)}</td>
                                         </tr>
                                     ))}
@@ -214,19 +214,19 @@ const Logs = () => {
                         {/* Mobile card layout */}
                         <div className="md:hidden divide-y divide-gray-700">
                             {logs.map((log, index) => (
-                                <div key={log._id} className="p-4 hover:bg-gray-100/30">
+                                <div key={log._id} className="p-4 hover:bg-[#252D3A]">
                                     <div className="flex flex-wrap items-start gap-2 mb-2">
-                                        <span className="px-2 py-1 rounded text-xs font-medium bg-primary-50 text-primary-600 border border-primary-200 break-words">
+                                        <span className="px-2 py-1 rounded text-xs font-medium bg-primary-500/20 text-primary-400 border border-primary-400/50 break-words">
                                             {getActionLabel(log.action)}
                                         </span>
-                                        <span className="px-2 py-0.5 rounded text-xs bg-gray-200 text-gray-700 capitalize">
+                                        <span className="px-2 py-0.5 rounded text-xs bg-[#333D4D] text-gray-200 capitalize">
                                             {TYPE_LABELS[log.performedByType] || log.performedByType || '—'}
                                         </span>
                                     </div>
                                     <div className="text-xs text-gray-400 space-y-1">
-                                        <p><span className="text-gray-500">By:</span> <span className="text-gray-800 font-medium">{log.performedBy || '—'}</span></p>
+                                        <p><span className="text-gray-400">By:</span> <span className="text-white font-medium">{log.performedBy || '—'}</span></p>
                                         <p><span className="text-gray-500">When:</span> {formatTimestamp(log.createdAt)}</p>
-                                        <p className="text-gray-600 break-words">{log.details || '—'}</p>
+                                        <p className="text-gray-300 break-words">{log.details || '—'}</p>
                                         {log.targetType && (
                                             <p className="text-gray-500">{log.targetType}{log.targetId ? `: ${String(log.targetId).slice(-8)}` : ''}</p>
                                         )}
@@ -239,7 +239,7 @@ const Logs = () => {
                 )}
 
                 {!loading && pagination.totalPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-3 sm:px-4 py-3 border-t border-gray-200 bg-gray-100/30">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-3 sm:px-4 py-3 border-t border-[#333D4D] bg-[#1F2732]">
                         <p className="text-gray-400 text-sm text-center sm:text-left">
                             Page {pagination.page} of {pagination.totalPages} • {pagination.total} total
                         </p>
@@ -247,14 +247,14 @@ const Logs = () => {
                             <button
                                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                                 disabled={page <= 1}
-                                className="px-3 py-1.5 bg-gray-200 hover:bg-gray-500 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1.5 bg-[#252D3A] hover:bg-[#333D4D] text-white rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Previous
                             </button>
                             <button
                                 onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                                 disabled={page >= pagination.totalPages}
-                                className="px-3 py-1.5 bg-gray-200 hover:bg-gray-500 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1.5 bg-[#252D3A] hover:bg-[#333D4D] text-white rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Next
                             </button>

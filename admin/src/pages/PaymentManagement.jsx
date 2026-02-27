@@ -160,7 +160,7 @@ const PaymentManagement = () => {
             rejected: 'bg-red-600/30 text-red-500 border-red-600/50',
             completed: 'bg-blue-600/30 text-blue-600 border-blue-600/50',
         };
-        return styles[status] || 'bg-gray-200/30 text-gray-400 border-gray-200';
+        return styles[status] || 'bg-gray-200/30 text-gray-400 border-[#333D4D]';
     };
 
     const getTypeBadge = (type) => {
@@ -176,7 +176,7 @@ const PaymentManagement = () => {
         <AdminLayout onLogout={handleLogout} title="Payments">
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
                     <FaWallet className="text-primary-500" />
                     Payment Management
                 </h1>
@@ -191,7 +191,7 @@ const PaymentManagement = () => {
                     className={`rounded-xl p-5 border-2 transition-all cursor-pointer ${
                         filters.status === 'pending' && filters.type === 'deposit'
                             ? 'border-amber-500 bg-primary-500/10'
-                            : 'border-gray-200 bg-white hover:border-gray-200'
+                            : 'border-[#333D4D] bg-[#252D3A] hover:border-[#333D4D]'
                     }`}
                     onClick={() => setFilters({ status: 'pending', type: 'deposit' })}
                     title="Click to view pending deposits"
@@ -200,7 +200,7 @@ const PaymentManagement = () => {
                         <div>
                             <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Pending Deposits</p>
                             <p className="text-2xl sm:text-3xl font-bold text-primary-500 mt-1">{pendingCounts.deposits}</p>
-                            <p className="text-xs text-gray-500 mt-1">Click to filter</p>
+                            <p className="text-xs text-gray-400 mt-1">Click to filter</p>
                         </div>
                         <FaArrowDown className="w-10 h-10 text-primary-500/50" />
                     </div>
@@ -209,7 +209,7 @@ const PaymentManagement = () => {
                     className={`rounded-xl p-5 border-2 transition-all cursor-pointer ${
                         filters.status === 'pending' && filters.type === 'withdrawal'
                             ? 'border-amber-500 bg-primary-500/10'
-                            : 'border-gray-200 bg-white hover:border-gray-200'
+                            : 'border-[#333D4D] bg-[#252D3A] hover:border-[#333D4D]'
                     }`}
                     onClick={() => setFilters({ status: 'pending', type: 'withdrawal' })}
                     title="Click to view pending withdrawals"
@@ -218,7 +218,7 @@ const PaymentManagement = () => {
                         <div>
                             <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Pending Withdrawals</p>
                             <p className="text-2xl sm:text-3xl font-bold text-primary-500 mt-1">{pendingCounts.withdrawals}</p>
-                            <p className="text-xs text-gray-500 mt-1">Click to filter</p>
+                            <p className="text-xs text-gray-400 mt-1">Click to filter</p>
                         </div>
                         <FaArrowUp className="w-10 h-10 text-purple-500/50" />
                     </div>
@@ -227,7 +227,7 @@ const PaymentManagement = () => {
                     className={`rounded-xl p-5 border-2 transition-all cursor-pointer ${
                         !hasActiveFilters || (filters.status === '' && filters.type === '')
                             ? 'border-blue-500 bg-blue-500/10'
-                            : 'border-gray-200 bg-white hover:border-gray-200'
+                            : 'border-[#333D4D] bg-[#252D3A] hover:border-[#333D4D]'
                     }`}
                     onClick={() => setFilters({ status: '', type: '' })}
                     title="Click to view all payments"
@@ -236,7 +236,7 @@ const PaymentManagement = () => {
                         <div>
                             <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Pending</p>
                             <p className="text-2xl sm:text-3xl font-bold text-blue-600 mt-1">{pendingCounts.total}</p>
-                            <p className="text-xs text-gray-500 mt-1">{pendingRequireAction ? 'Requires action' : 'All clear'}</p>
+                            <p className="text-xs text-gray-400 mt-1">{pendingRequireAction ? 'Requires action' : 'All clear'}</p>
                         </div>
                         <FaClock className="w-10 h-10 text-blue-500/50" />
                     </div>
@@ -244,9 +244,9 @@ const PaymentManagement = () => {
             </div>
 
             {/* Filters */}
-            <div className="bg-white rounded-xl p-4 sm:p-5 mb-6 border border-gray-200">
+            <div className="bg-[#252D3A] rounded-xl p-4 sm:p-5 mb-6 border border-[#333D4D]">
                 <div className="flex items-center gap-2 mb-3">
-                    <FaFilter className="text-gray-500 w-4 h-4" />
+                    <FaFilter className="text-gray-400 w-4 h-4" />
                     <span className="text-sm font-medium text-gray-400">Filter Payments</span>
                     {hasActiveFilters && (
                         <span className="ml-2 px-2 py-0.5 rounded-full bg-primary-500/20 text-primary-500 text-xs">
@@ -256,11 +256,11 @@ const PaymentManagement = () => {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
                     <div className="flex-1 sm:max-w-[180px]">
-                        <label className="block text-xs text-gray-500 mb-1">Status</label>
+                        <label className="block text-xs text-gray-400 mb-1">Status</label>
                         <select
                             value={filters.status}
                             onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                            className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:ring-2 focus:ring-amber-500/50"
+                            className="w-full px-4 py-2.5 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:ring-2 focus:ring-amber-500/50"
                         >
                             <option value="">All Status</option>
                             <option value="pending">Pending</option>
@@ -270,11 +270,11 @@ const PaymentManagement = () => {
                         </select>
                     </div>
                     <div className="flex-1 sm:max-w-[180px]">
-                        <label className="block text-xs text-gray-500 mb-1">Type</label>
+                        <label className="block text-xs text-gray-400 mb-1">Type</label>
                         <select
                             value={filters.type}
                             onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-                            className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-800 focus:ring-2 focus:ring-amber-500/50"
+                            className="w-full px-4 py-2.5 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:ring-2 focus:ring-amber-500/50"
                         >
                             <option value="">All Types</option>
                             <option value="deposit">Deposit</option>
@@ -284,7 +284,7 @@ const PaymentManagement = () => {
                     <div className="flex items-end">
                         <button
                             onClick={() => setFilters({ status: '', type: '' })}
-                            className="px-4 py-2.5 bg-gray-200 hover:bg-gray-500 rounded-lg text-gray-800 text-sm font-medium transition-colors"
+                            className="px-4 py-2.5 bg-[#252D3A] border border-[#333D4D] hover:bg-primary-500/20 hover:border-primary-400 rounded-lg text-gray-300 hover:text-primary-400 text-sm font-medium transition-colors"
                         >
                             Clear Filters
                         </button>
@@ -296,7 +296,7 @@ const PaymentManagement = () => {
             {!loading && (
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <p className="text-sm text-gray-400">
-                        Showing <span className="font-semibold text-gray-800">{payments.length}</span> payment{payments.length !== 1 ? 's' : ''}
+                        Showing <span className="font-semibold text-white">{payments.length}</span> payment{payments.length !== 1 ? 's' : ''}
                         {hasActiveFilters && (
                             <span className="ml-2 text-primary-500">(filtered)</span>
                         )}
@@ -312,16 +312,16 @@ const PaymentManagement = () => {
 
             {/* Payments Table */}
             {loading ? (
-                <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
+                <div className="text-center py-16 bg-[#252D3A] rounded-xl border border-[#333D4D]">
                     <div className="animate-spin rounded-full h-12 w-12 border-2 border-amber-500 border-t-transparent mx-auto mb-4"></div>
                     <p className="text-gray-400">Loading payments...</p>
-                    <p className="text-gray-500 text-sm mt-1">Please wait</p>
+                    <p className="text-gray-400 text-sm mt-1">Please wait</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="bg-white min-w-[1080px]">
+                <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-xl border border-[#333D4D] overflow-hidden">
+                    <div className="bg-[#252D3A] min-w-[1080px]">
                         <table className="w-full text-sm table-fixed">
-                            <thead className="bg-gray-50/80">
+                            <thead className="bg-[#1F2732]/80">
                                 <tr>
                                     <th className="w-[90px] px-4 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Ref ID</th>
                                     <th className="w-[180px] px-4 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Player</th>
@@ -334,7 +334,7 @@ const PaymentManagement = () => {
                                     <th className="w-[170px] px-4 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Date</th>
                                     <th className="w-[180px] px-4 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                                         <span className="block">Actions</span>
-                                        <span className="block font-normal normal-case text-gray-500 mt-0.5">View / Approve / Reject</span>
+                                        <span className="block font-normal normal-case text-gray-400 mt-0.5">View / Approve / Reject</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -343,9 +343,9 @@ const PaymentManagement = () => {
                                     <tr>
                                         <td colSpan="8" className="px-6 py-16 text-center">
                                             <div className="max-w-sm mx-auto">
-                                                <FaWallet className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                                                <FaWallet className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                                                 <p className="text-gray-400 font-medium mb-1">No payments found</p>
-                                                <p className="text-gray-500 text-sm">
+                                                <p className="text-gray-400 text-sm">
                                                     {hasActiveFilters
                                                         ? 'Try clearing filters or change your filter criteria.'
                                                         : 'Payments will appear here when players request deposits or withdrawals.'}
@@ -353,7 +353,7 @@ const PaymentManagement = () => {
                                                 {hasActiveFilters && (
                                                     <button
                                                         onClick={() => setFilters({ status: '', type: '' })}
-                                                        className="mt-4 px-4 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg text-gray-800 text-sm font-medium"
+                                                        className="mt-4 px-4 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg text-white text-sm font-medium"
                                                     >
                                                         Clear Filters
                                                     </button>
@@ -363,16 +363,16 @@ const PaymentManagement = () => {
                                     </tr>
                                 ) : (
                                     payments.map((payment) => (
-                                        <tr key={payment._id} className="hover:bg-gray-50">
+                                        <tr key={payment._id} className="hover:bg-[#1F2732]">
                                             <td className="px-4 py-4 text-xs text-gray-400 whitespace-nowrap">
                                                 #{payment._id.slice(-6).toUpperCase()}
                                             </td>
                                             <td className="px-4 py-4">
                                                 <div className="truncate">
-                                                    <p className="font-medium text-gray-800 truncate">
+                                                    <p className="font-medium text-white truncate">
                                                         {payment.userId?.username || 'Unknown'}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 truncate">
+                                                    <p className="text-xs text-gray-400 truncate">
                                                         {payment.userId?.email || payment.userId?.phone || ''}
                                                     </p>
                                                 </div>
@@ -392,7 +392,7 @@ const PaymentManagement = () => {
                                                     <div className="space-y-1.5">
                                                         {payment.upiTransactionId && (
                                                             <p className="text-xs text-gray-400 truncate">
-                                                                UTR: <span className="text-gray-800 font-mono">{payment.upiTransactionId}</span>
+                                                                UTR: <span className="text-white font-mono">{payment.upiTransactionId}</span>
                                                             </p>
                                                         )}
                                                         {payment.screenshotUrl && (
@@ -410,18 +410,18 @@ const PaymentManagement = () => {
                                                             </button>
                                                         )}
                                                         {payment.userNote && (
-                                                            <p className="text-xs text-gray-500 truncate" title={payment.userNote}>Note: {payment.userNote}</p>
+                                                            <p className="text-xs text-gray-400 truncate" title={payment.userNote}>Note: {payment.userNote}</p>
                                                         )}
                                                     </div>
                                                 ) : (
                                                     <div className="space-y-0.5">
                                                         {payment.bankDetailId ? (
                                                             <>
-                                                                <p className="text-xs text-gray-800 font-medium truncate">
+                                                                <p className="text-xs text-white font-medium truncate">
                                                                     {payment.bankDetailId.accountHolderName}
                                                                 </p>
                                                                 {payment.bankDetailId.bankName && (
-                                                                    <p className="text-xs text-gray-500 truncate">
+                                                                    <p className="text-xs text-gray-400 truncate">
                                                                         {payment.bankDetailId.bankName}
                                                                         {payment.bankDetailId.accountNumber && (
                                                                             <> - ****{payment.bankDetailId.accountNumber.slice(-4)}</>
@@ -429,13 +429,13 @@ const PaymentManagement = () => {
                                                                     </p>
                                                                 )}
                                                                 {payment.bankDetailId.upiId && (
-                                                                    <p className="text-xs text-gray-500 truncate">
+                                                                    <p className="text-xs text-gray-400 truncate">
                                                                         UPI: {payment.bankDetailId.upiId}
                                                                     </p>
                                                                 )}
                                                             </>
                                                         ) : (
-                                                            <p className="text-xs text-gray-500">No bank details</p>
+                                                            <p className="text-xs text-gray-400">No bank details</p>
                                                         )}
                                                     </div>
                                                 )}
@@ -445,7 +445,7 @@ const PaymentManagement = () => {
                                                     {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
                                                 </span>
                                                 {payment.adminRemarks && payment.status !== 'pending' && (
-                                                    <p className="text-xs text-gray-500 mt-1 truncate" title={payment.adminRemarks}>
+                                                    <p className="text-xs text-gray-400 mt-1 truncate" title={payment.adminRemarks}>
                                                         {payment.adminRemarks}
                                                     </p>
                                                 )}
@@ -453,7 +453,7 @@ const PaymentManagement = () => {
                                             <td className="px-4 py-4 text-xs text-gray-400">
                                                 <p className="whitespace-nowrap">{formatDate(payment.createdAt)}</p>
                                                 {payment.processedAt && payment.status !== 'pending' && (
-                                                    <p className="text-gray-500 whitespace-nowrap text-[10px] mt-0.5">
+                                                    <p className="text-gray-400 whitespace-nowrap text-[10px] mt-0.5">
                                                         Done: {formatDate(payment.processedAt)}
                                                     </p>
                                                 )}
@@ -471,21 +471,21 @@ const PaymentManagement = () => {
                                                         <>
                                                             <button
                                                                 onClick={() => openActionModal(payment, 'approve')}
-                                                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-green-600 hover:bg-green-700 rounded-lg text-xs font-medium text-gray-800 transition-colors"
+                                                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-green-600 hover:bg-green-700 rounded-lg text-xs font-medium text-white transition-colors"
                                                                 title="Approve – add money to player wallet"
                                                             >
                                                                 <FaCheck className="w-3.5 h-3.5 shrink-0" /> Approve
                                                             </button>
                                                             <button
                                                                 onClick={() => openActionModal(payment, 'reject')}
-                                                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-red-600 hover:bg-red-700 rounded-lg text-xs font-medium text-gray-800 transition-colors"
+                                                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-red-600 hover:bg-red-700 rounded-lg text-xs font-medium text-white transition-colors"
                                                                 title="Reject – decline this request"
                                                             >
                                                                 <FaTimes className="w-3.5 h-3.5 shrink-0" /> Reject
                                                             </button>
                                                         </>
                                                     ) : (
-                                                        <span className="text-xs text-gray-500 italic">Processed</span>
+                                                        <span className="text-xs text-gray-400 italic">Processed</span>
                                                     )}
                                                 </div>
                                             </td>
@@ -501,7 +501,7 @@ const PaymentManagement = () => {
             {/* Action Modal */}
             {actionModal.show && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl max-w-md w-full p-6 border border-gray-200 shadow-2xl">
+                    <div className="bg-[#252D3A] rounded-xl max-w-md w-full p-6 border border-[#333D4D] shadow-2xl">
                         <div className="flex items-center gap-3 mb-4">
                             {actionModal.action === 'approve' ? (
                                 <div className="w-10 h-10 rounded-full bg-green-600/20 flex items-center justify-center">
@@ -513,7 +513,7 @@ const PaymentManagement = () => {
                                 </div>
                             )}
                             <div>
-                                <h3 className="text-xl font-bold text-gray-800">
+                                <h3 className="text-xl font-bold text-white">
                                     {actionModal.action === 'approve' ? 'Approve' : 'Reject'} {actionModal.payment?.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
                                 </h3>
                                 <p className="text-sm text-gray-400 mt-0.5">
@@ -522,16 +522,16 @@ const PaymentManagement = () => {
                             </div>
                         </div>
                         
-                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div className="bg-[#1F2732] rounded-lg p-4 mb-4">
                             <div className="flex justify-between items-center mb-2">
                                 <span className="text-gray-400">Amount</span>
-                                <span className="text-xl font-bold text-gray-800">
+                                <span className="text-xl font-bold text-white">
                                     ₹{actionModal.payment?.amount?.toLocaleString()}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center mb-2">
                                 <span className="text-gray-400">Player</span>
-                                <span className="text-gray-800">
+                                <span className="text-white">
                                     {actionModal.payment?.userId?.username || 'Unknown'}
                                 </span>
                             </div>
@@ -550,13 +550,13 @@ const PaymentManagement = () => {
                         {/* Show screenshot for deposits */}
                         {actionModal.payment?.type === 'deposit' && actionModal.payment?.screenshotUrl && (
                             <div className="mb-4">
-                                <p className="text-gray-600 text-sm mb-2 font-medium">Payment Screenshot:</p>
+                                <p className="text-gray-300 text-sm mb-2 font-medium">Payment Screenshot:</p>
                                 <img
                                     src={actionModal.payment.screenshotUrl.startsWith('http') 
                                         ? actionModal.payment.screenshotUrl 
                                         : `${API_BASE_URL}${actionModal.payment.screenshotUrl}`}
                                     alt="Payment proof"
-                                    className="w-full max-h-48 object-contain rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                                    className="w-full max-h-48 object-contain rounded-lg border border-[#333D4D] cursor-pointer hover:opacity-90 transition-opacity"
                                     onClick={() => {
                                         const screenshotUrl = actionModal.payment.screenshotUrl.startsWith('http') 
                                             ? actionModal.payment.screenshotUrl 
@@ -572,9 +572,9 @@ const PaymentManagement = () => {
 
                         {/* Show bank details for withdrawals */}
                         {actionModal.payment?.type === 'withdrawal' && actionModal.payment?.bankDetailId && (
-                            <div className="mb-4 bg-gray-50 rounded-lg p-3">
+                            <div className="mb-4 bg-[#1F2732] rounded-lg p-3">
                                 <p className="text-gray-400 text-sm mb-2">Withdraw to:</p>
-                                <p className="text-gray-800 font-medium">{actionModal.payment.bankDetailId.accountHolderName}</p>
+                                <p className="text-white font-medium">{actionModal.payment.bankDetailId.accountHolderName}</p>
                                 {actionModal.payment.bankDetailId.bankName && (
                                     <p className="text-gray-400 text-sm">
                                         {actionModal.payment.bankDetailId.bankName} - {actionModal.payment.bankDetailId.accountNumber}
@@ -597,7 +597,7 @@ const PaymentManagement = () => {
                                 value={adminRemarks}
                                 onChange={(e) => setAdminRemarks(e.target.value)}
                                 placeholder={actionModal.action === 'approve' ? 'Optional remarks...' : 'Reason for rejection...'}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 resize-none focus:outline-none focus:border-blue-500"
+                                className="w-full px-4 py-3 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white resize-none focus:outline-none focus:border-blue-500"
                                 rows={3}
                             />
                         </div>
@@ -610,7 +610,7 @@ const PaymentManagement = () => {
                                     placeholder="Secret declare password"
                                     value={secretPassword}
                                     onChange={(e) => { setSecretPassword(e.target.value); setActionPasswordError(''); }}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
+                                    className="w-full px-4 py-3 bg-[#1F2732] border border-[#333D4D] rounded-lg text-white focus:outline-none focus:border-blue-500"
                                 />
                                 {actionPasswordError && (
                                     <p className="text-red-500 text-sm mt-2">{actionPasswordError}</p>
@@ -621,7 +621,7 @@ const PaymentManagement = () => {
                         <div className="flex gap-3">
                             <button
                                 onClick={closeActionModal}
-                                className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-800 transition-colors"
+                                className="flex-1 px-4 py-2 bg-[#1F2732] hover:bg-gray-200 rounded-lg text-white transition-colors"
                             >
                                 Cancel
                             </button>
@@ -632,7 +632,7 @@ const PaymentManagement = () => {
                                     (actionModal.action === 'reject' && !adminRemarks.trim()) ||
                                     (actionModal.action === 'approve' && hasSecretDeclarePassword && !secretPassword.trim())
                                 }
-                                className={`flex-1 px-4 py-2 rounded-lg text-gray-800 font-medium transition-colors disabled:opacity-50 ${
+                                className={`flex-1 px-4 py-2 rounded-lg text-white font-medium transition-colors disabled:opacity-50 ${
                                     actionModal.action === 'approve'
                                         ? 'bg-green-600 hover:bg-green-700'
                                         : 'bg-red-600 hover:bg-red-700'
@@ -654,7 +654,7 @@ const PaymentManagement = () => {
                     <div className="relative max-w-4xl max-h-[90vh]">
                         <button
                             onClick={() => setImageModal({ show: false, url: '' })}
-                            className="absolute -top-10 right-0 text-gray-800 hover:text-gray-600"
+                            className="absolute -top-10 right-0 text-white hover:text-gray-300"
                         >
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -672,7 +672,7 @@ const PaymentManagement = () => {
             {/* Detail Modal */}
             {detailModal.show && detailModal.payment && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl max-w-lg w-full p-6 border border-gray-200 max-h-[90vh] overflow-y-auto shadow-2xl">
+                    <div className="bg-[#252D3A] rounded-xl max-w-lg w-full p-6 border border-[#333D4D] max-h-[90vh] overflow-y-auto shadow-2xl">
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-3">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${detailModal.payment.type === 'deposit' ? 'bg-green-600/20' : 'bg-purple-600/20'}`}>
@@ -683,7 +683,7 @@ const PaymentManagement = () => {
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-800">
+                                    <h3 className="text-xl font-bold text-white">
                                         {detailModal.payment.type === 'deposit' ? 'Deposit' : 'Withdrawal'} Details
                                     </h3>
                                     <p className="text-sm text-gray-400">
@@ -693,7 +693,7 @@ const PaymentManagement = () => {
                             </div>
                             <button
                                 onClick={() => setDetailModal({ show: false, payment: null })}
-                                className="text-gray-400 hover:text-gray-800"
+                                className="text-gray-400 hover:text-white"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -702,10 +702,10 @@ const PaymentManagement = () => {
                         </div>
 
                         {/* Amount & Status */}
-                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div className="bg-[#1F2732] rounded-lg p-4 mb-4">
                             <div className="flex justify-between items-center mb-3">
                                 <span className="text-gray-400">Amount</span>
-                                <span className="text-2xl font-bold text-gray-800">
+                                <span className="text-2xl font-bold text-white">
                                     ₹{detailModal.payment.amount?.toLocaleString()}
                                 </span>
                             </div>
@@ -727,30 +727,30 @@ const PaymentManagement = () => {
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-400">Request ID</span>
-                                <span className="text-gray-800 font-mono text-sm">
+                                <span className="text-white font-mono text-sm">
                                     #{detailModal.payment._id.slice(-8).toUpperCase()}
                                 </span>
                             </div>
                         </div>
 
                         {/* Player Info */}
-                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                            <h4 className="text-sm font-semibold text-gray-600 mb-3">Player Information</h4>
+                        <div className="bg-[#1F2732] rounded-lg p-4 mb-4">
+                            <h4 className="text-sm font-semibold text-gray-300 mb-3">Player Information</h4>
                             <div className="space-y-2">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500">Username</span>
-                                    <span className="text-gray-800">{detailModal.payment.userId?.username || 'Unknown'}</span>
+                                    <span className="text-gray-400">Username</span>
+                                    <span className="text-white">{detailModal.payment.userId?.username || 'Unknown'}</span>
                                 </div>
                                 {detailModal.payment.userId?.email && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">Email</span>
-                                        <span className="text-gray-800">{detailModal.payment.userId.email}</span>
+                                        <span className="text-gray-400">Email</span>
+                                        <span className="text-white">{detailModal.payment.userId.email}</span>
                                     </div>
                                 )}
                                 {detailModal.payment.userId?.phone && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">Phone</span>
-                                        <span className="text-gray-800">{detailModal.payment.userId.phone}</span>
+                                        <span className="text-gray-400">Phone</span>
+                                        <span className="text-white">{detailModal.payment.userId.phone}</span>
                                     </div>
                                 )}
                             </div>
@@ -758,41 +758,41 @@ const PaymentManagement = () => {
 
                         {/* Bank Details for Withdrawals */}
                         {detailModal.payment.type === 'withdrawal' && detailModal.payment.bankDetailId && (
-                            <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                                <h4 className="text-sm font-semibold text-gray-600 mb-3">Bank Account Details</h4>
+                            <div className="bg-[#1F2732] rounded-lg p-4 mb-4">
+                                <h4 className="text-sm font-semibold text-gray-300 mb-3">Bank Account Details</h4>
                                 <div className="space-y-2">
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">Account Holder</span>
-                                        <span className="text-gray-800 font-medium">{detailModal.payment.bankDetailId.accountHolderName}</span>
+                                        <span className="text-gray-400">Account Holder</span>
+                                        <span className="text-white font-medium">{detailModal.payment.bankDetailId.accountHolderName}</span>
                                     </div>
                                     {detailModal.payment.bankDetailId.bankName && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">Bank Name</span>
-                                            <span className="text-gray-800">{detailModal.payment.bankDetailId.bankName}</span>
+                                            <span className="text-gray-400">Bank Name</span>
+                                            <span className="text-white">{detailModal.payment.bankDetailId.bankName}</span>
                                         </div>
                                     )}
                                     {detailModal.payment.bankDetailId.accountNumber && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">Account Number</span>
-                                            <span className="text-gray-800 font-mono">{detailModal.payment.bankDetailId.accountNumber}</span>
+                                            <span className="text-gray-400">Account Number</span>
+                                            <span className="text-white font-mono">{detailModal.payment.bankDetailId.accountNumber}</span>
                                         </div>
                                     )}
                                     {detailModal.payment.bankDetailId.ifscCode && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">IFSC Code</span>
-                                            <span className="text-gray-800 font-mono">{detailModal.payment.bankDetailId.ifscCode}</span>
+                                            <span className="text-gray-400">IFSC Code</span>
+                                            <span className="text-white font-mono">{detailModal.payment.bankDetailId.ifscCode}</span>
                                         </div>
                                     )}
                                     {detailModal.payment.bankDetailId.upiId && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">UPI ID</span>
-                                            <span className="text-gray-800 font-mono">{detailModal.payment.bankDetailId.upiId}</span>
+                                            <span className="text-gray-400">UPI ID</span>
+                                            <span className="text-white font-mono">{detailModal.payment.bankDetailId.upiId}</span>
                                         </div>
                                     )}
                                     {detailModal.payment.bankDetailId.accountType && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">Account Type</span>
-                                            <span className="text-gray-800 capitalize">{detailModal.payment.bankDetailId.accountType.replace('_', ' ')}</span>
+                                            <span className="text-gray-400">Account Type</span>
+                                            <span className="text-white capitalize">{detailModal.payment.bankDetailId.accountType.replace('_', ' ')}</span>
                                         </div>
                                     )}
                                 </div>
@@ -801,31 +801,31 @@ const PaymentManagement = () => {
 
                         {/* Deposit Details */}
                         {detailModal.payment.type === 'deposit' && (
-                            <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                                <h4 className="text-sm font-semibold text-gray-600 mb-3">Payment Details</h4>
+                            <div className="bg-[#1F2732] rounded-lg p-4 mb-4">
+                                <h4 className="text-sm font-semibold text-gray-300 mb-3">Payment Details</h4>
                                 <div className="space-y-2">
                                     {detailModal.payment.upiTransactionId && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">UTR / Transaction ID</span>
-                                            <span className="text-gray-800 font-mono">{detailModal.payment.upiTransactionId}</span>
+                                            <span className="text-gray-400">UTR / Transaction ID</span>
+                                            <span className="text-white font-mono">{detailModal.payment.upiTransactionId}</span>
                                         </div>
                                     )}
                                     {detailModal.payment.userNote && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">User Note</span>
-                                            <span className="text-gray-800">{detailModal.payment.userNote}</span>
+                                            <span className="text-gray-400">User Note</span>
+                                            <span className="text-white">{detailModal.payment.userNote}</span>
                                         </div>
                                     )}
                                 </div>
                                 {detailModal.payment.screenshotUrl && (
                                     <div className="mt-4">
-                                        <p className="text-gray-600 text-sm mb-2 font-medium">Payment Screenshot:</p>
+                                        <p className="text-gray-300 text-sm mb-2 font-medium">Payment Screenshot:</p>
                                         <img
                                             src={detailModal.payment.screenshotUrl.startsWith('http') 
                                                 ? detailModal.payment.screenshotUrl 
                                                 : `${API_BASE_URL}${detailModal.payment.screenshotUrl}`}
                                             alt="Payment proof"
-                                            className="w-full max-h-60 object-contain rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                                            className="w-full max-h-60 object-contain rounded-lg border border-[#333D4D] cursor-pointer hover:opacity-90 transition-opacity"
                                             onClick={() => {
                                                 const screenshotUrl = detailModal.payment.screenshotUrl.startsWith('http') 
                                                     ? detailModal.payment.screenshotUrl 
@@ -842,29 +842,29 @@ const PaymentManagement = () => {
                         )}
 
                         {/* Timestamps */}
-                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                            <h4 className="text-sm font-semibold text-gray-600 mb-3">Timeline</h4>
+                        <div className="bg-[#1F2732] rounded-lg p-4 mb-4">
+                            <h4 className="text-sm font-semibold text-gray-300 mb-3">Timeline</h4>
                             <div className="space-y-2">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500">Requested</span>
-                                    <span className="text-gray-800">{formatDate(detailModal.payment.createdAt)}</span>
+                                    <span className="text-gray-400">Requested</span>
+                                    <span className="text-white">{formatDate(detailModal.payment.createdAt)}</span>
                                 </div>
                                 {detailModal.payment.processedAt && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">Processed</span>
-                                        <span className="text-gray-800">{formatDate(detailModal.payment.processedAt)}</span>
+                                        <span className="text-gray-400">Processed</span>
+                                        <span className="text-white">{formatDate(detailModal.payment.processedAt)}</span>
                                     </div>
                                 )}
                                 {detailModal.payment.processedBy?.username && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">Processed By</span>
-                                        <span className="text-gray-800">{detailModal.payment.processedBy.username}</span>
+                                        <span className="text-gray-400">Processed By</span>
+                                        <span className="text-white">{detailModal.payment.processedBy.username}</span>
                                     </div>
                                 )}
                                 {detailModal.payment.adminRemarks && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">Admin Remarks</span>
-                                        <span className="text-gray-800">{detailModal.payment.adminRemarks}</span>
+                                        <span className="text-gray-400">Admin Remarks</span>
+                                        <span className="text-white">{detailModal.payment.adminRemarks}</span>
                                     </div>
                                 )}
                             </div>
@@ -874,7 +874,7 @@ const PaymentManagement = () => {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setDetailModal({ show: false, payment: null })}
-                                className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-800 transition-colors"
+                                className="flex-1 px-4 py-2 bg-[#1F2732] hover:bg-gray-200 rounded-lg text-white transition-colors"
                             >
                                 Close
                             </button>
@@ -885,7 +885,7 @@ const PaymentManagement = () => {
                                             setDetailModal({ show: false, payment: null });
                                             openActionModal(detailModal.payment, 'approve');
                                         }}
-                                        className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-gray-800 font-medium transition-colors"
+                                        className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-medium transition-colors"
                                     >
                                         Approve
                                     </button>
@@ -894,7 +894,7 @@ const PaymentManagement = () => {
                                             setDetailModal({ show: false, payment: null });
                                             openActionModal(detailModal.payment, 'reject');
                                         }}
-                                        className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-gray-800 font-medium transition-colors"
+                                        className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition-colors"
                                     >
                                         Reject
                                     </button>

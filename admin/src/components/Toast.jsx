@@ -4,27 +4,27 @@ import { FaCheckCircle, FaExclamationCircle, FaExclamationTriangle, FaInfoCircle
 const Toast = ({ type = 'info', message, onClose, duration = 5000 }) => {
     const config = {
         success: {
-            bg: 'bg-green-50',
-            border: 'border-green-200',
-            text: 'text-green-700',
+            bg: 'bg-green-500/20',
+            border: 'border-green-400/50',
+            text: 'text-green-400',
             icon: FaCheckCircle,
         },
         error: {
-            bg: 'bg-red-50',
-            border: 'border-red-200',
-            text: 'text-red-700',
+            bg: 'bg-red-500/20',
+            border: 'border-red-400/50',
+            text: 'text-red-400',
             icon: FaExclamationCircle,
         },
         warning: {
-            bg: 'bg-amber-50',
-            border: 'border-amber-200',
-            text: 'text-amber-700',
+            bg: 'bg-amber-500/20',
+            border: 'border-amber-400/50',
+            text: 'text-amber-400',
             icon: FaExclamationTriangle,
         },
         info: {
-            bg: 'bg-blue-50',
-            border: 'border-blue-200',
-            text: 'text-blue-700',
+            bg: 'bg-blue-500/20',
+            border: 'border-blue-400/50',
+            text: 'text-blue-400',
             icon: FaInfoCircle,
         },
     };
@@ -45,7 +45,7 @@ const Toast = ({ type = 'info', message, onClose, duration = 5000 }) => {
             {onClose && (
                 <button
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-100"
+                    className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
                 >
                     <FaTimes className="w-4 h-4" />
                 </button>
