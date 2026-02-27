@@ -92,6 +92,12 @@ const PlayerDetail = () => {
     const [walletAdjustAmount, setWalletAdjustAmount] = useState('');
     const [walletActionLoading, setWalletActionLoading] = useState(false);
     const [walletActionError, setWalletActionError] = useState('');
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [passwordError2, setPasswordError2] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
     const dropdownRef = useRef(null);
 
     useEffect(() => {
@@ -367,6 +373,46 @@ const PlayerDetail = () => {
         }
     };
 
+    const openPasswordModal = () => {
+        setNewPassword('');
+        setConfirmPassword('');
+        setPasswordError2('');
+        setPasswordSuccess('');
+        setPasswordModalOpen(true);
+    };
+
+    const handlePasswordSubmit2 = async () => {
+        if (!newPassword || newPassword.length < 6) {
+            setPasswordError2('Password must be at least 6 characters');
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            setPasswordError2('Passwords do not match');
+            return;
+        }
+        setPasswordError2('');
+        setPasswordSuccess('');
+        setPasswordLoading(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/users/${userId}/password`, {
+                method: 'PATCH',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ password: newPassword }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setPasswordSuccess('Password updated successfully');
+                setNewPassword('');
+            } else {
+                setPasswordError2(data.message || 'Failed to update password');
+            }
+        } catch (err) {
+            setPasswordError2('Network error. Please try again.');
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
     const performDeletePlayer = async (secretDeclarePasswordValue) => {
         if (!userId || !player?.username) return;
         if (!window.confirm(`Delete player "${player.username}"? This will remove their account and wallet. This cannot be undone.`)) return;
@@ -504,6 +550,14 @@ const PlayerDetail = () => {
                             title="Edit wallet"
                         >
                             <FaWallet className="w-4 h-4" /> Edit Wallet
+                        </button>
+                        <button
+                            type="button"
+                            onClick={openPasswordModal}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-[#252D3A] border border-[#333D4D] text-purple-400 hover:bg-purple-500/20 hover:border-purple-400 transition-colors"
+                            title="Edit password"
+                        >
+                            Edit Password
                         </button>
                         <button
                             type="button"
@@ -908,6 +962,77 @@ const PlayerDetail = () => {
                                     <button type="button" onClick={() => handleWalletAdjust('debit')} disabled={walletActionLoading} className="px-4 py-2 rounded-lg bg-[#252D3A] border border-red-600/60 text-red-400 hover:bg-red-900/40 font-semibold disabled:opacity-50">Deduct</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Password Modal */}
+            {passwordModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30">
+                    <div className="bg-[#252D3A] rounded-xl border border-[#333D4D] shadow-xl w-full max-w-md">
+                        <div className="px-4 py-3 border-b border-[#333D4D] flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-purple-400">Edit Password</h3>
+                            <button type="button" onClick={() => setPasswordModalOpen(false)} className="text-gray-400 hover:text-white p-1">×</button>
+                        </div>
+                        <div className="p-4 space-y-4">
+                            {passwordError2 && (
+                                <div className="rounded-lg bg-red-900/30 border border-red-600/50 text-red-400 text-sm px-3 py-2">{passwordError2}</div>
+                            )}
+                            {passwordSuccess && (
+                                <div className="rounded-lg bg-green-900/30 border border-green-600/50 text-green-400 text-sm px-3 py-2">{passwordSuccess}</div>
+                            )}
+                            {!passwordSuccess && (
+                                <>
+                                    <div>
+                                        <label className="block text-gray-400 text-sm mb-2">New Password for {player?.username}</label>
+                                        <input
+                                            type="password"
+                                            placeholder="Minimum 6 characters"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                            autoFocus
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-400 text-sm mb-2">Confirm Password</label>
+                                        <input
+                                            type="password"
+                                            placeholder="Re-enter password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            className="w-full px-3 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        />
+                                    </div>
+                                    <div className="flex gap-2 justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={() => setPasswordModalOpen(false)}
+                                            className="px-4 py-2 rounded-lg bg-[#1F2732] border border-[#333D4D] text-gray-300 hover:bg-[#333D4D] font-semibold"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handlePasswordSubmit2}
+                                            disabled={passwordLoading || !newPassword || !confirmPassword}
+                                            className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {passwordLoading ? <span className="animate-spin">⏳</span> : 'Update Password'}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                            {passwordSuccess && (
+                                <button
+                                    type="button"
+                                    onClick={() => setPasswordModalOpen(false)}
+                                    className="w-full py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-semibold"
+                                >
+                                    Done
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
