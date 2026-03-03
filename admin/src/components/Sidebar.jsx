@@ -15,6 +15,7 @@ import {
     FaCoins,
     FaCog,
     FaMoneyBillWave,
+    FaGamepad,
 } from 'react-icons/fa';
 import GoogleTranslate from './GoogleTranslate';
 
@@ -37,6 +38,7 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         { path: '/wallet', label: 'Wallet', icon: FaWallet },
         { path: '/logs', label: 'Logs', icon: FaClipboardList },
         { path: '/settings', label: 'Settings', icon: FaCog },
+        { path: '/games', label: 'Games', icon: FaGamepad },
     ];
 
     const isActive = (path) => {
@@ -45,6 +47,9 @@ const Sidebar = ({ onLogout, isOpen = true, onClose }) => {
         }
         if (path === '/revenue') {
             return location.pathname === '/revenue' || location.pathname.startsWith('/revenue/');
+        }
+        if (path === '/games') {
+            return location.pathname === '/games' || location.pathname.startsWith('/games/');
         }
         if (path === '/reports') return location.pathname === '/reports';
         return location.pathname === path;

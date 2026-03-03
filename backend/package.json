@@ -11,7 +11,8 @@
     "dev": "nodemon index.js",
     "create-admin": "node scripts/createAdmin.js",
     "create-bookie": "node scripts/createBookie.js",
-    "check-env": "node scripts/checkEnv.js"
+    "check-env": "node scripts/checkEnv.js",
+    "roulette-sim": "node scripts/rouletteSimulation.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

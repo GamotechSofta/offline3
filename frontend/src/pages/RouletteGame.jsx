@@ -96,6 +96,10 @@ const RouletteGame = () => {
   const totalBet = bets.reduce((sum, b) => sum + (Number(b.amount) || 0), 0);
 
   const handleSpin = async () => {
+    if (!userId) {
+      setError('Session expired. Please log in again.');
+      return;
+    }
     if (bets.length === 0) {
       setError('Place at least one bet');
       return;
@@ -114,22 +118,24 @@ const RouletteGame = () => {
     setError('');
     setResult(null);
 
+    const idempotencyKey = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `spin-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
     try {
       const res = await fetch(`${API_BASE_URL}/roulette/spin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, bets }),
+        body: JSON.stringify({ userId: userId != null ? String(userId) : undefined, bets, idempotencyKey }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({ success: false, message: 'Invalid response from server' }));
 
       if (!data.success) {
         setError(data.message || 'Spin failed');
-        if (res.status === 403) setError('Account is blocked');
-        if (res.status === 429) setError('Please wait before spinning again');
+        if (res.status === 403) setError(data.message || 'Account is blocked');
+        if (res.status === 429) setError(data.message || 'Please wait before spinning again');
         return;
       }
 
-      setResult(data.data);
+      setResult({ ...data.data, idempotent: data.data?.idempotent === true });
       setWheelSpinning(true);
       if (wheelSpinTimeoutRef.current) clearTimeout(wheelSpinTimeoutRef.current);
       wheelSpinTimeoutRef.current = setTimeout(() => setWheelSpinning(false), 5000);
@@ -183,18 +189,21 @@ const RouletteGame = () => {
   return (
     <div className="min-h-screen bg-[#186213] bg-gradient-to-br from-[#0f3d12] via-[#186213] to-[#10410f] text-white p-2 md:p-4 pb-24">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between gap-2">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="text-gray-200/80 hover:text-white flex items-center gap-1 text-sm"
+            className="text-gray-200/80 hover:text-white flex items-center gap-1 text-sm shrink-0"
           >
             ← Back
           </button>
           <h1 className="text-2xl font-extrabold tracking-wide drop-shadow-[0_0_12px_rgba(0,0,0,0.7)]">
             Roulette
           </h1>
-          <div className="w-14" />
+          <p className="hidden md:block shrink-0 text-right text-emerald-300 font-bold text-lg drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">
+            ₹{Number(balance ?? 0).toLocaleString('en-IN')}
+          </p>
+          <div className="w-14 md:hidden" />
         </div>
 
         {error && (
@@ -431,13 +440,13 @@ const RouletteGame = () => {
           </div>
         </div>
 
-      {/* Mobile sticky spin button at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden px-4 pb-[calc(16px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none">
+      {/* Mobile sticky spin button + balance in same row */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden px-3 sm:px-4 pb-[calc(16px+env(safe-area-inset-bottom,0px))] pt-2 flex items-center gap-2">
         <button
           type="button"
           onClick={handleSpin}
           disabled={spinning || bets.length === 0 || totalBet <= 0 || (balance !== null && balance < totalBet)}
-          className="pointer-events-auto w-full max-w-[420px] mx-auto py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg text-white relative overflow-hidden"
+          className="flex-1 min-w-0 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg text-white relative overflow-hidden"
           style={{
             backgroundImage: `url(${SPIN_BTN_SVG_URL})`,
             backgroundSize: 'cover',
@@ -449,6 +458,10 @@ const RouletteGame = () => {
             {spinning ? 'Spinning…' : `Spin (₹${totalBet.toLocaleString('en-IN')})`}
           </span>
         </button>
+        <div className="shrink-0 text-right py-2 px-3 rounded-lg bg-[#186213]/80 border border-yellow-500/50">
+          <p className="text-[10px] uppercase tracking-wide text-gray-300">Balance</p>
+          <p className="text-emerald-300 font-bold text-sm whitespace-nowrap">₹{Number(balance ?? 0).toLocaleString('en-IN')}</p>
+        </div>
       </div>
 
       {/* Mobile result popup */}

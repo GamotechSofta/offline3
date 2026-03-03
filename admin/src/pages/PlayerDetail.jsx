@@ -10,6 +10,7 @@ const TABS = [
     { id: 'statement', label: 'Account Statement' },
     { id: 'wallet', label: 'Wallet Statement' },
     { id: 'bets', label: 'Bet History' },
+    { id: 'games', label: 'Game History' },
     { id: 'profile', label: 'Profile' },
 ];
 
@@ -79,7 +80,7 @@ const PlayerDetail = () => {
     const [error, setError] = useState('');
     const [statementFrom, setStatementFrom] = useState('');
     const [statementTo, setStatementTo] = useState('');
-    const [statementPreset, setStatementPreset] = useState('today');
+    const [statementPreset, setStatementPreset] = useState('this_month');
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [statementData, setStatementData] = useState([]);
     const [walletTx, setWalletTx] = useState([]);
@@ -92,6 +93,7 @@ const PlayerDetail = () => {
     const [walletAdjustAmount, setWalletAdjustAmount] = useState('');
     const [walletActionLoading, setWalletActionLoading] = useState(false);
     const [walletActionError, setWalletActionError] = useState('');
+    const [rouletteGames, setRouletteGames] = useState([]);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
@@ -113,7 +115,7 @@ const PlayerDetail = () => {
 
     useEffect(() => {
         if (!statementFrom || !statementTo) {
-            const preset = STATEMENT_PRESETS.find((p) => p.id === 'today');
+            const preset = STATEMENT_PRESETS.find((p) => p.id === 'this_month');
             const { from, to } = preset ? preset.getRange() : { from: '', to: '' };
             if (from) setStatementFrom(from);
             if (to) setStatementTo(to);
@@ -124,7 +126,10 @@ const PlayerDetail = () => {
         if (!userId || !player) return;
         if (activeTab === 'statement' && statementFrom && statementTo) fetchStatement();
         if (activeTab === 'wallet') fetchWalletTx();
-        if (activeTab === 'bets') fetchBets();
+        if ((activeTab === 'bets' || activeTab === 'games' || activeTab === 'profile') && statementFrom && statementTo) {
+            fetchBets();
+            fetchRouletteHistory();
+        }
     }, [activeTab, userId, player, statementFrom, statementTo]);
 
     const fetchPlayer = async () => {
@@ -241,13 +246,38 @@ const PlayerDetail = () => {
         if (!userId) return;
         setLoadingTab(true);
         try {
-            const res = await fetch(`${API_BASE_URL}/bets/history?userId=${userId}`, { headers: getAuthHeaders() });
+            const params = new URLSearchParams({ userId });
+            if (statementFrom) params.append('startDate', statementFrom);
+            if (statementTo) params.append('endDate', statementTo);
+            const res = await fetch(`${API_BASE_URL}/bets/history?${params.toString()}`, { headers: getAuthHeaders() });
             const data = await res.json();
             setBets(data.success ? data.data || [] : []);
         } catch (err) {
             setBets([]);
         } finally {
             setLoadingTab(false);
+        }
+    };
+
+    const fetchRouletteHistory = async () => {
+        if (!userId) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/roulette/history?userId=${encodeURIComponent(userId)}&limit=200`, { headers: getAuthHeaders() });
+            const data = await res.json();
+            const list = data.success && Array.isArray(data.data) ? data.data : [];
+            const start = statementFrom ? new Date(statementFrom) : null;
+            const end = statementTo ? new Date(statementTo) : null;
+            if (start) start.setHours(0, 0, 0, 0);
+            if (end) end.setHours(23, 59, 59, 999);
+            const filtered = list.filter((g) => {
+                const d = new Date(g.createdAt);
+                if (start && d < start) return false;
+                if (end && d > end) return false;
+                return true;
+            });
+            setRouletteGames(filtered);
+        } catch (err) {
+            setRouletteGames([]);
         }
     };
 
@@ -499,7 +529,7 @@ const PlayerDetail = () => {
                         </button>
                         <button
                             type="button"
-                            onClick={() => { setWalletModalOpen(true); setWalletActionError(''); setWalletAdjustAmount(''); setWalletSetBalance(''); }}
+                            onClick={() => { setWalletModalOpen(true); setWalletActionError(''); setWalletAdjustAmount(''); }}
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-[#252D3A] border border-[#333D4D] text-primary-400 hover:bg-primary-500/20 hover:border-primary-400 transition-colors"
                             title="Edit wallet"
                         >
@@ -861,8 +891,65 @@ const PlayerDetail = () => {
                     </>
                 )}
 
+                {activeTab === 'games' && (
+                    <>
+                        {loadingTab ? (
+                            <div className="p-8 text-center text-gray-400">Loading...</div>
+                        ) : (() => {
+                            const byMarket = {};
+                            bets.forEach((b) => {
+                                const mid = b.marketId?._id?.toString() || b.marketId?.toString() || 'unknown';
+                                if (!byMarket[mid]) {
+                                    byMarket[mid] = { marketName: b.marketId?.marketName || '—', count: 0, totalAmount: 0, firstAt: null, lastAt: null };
+                                }
+                                byMarket[mid].count += 1;
+                                byMarket[mid].totalAmount += b.amount || 0;
+                                const d = new Date(b.createdAt);
+                                if (!byMarket[mid].firstAt || d < byMarket[mid].firstAt) byMarket[mid].firstAt = d;
+                                if (!byMarket[mid].lastAt || d > byMarket[mid].lastAt) byMarket[mid].lastAt = d;
+                            });
+                            let gameList = Object.entries(byMarket).map(([id, g]) => ({ id, ...g }));
+                            if (rouletteGames.length > 0) {
+                                const totalBet = rouletteGames.reduce((s, g) => s + (Number(g.totalBet) || 0), 0);
+                                const firstAt = rouletteGames.reduce((min, g) => { const d = new Date(g.createdAt); return !min || d < min ? d : min; }, null);
+                                const lastAt = rouletteGames.reduce((max, g) => { const d = new Date(g.createdAt); return !max || d > max ? d : max; }, null);
+                                gameList = [{ id: 'roulette', marketName: 'Roulette', count: rouletteGames.length, totalAmount: totalBet, firstAt, lastAt }, ...gameList];
+                            }
+                            gameList.sort((a, b) => (b.lastAt || 0) - (a.lastAt || 0));
+                            return gameList.length === 0 ? (
+                                <div className="p-8 text-center text-gray-400">No game history in this period.</div>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm">
+                                        <thead>
+                                            <tr className="border-b border-[#333D4D] text-left text-gray-400 uppercase tracking-wider text-xs">
+                                                <th className="p-4">Market / Game</th>
+                                                <th className="p-4">Bets</th>
+                                                <th className="p-4">Total Amount</th>
+                                                <th className="p-4">First Bet</th>
+                                                <th className="p-4">Last Bet</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {gameList.map((g) => (
+                                                <tr key={g.id} className="border-b border-[#333D4D] hover:bg-[#1F2732]/20">
+                                                    <td className="p-4 text-white font-medium">{g.marketName}</td>
+                                                    <td className="p-4 text-gray-300">{g.count}</td>
+                                                    <td className="p-4 font-mono text-primary-400">{formatCurrency(g.totalAmount)}</td>
+                                                    <td className="p-4 text-gray-400 text-xs">{g.firstAt ? g.firstAt.toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : '—'}</td>
+                                                    <td className="p-4 text-gray-400 text-xs">{g.lastAt ? g.lastAt.toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : '—'}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            );
+                        })()}
+                    </>
+                )}
+
                 {activeTab === 'profile' && (
-                    <div className="p-6">
+                    <div className="p-6 space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
                             <div><p className="text-gray-400 text-sm">Name</p><p className="text-white">{player.username}</p></div>
                             <div><p className="text-gray-400 text-sm">Email</p><p className="text-white">{player.email}</p></div>
@@ -870,6 +957,46 @@ const PlayerDetail = () => {
                             <div><p className="text-gray-400 text-sm">Role</p><p className="text-white capitalize">{player.role || 'Player'}</p></div>
                             <div><p className="text-gray-400 text-sm">Source</p><p className="text-white">{player.source === 'bookie' ? 'Bookie' : 'Super Admin'}</p></div>
                             <div><p className="text-gray-400 text-sm">Created</p><p className="text-white">{player.createdAt ? new Date(player.createdAt).toLocaleString('en-IN') : '—'}</p></div>
+                        </div>
+
+                        {/* Bet History - summary and link */}
+                        <div className="border border-[#333D4D] rounded-lg p-4 bg-[#1F2732]/40">
+                            <h3 className="text-primary-500 font-semibold mb-2">Bet History</h3>
+                            <p className="text-gray-400 text-sm mb-3">View all bets placed by this player. Filter by date range above.</p>
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-gray-300 text-sm">Total bets in range: <strong className="text-white">{bets.length}</strong></span>
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveTab('bets')}
+                                    className="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold transition-colors"
+                                >
+                                    View Bet History
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Game History - summary and link */}
+                        <div className="border border-[#333D4D] rounded-lg p-4 bg-[#1F2732]/40">
+                            <h3 className="text-primary-500 font-semibold mb-2">Game History</h3>
+                            <p className="text-gray-400 text-sm mb-3">View games/markets this player has played and summary per market.</p>
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-gray-300 text-sm">
+                                    Games in range: <strong className="text-white">
+                                        {(() => {
+                                            const ids = new Set(bets.map((b) => (b.marketId?._id || b.marketId)?.toString()).filter(Boolean));
+                                            if (rouletteGames.length > 0) ids.add('roulette');
+                                            return ids.size;
+                                        })()}
+                                    </strong>
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveTab('games')}
+                                    className="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold transition-colors"
+                                >
+                                    View Game History
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

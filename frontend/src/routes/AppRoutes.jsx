@@ -126,14 +126,18 @@ const Layout = ({ children }) => {
     <div
       className={`min-h-screen min-h-ios-screen ${
         isRoulettePage ? 'pb-0' : 'pb-[calc(4rem+env(safe-area-inset-bottom,0px))]'
-      } md:pb-0 w-full max-w-full overflow-x-hidden ${isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'}`}
+      } md:pb-0 w-full max-w-full overflow-x-hidden ${
+        isRoulettePage ? 'bg-[#186213]' : isDarkLayout ? 'bg-[#1F2732]' : 'bg-white'
+      }`}
     >
-      <AppHeader />
+      {!isRoulettePage && <AppHeader />}
       {/* Reduce mobile top-gap under fixed header */}
       {/* Desktop: ensure no overlap under fixed header */}
       <div
         className={
-          isBidPage
+          isRoulettePage
+            ? 'pt-2 sm:pt-3 md:pt-4'
+            : isBidPage
             ? 'pt-[calc(52px+env(safe-area-inset-top,0px))] sm:pt-[calc(68px+env(safe-area-inset-top,0px))] md:pt-[calc(70px+env(safe-area-inset-top,0px))]'
             : ((isBetsPage || isHistoryPage) ? 'pt-[calc(72px+env(safe-area-inset-top,0px))] sm:pt-[calc(76px+env(safe-area-inset-top,0px))] md:pt-[calc(88px+env(safe-area-inset-top,0px))]' : 'pt-[calc(56px+env(safe-area-inset-top,0px))] sm:pt-[calc(68px+env(safe-area-inset-top,0px))] md:pt-[calc(72px+env(safe-area-inset-top,0px))]')
         }
